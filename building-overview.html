@@ -213,7 +213,10 @@
   #temi-card { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
   #temi-card:hover { border-color: #cfc4ff; box-shadow: 0 0 0 3px #f3f0ff; }
   .below.with-temi .temi { grid-template-columns: minmax(0, 1.25fr) 1fr; }
-  .below.with-temi .temi-pic { height: auto; aspect-ratio: 16 / 9; }
+  /* In the fixed-height row the feed fills the available height (cropped), it never dictates it */
+  .below.with-temi .temi { align-items: stretch; }
+  .below.with-temi .temi-pic { height: 100%; min-height: 0; aspect-ratio: auto; }
+  .below.with-temi #temi-card { overflow: hidden; }
   .temi-pic { position: relative; overflow: hidden; }
   .temi-pic video.cam { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .45s ease; }
   .temi-pic video.fading { opacity: 0; }
