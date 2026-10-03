@@ -74,7 +74,9 @@
   .below { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
   .below:has(#rooms-card:not([style*="none"])) { grid-template-columns: 1fr 340px; }
   /* Floor with a greeter: robot on the left, to-do and spaces stacked on the right as an accordion */
-  .below.with-temi { grid-template-columns: 1fr 1fr; grid-template-areas: "temi todo" "temi rooms"; }
+  /* Right column stacks from the top: first row hugs its card, the second takes the leftover height */
+  .below.with-temi { grid-template-columns: 1fr 1fr; grid-template-rows: auto 1fr; grid-template-areas: "temi todo" "temi rooms"; }
+  .below.with-temi #todo-card, .below.with-temi #rooms-card { align-self: start; }
   .below.with-temi #temi-card { grid-area: temi; }
   .below.with-temi #todo-card { grid-area: todo; }
   .below.with-temi #rooms-card { grid-area: rooms; }
@@ -194,9 +196,15 @@
   /* Greeter robot card on the ground floor: opens the reception view */
   #temi-card { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
   #temi-card:hover { border-color: #cfc4ff; box-shadow: 0 0 0 3px #f3f0ff; }
-  .below.with-temi .temi { grid-template-columns: 120px 1fr; }
-  .below.with-temi .temi-pic { height: 170px; }
-  .temi { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 4px 16px 4px; align-items: center; }
+  .below.with-temi .temi { grid-template-columns: minmax(0, 1.25fr) 1fr; }
+  .below.with-temi .temi-pic { height: auto; aspect-ratio: 16 / 9; }
+  .temi-pic { position: relative; overflow: hidden; }
+  .temi-pic video.cam { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .45s ease; }
+  .temi-pic video.fading { opacity: 0; }
+  .temi-pic.has-video { background: #1c2029; }
+  .temi-pic.has-video > svg { visibility: hidden; }
+  .temi-pic .ov { top: 8px; left: 8px; font-size: 10px; }
+  .temi { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 4px 16px 4px; align-items: start; }
   .temi-pic { height: 132px; border-radius: 10px; background: linear-gradient(180deg, #f6f3ff, #ece6ff); display: grid; place-items: center; }
   .temi b { font-weight: 600; display: block; }
   .temi small { color: var(--muted); }
@@ -914,7 +922,12 @@ function renderTemiCard() {
   const relays = LOG.filter(l => l.out === 'remote' || l.out === 'live').length;
   document.getElementById('temi-state').innerHTML = panic ? '<span class="chip err">Alerte</span>'
     : remote ? '<span class="chip occ">Piloté à distance</span>' : '<span class="chip acc">En autonomie</span>';
-  document.getElementById('temi').innerHTML = `<div class="temi-pic">${TEMI_SVG}</div>
+  // Live camera instead of the illustration. Built once: re-rendering would detach the video every 1.5 s.
+  const temi = document.getElementById('temi');
+  if (!document.getElementById('temi-pic')) temi.innerHTML = `<div class="temi-pic" id="temi-pic">${TEMI_SVG}<span class="ov o-tl"><span class="rec"></span>EN DIRECT</span></div><div id="temi-info"></div>`;
+  const pic = document.getElementById('temi-pic');
+  if (!document.getElementById('view-building').hidden) mountClip('lobby', pic, pic.querySelector('.ov'));
+  document.getElementById('temi-info').innerHTML = `
     <div><b>${f.greeter.name}</b><small>Temi 3 · Réception · sur secteur</small>
       <div class="temi-stats">
         <div><small>Échanges</small><b>${f.greeter.visitors}</b></div>
@@ -1161,6 +1174,8 @@ function mountClip(name, parent, before = null) {
     v.addEventListener('playing', () => v.parentElement && v.parentElement.classList.add('has-video'));
   }
   if (!parent || v.error) return;
+  // Shared between the reception view and the Temi card: only move it when it lives elsewhere.
+  if (v.parentElement === parent) { if (v.paused) v.play().catch(() => {}); return; }
   parent.insertBefore(v, before);
   if (v.readyState >= 2) parent.classList.add('has-video');
   v.play().catch(() => {});
@@ -1291,7 +1306,7 @@ function showView(v) {
   document.querySelectorAll('[data-crumb]').forEach(c => c.hidden = v !== 'accueil');
   history.replaceState(null, '', v === 'accueil' ? '#accueil' : location.pathname);
   document.querySelector('main').scrollTop = 0;
-  if (v === 'accueil') renderAccueil();
+  if (v === 'accueil') renderAccueil(); else renderAll();
 }
 document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
 // Map labels that link to another view (the greeter's label opens the reception view). The SVG re-renders, so delegate.
