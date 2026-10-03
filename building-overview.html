@@ -187,8 +187,8 @@
   .sev-low { background: #eef0f3; color: #59636e; box-shadow: inset 0 0 0 1px rgba(31,35,40,.08); }
   .empty { padding: 4px 16px 16px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
   /* Empty to-do list: centred all-clear with a check that draws itself, then a slow breathing halo */
-  .all-good { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 14px 16px 22px; color: var(--muted); }
-  .all-good b { color: var(--text); font-weight: 600; margin-top: 8px; }
+  .all-good { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px; padding: 12px 16px 20px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+  .all-good b { color: var(--text); font-size: 13px; font-weight: 600; margin-top: 10px; }
   .ok-badge { position: relative; width: 44px; height: 44px; border-radius: 50%; background: var(--green); display: grid; place-items: center; animation: ok-pop .45s cubic-bezier(.2, 1.4, .4, 1) both; }
   .ok-badge::after { content: ''; position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 0 0 rgba(34,168,97,.35); animation: ok-halo 2.8s ease-out .6s infinite; }
   .ok-badge path { stroke-dasharray: 24; stroke-dashoffset: 24; animation: ok-draw .45s ease-out .25s forwards; }
@@ -882,8 +882,8 @@ function renderTodo() {
       </div>
     </li>`).join('') : `<li class="all-good">
       <span class="ok-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></span>
-      <b>Tout va bien</b>
-      <span>${selected === 'all' ? 'Aucune tâche en attente dans le bâtiment.' : 'Rien à traiter sur cet étage.'}</span></li>`;
+      <b>Tout est en ordre</b>
+      <span>Aucune tâche en attente ${selected === 'all' ? 'dans le bâtiment' : 'sur cet étage'}.</span></li>`;
   // The list re-renders every 1.5 s: only touch the DOM when it changed, or the empty-state animation would restart.
   const ul = document.getElementById('todo');
   if (ul.dataset.html === html) return;
