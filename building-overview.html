@@ -323,12 +323,21 @@ const STATE = {
   idle:    { chip: 'idle', label: 'Planifié',   color: '#a0a7b0' },
   live:    { chip: 'acc',  label: 'En service', color: '#7c5cff' },
 };
+// Room states share one icon set (24×24 stroke paths) between map markers and list chips.
+const ICON = {
+  check:  '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  sync:   '<path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/>',
+  broom:  '<path d="M20 3 11.5 11.5"/><path d="M9.5 10.5 13.5 14.5 9 21 3 15Z"/><path d="M6 18l1.5-1.5"/>',
+  guest:  '<circle cx="12" cy="8" r="4"/><path d="M4.5 21c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/>',
+  alert:  '<path d="M12 6v8"/><path d="M12 18.5v.5"/>',
+};
+const iconSvg = (name, size = 12) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${ICON[name]}</svg>`;
 const ROOM_STATE = {
-  occupied:{ chip: 'occ',  label: 'Occupé',     fill: '#e3e8ff' },
-  clean:   { chip: 'ok',   label: 'Prêt',       fill: '#d9f3f0' },
-  doing:   { chip: 'run',  label: 'En cours',   fill: '#bfeae4' },
-  blocked: { chip: 'err',  label: 'Bloqué',     fill: '#fbd5d6' },
-  todo:    { chip: 'warn', label: 'À nettoyer', fill: '#fdeccb' },
+  occupied:{ chip: 'occ',  label: 'Occupé',     fill: '#e3e8ff', color: '#3451b2', icon: 'guest' },
+  clean:   { chip: 'ok',   label: 'Prêt',       fill: '#d9f3f0', color: '#22a861', icon: 'check' },
+  doing:   { chip: 'run',  label: 'En cours',   fill: '#bfeae4', color: '#00a99d', icon: 'sync' },
+  blocked: { chip: 'err',  label: 'Bloqué',     fill: '#fbd5d6', color: '#e5484d', icon: 'alert' },
+  todo:    { chip: 'warn', label: 'À nettoyer', fill: '#fdeccb', color: '#f0a020', icon: 'broom' },
 };
 
 // Selection drives the whole page: 'all' or a floor id.
@@ -475,14 +484,6 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   return s;
 }
 
-// Standing guest silhouette (occupied apartment).
-function guestGlyph(x, y, z) {
-  const [cx, cy] = P(x, y, z), c = '#3451b2';
-  return `<ellipse cx="${cx}" cy="${cy}" rx="7" ry="3.2" fill="rgba(0,0,0,.14)"/>` +
-    `<path d="M${cx - 5},${cy} L${cx - 5},${cy - 11} Q${cx - 5},${cy - 15} ${cx},${cy - 15} Q${cx + 5},${cy - 15} ${cx + 5},${cy - 11} L${cx + 5},${cy} Z" fill="${c}"/>` +
-    `<circle cx="${cx}" cy="${cy - 19}" r="3.6" fill="${c}"/>`;
-}
-
 // Open storey: cutaway with extruded rooms and robot position.
 function openFloor(f, z0) {
   const states = roomStates(f);
@@ -518,24 +519,19 @@ function openFloor(f, z0) {
   const roomLabels = [], robotTags = [];
   f.layout.rooms.filter(r => r.kind !== 'corridor' && r.kind !== 'core').forEach(r => {
     // Move the room number to the back of the room when a robot stands in it, so its tag never covers it.
-    const guest = (f.occupied || []).includes(r.id) || states[r.id] === 'todo';
+    const guest = r.kind === 'apt';
     const inside = guest || [f.robot.at, f.greeter && f.greeter.at].some(a => a && a[0] > r.x1 && a[0] < r.x2 && a[1] > r.y1 && a[1] < r.y2);
     const c = inside ? P(r.x1 + 0.9, r.y1 + 0.7, z0) : P((r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2, z0);
     const st = r.kind === 'apt' ? states[r.id] : null;
     roomLabels.push(`<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">${r.id}</text>`);
   });
-  // Rooms still to clean: amber broom marker
-  f.layout.rooms.filter(q => states[q.id] === 'todo').forEach(q => {
+  // State marker on every apartment: coloured disc + white icon (same icons as the list chips)
+  f.layout.rooms.filter(q => q.kind === 'apt').forEach(q => {
+    const st = ROOM_STATE[states[q.id]];
     const [cx, cy] = P((q.x1 + q.x2) / 2 + 0.35, (q.y1 + q.y2) / 2 + 0.35, z0);
     items.push({ d: (q.x1 + q.x2) / 2 + (q.y1 + q.y2) / 2 + 0.7, svg:
-      `<circle cx="${cx}" cy="${cy - 9}" r="8" fill="#f0a020" stroke="#fff" stroke-width="2"/>` +
-      `<line x1="${cx + 4}" y1="${cy - 15}" x2="${cx - 0.6}" y2="${cy - 9.6}" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>` +
-      `<path d="M${cx - 1.6},${cy - 10.8} L${cx + 0.6},${cy - 8.6} L${cx - 2.2},${cy - 4.2} L${cx - 6},${cy - 8} Z" fill="#fff"/>` });
-  });
-  // Guests in occupied apartments
-  f.layout.rooms.filter(q => (f.occupied || []).includes(q.id)).forEach(q => {
-    const gx = (q.x1 + q.x2) / 2 + 0.3, gy = (q.y1 + q.y2) / 2 + 0.3;
-    items.push({ d: gx + gy, svg: guestGlyph(gx, gy, z0) });
+      `<circle cx="${cx}" cy="${cy - 11}" r="10" fill="${st.color}" stroke="#fff" stroke-width="2"/>` +
+      `<g transform="translate(${cx - 5},${cy - 16}) scale(.4167)" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">${ICON[st.icon]}</g>` });
   });
   const r = f.robot, st = STATE[r.state];
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', overlay: robotTags }) });
@@ -677,7 +673,6 @@ function renderTodo() {
   document.querySelectorAll('#todo [data-go]').forEach(b => b.onclick = e => { e.stopPropagation(); select(+b.dataset.go); });
 }
 
-const BROOM = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 3 11.5 11.5"/><path d="M9.5 10.5 13.5 14.5 9 21 3 15Z"/><path d="M6 18l1.5-1.5"/></svg>';
 function renderRooms() {
   const card = document.getElementById('rooms-card');
   if (selected === 'all') { card.style.display = 'none'; return; }
@@ -690,7 +685,7 @@ function renderRooms() {
   document.getElementById('rooms-count').textContent = `${list.filter(r => states[r.id] === 'clean').length}/${list.length - occ} prêts${occ ? ` · ${occ} occupé${occ > 1 ? 's' : ''}` : ''}`;
   document.getElementById('rooms').innerHTML = list.map(r => {
     const s = ROOM_STATE[states[r.id]];
-    const icon = states[r.id] === 'todo' ? BROOM : '';
+    const icon = iconSvg(s.icon);
     return `<div class="room"><span class="sw" style="background:${s.fill};border:1px solid #d5d9df"></span><span class="n">${f.id === 0 ? r.id : 'App. ' + r.id}</span><span class="s chip ${s.chip}">${icon}${s.label}</span></div>`;
   }).join('');
 }
