@@ -525,6 +525,19 @@
   #acc-sos-card .chip { background: #fff; color: #1c7c4a; }
   .sos-addr { margin: 0 16px 8px; padding: 7px 10px; border-radius: 8px; background: rgba(0,0,0,.16); color: #fff; font-size: 12px; line-height: 1.4; }
   .sos-addr b { font-weight: 600; }
+  /* Guest file covers the side column during a video takeover, like the emergency numbers during an alarm */
+  .acc-grid:has(#acc-live-card) > .side:has(#acc-guest-card:not([hidden])) { position: relative; min-height: 0; }
+  #acc-guest-card:not([hidden]) { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; }
+  .guest { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; }
+  .guest-id { display: flex; align-items: center; gap: 12px; padding: 4px 16px 12px; }
+  .guest-id .av { width: 42px; height: 42px; border-radius: 50%; background: #e4e8f3; color: #1e3a8a; display: grid; place-items: center; font-weight: 600; flex: none; }
+  .guest-id b { display: block; font-size: 15px; font-weight: 600; }
+  .guest-id small { color: var(--muted); font-size: 12px; }
+  .guest-ask { margin: 0 16px 10px; padding: 8px 10px; border-radius: 8px; background: #fff4e0; color: #7a4a00; font-size: 12px; line-height: 1.45; }
+  .guest-ask b { font-weight: 600; }
+  .guest .rf-rows { padding-bottom: 0; }
+  .guest-acts { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px 16px 16px; }
+  .guest-acts .btn { justify-content: center; }
   .sos { list-style: none; padding: 0 16px 10px; }
   .sos li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid rgba(255,255,255,.3); }
   .sos li:first-child { border-top: none; }
@@ -758,6 +771,11 @@
         <div class="card-h"><h3>Numéros d'urgence</h3><div class="right" id="acc-sos-state"></div></div>
         <p class="sos-addr">Adresse à donner : <b>14 rue Henry Monnier, Paris 9e</b> · Quartier Libre Saint-Georges, réception au RDC</p>
         <ul class="sos" id="acc-sos"></ul>
+      </div>
+      <!-- Guest file, shown while an operator is talking through the robot -->
+      <div class="card" id="acc-guest-card" hidden>
+        <div class="card-h"><h3>Fiche client</h3><div class="right" id="acc-guest-state"></div></div>
+        <div class="guest" id="acc-guest"></div>
       </div>
       <div class="card" id="acc-pos-card">
         <div class="card-h"><h3>Position du robot</h3><div class="right" id="acc-pos-state"></div></div>
@@ -1999,6 +2017,16 @@ const OUT = {
   wait:   () => `<span class="chip err">En attente · ${since(ACC.waiting)}</span>`,
   alarm:  () => '<span class="chip err">Alerte</span>',
 };
+// The guest at the counter, from the property management system: shown to the operator during a takeover.
+const GUEST = { name: 'Mme Claire Lefèvre', initials: 'CL', company: 'Atelier Nord SAS', since: 'cliente depuis 2024',
+  ask: 'Facture au nom de sa société pour son séjour en cours.',
+  rows: [
+    ['Réservation', 'App. 305 · 3 nuits<small>du 2 au 5 oct. · arrivée 15 h 20</small>'],
+    ['Société', 'Atelier Nord SAS<small>SIRET 812 345 678 00021 · facturation à Lille</small>'],
+    ['Contact', 'c.lefevre@ateliernord.fr<small>+33 6 12 34 56 78 · français</small>'],
+    ['Séjours', '4e séjour<small>dernier en juin 2026, app. 402</small>'],
+    ['Notes', 'Facture société à chaque séjour<small>préfère un étage calme</small>'],
+  ] };
 const TOPQ = [['Wi-Fi', 6], ['Bagagerie', 5], ['Heure de check-out', 4], ['Taxi, métro', 3], ["Code d'entrée", 3], ['Autre', 2]];
 
 // Planned day at the desk; the live part is rebuilt from ACC.
@@ -2256,7 +2284,22 @@ function renderSos() {
   }).join('');
 }
 
-function renderAccueil() { renderSos(); renderLive(); renderPos(); renderPosMap(); renderCoverage(); renderLog(); }
+function renderGuest() {
+  const card = document.getElementById('acc-guest-card');
+  card.hidden = ACC.mode !== 'remote' || !!ACC.panicAt;
+  if (card.hidden) return;
+  document.getElementById('acc-guest-state').innerHTML = `<span class="chip occ">En visio · ${since(ACC.takeoverAt)}</span>`;
+  document.getElementById('acc-guest').innerHTML = `
+    <div class="guest-id"><span class="av">${GUEST.initials}</span><div><b>${GUEST.name}</b><small>${GUEST.company} · ${GUEST.since}</small></div></div>
+    <p class="guest-ask"><b>Demande en cours :</b> ${GUEST.ask}</p>
+    <div class="rf-rows">${GUEST.rows.map(([l, v]) => `<div class="rf-row"><span>${l}</span><b>${v}</b></div>`).join('')}</div>
+    <div class="guest-acts">
+      <button class="btn">${icon('check', 14)}Envoyer la facture</button>
+      <button class="btn">Réservation <span aria-hidden="true">→</span></button>
+    </div>`;
+}
+
+function renderAccueil() { renderSos(); renderGuest(); renderLive(); renderPos(); renderPosMap(); renderCoverage(); renderLog(); }
 
 function takeOver() {
   ACC.mode = 'remote'; ACC.takeoverAt = Date.now();
