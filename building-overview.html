@@ -261,7 +261,7 @@
 
   /* ---------- Reception robot position ---------- */
   .pos-map { padding: 2px 16px 0; }
-  .pos-map svg { width: 100%; height: auto; display: block; }
+  .pos-map svg { width: 100%; max-width: 340px; height: auto; display: block; margin: 0 auto; }
   .pos-map .spot { cursor: pointer; }
   .pos-map .spot:hover circle { fill: #cfe0ff; }
   .pos-meta { padding: 8px 16px 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
@@ -305,7 +305,7 @@
   .live.has-video > svg, .pip.has-video .av { visibility: hidden; }
   .ov { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 6px; background: rgba(15,18,25,.62); color: #fff; font-size: 11px; font-weight: 500; backdrop-filter: blur(6px); }
   .ov.o-tl { top: 10px; left: 10px; }
-  .ov.o-bl { bottom: 10px; left: 10px; } .ov.o-tr { top: 10px; right: 10px; }
+  .ov.o-bl { bottom: 10px; left: 10px; }
   .ov .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
   .ov.alarm { background: rgba(229,72,77,.92); }
   .ov.alarm .rec { background: #fff; }
@@ -322,16 +322,7 @@
   .who-row b { font-weight: 500; display: block; }
   .who-row small { color: var(--muted); }
   .who-row .chip { margin-left: auto; }
-  .panic { padding: 0 16px 16px; }
-  .panic p { color: var(--muted); line-height: 1.45; margin-bottom: 10px; }
-  .panic .last { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
   .card.alarm { border-color: #f5c2c3; box-shadow: 0 0 0 3px var(--red-soft); }
-  .steps { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px; }
-  .steps li { display: flex; gap: 8px; align-items: center; }
-  .steps li.wait { color: var(--muted); }
-  .steps .ic { width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; flex: none; }
-  .steps li:not(.wait) .ic { background: var(--green); color: #fff; }
-  .steps li.wait .ic { border: 2px solid var(--faint); }
   .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 4px 16px 14px; }
   .kpi small { display: block; color: var(--muted); font-size: 12px; margin-bottom: 2px; }
   .kpi b { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -449,10 +440,6 @@
         <div class="pos-map"><svg id="acc-pos-map" viewBox="-6 -16 312 186"></svg></div>
         <div class="pos-meta" id="acc-pos-meta"></div>
         <div class="pos-actions" id="acc-pos-actions"></div>
-      </div>
-      <div class="card" id="acc-panic-card">
-        <div class="card-h"><h3>Bouton panique</h3><div class="right" id="acc-panic-state"></div></div>
-        <div class="panic" id="acc-panic"></div>
       </div>
     </div>
   </div>
@@ -1323,7 +1310,6 @@ setInterval(() => {
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) Object.values(clipEls).forEach(v => v.isConnected && v.play().catch(() => {}));
 });
-const CHECK = icon('check', 11, { sw: 3.5 });
 
 function renderLive() {
   const remote = ACC.mode === 'remote', panic = !!ACC.panicAt;
@@ -1333,12 +1319,13 @@ function renderLive() {
       <button class="btn primary" data-act="take">Prendre la main</button></div>` : '';
   document.getElementById('acc-live').innerHTML = `${handoff}
     <div class="live">${VIDEO}
-      <span class="ov o-tl"><span class="rec"></span>EN DIRECT</span>
+      ${panic ? '<span class="ov o-tl alarm"><span class="rec"></span>EN DIRECT · ENREGISTREMENT</span>' : '<span class="ov o-tl"><span class="rec"></span>EN DIRECT</span>'}
       <span class="ov o-bl">${remote ? `Hery parle via le robot · ${since(ACC.takeoverAt)}` : 'Le robot répond seul · FR · EN · IT · ES'}</span>
-      ${panic ? '<span class="ov o-tr alarm"><span class="rec"></span>Enregistrement audio et vidéo</span>' : ''}
+
       ${remote ? '<div class="pip"><span class="av">HR</span><small>Hery · Antananarivo</small></div>' : ''}
     </div>
     <div class="controls">
+      ${panic ? '<button class="btn danger" data-act="calm">Lever l\'alerte</button>' : ''}
       ${remote ? '<button class="btn primary" data-act="release">Rendre la main au robot</button><button class="btn">Couper le micro</button><button class="btn" data-act="go-entree">Aller à la porte</button>'
         : '<button class="btn primary" data-act="take">Prendre la main en visio</button><button class="btn">Parler dans le hall</button><button class="btn" data-act="go-base">Ramener à la base</button>'}
       <span class="note">${remote ? 'Latence 180 ms · Antananarivo → Paris' : 'Hery est disponible pour un relais'}</span>
@@ -1357,23 +1344,6 @@ function renderWho() {
     row('var(--accueil)', ICON_ACCUEIL, 'TEMI-4F2A', 'Robot d\'accueil · sur secteur', remote ? '<span class="chip occ">Relais visio</span>' : '<span class="chip acc">En autonomie</span>') +
     row('#22a861', 'IN', 'Inès', `Réceptionniste · au 307 (É3) depuis ${Math.round((Date.now() - ACC.awayAt) / MIN)} min`, '<span class="chip warn">Hors du poste</span>') +
     row('#b9825a', 'HR', 'Hery R.', 'Opérateur · Antananarivo', remote ? '<span class="chip occ">En visio</span>' : '<span class="chip ok">Disponible</span>');
-}
-
-function renderPanic() {
-  const card = document.getElementById('acc-panic-card'), el = document.getElementById('acc-panic');
-  card.classList.toggle('alarm', !!ACC.panicAt);
-  if (!ACC.panicAt) {
-    document.getElementById('acc-panic-state').innerHTML = '<span class="chip ok">Armé</span>';
-    el.innerHTML = `<p>Déclenchable depuis le robot, le comptoir et l'appli de l'agent. Le robot se place face au comptoir, allume son écran et enregistre le son et l'image ; Hery et l'astreinte sont prévenus. Rôle de témoin et de dissuasion, pas de sécurité.</p>
-      <div class="last">Dernier déclenchement : 14 mars 2026 · client agressif au comptoir</div>
-      <button class="btn danger" data-act="panic">Simuler un déclenchement</button>`;
-    return;
-  }
-  const t = (Date.now() - ACC.panicAt) / 1000;
-  const steps = [[0, 'Hery alerté, visio ouverte'], [2, 'Robot face au comptoir, écran allumé'], [3, 'Enregistrement audio et vidéo démarré'], [8, 'Astreinte sécurité appelée']];
-  document.getElementById('acc-panic-state').innerHTML = `<span class="chip err">En cours · ${since(ACC.panicAt)}</span>`;
-  el.innerHTML = `<ul class="steps">${steps.map(([s, label]) => `<li class="${t >= s ? '' : 'wait'}"><span class="ic">${t >= s ? CHECK : ''}</span>${label}</li>`).join('')}</ul>
-    <button class="btn danger" data-act="calm">Lever l'alerte</button>`;
 }
 
 function renderCoverage() {
@@ -1482,7 +1452,7 @@ function goTo(id) {
   renderPos();
 }
 
-function renderAccueil() { renderLive(); renderWho(); renderPos(); renderPosMap(); renderPanic(); renderCoverage(); renderLog(); }
+function renderAccueil() { renderLive(); renderWho(); renderPos(); renderPosMap(); renderCoverage(); renderLog(); }
 
 function takeOver() {
   ACC.mode = 'remote'; ACC.takeoverAt = Date.now();
@@ -1524,7 +1494,6 @@ document.getElementById('view-accueil').addEventListener('click', e => {
 setInterval(() => {
   if (document.getElementById('view-accueil').hidden) return;
   document.querySelectorAll('#view-accueil [data-since]').forEach(s => s.textContent = dur(Date.now() - +s.dataset.since));
-  if (ACC.panicAt) renderPanic();
 }, 1000);
 setInterval(() => { if (!document.getElementById('view-accueil').hidden) renderCoverage(); }, 30000);
 
