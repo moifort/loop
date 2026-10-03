@@ -365,7 +365,7 @@
       <div class="right" id="robots-count"></div>
     </div>
     <div class="table-scroll"><table>
-      <thead><tr><th>Robot</th><th>Étage</th><th>État</th><th>Avancement du jour</th><th>Prochaine étape</th></tr></thead>
+      <thead><tr><th>Robot</th><th>État</th><th>Avancement du jour</th><th>Prochaine étape</th><th>Étage</th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
@@ -924,32 +924,36 @@ let openPanel = null;
 document.getElementById('temi-card').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showView('accueil'); } };
 
 
-// Battery as a three-level icon under the robot name; exact value on hover.
+// iOS-style battery under the robot name: thin neutral outline, one continuous fill in three levels.
+// Fill is dark as on iOS, red when almost empty, green when plugged in. Exact value on hover.
 const BATTERY = [
-  { min: 70, bars: 3, color: '#22a861', label: 'Batterie pleine' },
-  { min: 30, bars: 2, color: '#f0a020', label: 'Batterie moyenne' },
-  { min: 0,  bars: 1, color: '#e5484d', label: 'Batterie presque vide' },
+  { min: 70, fill: 1,   label: 'Batterie pleine' },
+  { min: 30, fill: .55, label: 'Batterie moyenne' },
+  { min: 0,  fill: .2,  label: 'Batterie presque vide', color: '#e5484d' },
 ];
-function batteryIcon(pct, note) {
-  const b = BATTERY.find(x => pct >= x.min);
-  const bars = [0, 1, 2].map(i => `<rect x="${2.5 + i * 5}" y="2.5" width="4" height="7" rx=".8" fill="${i < b.bars ? b.color : '#e3e6ea'}"/>`).join('');
-  return `<span class="batt" title="${b.label} · ${note || pct + ' %'}"><svg width="22" height="12" viewBox="0 0 22 12"><rect x=".75" y=".75" width="18" height="10.5" rx="2.2" fill="none" stroke="${b.color}" stroke-width="1.5"/><rect x="19.6" y="3.8" width="1.9" height="4.4" rx=".8" fill="${b.color}"/>${bars}</svg></span>`;
+function batteryIcon(pct, plugged) {
+  const b = BATTERY.find(x => pct >= x.min), color = plugged ? '#22a861' : b.color || '#1f2328';
+  return `<span class="batt" title="${b.label} · ${plugged || pct + ' %'}"><svg width="24" height="12" viewBox="0 0 24 12">
+    <rect x=".5" y=".5" width="20.5" height="11" rx="3.4" fill="none" stroke="rgba(31,35,40,.35)"/>
+    <path d="M22.3 4.2v3.6a1.9 1.9 0 0 0 0-3.6Z" fill="rgba(31,35,40,.4)"/>
+    <rect x="2" y="2" width="${(17.5 * b.fill).toFixed(1)}" height="8" rx="2" fill="${color}"/></svg></span>`;
 }
 
 function renderRows() {
   const rows = [];
   [...scope()].sort((a, b) => a.id - b.id).forEach(f => {
     if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><b>${f.greeter.name}</b>${batteryIcon(100, 'Sur secteur')}</div></div></td>
-      <td>${f.label} <span class="muted">· Réception</span></td><td><span class="chip acc">En service</span></td>
+      <td><span class="chip acc">En service</span></td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
-      <td class="muted">${f.greeter.next}</td></tr>`);
+      <td class="muted">${f.greeter.next}</td>
+      <td>${f.label} <span class="muted">· Réception</span></td></tr>`);
     const r = f.robot, st = STATE[r.state];
     rows.push(`<tr data-id="${f.id}">
       <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span><div><b>${r.name}</b>${batteryIcon(r.bat)}</div></div></td>
-      <td>${f.label} <span class="muted">· ${f.name}</span></td>
       <td><span class="chip ${st.chip}">${st.label}</span></td>
       <td><div class="pct"><div class="bar"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? 'var(--red)' : 'var(--menage)'}"></i></div>${r.pct} %</div></td>
-      <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td></tr>`);
+      <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td>
+      <td>${f.label} <span class="muted">· ${f.name}</span></td></tr>`);
   });
   document.getElementById('rows').innerHTML = rows.join('');
   document.getElementById('robots-count').textContent = selected === 'all' ? '7 robots · 1 par étage + accueil' : `${rows.length} robot${rows.length > 1 ? 's' : ''} sur cet étage`;
