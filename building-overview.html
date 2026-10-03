@@ -102,11 +102,11 @@
   .issue { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .issue:hover { text-decoration: underline; }
   /* Floor + room(s) read as one two-tone badge: [É3 | 307] */
-  .tags { display: inline-flex; flex-wrap: nowrap; border-radius: 6px; overflow: hidden; vertical-align: middle; line-height: 1; }
-  .tag { display: inline-flex; align-items: center; justify-content: center; height: 22px; padding: 0 6px; font-size: 11.5px; font-weight: 600; letter-spacing: .02em; white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .tag.lvl { background: #1f2328; color: #fff; }
-  .tag.room { background: #eceef1; color: #1f2328; }
-  .tag.room + .tag.room { border-left: 1px solid #fff; }
+  /* Split badge (shields.io anatomy): 20px, 3px radius, 11px text, 6px side padding, dark label + light value */
+  .tags { display: inline-flex; flex: none; height: 20px; border-radius: 3px; overflow: hidden; vertical-align: middle; box-shadow: inset 0 0 0 1px rgba(31,35,40,.08); }
+  .tag-lvl, .tag-room { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; font-size: 11px; line-height: 20px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; cursor: pointer; }
+  .tag-lvl { background: #3a4150; color: #fff; }
+  .tag-room { background: #eef0f3; color: #1f2328; }
   .tag:hover { filter: brightness(.95); }
   .issue .tags { margin-left: auto; flex-wrap: nowrap; flex: none; }
   .issue .txt { overflow: hidden; text-overflow: ellipsis; }
@@ -617,17 +617,20 @@ function floorPicker() {
 const scope = () => selected === 'all' ? FLOORS : FLOORS.filter(f => f.id === selected);
 // Floor + apartment tags shown on every notification.
 // Compact (whole-building row): floor only. Full (to-do list): floor + every apartment.
-// Room where the alert's robot currently stands (live), or "Couloir" between rooms.
+// Room the alert's robot is in (live). In the corridor it shows the apartment it is working on.
 function robotRoom(floorId) {
-  const f = FLOORS.find(x => x.id === floorId), [x, y] = f.robot.at;
-  const r = f.layout.rooms.find(r => r.kind !== 'core' && x > r.x1 && x < r.x2 && y > r.y1 && y < r.y2);
-  if (!r || r.kind === 'corridor') return 'Couloir';
-  return r.id;
+  const f = FLOORS.find(x => x.id === floorId), r = f.robot, [x, y] = r.at;
+  const inside = f.layout.rooms.find(q => (q.kind === 'apt' || q.kind === 'lobby') && x > q.x1 && x < q.x2 && y > q.y1 && y < q.y2);
+  if (inside) return inside.id;
+  const apts = f.layout.rooms.filter(q => q.kind === 'apt');
+  if (r.sim && r.sim.room != null) return apts[r.sim.room].id;
+  const near = apts.reduce((a, q) => Math.hypot((q.x1 + q.x2) / 2 - x, (q.y1 + q.y2) / 2 - y) < Math.hypot((a.x1 + a.x2) / 2 - x, (a.y1 + a.y2) / 2 - y) ? q : a);
+  return near.id;
 }
 // Same badge everywhere: [floor | room where the robot is].
 const tagsFor = t => {
   const list = [robotRoom(t.floor)];
-  return `<span class="tags"><span class="tag lvl" data-go="${t.floor}">${FLOORS.find(f => f.id === t.floor).label}</span>${list.map(r => `<span class="tag room" data-go="${t.floor}">${r}</span>`).join('')}</span>`;
+  return `<span class="tags"><span class="tag-lvl" data-go="${t.floor}">${FLOORS.find(f => f.id === t.floor).label}</span>${list.map(r => `<span class="tag-room" data-go="${t.floor}">${r}</span>`).join('')}</span>`;
 };
 
 function renderTodo() {
