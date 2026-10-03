@@ -319,7 +319,17 @@
   .men-robots { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; padding: 4px 16px 16px; }
   .mr { border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
   .mr:hover { border-color: #b3d1ff; box-shadow: 0 0 0 3px var(--blue-soft); }
-  .mr.blocked { border-color: #f1a7a9; background: #fff7f7; }
+  /* Robot in alert: solid red card, everything inside inverted to white */
+  .mr.blocked { background: var(--red); border-color: var(--red); color: #fff; }
+  .mr.blocked:hover { border-color: #c53337; box-shadow: 0 0 0 3px var(--red-soft); }
+  .mr.blocked .rb-ic { background: rgba(255,255,255,.22) !important; }
+  .mr.blocked .chip { background: #fff; color: #b42318; }
+  .mr.blocked .tag-lvl { background: rgba(0,0,0,.28); }
+  .mr.blocked .tag-room { background: #fff; color: #b42318; }
+  .mr.blocked .mr-where, .mr.blocked .mr-where.down > span:last-child, .mr.blocked .m .lb, .mr.blocked .m .lb b { color: #fff; }
+  .mr.blocked .mb { background: rgba(255,255,255,.3); }
+  .mr.blocked .mb i { background: #fff !important; }
+  .mr.blocked .cons { border-top-color: rgba(255,255,255,.35); }
   .mr-h { display: flex; align-items: center; gap: 10px; }
   .mr-h .rb-ic { width: 32px; height: 32px; }
   .mr-h b { font-weight: 600; }
@@ -327,8 +337,8 @@
   .mr-name { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
   .mr-name .batt { line-height: 0; }
   .mr-where { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; min-width: 0; }
-  .mr-where span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .mr-where.down span:last-child { color: var(--red); }
+  .mr-where > span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mr-where.down > span:last-child { color: var(--red); }
   .cons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; padding-top: 10px; border-top: 1px solid var(--border); }
   .cons .m .lb { font-size: 11px; }
   .men-stock { padding: 0 16px 8px; }
