@@ -32,6 +32,7 @@
   .nav-btn.active { background: var(--blue-soft); color: var(--blue); }
   .nav-btn .badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--red); border: 2px solid var(--panel); }
   .nav-spacer { flex: 1; }
+  .nav-sep { width: 24px; height: 1px; background: var(--border); margin: 6px 0; flex: none; }
 
   /* ---------- Header: one size, one colour ---------- */
   .top { background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; gap: 8px; font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; }
@@ -383,6 +384,7 @@
 <nav class="nav">
   <div class="me" title="Michael — CEO">M</div>
   <button class="nav-btn active" data-view="building" title="Bâtiment"><i data-icon="building-2" data-size="20" data-sw="1.75"></i></button>
+  <div class="nav-sep" role="separator"></div>
   <button class="nav-btn" data-view="accueil" title="Temi · Accueil"><i data-icon="bot" data-size="20" data-sw="1.75"></i></button>
   <button class="nav-btn" title="Plans"><i data-icon="layers" data-size="20" data-sw="1.75"></i></button>
   <button class="nav-btn" title="Robots"><i data-icon="layout-list" data-size="20" data-sw="1.75"></i></button>
