@@ -672,7 +672,7 @@ function renderTodo() {
       <div>
         <div class="t">${tagsFor(t)}<span class="sev sev-${t.prio}">${PRIO_LABEL[t.prio]}</span>${t.title}</div>
         <p>${t.desc}</p>
-        ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage</button>` : ''}</div>`}
+        ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage <span aria-hidden="true">→</span></button>` : ''}</div>`}
       </div>
     </li>`).join('') : `<li class="empty"><span class="dot" style="background:var(--green)"></span>Rien à signaler sur cet étage.</li>`;
   document.querySelectorAll('#todo .ck').forEach(b => b.onclick = () => { const i = +b.dataset.i; done.has(i) ? done.delete(i) : done.add(i); renderAll(); });
