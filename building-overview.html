@@ -73,12 +73,18 @@
   /* To-do list (and apartments when a floor is selected) sit under the building */
   .below { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
   .below:has(#rooms-card:not([style*="none"])) { grid-template-columns: 1fr 340px; }
-  .below:has(#temi-card:not([style*="none"])) { grid-template-columns: 1fr 300px 300px; }
-  /* Not enough room for three columns: to-do list on its own row, apartments and Temi side by side */
-  @container (max-width: 1100px) {
-    .below:has(#temi-card:not([style*="none"])) { grid-template-columns: 1fr 1fr; }
-    .below:has(#temi-card:not([style*="none"])) > .card:first-child { grid-column: 1 / -1; }
-  }
+  /* Floor with a greeter: robot on the left, to-do and spaces stacked on the right as an accordion */
+  .below.with-temi { grid-template-columns: 1fr 1fr; grid-template-areas: "temi todo" "temi rooms"; }
+  .below.with-temi #temi-card { grid-area: temi; }
+  .below.with-temi #todo-card { grid-area: todo; }
+  .below.with-temi #rooms-card { grid-area: rooms; }
+  @container (max-width: 800px) { .below.with-temi { grid-template-areas: "temi" "todo" "rooms"; } }
+  .chev { display: none; color: var(--muted); transition: transform .15s; }
+  .below.with-temi .chev { display: block; }
+  .below.with-temi #todo-card .card-h, .below.with-temi #rooms-card .card-h { cursor: pointer; user-select: none; }
+  .card.collapsed .chev { transform: rotate(-90deg); }
+  .card.collapsed > :not(.card-h) { display: none; }
+  .card.collapsed .card-h { padding-bottom: 14px; }
 
   /* ---------- Floor picker ---------- */
   .floors { display: flex; flex-direction: column; gap: 4px; }
@@ -185,6 +191,8 @@
   /* Greeter robot card on the ground floor: opens the reception view */
   #temi-card { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
   #temi-card:hover { border-color: #cfc4ff; box-shadow: 0 0 0 3px #f3f0ff; }
+  .below.with-temi .temi { grid-template-columns: 120px 1fr; }
+  .below.with-temi .temi-pic { height: 170px; }
   .temi { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 4px 16px 4px; align-items: center; }
   .temi-pic { height: 132px; border-radius: 10px; background: linear-gradient(180deg, #f6f3ff, #ece6ff); display: grid; place-items: center; }
   .temi b { font-weight: 600; display: block; }
@@ -325,15 +333,15 @@
   </div>
 
   <div class="below">
-    <div class="card">
+    <div class="card" id="todo-card">
       <div class="card-h"><h3>À traiter</h3>
-        <div class="right"><span id="todo-count"></span>
+        <div class="right"><span id="todo-count"></span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
         </div>
       </div>
       <ul class="todos" id="todo"></ul>
     </div>
     <div class="card" id="rooms-card">
-      <div class="card-h"><h3>Appartements</h3><div class="right" id="rooms-count"></div></div>
+      <div class="card-h"><h3>Appartements</h3><div class="right"><span id="rooms-count"></span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg></div></div>
       <div class="rooms" id="rooms"></div>
     </div>
     <div class="card" id="temi-card" role="link" tabindex="0" title="Ouvrir la vue Accueil">
@@ -874,8 +882,14 @@ const TEMI_SVG = `<svg width="66" height="122" viewBox="0 0 80 150">
 function renderTemiCard() {
   const card = document.getElementById('temi-card');
   const f = selected === 'all' ? null : FLOORS.find(x => x.id === selected);
-  if (!f || !f.greeter) { card.style.display = 'none'; return; }
+  const below = card.parentElement, todo = document.getElementById('todo-card'), rooms = document.getElementById('rooms-card');
+  below.classList.toggle('with-temi', !!(f && f.greeter));
+  if (!f || !f.greeter) { card.style.display = 'none'; todo.classList.remove('collapsed'); rooms.classList.remove('collapsed'); return; }
   card.style.display = '';
+  // Accordion: one panel open at a time. The to-do list wins while it has something to handle.
+  const open = openPanel || (alertsOf(f.id).length ? 'todo' : 'rooms');
+  todo.classList.toggle('collapsed', open !== 'todo');
+  rooms.classList.toggle('collapsed', open !== 'rooms');
   // Same figures as the reception view
   const remote = ACC.mode === 'remote', panic = !!ACC.panicAt;
   const alone = coverage().segs.filter(s => !s.plan && s.k !== 'desk').reduce((a, s) => a + s.b - s.a, 0);
@@ -892,6 +906,14 @@ function renderTemiCard() {
       </div></div>`;
 }
 document.getElementById('temi-card').onclick = () => showView('accueil');
+// Clicking a header opens that panel; clicking the open one hands over to the other.
+let openPanel = null;
+[['todo-card', 'todo', 'rooms'], ['rooms-card', 'rooms', 'todo']].forEach(([id, me, other]) =>
+  document.querySelector(`#${id} .card-h`).addEventListener('click', () => {
+    if (!document.querySelector('.below').classList.contains('with-temi')) return;
+    openPanel = document.getElementById(id).classList.contains('collapsed') ? me : other;
+    renderTemiCard();
+  }));
 document.getElementById('temi-card').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showView('accueil'); } };
 
 const batColor = b => b < 25 ? 'var(--red)' : b < 50 ? 'var(--amber)' : 'var(--green)';
@@ -918,7 +940,7 @@ function renderRows() {
   document.querySelectorAll('#rows tr').forEach(tr => tr.onclick = () => tr.dataset.view ? showView(tr.dataset.view) : select(+tr.dataset.id));
 }
 
-function select(id) { selected = id; renderAll(); }
+function select(id) { selected = id; openPanel = null; renderAll(); }
 function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderRows(); }
 
 const tick = () => document.getElementById('clock').textContent =
