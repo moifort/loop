@@ -682,6 +682,13 @@ function stoneFloor(f, z0, opts) {
     s += poly(quad(1.3, D, 3.3, D, z0, z1 - 6), 'fill="#1d2654"');
     const a = P(1.3, D, z1 - 6), b = P(3.3, D, z1 - 6);
     s += `<path d="M${a[0]},${a[1]} Q${(a[0] + b[0]) / 2},${(a[1] + b[1]) / 2 - 16} ${b[0]},${b[1]} Z" fill="#1d2654"/>`;
+    // Entrance canopy (marquise): dark awning over the sidewalk, gold front edge, wrought-iron brackets
+    const zw = z1 - 1, zo = z1 - 9, x1 = 0.95, x2 = 3.65, out = 1.05;
+    s += line(P(x1 + 0.2, D, zw - 15), P(x1 + 0.2, D + out - 0.1, zo), `stroke="${IRON}" stroke-width="1.6"`);
+    s += line(P(x2 - 0.2, D, zw - 15), P(x2 - 0.2, D + out - 0.1, zo), `stroke="${IRON}" stroke-width="1.6"`);
+    s += poly([P(x1, D, zw), P(x2, D, zw), P(x2, D + out, zo), P(x1, D + out, zo)], 'fill="#2b3142"');
+    s += poly([P(x2, D, zw), P(x2, D + out, zo), P(x2, D + out, zo - 3), P(x2, D, zw - 3)], 'fill="#1f2433"');
+    s += poly([P(x1, D + out, zo), P(x2, D + out, zo), P(x2, D + out, zo - 3), P(x1, D + out, zo - 3)], 'fill="#c8a96a"');
     [[4.3, 1.8], [6.7, 1.8], [9.1, 1.8]].forEach(([x, w], k) => s += frontWindow(x, w, z0 + 6, z1 - 8, opts.progress ? glass((k + 1) / 3 - 0.01, p) : GLASS));
     [[0.8, 1.6], [3.4, 1.6]].forEach(([y, w], k) => s += sideWindow(y, w, z0 + 6, z1 - 8, opts.progress ? glass((k + 1) / 2 - 0.01, p) : GLASS));
   } else {
