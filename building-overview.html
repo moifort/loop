@@ -8,77 +8,91 @@
   :root {
     --bg: #f4f5f6; --panel: #ffffff; --panel-2: #f9fafb; --border: #e4e6ea;
     --text: #1f2328; --muted: #7d8590; --faint: #b8bec6;
-    --brand: #1d2654;
     --blue: #006fff; --blue-soft: #e6f0ff;
     --green: #22a861; --green-soft: #e7f6ee; --amber: #f0a020; --amber-soft: #fff4e0;
     --red: #e5484d; --red-soft: #fdecec; --gray: #a0a7b0;
-    --accueil: #7c5cff; --menage: #00a99d; --menage-soft: #d9f3f0;
+    --accueil: #7c5cff; --menage: #00a99d; --menage-soft: #d9f3f0; --occ: #3b82f6;
     --shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, "Segoe UI", sans-serif;
     font-size: 13px; color: var(--text); background: var(--bg);
-    display: grid; grid-template-columns: 64px 1fr; grid-template-rows: 56px 1fr; height: 100vh; overflow: hidden;
+    display: grid; grid-template-columns: 64px 1fr; grid-template-rows: 52px 1fr; height: 100vh; overflow: hidden;
   }
   svg { display: block; }
-  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; text-align: left; }
 
   /* ---------- Sidebar ---------- */
   .nav { grid-row: 1 / 3; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 8px 0; gap: 4px; }
-  .logo { width: 46px; height: 52px; display: grid; place-items: center; margin-bottom: 12px; }
-  .logo img { height: 46px; width: auto; }
+  /* Michael's avatar: drop assets/michael.jpg and set it as background-image */
+  .me { width: 38px; height: 38px; border-radius: 50%; margin: 2px 0 14px; background: linear-gradient(135deg, #2b3a67, #5b6fa8) center / cover; color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 14px; box-shadow: 0 0 0 2px var(--panel), 0 0 0 3px var(--border); }
   .nav-btn { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; color: var(--muted); position: relative; }
   .nav-btn:hover { background: var(--panel-2); color: var(--text); }
   .nav-btn.active { background: var(--blue-soft); color: var(--blue); }
   .nav-btn .badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--red); border: 2px solid var(--panel); }
   .nav-spacer { flex: 1; }
 
-  /* ---------- Header ---------- */
-  .top { background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; gap: 14px; }
-  .wordmark { font-size: 12px; letter-spacing: .16em; color: var(--brand); font-weight: 500; white-space: nowrap; }
-  .vsep { width: 1px; height: 22px; background: var(--border); }
-  .site { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; padding: 6px 10px; border-radius: 8px; }
-  .site:hover { background: var(--panel-2); }
-  .site small { color: var(--muted); font-weight: 400; }
-  .top .right { margin-left: auto; display: flex; align-items: center; gap: 12px; color: var(--muted); }
-  .avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #5b8cff, #a35bff); color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 12px; }
+  /* ---------- Header: one size, one colour ---------- */
+  .top { background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; gap: 8px; font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; }
+  .top .sep { color: var(--faint); font-weight: 400; }
+  .top button { display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 8px; font-weight: 500; }
+  .top button:hover { background: var(--panel-2); }
+  .top .right { margin-left: auto; }
 
   /* ---------- Main ---------- */
   main { overflow-y: auto; padding: 20px 24px 40px; }
-  .wrap { max-width: 1480px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+  .wrap { max-width: 1520px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
 
-  .hero { display: flex; align-items: flex-end; gap: 16px; }
+  .hero { display: flex; align-items: center; gap: 24px; }
   .hero h1 { font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
   .hero .status { margin-top: 6px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
   .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
-  .hero .actions { margin-left: auto; display: flex; gap: 8px; }
+  .stats { margin-left: auto; display: flex; gap: 28px; }
+  .stat small { display: block; color: var(--muted); font-size: 12px; }
+  .stat .v { display: flex; align-items: flex-end; gap: 10px; margin-top: 2px; }
+  .stat b { font-size: 20px; font-weight: 600; letter-spacing: -.02em; line-height: 1; }
+  .stat b span { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .stat svg { width: 72px; height: 24px; }
+
   .btn { padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); font-weight: 500; display: inline-flex; gap: 6px; align-items: center; }
   .btn:hover { background: var(--panel-2); }
   .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
-  .btn.sm { padding: 4px 9px; font-size: 12px; }
 
-  /* Stage: floor list | flat building | context column */
-  .stage { display: grid; grid-template-columns: 250px 560px minmax(320px, 1fr); gap: 20px; align-items: start; }
+  /* Stage: floor picker | flat building | context */
+  .stage { display: grid; grid-template-columns: 360px 560px minmax(300px, 1fr); gap: 20px; align-items: start; }
 
-  .floors { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; }
-  .floors .ttl { color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; padding: 0 10px 6px; }
-  .fl { display: grid; grid-template-columns: 36px 1fr auto; gap: 8px; align-items: center; padding: 9px 10px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; text-align: left; width: 100%; }
+  /* ---------- Floor picker ---------- */
+  .floors { display: flex; flex-direction: column; gap: 4px; }
+  .fl { display: block; width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid transparent; }
   .fl:hover { background: var(--panel); border-color: var(--border); }
   .fl.sel { background: var(--panel); border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
+  .fl .r1 { display: grid; grid-template-columns: 34px 1fr auto; gap: 8px; align-items: center; }
   .fl .lv { font-weight: 600; color: var(--muted); font-size: 12px; }
-  .fl .nm { font-weight: 500; }
-  .fl .sub { color: var(--muted); font-size: 12px; margin-top: 1px; }
-  .fl.all { margin-bottom: 6px; }
-  .fl.all .lv { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; background: var(--brand); color: #fff; }
-  .mini { width: 46px; height: 5px; border-radius: 9px; background: #e9ecef; overflow: hidden; margin-top: 5px; }
-  .mini i { display: block; height: 100%; }
+  .fl .nm { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fl .nm small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 4px; }
+  .fl .r2 { display: grid; grid-template-columns: 34px 1fr 1fr 64px; gap: 10px; align-items: center; margin-top: 7px; }
+  .m { display: flex; flex-direction: column; gap: 3px; }
+  .m .lb { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
+  .m .lb b { color: var(--text); font-weight: 500; }
+  .mb { height: 4px; border-radius: 9px; background: #e9ecef; overflow: hidden; }
+  .mb i { display: block; height: 100%; border-radius: 9px; }
+  .al { display: flex; flex-direction: column; gap: 3px; }
+  .al .pips { display: flex; gap: 3px; height: 4px; }
+  .al .pips i { flex: 1; border-radius: 9px; background: #e9ecef; }
 
+  .fl.all { padding: 12px; margin-bottom: 8px; }
+  .fl.all .r1 { grid-template-columns: 58px 1fr auto; gap: 12px; }
+  .rings-legend { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; font-size: 12px; color: var(--muted); }
+  .rings-legend span { display: flex; align-items: center; gap: 6px; }
+  .rings-legend b { color: var(--text); font-weight: 500; }
+
+  /* ---------- Building ---------- */
   .bld { width: 560px; }
   .bld svg { width: 560px; height: auto; }
   .bld svg .floor { cursor: pointer; }
-  .bld svg .floor:hover .front { fill: #eef1f4; }
-  .bld-caption { display: flex; align-items: center; gap: 10px; justify-content: center; color: var(--muted); font-size: 12px; margin-top: 4px; flex-wrap: wrap; }
+  .bld svg .floor:hover { filter: brightness(1.03); }
+  .bld-caption { display: flex; align-items: center; gap: 12px; justify-content: center; color: var(--muted); font-size: 12px; margin-top: 4px; flex-wrap: wrap; }
   .bld-caption span { display: inline-flex; align-items: center; gap: 6px; }
   .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
 
@@ -90,31 +104,32 @@
   .chip.idle { background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
   .chip.acc { background: #efeaff; color: #5b3fd6; }
 
+  /* ---------- Context column ---------- */
   .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
   .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
-  .card-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; }
+  .card-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 6px; }
   .card-h h3 { font-size: 13px; font-weight: 600; }
   .card-h .right { margin-left: auto; display: flex; gap: 6px; align-items: center; color: var(--muted); font-size: 12px; }
-  .card-b { padding: 14px 16px 16px; }
 
-  .todo { display: flex; gap: 12px; padding: 12px; border-radius: 10px; background: var(--red-soft); border: 1px solid #f7c9cb; }
-  .todo + .todo { margin-top: 8px; }
-  .todo .ic { width: 32px; height: 32px; border-radius: 8px; background: var(--red); color: #fff; display: grid; place-items: center; flex: none; }
-  .todo b { display: block; font-weight: 600; }
-  .todo p { color: #7a271a; margin-top: 2px; line-height: 1.4; }
-  .todo .acts { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-  .allgood { display: flex; gap: 10px; align-items: center; color: var(--muted); font-size: 12px; }
-  .todo ~ .allgood { padding-top: 12px; }
+  .todos { list-style: none; }
+  .td { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--border); }
+  .td:first-child { border-top: none; }
+  .td .ck { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--faint); margin-top: 1px; display: grid; place-items: center; }
+  .td .ck:hover { border-color: var(--green); }
+  .td.done .ck { background: var(--green); border-color: var(--green); }
+  .td.done .t, .td.done p { text-decoration: line-through; color: var(--faint); }
+  .td .t { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .td .t .where { color: var(--muted); font-weight: 500; font-size: 12px; }
+  .td p { color: var(--muted); margin-top: 2px; line-height: 1.45; }
+  .td .acts { display: flex; gap: 14px; margin-top: 6px; }
+  .td .acts button { color: var(--blue); font-weight: 500; font-size: 12px; }
+  .td .acts button:hover { text-decoration: underline; }
+  .prio { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .empty { padding: 4px 16px 16px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
 
-  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 10px; }
-  .kpis small { color: var(--muted); font-size: 12px; display: block; }
-  .kpis b { font-size: 22px; font-weight: 600; letter-spacing: -.02em; }
-  .kpis span { font-size: 12px; }
-  .up { color: var(--green); } .down { color: var(--red); } .muted { color: var(--muted); }
-
-  .rooms { display: flex; flex-direction: column; }
-  .room { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
-  .room:last-child { border-bottom: none; }
+  .rooms { padding: 0 16px 8px; }
+  .room { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--border); }
+  .room:first-child { border-top: none; }
   .room .n { font-weight: 500; }
   .room .s { margin-left: auto; }
 
@@ -132,6 +147,7 @@
   .bar i { display: block; height: 100%; border-radius: 99px; }
   .pct { display: flex; align-items: center; gap: 8px; }
   .bat { display: inline-flex; align-items: center; gap: 6px; }
+  .muted { color: var(--muted); } .down { color: var(--red); } .up { color: var(--green); }
 
   @keyframes pulse { 0% { r: 6; opacity: .55; } 100% { r: 18; opacity: 0; } }
   .pulse { animation: pulse 1.6s ease-out infinite; }
@@ -140,7 +156,7 @@
 <body>
 
 <nav class="nav">
-  <div class="logo" title="Quartier Libre Collection"><img src="assets/quartier-libre-collection-mark.png" alt="Quartier Libre Collection"></div>
+  <div class="me" title="Michael — CEO">M</div>
   <button class="nav-btn active" title="Bâtiment"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg></button>
   <button class="nav-btn" title="Plans"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></svg></button>
   <button class="nav-btn" title="Robots"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01"/></svg></button>
@@ -151,16 +167,12 @@
 </nav>
 
 <header class="top">
-  <span class="wordmark">QUARTIER LIBRE COLLECTION</span>
-  <span class="vsep"></span>
-  <button class="site">
-    Quartier Libre Saint-Georges <small>· 14 rue Henry Monnier, Paris 9<sup>e</sup></small>
+  <span>Quartier Libre Collection</span>
+  <span class="sep">/</span>
+  <button>Saint-Georges · 14 rue Henry Monnier, Paris 9e
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
   </button>
-  <div class="right">
-    <span id="clock"></span>
-    <div class="avatar">CM</div>
-  </div>
+  <span class="right" id="clock"></span>
 </header>
 
 <main>
@@ -168,42 +180,33 @@
 
   <div class="hero">
     <div>
-      <h1 id="title">Bonjour Claire</h1>
+      <h1>Bonjour Michael</h1>
       <div class="status" id="status"></div>
     </div>
-    <div class="actions">
-      <button class="btn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7"/></svg>
-        Rapport du jour
-      </button>
-      <button class="btn primary">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-        Demander un ménage
-      </button>
-    </div>
+    <div class="stats" id="stats"></div>
   </div>
 
   <div class="stage">
     <div class="floors" id="floors"></div>
 
     <div class="bld">
-      <svg id="iso" viewBox="0 0 560 640"></svg>
+      <svg id="iso" viewBox="0 0 560 650"></svg>
       <div class="bld-caption" id="caption"></div>
     </div>
 
     <div class="col">
       <div class="card">
         <div class="card-h"><h3>À traiter</h3><div class="right" id="todo-count"></div></div>
-        <div class="card-b" id="todo"></div>
-      </div>
-      <div class="card">
-        <div class="card-h"><h3 id="kpi-title">Aujourd'hui</h3><div class="right">depuis 6 h 00</div></div>
-        <div class="card-b kpis" id="kpis"></div>
+        <ul class="todos" id="todo"></ul>
       </div>
       <div class="card" id="rooms-card">
-        <div class="card-h"><h3>Appartements de l'étage</h3><div class="right" id="rooms-count"></div></div>
-        <div class="card-b rooms" id="rooms"></div>
+        <div class="card-h"><h3>Appartements</h3><div class="right" id="rooms-count"></div></div>
+        <div class="rooms" id="rooms"></div>
       </div>
+      <button class="btn primary" style="align-self:flex-start">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+        Demander un ménage
+      </button>
     </div>
   </div>
 
@@ -212,12 +215,10 @@
       <h3>Robots</h3>
       <div class="right" id="robots-count"></div>
     </div>
-    <div style="padding-top:8px">
-      <table>
-        <thead><tr><th>Robot</th><th>Étage</th><th>État</th><th>Avancement du jour</th><th>Batterie</th><th>Prochaine étape</th></tr></thead>
-        <tbody id="rows"></tbody>
-      </table>
-    </div>
+    <table>
+      <thead><tr><th>Robot</th><th>Étage</th><th>État</th><th>Avancement du jour</th><th>Batterie</th><th>Prochaine étape</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
   </div>
 
 </div>
@@ -225,14 +226,13 @@
 
 <script>
 // =====================================================================
-// Data — Quartier Libre Saint-Georges, RDC + 5 levels, one cleaning
-// robot per level and a greeter robot in the lobby.
-// Plan units: building footprint is W x D (x to the right, y to the back).
+// Data — Quartier Libre Saint-Georges, RDC + 5 levels (mansard on top),
+// one cleaning robot per level and a greeter robot at the reception.
+// Plan units: footprint is W x D (x to the right, y to the back).
 // =====================================================================
 const W = 12, D = 6;
 
-// Apartment level layout: north row, corridor (y 2.4–3.6), south row.
-function apartmentLevel(n, names) {
+function apartmentLevel(n) {
   const r = (id, x1, y1, x2, y2, kind = 'apt') => ({ id, x1, y1, x2, y2, kind });
   return {
     rooms: [
@@ -241,14 +241,26 @@ function apartmentLevel(n, names) {
       r(`${n}05`, 0, 3.6, 3, 6), r('core', 3, 3.6, 5, 6, 'core'), r(`${n}06`, 5, 3.6, 8.5, 6), r(`${n}07`, 8.5, 3.6, 12, 6),
     ],
     walls: [
-      // party walls
       [3, 0, 3, 2.4], [6, 0, 6, 2.4], [9, 0, 9, 2.4],
       [3, 3.6, 3, 6], [5, 3.6, 5, 6], [8.5, 3.6, 8.5, 6],
-      // corridor walls with a door gap per apartment
       [0, 2.4, 1.1, 2.4], [1.9, 2.4, 4.1, 2.4], [4.9, 2.4, 7.1, 2.4], [7.9, 2.4, 10.1, 2.4], [10.9, 2.4, 12, 2.4],
       [0, 3.6, 1.1, 3.6], [1.9, 3.6, 3, 3.6], [5, 3.6, 6.3, 3.6], [7.1, 3.6, 9.8, 3.6], [10.6, 3.6, 12, 3.6],
     ],
-    names,
+  };
+}
+function suiteLevel() {
+  const r = (id, x1, y1, x2, y2, kind = 'apt') => ({ id, x1, y1, x2, y2, kind });
+  return {
+    rooms: [
+      r('corridor', 0, 2.4, 12, 3.6, 'corridor'),
+      r('501', 0, 0, 4, 2.4), r('502', 4, 0, 8, 2.4), r('503', 8, 0, 12, 2.4),
+      r('504', 0, 3.6, 3, 6), r('core', 3, 3.6, 5, 6, 'core'), r('505', 5, 3.6, 12, 6),
+    ],
+    walls: [
+      [4, 0, 4, 2.4], [8, 0, 8, 2.4], [3, 3.6, 3, 6], [5, 3.6, 5, 6],
+      [0, 2.4, 1.6, 2.4], [2.4, 2.4, 5.6, 2.4], [6.4, 2.4, 9.6, 2.4], [10.4, 2.4, 12, 2.4],
+      [0, 3.6, 1.1, 3.6], [1.9, 3.6, 3, 3.6], [5, 3.6, 8.1, 3.6], [8.9, 3.6, 12, 3.6],
+    ],
   };
 }
 const LOBBY = {
@@ -263,22 +275,32 @@ const LOBBY = {
   walls: [[5, 0, 5, 1.2], [5, 2.2, 5, 3.4], [9, 0, 9, 3.4], [5, 3.4, 5.6, 3.4], [6.4, 3.4, 12, 3.4], [7, 3.4, 7, 6], [9.5, 3.4, 9.5, 6], [5, 3.4, 5, 6]],
 };
 
+// occ = occupancy tonight (%), null for common areas.
 const FLOORS = [
-  { id: 5, label: 'É5', name: 'Suites sous les toits', area: 520, layout: apartmentLevel(5),
-    robot: { name: 'Brume', state: 'idle', pct: 0, bat: 100, at: [4, 3], next: 'Démarre à 12 h 00 (départs clients)' } },
-  { id: 4, label: 'É4', name: 'Appartements 401–407', area: 610, layout: apartmentLevel(4),
+  { id: 5, label: 'É5', name: 'Suites', hint: 'sous les toits', area: 520, occ: 60, layout: suiteLevel(),
+    robot: { name: 'Brume', state: 'idle', pct: 0, bat: 100, at: [4, 3], next: 'Démarre à 12 h 00' } },
+  { id: 4, label: 'É4', name: 'App. 401–407', area: 610, occ: 86, layout: apartmentLevel(4),
     robot: { name: 'Écume', state: 'charge', pct: 55, bat: 22, at: [4, 3], next: 'Reprend à 14 h 30' } },
-  { id: 3, label: 'É3', name: 'Appartements 301–307', area: 610, layout: apartmentLevel(3),
-    robot: { name: 'Pluie', state: 'blocked', pct: 41, bat: 63, at: [10.5, 3], next: 'Appartement 304 non libéré' },
+  { id: 3, label: 'É3', name: 'App. 301–307', area: 610, occ: 100, layout: apartmentLevel(3),
+    robot: { name: 'Pluie', state: 'blocked', pct: 41, bat: 63, at: [10.5, 3], next: 'App. 304 non libéré' },
     blockedRoom: '304' },
-  { id: 2, label: 'É2', name: 'Appartements 201–207', area: 610, layout: apartmentLevel(2),
+  { id: 2, label: 'É2', name: 'App. 201–207', area: 610, occ: 71, layout: apartmentLevel(2),
     robot: { name: 'Rosée', state: 'done', pct: 100, bat: 81, at: [4, 3], next: 'Terminé à 10 h 12' } },
-  { id: 1, label: 'É1', name: 'Appartements 101–107', area: 610, layout: apartmentLevel(1),
+  { id: 1, label: 'É1', name: 'App. 101–107', area: 610, occ: 86, layout: apartmentLevel(1),
     robot: { name: 'Averse', state: 'run', pct: 64, bat: 58, at: [6.8, 4.9], next: 'Fin estimée 13 h 40' } },
-  { id: 0, label: 'RDC', name: 'Réception & petit-déjeuner', area: 420, layout: LOBBY,
-    robot: { name: 'Bruine', state: 'done', pct: 100, bat: 92, at: [6, 4.6], next: 'Repasse à 15 h 00 (hall)' },
-    greeter: { name: 'Léa', state: 'live', visitors: 23, at: [2.6, 4.2], next: '6 arrivées attendues avant 18 h' } },
+  { id: 0, label: 'RDC', name: 'Réception', hint: '& petit-déj.', area: 420, occ: null, layout: LOBBY,
+    robot: { name: 'Bruine', state: 'done', pct: 100, bat: 92, at: [6, 4.6], next: 'Repasse à 15 h 00' },
+    greeter: { name: 'Léa', state: 'live', visitors: 23, at: [2.6, 4.2], next: '6 arrivées avant 18 h' } },
 ];
+
+// To-do list, linked to a floor (alerts per floor are derived from it).
+const TODOS = [
+  { floor: 3, prio: 'high', title: 'Pluie est bloqué devant le 304', desc: "Le client n'est pas encore parti (départ prévu 11 h). Le robot attend depuis 18 min.", acts: ['Appeler la réception', 'Passer au suivant'] },
+  { floor: 4, prio: 'med', title: 'Écume recharge, batterie 22 %', desc: "Reprise à 14 h 30 : 3 appartements seront prêts après l'arrivée de 15 h.", acts: ['Prévenir la réception', 'Voir le planning'] },
+  { floor: 5, prio: 'low', title: 'Confirmer les départs des suites', desc: 'Brume démarre à 12 h si les suites 501 à 503 sont libérées.', acts: ['Confirmer'] },
+];
+const PRIO = { high: '#e5484d', med: '#f0a020', low: '#a0a7b0' };
+
 const STATE = {
   run:     { chip: 'run',  label: 'En ménage',  color: '#00a99d' },
   done:    { chip: 'ok',   label: 'Terminé',    color: '#22a861' },
@@ -288,61 +310,93 @@ const STATE = {
   live:    { chip: 'acc',  label: 'En service', color: '#7c5cff' },
 };
 const ROOM_STATE = {
-  clean:   { chip: 'ok',   label: 'Prêt',        fill: '#d9f3f0' },
-  doing:   { chip: 'run',  label: 'En cours',    fill: '#bfeae4' },
-  blocked: { chip: 'err',  label: 'Non libéré',  fill: '#fbd5d6' },
-  todo:    { chip: 'idle', label: 'À faire',     fill: '#ffffff' },
+  clean:   { chip: 'ok',   label: 'Prêt',       fill: '#d9f3f0' },
+  doing:   { chip: 'run',  label: 'En cours',   fill: '#bfeae4' },
+  blocked: { chip: 'err',  label: 'Non libéré', fill: '#fbd5d6' },
+  todo:    { chip: 'idle', label: 'À faire',    fill: '#ffffff' },
 };
 
 // Selection drives the whole page: 'all' or a floor id.
 let selected = 'all';
+const done = new Set();
 
-// Room status derived from the robot's progress along its route.
 function roomStates(f) {
   const apts = f.layout.rooms.filter(r => r.kind === 'apt');
-  const done = Math.floor(f.robot.pct / 100 * apts.length + 1e-9);
+  const n = Math.floor(f.robot.pct / 100 * apts.length + 1e-9);
   const out = {};
   apts.forEach((r, i) => {
     if (f.blockedRoom === r.id) out[r.id] = 'blocked';
-    else if (i < done) out[r.id] = 'clean';
-    else if (i === done && f.robot.state === 'run') out[r.id] = 'doing';
+    else if (i < n) out[r.id] = 'clean';
+    else if (i === n && f.robot.state === 'run') out[r.id] = 'doing';
     else out[r.id] = 'todo';
   });
   return out;
 }
+const openTodos = () => TODOS.map((t, i) => ({ ...t, i })).filter(t => !done.has(t.i));
+const alertsOf = id => openTodos().filter(t => t.floor === id);
 
 // =====================================================================
-// Isometric renderer
+// Isometric renderer — Haussmann facade
 // =====================================================================
-const S = 30, H = 54, OX = 200, OY = 350;
+const S = 30, H = 54, OX = 200, OY = 355;
 const P = (x, y, z) => [OX + (x - y) * 0.866 * S, OY + (x + y) * 0.5 * S - z];
 const pts = a => a.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
 const poly = (a, attrs) => `<polygon points="${pts(a)}" ${attrs}/>`;
-const levelIndex = id => id; // RDC = 0 … É5 = 5
+const line = (a, b, attrs) => `<line x1="${a[0].toFixed(1)}" y1="${a[1].toFixed(1)}" x2="${b[0].toFixed(1)}" y2="${b[1].toFixed(1)}" ${attrs}/>`;
+const quad = (x1, y1, x2, y2, z0, z1) => [P(x1, y1, z0), P(x2, y2, z0), P(x2, y2, z1), P(x1, y1, z1)];
 
-function quad(x1, y1, x2, y2, z0, z1) { return [P(x1, y1, z0), P(x2, y2, z0), P(x2, y2, z1), P(x1, y1, z1)]; }
+const STONE = '#efe7d6', STONE_SIDE = '#ddd2bc', CORNICE = '#d6c9ad', IRON = '#2a2f3b';
+const GLASS = '#4a5470', GLASS_LIT = '#86d9cf', GLASS_BLOCK = '#f3a3a5';
 
-// Closed storey: facade + side + slab; optional cleaning progress fill.
-function closedFloor(f, z0, opts) {
-  const z1 = z0 + H - 5;
-  const r = f.robot;
-  const p = opts.progress ? r.pct / 100 : 0;
-  const fill = r.state === 'blocked' ? '#e5484d' : '#00a99d';
+// Window lit when the cleaning progress has passed it.
+const glass = (t, p, blocked) => (t <= p ? (blocked ? GLASS_LIT : GLASS_LIT) : GLASS);
+
+function frontWindow(x, w, z0, z1, color) {
+  let s = poly(quad(x - 0.08, D, x + w + 0.08, D, z0 - 2, z1 + 3), `fill="${CORNICE}"`);
+  s += poly(quad(x, D, x + w, D, z0, z1), `fill="${color}"`);
+  s += line(P(x + w / 2, D, z0), P(x + w / 2, D, z1), 'stroke="rgba(255,255,255,.35)" stroke-width="1"');
+  return s;
+}
+function sideWindow(y, w, z0, z1, color) {
+  return poly(quad(W, y - 0.08, W, y + w + 0.08, z0 - 2, z1 + 3), `fill="${CORNICE}"`) + poly(quad(W, y, W, y + w, z0, z1), `fill="${color}" opacity=".9"`);
+}
+function railing(x1, x2, y, z, h) {
+  let s = line(P(x1, y, z + h), P(x2, y, z + h), `stroke="${IRON}" stroke-width="1.6"`);
+  for (let x = x1; x <= x2 + 1e-6; x += 0.22) s += line(P(x, y, z), P(x, y, z + h), `stroke="${IRON}" stroke-width=".7" opacity=".85"`);
+  return s;
+}
+
+function stoneFloor(f, z0, opts) {
+  const z1 = z0 + H - 6;
+  const r = f.robot, p = opts.progress ? r.pct / 100 : 0, blocked = r.state === 'blocked';
   let s = `<g class="floor" data-id="${f.id}">`;
-  s += poly(quad(0, D, W, D, z0, z1), 'class="front" fill="#f6f7f9"');
-  if (p > 0) s += poly(quad(0, D, W * p, D, z0, z1), `fill="${fill}" opacity=".82"`);
-  for (let k = 0; k < 8; k++) {
-    const x = 0.55 + k * 1.45;
-    s += poly(quad(x, D, x + 0.85, D, z0 + 12, z1 - 10), 'fill="rgba(255,255,255,.5)"');
+  s += poly(quad(0, D, W, D, z0, z1), `fill="${STONE}"`) + poly(quad(W, 0, W, D, z0, z1), `fill="${STONE_SIDE}"`);
+  if (f.id === 0) {
+    // rusticated ground floor with carriage door and shop windows
+    for (let z = z0 + 8; z < z1; z += 8) s += line(P(0, D, z), P(W, D, z), 'stroke="#d8ccb4" stroke-width="1"') + line(P(W, 0, z), P(W, D, z), 'stroke="#cbbfa6" stroke-width="1"');
+    s += poly(quad(1.3, D, 3.3, D, z0, z1 - 6), 'fill="#1d2654"');
+    const a = P(1.3, D, z1 - 6), b = P(3.3, D, z1 - 6);
+    s += `<path d="M${a[0]},${a[1]} Q${(a[0] + b[0]) / 2},${(a[1] + b[1]) / 2 - 16} ${b[0]},${b[1]} Z" fill="#1d2654"/>`;
+    [[4.3, 1.8], [6.7, 1.8], [9.1, 1.8]].forEach(([x, w], k) => s += frontWindow(x, w, z0 + 6, z1 - 8, opts.progress ? glass((k + 1) / 3 - 0.01, p) : GLASS));
+    [[0.8, 1.6], [3.4, 1.6]].forEach(([y, w], k) => s += sideWindow(y, w, z0 + 6, z1 - 8, opts.progress ? glass((k + 1) / 2 - 0.01, p) : GLASS));
+  } else {
+    for (let k = 0; k < 6; k++) {
+      const x = 0.55 + k * 1.95;
+      s += frontWindow(x, 0.95, z0 + 9, z1 - 9, opts.progress ? glass((k + 0.5) / 6, p) : GLASS);
+      if (f.id !== 2 && f.id !== 4) s += railing(x - 0.05, x + 1.0, D + 0.05, z0 + 9, 7);
+    }
+    for (let k = 0; k < 3; k++) s += sideWindow(0.7 + k * 1.85, 0.9, z0 + 9, z1 - 9, opts.progress && p >= 1 ? GLASS_LIT : GLASS);
+    // continuous wrought-iron balcony on the 2nd and 4th floors
+    if (f.id === 2 || f.id === 4) {
+      s += poly([P(0, D, z0 + 6), P(W, D, z0 + 6), P(W, D + 0.45, z0 + 6), P(0, D + 0.45, z0 + 6)], 'fill="#cdbfa3"');
+      s += poly(quad(0, D + 0.45, W, D + 0.45, z0 + 3, z0 + 6), 'fill="#bfb093"');
+      s += railing(0, W, D + 0.45, z0 + 6, 9);
+    }
   }
-  s += poly(quad(W, 0, W, D, z0, z1), 'fill="#dfe3e8"');
-  if (p >= 1) s += poly(quad(W, 0, W, D, z0, z1), `fill="${fill}" opacity=".5"`);
-  for (let k = 0; k < 4; k++) {
-    const y = 0.5 + k * 1.45;
-    s += poly(quad(W, y, W, y + 0.8, z0 + 12, z1 - 10), 'fill="rgba(255,255,255,.35)"');
-  }
-  s += poly(quad(0, D, W, D, z1, z1 + 5), 'fill="#cfd5dc"') + poly(quad(W, 0, W, D, z1, z1 + 5), 'fill="#bfc6ce"');
-  if (opts.progress && r.state === 'blocked') {
+  // cornice with today's cleaning progress
+  s += poly(quad(0, D + 0.12, W, D + 0.12, z1, z1 + 6), `fill="${CORNICE}"`) + poly(quad(W + 0.12, 0, W + 0.12, D + 0.12, z1, z1 + 6), 'fill="#c8baa0"');
+  if (p > 0) s += poly(quad(0, D + 0.13, W * p, D + 0.13, z1 + 1.5, z1 + 4.5), `fill="${blocked ? '#e5484d' : '#00a99d'}"`);
+  if (opts.progress && blocked) {
     const c = P(W * p, D, (z0 + z1) / 2);
     s += `<circle cx="${c[0]}" cy="${c[1]}" r="9" fill="#e5484d" stroke="#fff" stroke-width="2"/><text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">!</text>`;
   }
@@ -353,7 +407,38 @@ function closedFloor(f, z0, opts) {
   return s + '</g>';
 }
 
-// Robot glyph standing at plan position (x, y) on level z.
+// Zinc mansard roof with dormers and chimneys (top level).
+function mansardFloor(f, z0, opts) {
+  const z1 = z0 + H, k = 1.1, p = opts.progress ? f.robot.pct / 100 : 0;
+  const ZINC = '#6c7489', ZINC_SIDE = '#596075', ZINC_TOP = '#8a91a3';
+  let s = `<g class="floor" data-id="${f.id}">`;
+  s += poly([P(W, 0, z0), P(W, D, z0), P(W - k, D - k, z1), P(W - k, 0, z1)], `fill="${ZINC_SIDE}"`);
+  s += poly([P(0, D, z0), P(W, D, z0), P(W - k, D - k, z1), P(0, D - k, z1)], `fill="${ZINC}"`);
+  for (let x = 0.4; x < W; x += 0.6) s += line(P(x, D, z0), P(Math.min(x, W - k), D - k, z1), 'stroke="rgba(255,255,255,.08)" stroke-width="1"');
+  s += poly([P(0, 0, z1), P(W - k, 0, z1), P(W - k, D - k, z1), P(0, D - k, z1)], `fill="${ZINC_TOP}"`);
+  // chimneys
+  [[1.5, 0.6], [8.6, 1.0]].forEach(([x, y]) => {
+    s += poly(quad(x, y + 0.9, x + 1.2, y + 0.9, z1, z1 + 22), 'fill="#d9cdb3"') + poly(quad(x + 1.2, y, x + 1.2, y + 0.9, z1, z1 + 22), 'fill="#c4b79c"');
+    s += poly([P(x, y, z1 + 22), P(x + 1.2, y, z1 + 22), P(x + 1.2, y + 0.9, z1 + 22), P(x, y + 0.9, z1 + 22)], 'fill="#b9ab8f"');
+    for (let j = 0; j < 3; j++) { const c = P(x + 0.25 + j * 0.35, y + 0.45, z1 + 22); s += `<rect x="${c[0] - 2}" y="${c[1] - 7}" width="4" height="7" fill="#b0705a"/>`; }
+  });
+  // dormers on the front slope
+  for (let i = 0; i < 5; i++) {
+    const x = 0.7 + i * 2.3, y = D - 0.5, zb = z0 + 10, zt = z0 + 38;
+    s += poly(quad(x, y, x + 1.1, y, zb, zt), `fill="${STONE}"`);
+    const a = P(x - 0.1, y, zt), b = P(x + 1.2, y, zt), c = P(x + 0.55, y, zt + 9);
+    s += poly([a, b, c], 'fill="#d6c9ad"');
+    s += poly(quad(x + 0.2, y, x + 0.9, y, zb + 4, zt - 5), `fill="${opts.progress ? glass((i + 0.5) / 5, p) : GLASS}"`);
+  }
+  // top balcony at the foot of the mansard
+  s += poly([P(0, D, z0), P(W, D, z0), P(W, D + 0.35, z0), P(0, D + 0.35, z0)], 'fill="#cdbfa3"');
+  s += railing(0, W, D + 0.35, z0, 8);
+  if (p > 0) s += poly(quad(0, D + 0.36, W * p, D + 0.36, z0 - 3, z0), 'fill="#00a99d"');
+  return s + '</g>';
+}
+
+function closedFloor(f, z0, opts) { return f.id === 5 ? mansardFloor(f, z0, opts) : stoneFloor(f, z0, opts); }
+
 function robotGlyph(x, y, z, color, label, opts = {}) {
   const [cx, cy] = P(x, y, z);
   const h = opts.tall ? 26 : 12, rx = opts.tall ? 7 : 10, ry = rx * 0.5;
@@ -372,10 +457,7 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
 function openFloor(f, z0) {
   const states = roomStates(f);
   const WALL = 30, LOW = 7;
-  let s = '';
-  // slab under the open floor
-  s += poly(quad(0, D, W, D, z0 - 6, z0), 'fill="#cfd5dc"') + poly(quad(W, 0, W, D, z0 - 6, z0), 'fill="#bfc6ce"');
-  // floor tiles
+  let s = poly(quad(0, D, W, D, z0 - 6, z0), `fill="${CORNICE}"`) + poly(quad(W, 0, W, D, z0 - 6, z0), 'fill="#c8baa0"');
   f.layout.rooms.forEach(r => {
     let fill = '#f2f4f7';
     if (r.kind === 'apt') fill = ROOM_STATE[states[r.id]].fill;
@@ -383,67 +465,52 @@ function openFloor(f, z0) {
     if (r.kind === 'core') fill = '#e4e7eb';
     s += poly([P(r.x1, r.y1, z0), P(r.x2, r.y1, z0), P(r.x2, r.y2, z0), P(r.x1, r.y2, z0)], `fill="${fill}" stroke="#e1e5ea" stroke-width=".6"`);
   });
-  // collect vertical items for painter's algorithm (far → near: smaller x + y first)
   const items = [];
   const wall = (x1, y1, x2, y2, h, shade) => items.push({ d: (x1 + x2) / 2 + (y1 + y2) / 2, svg:
-    poly(quad(x1, y1, x2, y2, z0, z0 + h), `fill="${shade}" stroke="#c3c9d1" stroke-width=".6"`) +
-    `<line x1="${P(x1, y1, z0 + h)[0]}" y1="${P(x1, y1, z0 + h)[1]}" x2="${P(x2, y2, z0 + h)[0]}" y2="${P(x2, y2, z0 + h)[1]}" stroke="#9aa3ad" stroke-width="2.2" stroke-linecap="round"/>` });
-  // back exterior walls (tall), front exterior walls (low cut)
-  wall(0, 0, W, 0, WALL, '#eef0f3');
-  wall(0, 0, 0, D, WALL, '#e2e6ea');
-  f.layout.walls.forEach(([x1, y1, x2, y2]) => wall(x1, y1, x2, y2, WALL * 0.8, x1 === x2 ? '#e7eaee' : '#f4f5f7'));
-  wall(0, D, W, D, LOW, '#dde2e7');
-  wall(W, 0, W, D, LOW, '#d3d9df');
-  // labels for rooms (flat on the floor, drawn with tiles depth)
-  f.layout.rooms.filter(r => r.kind !== 'corridor').forEach(r => {
+    poly(quad(x1, y1, x2, y2, z0, z0 + h), `fill="${shade}" stroke="#d3c7ae" stroke-width=".6"`) +
+    line(P(x1, y1, z0 + h), P(x2, y2, z0 + h), 'stroke="#b9ab8f" stroke-width="2.2" stroke-linecap="round"') });
+  wall(0, 0, W, 0, WALL, '#f3eee3');
+  wall(0, 0, 0, D, WALL, '#e8e0cf');
+  f.layout.walls.forEach(([x1, y1, x2, y2]) => wall(x1, y1, x2, y2, WALL * 0.8, x1 === x2 ? '#efe9dc' : '#f7f4ee'));
+  wall(0, D, W, D, LOW, STONE);
+  wall(W, 0, W, D, LOW, STONE_SIDE);
+  f.layout.rooms.filter(r => r.kind !== 'corridor' && r.kind !== 'core').forEach(r => {
     const c = P((r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2, z0);
-    const txt = r.kind === 'core' ? '' : r.id;
     const st = r.kind === 'apt' ? states[r.id] : null;
     items.push({ d: (r.x1 + r.x2) / 2 + (r.y1 + r.y2) / 2 - 0.4, svg:
-      `<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}">${txt}</text>` });
+      `<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}">${r.id}</text>` });
   });
-  // robots
   const r = f.robot, st = STATE[r.state];
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked' }) });
-  if (f.greeter) {
-    const g = f.greeter;
-    items.push({ d: g.at[0] + g.at[1] + 0.1, svg: robotGlyph(g.at[0], g.at[1], z0, '#7c5cff', g.name, { tall: true, pulse: true }) });
-  }
-  // blocked door marker
+  if (f.greeter) items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, '#7c5cff', f.greeter.name, { tall: true, pulse: true }) });
   if (f.blockedRoom) {
     const room = f.layout.rooms.find(x => x.id === f.blockedRoom);
-    const a = P(room.x1 + 1.1, room.y2, z0), b = P(room.x1 + 1.9, room.y2, z0);
-    items.push({ d: room.x1 + 1.5 + room.y2 + 0.05, svg: `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#e5484d" stroke-width="5" stroke-linecap="round"/>` });
+    items.push({ d: room.x1 + 1.5 + room.y2 + 0.05, svg: line(P(room.x1 + 1.1, room.y2, z0), P(room.x1 + 1.9, room.y2, z0), 'stroke="#e5484d" stroke-width="5" stroke-linecap="round"') });
   }
   items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
   return s;
 }
 
-// Dashed silhouette of the storeys above the cut.
 function ghost(zFrom, zTo) {
   const st = 'fill="none" stroke="#aeb6c0" stroke-width="1" stroke-dasharray="4 4"';
-  let s = `<g opacity=".7">`;
-  s += poly([P(0, 0, zTo), P(W, 0, zTo), P(W, D, zTo), P(0, D, zTo)], st);
-  [[0, D], [W, D], [W, 0], [0, 0]].forEach(([x, y]) => { const a = P(x, y, zFrom), b = P(x, y, zTo); s += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" ${st}/>`; });
+  let s = '<g opacity=".7">' + poly([P(0, 0, zTo), P(W, 0, zTo), P(W, D, zTo), P(0, D, zTo)], st);
+  [[0, D], [W, D], [W, 0], [0, 0]].forEach(([x, y]) => s += line(P(x, y, zFrom), P(x, y, zTo), st));
   return s + '</g>';
 }
 
 function renderBuilding() {
   const svg = document.getElementById('iso');
   const top = FLOORS.length * H;
-  let s = poly([P(-1.4, -1.4, 0), P(W + 1.4, -1.4, 0), P(W + 1.4, D + 1.6, 0), P(-1.4, D + 1.6, 0)], 'fill="#e8ece9"');
-  // pavement line in front of the entrance
-  s += poly([P(-1.4, D + 0.5, 0), P(W + 1.4, D + 0.5, 0), P(W + 1.4, D + 1.6, 0), P(-1.4, D + 1.6, 0)], 'fill="#dde2de"');
+  let s = poly([P(-1.4, -1.4, 0), P(W + 1.4, -1.4, 0), P(W + 1.4, D + 1.8, 0), P(-1.4, D + 1.8, 0)], 'fill="#e6e8e4"');
+  s += poly([P(-1.4, D + 0.6, 0), P(W + 1.4, D + 0.6, 0), P(W + 1.4, D + 1.8, 0), P(-1.4, D + 1.8, 0)], 'fill="#d9dcd6"');
+  // street lamp, as in the brand illustration
+  const lb = P(0.2, D + 1.2, 0), lt = P(0.2, D + 1.2, 58);
+  s += line(lb, lt, `stroke="${IRON}" stroke-width="2"`) + `<rect x="${lt[0] - 4}" y="${lt[1] - 10}" width="8" height="10" rx="1.5" fill="${IRON}"/><rect x="${lt[0] - 2.5}" y="${lt[1] - 8}" width="5" height="6" fill="#ffe7a3"/>`;
   const ordered = [...FLOORS].sort((a, b) => a.id - b.id);
   if (selected === 'all') {
     ordered.forEach(f => s += closedFloor(f, f.id * H, { progress: true }));
-    // mansard roof
-    s += poly([P(0, 0, top), P(W, 0, top), P(W, D, top), P(0, D, top)], 'fill="#3a4466"');
-    s += poly([P(0.6, 0.6, top + 10), P(W - 0.6, 0.6, top + 10), P(W - 0.6, D - 0.6, top + 10), P(0.6, D - 0.6, top + 10)], 'fill="#4b5679"');
-    // entrance + greeter in front
-    s += poly(quad(1.4, D, 3.2, D, 0, 34), 'fill="#1d2654"');
     const g = FLOORS.find(f => f.greeter).greeter;
-    s += robotGlyph(2.3, D + 0.9, 0, '#7c5cff', `${g.name} · accueil`, { tall: true, pulse: true });
+    s += robotGlyph(2.3, D + 1.0, 0, '#7c5cff', `${g.name} · accueil`, { tall: true, pulse: true });
   } else {
     const sel = FLOORS.find(f => f.id === selected);
     ordered.filter(f => f.id < selected).forEach(f => s += closedFloor(f, f.id * H, { progress: false }));
@@ -452,33 +519,61 @@ function renderBuilding() {
   }
   svg.innerHTML = s;
   svg.querySelectorAll('.floor').forEach(g => g.onclick = () => select(+g.dataset.id));
-
-  const cap = document.getElementById('caption');
-  cap.innerHTML = selected === 'all'
-    ? `<span><i class="sw" style="background:#00a99d"></i>Nettoyé aujourd'hui</span><span><i class="sw" style="background:#e9ecef"></i>Reste à faire</span><span><i class="sw" style="background:#e5484d"></i>Robot bloqué</span><span><i class="sw" style="background:#7c5cff"></i>Robot d'accueil</span>`
-    : Object.entries(ROOM_STATE).map(([, v]) => `<span><i class="sw" style="background:${v.fill};border:1px solid #d5d9df"></i>${v.label}</span>`).join('') + `<span class="muted">· Cliquez sur « Tout le bâtiment » pour revenir</span>`;
+  document.getElementById('caption').innerHTML = selected === 'all'
+    ? `<span><i class="sw" style="background:${GLASS_LIT}"></i>Fenêtre allumée = nettoyé</span><span><i class="sw" style="background:#00a99d"></i>Avancement sur la corniche</span><span><i class="sw" style="background:#e5484d"></i>Robot bloqué</span><span><i class="sw" style="background:#7c5cff"></i>Robot d'accueil</span>`
+    : Object.values(ROOM_STATE).map(v => `<span><i class="sw" style="background:${v.fill};border:1px solid #d5d9df"></i>${v.label}</span>`).join('');
 }
 
 // =====================================================================
-// Side panels
+// Floor picker
 // =====================================================================
+function rings(vals, size = 58) {
+  // Fitness-style concentric rings: [value 0..1, color]
+  const c = size / 2, sw = 6, gap = 1.5;
+  let s = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+  vals.forEach(([v, col], i) => {
+    const r = c - sw / 2 - i * (sw + gap), L = 2 * Math.PI * r;
+    s += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${col}" stroke-opacity=".18" stroke-width="${sw}"/>`;
+    s += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(L * Math.min(v, 1)).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 ${c} ${c})"/>`;
+  });
+  return s + '</svg>';
+}
+const metric = (label, v, color) => `<div class="m"><div class="lb">${label}<b>${v === null ? '—' : v + ' %'}</b></div><div class="mb"><i style="width:${v || 0}%;background:${color}"></i></div></div>`;
+function alertMetric(list) {
+  const pips = [0, 1, 2].map(k => `<i style="${list[k] ? `background:${PRIO[list[k].prio]}` : ''}"></i>`).join('');
+  return `<div class="al m"><div class="lb">Alertes<b>${list.length}</b></div><div class="pips">${pips}</div></div>`;
+}
+
 function floorPicker() {
-  const allPct = Math.round(FLOORS.reduce((a, f) => a + f.robot.pct * f.area, 0) / FLOORS.reduce((a, f) => a + f.area, 0));
-  const blocked = FLOORS.filter(f => f.robot.state === 'blocked').length;
-  let h = `<div class="ttl">Étages</div>
-    <button class="fl all ${selected === 'all' ? 'sel' : ''}" data-id="all">
-      <span class="lv"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="1"/></svg></span>
-      <div><div class="nm">Tout le bâtiment</div><div class="sub">${allPct} % nettoyé · 7 robots</div></div>
-      ${blocked ? `<span class="chip err">${blocked}</span>` : ''}
+  const area = FLOORS.reduce((a, f) => a + f.area, 0);
+  const clean = Math.round(FLOORS.reduce((a, f) => a + f.robot.pct * f.area, 0) / area);
+  const occFloors = FLOORS.filter(f => f.occ !== null);
+  const occ = Math.round(occFloors.reduce((a, f) => a + f.occ, 0) / occFloors.length);
+  const okRobots = 7 - FLOORS.filter(f => f.robot.state === 'blocked').length;
+  const nAlerts = openTodos().length;
+  let h = `<button class="fl all ${selected === 'all' ? 'sel' : ''}" data-id="all">
+      <div class="r1">
+        ${rings([[clean / 100, '#00a99d'], [occ / 100, '#3b82f6'], [okRobots / 7, '#7c5cff']])}
+        <div><div class="nm">Tout le bâtiment</div>
+          <div class="rings-legend">
+            <span><i class="dot" style="background:#00a99d"></i>Ménage <b>${clean} %</b></span>
+            <span><i class="dot" style="background:#3b82f6"></i>Occupation <b>${occ} %</b></span>
+            <span><i class="dot" style="background:#7c5cff"></i>Robots opérationnels <b>${okRobots}/7</b></span>
+          </div></div>
+        ${nAlerts ? `<span class="chip err">${nAlerts} alerte${nAlerts > 1 ? 's' : ''}</span>` : ''}
+      </div>
     </button>`;
   FLOORS.forEach(f => {
     const r = f.robot, st = STATE[r.state];
     h += `<button class="fl ${selected === f.id ? 'sel' : ''}" data-id="${f.id}">
-      <span class="lv">${f.label}</span>
-      <div><div class="nm">${f.name}</div>
-        <div class="sub">${r.name}${f.greeter ? ' · ' + f.greeter.name : ''}</div>
-        <div class="mini"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? '#e5484d' : '#00a99d'}"></i></div></div>
-      <span class="chip ${st.chip}">${st.label}</span>
+      <div class="r1"><span class="lv">${f.label}</span>
+        <span class="nm">${f.name}${f.hint ? `<small>${f.hint}</small>` : ''}</span>
+        <span class="chip ${st.chip}">${st.label}</span></div>
+      <div class="r2"><span></span>
+        ${metric('Occupation', f.occ, '#3b82f6')}
+        ${metric('Ménage', r.pct, r.state === 'blocked' ? '#e5484d' : '#00a99d')}
+        ${alertMetric(alertsOf(f.id))}
+      </div>
     </button>`;
   });
   const el = document.getElementById('floors');
@@ -486,67 +581,72 @@ function floorPicker() {
   el.querySelectorAll('.fl').forEach(b => b.onclick = () => select(b.dataset.id === 'all' ? 'all' : +b.dataset.id));
 }
 
+// =====================================================================
+// Hero: status line + unboxed stats with sparklines
+// =====================================================================
 const scope = () => selected === 'all' ? FLOORS : FLOORS.filter(f => f.id === selected);
-const floorName = f => f.id === 0 ? 'au rez-de-chaussée' : `au ${f.id}<sup>e</sup> étage`;
+
+function spark(data, color) {
+  const max = Math.max(...data), min = Math.min(...data), w = 72, h = 24;
+  const xy = data.map((v, i) => [i / (data.length - 1) * w, h - 3 - (v - min) / (max - min || 1) * (h - 6)]);
+  const d = xy.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join('');
+  const last = xy[xy.length - 1];
+  return `<svg viewBox="0 0 ${w} ${h}"><path d="${d} L${w},${h} L0,${h} Z" fill="${color}" opacity=".12"/><path d="${d}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linejoin="round"/><circle cx="${last[0]}" cy="${last[1]}" r="2.4" fill="${color}"/></svg>`;
+}
+// Hourly series since 6 h, scaled to the current value.
+const ramp = (end, n = 8, start = 0) => Array.from({ length: n }, (_, i) => start + (end - start) * Math.pow(i / (n - 1), 0.85) + (i % 3 === 1 ? end * 0.03 : 0));
 
 function renderHero() {
-  const fs = scope();
-  const blocked = fs.filter(f => f.robot.state === 'blocked');
-  const robots = fs.length + fs.filter(f => f.greeter).length;
-  document.getElementById('title').innerHTML = selected === 'all' ? 'Bonjour Claire' : `${fs[0].label} · ${fs[0].name}`;
-  if (selected !== 'all') {
-    const f = fs[0], r = f.robot, st = STATE[r.state];
-    const who = f.greeter ? ` · ${f.greeter.name} est à la réception (${f.greeter.visitors} clients accueillis)` : '';
-    document.getElementById('status').innerHTML = `<span class="dot" style="background:${st.color}"></span><span><b>${r.name}</b> : ${st.label.toLowerCase()} · ${r.pct} % de l'étage nettoyé · <span class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</span>${who}</span>`;
-    return;
-  }
-  document.getElementById('status').innerHTML = blocked.length
-    ? `<span class="dot" style="background:var(--amber)"></span><span><b>${robots - blocked.length} robot${robots - blocked.length > 1 ? 's' : ''} sur ${robots}</b> travaille${robots - blocked.length > 1 ? 'nt' : ''} normalement · <b class="down">${blocked.length} demande votre attention</b></span>`
-    : `<span class="dot" style="background:var(--green)"></span><span>Tout fonctionne normalement${selected === 'all' ? '' : ' sur cet étage'}.</span>`;
-}
-
-function renderTodo() {
-  const blocked = scope().filter(f => f.robot.state === 'blocked');
-  document.getElementById('todo-count').textContent = blocked.length ? `${blocked.length} action` : '';
-  document.getElementById('todo').innerHTML = blocked.map(f => `
-    <div class="todo">
-      <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 8v5M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></div>
-      <div>
-        <b>${f.robot.name} est bloqué ${floorName(f)}</b>
-        <p>Le client de l'appartement ${f.blockedRoom} n'est pas encore parti (départ prévu 11 h). Le robot attend depuis 18 min devant la porte.</p>
-        <div class="acts">
-          <button class="btn sm primary">Appeler la réception</button>
-          ${selected === 'all' ? `<button class="btn sm" onclick="select(${f.id})">Voir l'étage</button>` : ''}
-          <button class="btn sm">Passer au suivant</button>
-        </div>
-      </div>
-    </div>`).join('') +
-    `<div class="allgood"><span class="dot" style="background:var(--green)"></span>${blocked.length ? "Rien d'autre à signaler." : 'Rien à signaler.'} ${selected === 'all' ? 'Léa est à la réception, les autres robots suivent leur planning.' : ''}</div>`;
-}
-
-function renderKpis() {
-  const el = document.getElementById('kpis');
+  const status = document.getElementById('status');
+  const stats = document.getElementById('stats');
   if (selected === 'all') {
+    const blocked = FLOORS.filter(f => f.robot.state === 'blocked').length;
+    status.innerHTML = blocked
+      ? `<span class="dot" style="background:var(--amber)"></span><span><b>${7 - blocked} robots sur 7</b> travaillent normalement · <b class="down">${openTodos().length} point${openTodos().length > 1 ? 's' : ''} à traiter</b></span>`
+      : `<span class="dot" style="background:var(--green)"></span><span>Tout fonctionne normalement.</span>`;
     const apts = FLOORS.filter(f => f.id > 0).flatMap(f => Object.values(roomStates(f)));
     const ready = apts.filter(s => s === 'clean').length;
-    const m2 = Math.round(FLOORS.reduce((a, f) => a + f.area * f.robot.pct / 100, 0));
     const area = FLOORS.reduce((a, f) => a + f.area, 0);
-    document.getElementById('kpi-title').textContent = "Aujourd'hui";
-    el.innerHTML = `
-      <div><small>Appartements prêts</small><b>${ready}</b> <span class="muted">/ ${apts.length}</span></div>
-      <div><small>Clients accueillis par Léa</small><b>23</b> <span class="up">+4 vs hier</span></div>
-      <div><small>Surface nettoyée</small><b>${m2.toLocaleString('fr-FR')} m²</b> <span class="muted">/ ${area.toLocaleString('fr-FR')}</span></div>
-      <div><small>Robots disponibles</small><b>6/7</b> <span class="muted">1 bloqué</span></div>`;
+    const m2 = Math.round(FLOORS.reduce((a, f) => a + f.area * f.robot.pct / 100, 0));
+    stats.innerHTML = [
+      ['Appartements prêts', `${ready}<span> / ${apts.length}</span>`, ramp(ready), '#00a99d'],
+      ['Surface nettoyée', `${Math.round(m2 / area * 100)} %<span> ${m2.toLocaleString('fr-FR')} m²</span>`, ramp(m2), '#00a99d'],
+      ['Clients accueillis', `23<span> +4 vs hier</span>`, [0, 1, 4, 7, 9, 14, 19, 23], '#7c5cff'],
+      ['Robots disponibles', `6<span> / 7</span>`, [7, 7, 7, 7, 7, 6, 7, 6], '#3b82f6'],
+    ].map(([l, v, d, c]) => `<div class="stat"><small>${l}</small><div class="v"><b>${v}</b>${spark(d, c)}</div></div>`).join('');
   } else {
-    const f = FLOORS.find(x => x.id === selected), r = f.robot;
-    const st = Object.values(roomStates(f));
-    document.getElementById('kpi-title').textContent = `Aujourd'hui · ${f.label}`;
-    el.innerHTML = `
-      <div><small>${f.id === 0 ? 'Espaces prêts' : 'Appartements prêts'}</small><b>${st.filter(s => s === 'clean').length}</b> <span class="muted">/ ${st.length}</span></div>
-      <div><small>Nettoyé</small><b>${r.pct} %</b> <span class="muted">${Math.round(f.area * r.pct / 100)} / ${f.area} m²</span></div>
-      <div><small>Batterie de ${r.name}</small><b>${r.bat} %</b> <span class="${r.bat < 25 ? 'down' : 'muted'}">${r.bat < 25 ? 'faible' : 'ok'}</span></div>
-      <div><small>Prochaine étape</small><b style="font-size:13px;line-height:1.5;display:block">${r.next}</b></div>`;
+    const f = scope()[0], r = f.robot, st = STATE[r.state];
+    const who = f.greeter ? ` · ${f.greeter.name} à la réception` : '';
+    status.innerHTML = `<span class="dot" style="background:${st.color}"></span><span><b>${f.label} · ${f.name}${f.hint ? ' ' + f.hint : ''}</b> — ${r.name} ${st.label.toLowerCase()} · <span class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</span>${who}</span>`;
+    const states = Object.values(roomStates(f));
+    stats.innerHTML = [
+      [f.id === 0 ? 'Espaces prêts' : 'Appartements prêts', `${states.filter(s => s === 'clean').length}<span> / ${states.length}</span>`, ramp(states.filter(s => s === 'clean').length + 0.01), '#00a99d'],
+      ['Ménage', `${r.pct} %<span> ${Math.round(f.area * r.pct / 100)} m²</span>`, ramp(r.pct + 0.01), r.state === 'blocked' ? '#e5484d' : '#00a99d'],
+      ['Occupation ce soir', f.occ === null ? '—' : `${f.occ} %`, [f.occ || 0, f.occ || 0, (f.occ || 0) * .9, f.occ || 0, f.occ || 0, f.occ || 0, f.occ || 0, f.occ || 0], '#3b82f6'],
+      [`Batterie ${r.name}`, `${r.bat} %`, r.state === 'charge' ? [80, 70, 58, 45, 33, 22, 18, 22] : ramp(r.bat, 8, 100), r.bat < 25 ? '#e5484d' : '#22a861'],
+    ].map(([l, v, d, c]) => `<div class="stat"><small>${l}</small><div class="v"><b>${v}</b>${spark(d, c)}</div></div>`).join('');
   }
+}
+
+// =====================================================================
+// To-do list, rooms, robots table
+// =====================================================================
+function renderTodo() {
+  const list = TODOS.map((t, i) => ({ ...t, i })).filter(t => selected === 'all' || t.floor === selected);
+  const open = list.filter(t => !done.has(t.i)).length;
+  document.getElementById('todo-count').textContent = open ? `${open} à faire` : 'Tout est traité';
+  const lvl = id => FLOORS.find(f => f.id === id).label;
+  document.getElementById('todo').innerHTML = list.length ? list.map(t => `
+    <li class="td ${done.has(t.i) ? 'done' : ''}">
+      <button class="ck" data-i="${t.i}" title="Marquer comme traité">${done.has(t.i) ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>' : ''}</button>
+      <div>
+        <div class="t"><span class="prio" style="background:${PRIO[t.prio]}"></span>${t.title}${selected === 'all' ? `<span class="where">${lvl(t.floor)}</span>` : ''}</div>
+        <p>${t.desc}</p>
+        ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage</button>` : ''}</div>`}
+      </div>
+    </li>`).join('') : `<li class="empty"><span class="dot" style="background:var(--green)"></span>Rien à signaler sur cet étage.</li>`;
+  document.querySelectorAll('#todo .ck').forEach(b => b.onclick = () => { const i = +b.dataset.i; done.has(i) ? done.delete(i) : done.add(i); renderAll(); });
+  document.querySelectorAll('#todo [data-go]').forEach(b => b.onclick = () => select(+b.dataset.go));
 }
 
 function renderRooms() {
@@ -556,11 +656,11 @@ function renderRooms() {
   const f = FLOORS.find(x => x.id === selected);
   const states = roomStates(f);
   const list = f.layout.rooms.filter(r => r.kind === 'apt');
-  card.querySelector('h3').textContent = f.id === 0 ? 'Espaces du rez-de-chaussée' : "Appartements de l'étage";
+  card.querySelector('h3').textContent = f.id === 0 ? 'Espaces' : 'Appartements';
   document.getElementById('rooms-count').textContent = `${list.filter(r => states[r.id] === 'clean').length}/${list.length} prêts`;
   document.getElementById('rooms').innerHTML = list.map(r => {
     const s = ROOM_STATE[states[r.id]];
-    return `<div class="room"><span class="sw" style="background:${s.fill};border:1px solid #d5d9df"></span><span class="n">${f.id === 0 ? r.id : 'Appartement ' + r.id}</span><span class="s chip ${s.chip}">${s.label}</span></div>`;
+    return `<div class="room"><span class="sw" style="background:${s.fill};border:1px solid #d5d9df"></span><span class="n">${f.id === 0 ? r.id : 'App. ' + r.id}</span><span class="s chip ${s.chip}">${s.label}</span></div>`;
   }).join('');
 }
 
@@ -591,7 +691,7 @@ function renderRows() {
 }
 
 function select(id) { selected = id; renderAll(); }
-function renderAll() { floorPicker(); renderBuilding(); renderHero(); renderTodo(); renderKpis(); renderRooms(); renderRows(); }
+function renderAll() { floorPicker(); renderBuilding(); renderHero(); renderTodo(); renderRooms(); renderRows(); }
 
 const tick = () => document.getElementById('clock').textContent =
   new Date().toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
