@@ -331,22 +331,12 @@
   .fl.trouble .mb i { background: #fff !important; }
   .fl.trouble .al { color: #fff; } .fl.trouble .al svg, .fl.trouble .al svg * { stroke: #fff; }
   .robot-alarm { animation: robot-blink 1s ease-in-out infinite; }
-  /* Easter egg: click the stuck robot and a small cartoon "HELP!" pops above it */
+  /* Easter egg: click the stuck robot and a small "help…" appears next to it */
   .help-tag { cursor: pointer; }
   .help-tag:hover rect { stroke: #e5484d; }
-  .help-bubble { animation: help-pop 3.2s cubic-bezier(.2, 1.6, .4, 1) forwards; transform-box: fill-box; transform-origin: 0% 70%; }
-  @keyframes help-pop {
-    0% { transform: scale(0) rotate(-25deg); opacity: 0; }
-    10% { transform: scale(1.25) rotate(6deg); opacity: 1; }
-    16% { transform: scale(.92) rotate(-4deg); }
-    22%, 40%, 58%, 76% { transform: scale(1) rotate(-6deg); }
-    31%, 49%, 67% { transform: scale(1.06) rotate(4deg); }
-    88% { transform: scale(1) rotate(-3deg); opacity: 1; }
-    100% { transform: scale(.4) rotate(10deg) translateY(-12px); opacity: 0; } }
-  .help-marks text { animation: help-float 1s ease-out infinite; }
-  .help-marks text:nth-child(2) { animation-delay: -.35s; } .help-marks text:nth-child(3) { animation-delay: -.7s; }
-  @keyframes help-float { 0% { transform: translateY(4px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-10px); opacity: 0; } }
-  @media (prefers-reduced-motion: reduce) { .help-marks text { animation: none; } .help-bubble { animation-duration: .01s; animation-fill-mode: none; } }
+  .help-bubble { animation: help-pop 3.2s ease-out forwards; }
+  @keyframes help-pop { 0% { opacity: 0; transform: translateY(3px); } 12%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-3px); } }
+  @media (prefers-reduced-motion: reduce) { .help-bubble { animation: none; } }
   @keyframes robot-blink { 50% { opacity: .4; } }
   .alarm-ring { fill: none; stroke: #e5484d; stroke-width: 3; animation: alarm-ring 1s ease-out infinite; }
   @keyframes alarm-ring { 0% { r: 8; opacity: .9; } 100% { r: 34; opacity: 0; } }
@@ -1142,14 +1132,9 @@ const HELP_MS = 3200;
 let helpAt = -Infinity;   // never shown until clicked
 const helpActive = () => performance.now() - helpAt < HELP_MS;
 const helpPhase = () => `animation-delay:-${Math.round(performance.now() - helpAt)}ms`;
-// Small cartoon "HELP!" (no bubble) right of the robot's label, with floating ! marks.
+// A small, calm "help" right of the stuck robot's label: fades in, then away.
 function helpBubble(x, y) {
-  const cx = x + 20, cy = y;
-  const comic = `font-family="'Comic Sans MS','Chalkboard SE','Marker Felt',cursive" font-weight="900"`;
-  return `<g class="help-bubble" style="${helpPhase()};pointer-events:none">
-    <text x="${cx}" y="${cy}" text-anchor="middle" font-size="13" ${comic} fill="#e5484d" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HELP!</text>
-    <g class="help-marks" ${comic} font-size="9" fill="#e5484d" stroke="#fff" stroke-width="2" paint-order="stroke"><text x="${cx + 22}" y="${cy - 8}">!</text><text x="${cx + 27}" y="${cy}">!</text><text x="${cx - 27}" y="${cy - 6}">?</text></g>
-  </g>`;
+  return `<text class="help-bubble" style="${helpPhase()};pointer-events:none" x="${x}" y="${y}" font-size="11" font-style="italic" font-weight="600" fill="#b42318" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">help…</text>`;
 }
 
 // Open storey: cutaway with extruded rooms and robot position.
