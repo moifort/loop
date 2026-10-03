@@ -528,6 +528,9 @@ const ROOM_STATE = {
 
 // Selection drives the whole page: 'all' or a floor id.
 let selected = 'all';
+// Hovering a row of the floor list previews that floor on the building only; the rest of the page keeps `selected`.
+let preview = null;
+const shown = () => preview ?? selected;
 const done = new Set();
 
 // Apartments a robot may clean: occupied ones (guest inside) are skipped.
@@ -746,12 +749,12 @@ function renderBuilding() {
   // street lamp, as in the brand illustration
   const lb = P(0.5, D + 1.2, 0), lt = P(0.5, D + 1.2, 58);
   s += line(lb, lt, `stroke="${IRON}" stroke-width="2"`) + `<rect x="${lt[0] - 4}" y="${lt[1] - 10}" width="8" height="10" rx="1.5" fill="${IRON}"/><rect x="${lt[0] - 2.5}" y="${lt[1] - 8}" width="5" height="6" fill="#ffe7a3"/>`;
-  const ordered = [...FLOORS].sort((a, b) => a.id - b.id);
-  if (selected === 'all') {
+  const ordered = [...FLOORS].sort((a, b) => a.id - b.id), view = shown();
+  if (view === 'all') {
     ordered.forEach(f => s += closedFloor(f, f.id * H, { progress: true }));
   } else {
-    const sel = FLOORS.find(f => f.id === selected);
-    ordered.filter(f => f.id < selected).forEach(f => s += closedFloor(f, f.id * H, { progress: false }));
+    const sel = FLOORS.find(f => f.id === view);
+    ordered.filter(f => f.id < view).forEach(f => s += closedFloor(f, f.id * H, { progress: false }));
     s += openFloor(sel, sel.id * H);
     if (sel.id < FLOORS.length - 1) s += ghost(sel.id * H + H, top);
   }
@@ -974,6 +977,15 @@ function renderRows() {
 }
 
 function select(id) { selected = id; openPanel = null; renderAll(); }
+// The list re-renders every 1.5 s, so listen on its stable container rather than on each row.
+const floorList = document.querySelector('.stage > .floors');
+floorList.addEventListener('mouseover', e => {
+  const row = e.target.closest('.fl');
+  if (!row) return;
+  const id = row.dataset.id === 'all' ? 'all' : +row.dataset.id;
+  if (id !== preview) { preview = id; renderBuilding(); }
+});
+floorList.addEventListener('mouseleave', () => { preview = null; renderBuilding(); });
 function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderRows(); }
 
 const tick = () => document.getElementById('clock').textContent =
@@ -1045,7 +1057,7 @@ function step(now) {
   });
   sinceUi += dt;
   if (sinceUi > 1.5) { sinceUi = 0; renderAll(); }
-  else if (moved && selected !== 'all') renderBuilding();
+  else if (moved && shown() !== 'all') renderBuilding();
   requestAnimationFrame(step);
 }
 renderAll();
