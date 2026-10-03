@@ -149,7 +149,10 @@
   .td .acts { display: flex; gap: 14px; margin-top: 6px; }
   .td .acts button { color: var(--blue); font-weight: 500; font-size: 12px; }
   .td .acts button:hover { text-decoration: underline; }
-  .prio { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .sev { display: inline-flex; flex: none; align-items: center; height: 20px; padding: 0 6px; border-radius: 3px; font-size: 11px; line-height: 20px; font-weight: 600; white-space: nowrap; }
+  .sev-high { background: #e5484d; color: #fff; }
+  .sev-med { background: #f0a020; color: #3d2600; }
+  .sev-low { background: #eef0f3; color: #59636e; box-shadow: inset 0 0 0 1px rgba(31,35,40,.08); }
   .empty { padding: 4px 16px 16px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
 
   .rooms { padding: 0 16px 8px; }
@@ -317,6 +320,7 @@ const TODOS = [
   { floor: 5, prio: 'low', short: 'CLN-C6F2 brosse usée', title: 'CLN-C6F2 : brosse principale à remplacer', desc: "Usure estimée à 92 %. Le robot continue de nettoyer, mais la brosse doit être changée avant la prochaine tournée.", acts: ['Planifier l\'entretien', 'Commander une brosse'] },
 ];
 const PRIO = { high: '#e5484d', med: '#f0a020', low: '#a0a7b0' };
+const PRIO_LABEL = { high: 'Urgent', med: 'Important', low: 'Mineur' };
 
 const STATE = {
   run:     { chip: 'run',  label: 'En ménage',  color: '#00a99d' },
@@ -666,7 +670,7 @@ function renderTodo() {
     <li class="td ${done.has(t.i) ? 'done' : ''}">
       <button class="ck" data-i="${t.i}" title="Marquer comme traité">${done.has(t.i) ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>' : ''}</button>
       <div>
-        <div class="t">${tagsFor(t)}<span class="prio" style="background:${PRIO[t.prio]}"></span>${t.title}</div>
+        <div class="t">${tagsFor(t)}<span class="sev sev-${t.prio}">${PRIO_LABEL[t.prio]}</span>${t.title}</div>
         <p>${t.desc}</p>
         ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage</button>` : ''}</div>`}
       </div>
