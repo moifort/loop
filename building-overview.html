@@ -684,6 +684,112 @@
   .log .a { color: var(--muted); margin-top: 2px; line-height: 1.45; }
   .topq { padding: 2px 16px 14px; display: flex; flex-direction: column; gap: 9px; }
   .topq .m .lb { font-size: 12px; color: var(--text); }
+
+  /* ---------- Greg AI: connection pill in the top bar ---------- */
+  .top .greg-pill { margin-left: auto; height: 30px; padding: 0 11px 0 9px; border-radius: 999px; border: 1px solid var(--border); background: var(--panel); gap: 7px; font-weight: 500; }
+  .top .greg-pill:hover { background: var(--panel-2); }
+  .top .greg-pill small { color: var(--muted); font-size: 11px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .top .greg-pill + .right { margin-left: 14px; }
+  .greg-dot { position: relative; width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex: none; }
+  .greg-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: inherit; animation: greg-ping 2s ease-out infinite; }
+  @keyframes greg-ping { 0% { transform: scale(1); opacity: .6; } 80%, 100% { transform: scale(2.6); opacity: 0; } }
+  .greg-pill[data-state="paused"] { border-color: #f5d49a; background: var(--amber-soft); color: #9a5b00; }
+  .greg-pill[data-state="paused"] .greg-dot { background: var(--amber); }
+  .greg-pill[data-state="paused"] .greg-dot::after { animation: none; }
+  .greg-pill[data-state="paused"] small { color: #9a5b00; }
+  @media (prefers-reduced-motion: reduce) { .greg-dot::after { animation: none; } }
+
+  /* ---------- Greg AI view ---------- */
+  .greg-av { width: 52px; height: 52px; border-radius: 14px; flex: none; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #0f172a, #1e3a8a 60%, #006fff); box-shadow: 0 4px 14px rgba(0,111,255,.25); }
+  .greg-av.sm { width: 22px; height: 22px; border-radius: 6px; box-shadow: none; }
+  .greg-conn { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--border); padding-top: 12px; }
+  .greg-conn > div { padding: 0 14px; border-left: 1px solid var(--border); min-width: 0; }
+  .greg-conn > div:first-child { padding-left: 0; border-left: none; }
+  .greg-conn small { display: block; color: var(--muted); font-size: 11px; margin-bottom: 2px; }
+  .greg-conn b { font-weight: 500; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .greg-conn code, .gev code, .greg-err code { font: 500 12px/1.4 ui-monospace, "SF Mono", Menlo, monospace; }
+  .greg-conn code { color: var(--text); }
+
+  /* Sync quality: latency area over a status band */
+  .sync-wrap { padding: 4px 16px 0; }
+  .sync-chart { position: relative; }
+  .sync-chart svg { width: 100%; height: 120px; overflow: visible; }
+  .sync-band { position: relative; height: 12px; border-radius: 4px; background: var(--panel-2); border: 1px solid var(--border); overflow: hidden; margin-top: 6px; }
+  .sync-band i { position: absolute; top: 0; bottom: 0; }
+  .sync-band .now, .sync-chart .now { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--text); border-radius: 2px; }
+  .sync-chart .ylab { position: absolute; left: 0; color: var(--muted); font-size: 10px; font-variant-numeric: tabular-nums; transform: translateY(-50%); background: var(--panel); padding-right: 4px; }
+  .sync-inc { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 10px 16px 0; font-size: 12px; color: var(--muted); }
+  .sync-inc span { display: inline-flex; align-items: center; gap: 6px; }
+  .sync-inc b { color: var(--text); font-weight: 500; }
+
+  /* Automatic chain: checkout → Greg → cleaning */
+  .chain { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; padding: 6px 16px 4px; }
+  .chain-step { position: relative; padding: 0 12px 0 0; }
+  .chain-step .node { position: relative; z-index: 1; width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; color: #fff; }
+  .chain-step:not(:last-child)::after { content: ''; position: absolute; left: 40px; right: 6px; top: 17px; height: 2px; background: repeating-linear-gradient(90deg, #b3d1ff 0 6px, transparent 6px 10px); background-size: 20px 2px; animation: chain-flow 1s linear infinite; }
+  @keyframes chain-flow { to { background-position: 20px 0; } }
+  @media (prefers-reduced-motion: reduce) { .chain-step::after { animation: none !important; } }
+  .chain-step time { display: block; margin-top: 8px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .chain-step b { display: block; font-weight: 600; margin-top: 1px; }
+  .chain-step p { color: var(--muted); font-size: 12px; line-height: 1.4; margin-top: 2px; }
+  .chain-foot { display: flex; gap: 18px; flex-wrap: wrap; padding: 10px 16px 14px; margin-top: 10px; border-top: 1px solid var(--border); color: var(--muted); font-size: 12px; }
+  .chain-foot b { color: var(--text); font-weight: 600; }
+
+  /* Event stream */
+  .seg { display: inline-flex; padding: 2px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--border); }
+  .seg button { padding: 3px 9px; border-radius: 6px; font-size: 12px; color: var(--muted); font-weight: 500; }
+  .seg button.on { background: var(--panel); color: var(--text); box-shadow: 0 1px 2px rgba(16,24,40,.08); }
+  .seg button em { font-style: normal; color: var(--faint); margin-left: 3px; font-variant-numeric: tabular-nums; }
+  .gev-list { list-style: none; max-height: 640px; overflow-y: auto; overscroll-behavior: contain; }
+  .gev { display: grid; grid-template-columns: 44px 104px 1fr auto; gap: 10px; align-items: start; padding: 10px 16px; border-top: 1px solid var(--border); cursor: pointer; }
+  .gev:first-child { border-top: none; }
+  .gev:hover { background: var(--panel-2); }
+  .gev.fresh { animation: gev-in 1.6s ease-out; }
+  @keyframes gev-in { from { background: #e6f0ff; } to { background: transparent; } }
+  .gev time { color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 2px; }
+  .gev .t { line-height: 1.45; min-width: 0; }
+  .gev .t code { color: var(--muted); display: block; font-size: 11px; }
+  .gev .t > span { display: block; }
+  .gev .st { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+  .gev .st small { color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .gev pre { grid-column: 2 / -1; margin-top: 2px; padding: 10px 12px; border-radius: 8px; background: #0f172a; color: #cbd5e1; font: 11.5px/1.5 ui-monospace, "SF Mono", Menlo, monospace; white-space: pre-wrap; overflow-x: auto; cursor: text; }
+  .gev pre .k { color: #93c5fd; } .gev pre .s { color: #86efac; } .gev pre .n { color: #fcd34d; }
+  .dir { display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 6px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; justify-self: start; }
+  .dir svg { flex: none; }
+  .dir.out { background: var(--blue-soft); color: var(--blue); }
+  .dir.in { background: #e0f2f1; color: #0f766e; }
+  .dir.act { background: #eef0f3; color: #3a4150; }
+  .chip.que { background: var(--panel-2); color: var(--muted); border: 1px dashed var(--faint); }
+
+  /* Errors and guard rails */
+  .greg-err { list-style: none; }
+  .greg-err li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 12px 16px; border-top: 1px solid var(--border); }
+  .greg-err li:first-child { border-top: none; }
+  .greg-err .ic { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; }
+  .greg-err .ic.err { background: var(--red-soft); color: #b42318; }
+  .greg-err .ic.warn { background: var(--amber-soft); color: #9a5b00; }
+  .greg-err .ic.ok { background: var(--green-soft); color: #137a44; }
+  .greg-err .t { font-weight: 600; display: flex; gap: 8px; align-items: center; }
+  .greg-err .t time { margin-left: auto; color: var(--muted); font-weight: 400; font-size: 12px; font-variant-numeric: tabular-nums; }
+  .greg-err p { color: var(--muted); margin-top: 2px; line-height: 1.45; }
+  .greg-err .acts { display: flex; gap: 14px; margin-top: 6px; }
+  .greg-err .acts button { color: var(--blue); font-weight: 500; font-size: 12px; }
+  .greg-err .acts button:hover { text-decoration: underline; }
+  .greg-err .acts .done { color: var(--green); }
+
+  /* What Greg may do: capability switches */
+  .perm { list-style: none; padding-bottom: 4px; }
+  .perm li { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 10px 16px; border-top: 1px solid var(--border); }
+  .perm li:first-child { border-top: none; }
+  .perm b { font-weight: 500; display: block; }
+  .perm small { color: var(--muted); font-size: 12px; line-height: 1.4; display: block; margin-top: 1px; }
+  .perm li.locked small { display: flex; align-items: center; gap: 4px; }
+  .sw-t { position: relative; width: 34px; height: 20px; border-radius: 999px; background: #d6dade; transition: background .15s; flex: none; }
+  .sw-t::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .15s; }
+  .sw-t.on { background: var(--green); }
+  .sw-t.on::after { transform: translateX(14px); }
+  .sw-t:disabled { opacity: .55; cursor: not-allowed; }
+  @container (max-width: 800px) { .chain { grid-template-columns: 1fr 1fr; gap: 16px 0; } .chain-step::after { display: none; } .greg-conn { grid-template-columns: 1fr 1fr; gap: 10px 0; } .gev { grid-template-columns: 44px 1fr auto; } .gev .dir { display: none; } }
 </style>
 </head>
 <body>
@@ -695,6 +801,8 @@
   <button class="nav-btn" data-view="accueil" title="Temi · Accueil"><i data-icon="bot" data-size="20" data-sw="1.75"></i></button>
   <button class="nav-btn" data-view="kilo" title="Kilo · Bagages"><i data-icon="luggage" data-size="20" data-sw="1.75"></i></button>
   <button class="nav-btn" data-view="menage" title="Robots de ménage"><i data-icon="brush-cleaning" data-size="20" data-sw="1.75"></i></button>
+  <div class="nav-sep" role="separator"></div>
+  <button class="nav-btn" data-view="greg" title="Greg AI"><i data-icon="sparkles" data-size="20" data-sw="1.75"></i></button>
   <div class="nav-spacer"></div>
   <button class="nav-btn" title="Réglages"><i data-icon="settings" data-size="20" data-sw="1.75"></i></button>
 </nav>
@@ -707,6 +815,8 @@
   </button>
   <span class="sep" data-crumb hidden>/</span><span data-crumb id="crumb-label" hidden>Accueil</span>
   <span class="sep" data-crumb2 hidden>/</span><span data-crumb2 id="crumb-sub" hidden></span>
+  <!-- Link with Greg, Quartier Libre's operations AI: live state on every view, opens the Greg AI view -->
+  <button class="greg-pill" id="greg-pill" data-state="ok" title="Ouvrir la vue Greg AI"><span class="greg-dot"></span><span id="greg-pill-label">Greg connecté</span><small id="greg-pill-ms"></small></button>
   <span class="right" id="clock"></span>
   <!-- Always-available panic button, in the top bar on every view -->
   <button class="panic-fab" id="panic-fab" title="Déclencher le bouton panique">
@@ -981,6 +1091,48 @@
   </div>
 
 </div>
+
+<!-- Greg AI view: Quartier Libre's operations agent, events both ways, platform actions, sync quality, errors -->
+<div class="wrap" id="view-greg" hidden>
+
+  <div class="card rf-head" id="greg-head"></div>
+
+  <div class="card">
+    <div class="card-h"><h3>Dernière chaîne automatique</h3><div class="right" id="greg-chain-sub"></div></div>
+    <div class="chain" id="greg-chain"></div>
+    <div class="chain-foot" id="greg-chain-foot"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><h3>Qualité de la synchro</h3><div class="right">7 h – 23 h · latence aller-retour</div></div>
+    <div class="sync-wrap"><div class="sync-chart" id="greg-sync"></div><div class="sync-band" id="greg-band"></div><div class="ticks" id="greg-ticks"></div></div>
+    <div class="sync-inc" id="greg-inc"></div>
+    <div class="legend">
+      <span><i class="sw" style="background:#22a861"></i>Synchro normale</span>
+      <span><i class="sw" style="background:#f0a020"></i>Dégradée (latence &gt; 1 s)</span>
+      <span><i class="sw" style="background:#e5484d"></i>Coupure</span>
+      <span><i class="sw" style="background:#a0a7b0"></i>En pause</span>
+    </div>
+  </div>
+
+  <div class="acc-grid">
+    <div class="card">
+      <div class="card-h"><h3>Événements</h3><div class="right"><div class="seg" id="greg-filter"></div></div></div>
+      <ul class="gev-list" id="greg-events"></ul>
+    </div>
+    <div class="side">
+      <div class="card">
+        <div class="card-h"><h3>Erreurs et rejets</h3><div class="right" id="greg-err-count"></div></div>
+        <ul class="greg-err" id="greg-errors"></ul>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3>Ce que Greg peut faire</h3><div class="right">garde-fous</div></div>
+        <ul class="perm" id="greg-perms"></ul>
+      </div>
+    </div>
+  </div>
+
+</div>
 </main>
 
 <script>
@@ -1010,6 +1162,16 @@ const LUCIDE = {
   'arrow-up-right': '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
   'luggage': '<path d="M6 20a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2"/><path d="M8 18V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v14"/><path d="M10 20h4"/><circle cx="16" cy="20" r="2"/><circle cx="8" cy="20" r="2"/>',
   'zap': '<path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/>',
+  'sparkles': '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
+  'arrow-down-left': '<path d="M17 7 7 17"/><path d="M17 17H7V7"/>',
+  'triangle-alert': '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  'refresh-cw': '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  'pause': '<rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>',
+  'play': '<polygon points="6 3 20 12 6 21 6 3"/>',
+  'shield-check': '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  'lock': '<rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  'x': '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  'door-open': '<path d="M11 20H2"/><path d="M11 4.562v16.157a1 1 0 0 0 1.242.97L19 20V5.562a2 2 0 0 0-1.515-1.94l-4-1A2 2 0 0 0 11 4.561z"/><path d="M11 4H8a2 2 0 0 0-2 2v14"/><path d="M14 12h.01"/><path d="M22 20h-3"/>',
 };
 // One way to draw an icon everywhere: Lucide geometry, round caps, stroke follows the text colour unless given.
 const icon = (name, size = 16, { sw = 2, color = 'currentColor', cls = '' } = {}) =>
@@ -2462,7 +2624,7 @@ setInterval(() => {
 setInterval(() => { if (!document.getElementById('view-accueil').hidden) renderCoverage(); }, 30000);
 
 // Views and their breadcrumb label (the building view has none)
-const VIEWS = { building: '', accueil: 'Accueil', menage: 'Ménage', robot: 'Ménage', kilo: 'Bagages' };
+const VIEWS = { building: '', accueil: 'Accueil', menage: 'Ménage', robot: 'Ménage', kilo: 'Bagages', greg: 'Greg AI' };
 // v may carry an argument: 'robot/CLN-91C5' opens that robot's sheet
 function showView(v) {
   let [view, arg] = String(v).split('/');
@@ -2482,7 +2644,7 @@ function showView(v) {
   document.getElementById('crumb-sub').textContent = sub;
   history.replaceState(null, '', v === 'building' ? location.pathname : '#' + v + (v === 'robot' ? '/' + sheetRobot : ''));
   document.querySelector('main').scrollTop = 0;
-  if (v === 'accueil') renderAccueil(); else renderAll();
+  if (v === 'accueil') renderAccueil(); else if (v === 'greg') renderGreg(); else renderAll();
 }
 document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
 // Map labels that link to another view (the greeter's label opens the reception view). The SVG re-renders, so delegate.
@@ -2993,8 +3155,292 @@ document.getElementById('view-kilo').addEventListener('click', e => {
   if (el.dataset.kfloor !== undefined) { const f = kiloFloor(); select(f.id, f.porter.name); }
 });
 
+// =====================================================================
+// Greg AI — Quartier Libre's in-house operations agent, plugged into Loop.
+// Loop emits robot and building events to Greg, Greg sends commands back,
+// and Loop runs them as platform actions behind guard rails.
+// =====================================================================
+const GREG = {
+  state: 'ok',              // 'ok' = live sync, 'paused' = events held in a queue
+  since: ago(316),          // connected since the reconnect after this morning's outage
+  ms: 140,                  // current round-trip latency
+  sent: 248, recv: 37, refused: 3,
+  filter: 'all', open: null, seq: 0,
+  pausedAt: null, pauses: [], // sim-hour spans where the sync was paused by hand
+  fixed: new Set(),         // error ids handled from the errors card
+};
+const GDIR = {
+  out: { label: 'Loop → Greg', ic: 'arrow-up-right' },
+  in:  { label: 'Greg → Loop', ic: 'arrow-down-left' },
+  act: { label: 'Action Loop', ic: 'zap' },
+};
+// Status chip per event outcome
+const GST = {
+  ok:       (e) => `<span class="chip ok">${e.dir === 'out' ? 'Livré' : e.dir === 'in' ? 'Accepté' : 'Exécuté'}</span>`,
+  refused:  () => '<span class="chip err">Refusé</span>',
+  unknown:  () => '<span class="chip err">Inconnu</span>',
+  retried:  (e) => `<span class="chip warn">Rejoué ×${e.retries}</span>`,
+  queued:   () => '<span class="chip que">En file</span>',
+  replayed: () => '<span class="chip acc">Rejoué</span>',
+};
+const gev = (m, dir, name, text, data, extra = {}) => ({ id: 'e' + (++GREG.seq), at: ago(m), dir, name, text, data, status: 'ok', ms: 90 + (GREG.seq * 37) % 120, ...extra });
+// Today's exchanges, newest first
+const GEVENTS = [
+  gev(0.4, 'act', 'accueil.guest_file.updated', 'Fiche de <b>Mme Lefèvre</b> complétée sur la vue Accueil : facture à établir au nom de Lefèvre Conseil SARL.', { guest: 'Mme Lefèvre', invoice_to: 'Lefèvre Conseil SARL', siret: '812 345 678 00021' }),
+  gev(0.5, 'in', 'greg.guest.context', 'Greg retrouve la réservation de <b>Mme Lefèvre</b> et le SIRET de sa société dans le PMS.', { reservation: 'QL-SG-48213', apartment: '402', siret: '812 345 678 00021' }),
+  gev(0.7, 'out', 'temi.human_requested', '<b>TEMI-4F2A</b> : Mme Lefèvre demande un humain (facture au nom de sa société).', { robot: 'TEMI-4F2A', guest: 'Mme Lefèvre', intent: 'invoice.company_name', lang: 'fr' }),
+  gev(3, 'out', 'kilo.trip.started', '<b>KILO-3B8D</b> part de la bagagerie avec M. Bernard, 2 valises vers l\'app. 204.', { robot: 'KILO-3B8D', guest: 'M. Bernard', bags: 2, to: { floor: 2, apartment: '204' } }),
+  gev(3.1, 'act', 'kilo.reserve', '<b>KILO-3B8D</b> réservé pour M. Bernard, rendez-vous à la bagagerie.', { robot: 'KILO-3B8D', meet_at: 'bagagerie' }),
+  gev(3.3, 'in', 'greg.kilo.dispatch', 'Greg envoie le Kilo : check-in de <b>M. Bernard</b> confirmé dans le PMS, 2 valises déclarées.', { guest: 'M. Bernard', apartment: '204', bags: 2, source: 'pms.checkin' }),
+  gev(8, 'in', 'greg.cleaning.start', 'Greg demande le ménage de l\'<b>app. 306</b>.', { apartment: '306', priority: 'normal' },
+    { status: 'refused', why: 'App. 306 occupé par M. Okafor jusqu\'au 5 oct. : Loop ne lance jamais un robot dans un appartement occupé.' }),
+  gev(13.2, 'out', 'cleaning.scheduled', 'Ménage de l\'app. 203 planifié, prêt vers <b>12 h 55</b>.', { apartment: '203', robot: 'CLN-2D84', eta: '12:55' }),
+  gev(13.3, 'act', 'cleaning.enqueue', '<b>CLN-2D84</b> ajoute l\'app. 203 à sa tournée, juste après le 207.', { robot: 'CLN-2D84', apartment: '203', after: '207' }),
+  gev(13.6, 'in', 'greg.cleaning.start', 'Greg confirme le départ dans le PMS (facture soldée, code Salto révoqué) et demande le ménage de l\'<b>app. 203</b>.', { apartment: '203', priority: 'high', reason: 'checkout', next_arrival: '16:00' }),
+  gev(14.4, 'out', 'guest.checkout_detected', 'Départ détecté : <b>Mme Haddad</b> quitte le hall avec 2 valises (TEMI-4F2A).', { robot: 'TEMI-4F2A', guest: 'Mme Haddad', apartment: '203', bags: 2, confidence: 0.94 }),
+  gev(17.8, 'act', 'todo.created', 'Alerte « CLN-91C5 bloqué » ajoutée à la liste <b>À traiter</b>.', { todo: 'robot.blocked', floor: 3, apartment: '307' }),
+  gev(17.9, 'in', 'greg.staff.notify', 'Greg prévient <b>Inès</b> sur WhatsApp : valise à déplacer dans l\'app. 307.', { to: 'Inès', channel: 'whatsapp', apartment: '307' }),
+  gev(18, 'out', 'robot.blocked', '<b>CLN-91C5</b> bloqué dans l\'app. 307 : une valise au sol.', { robot: 'CLN-91C5', floor: 3, apartment: '307', obstacle: 'luggage' }),
+  gev(26, 'out', 'room.ready', 'App. 105 prêt (CLN-7B19).', { apartment: '105', robot: 'CLN-7B19' },
+    { status: 'retried', retries: 2, why: 'Greg n\'a pas acquitté le webhook en 5 s. Loop l\'a rejoué 2 fois, livré au 3ᵉ essai.' }),
+  gev(41, 'out', 'robot.battery_low', '<b>CLN-5E07</b> à 22 % de batterie, retour à la base prévu vers 15 %.', { robot: 'CLN-5E07', battery: 22 }),
+  gev(54, 'act', 'temi.say', 'Annonce diffusée dans le hall par <b>TEMI-4F2A</b>.', { robot: 'TEMI-4F2A', langs: ['fr', 'en'] }),
+  gev(55, 'in', 'greg.temi.say', 'Greg fait annoncer : « Le petit-déjeuner ferme dans 15 minutes. »', { text: 'Le petit-déjeuner ferme dans 15 minutes.', langs: ['fr', 'en'] }),
+  gev(72, 'in', 'greg.laundry.pickup', 'Greg demande un enlèvement de linge au 4ᵉ étage.', { floor: 4, bags: 6, version: 'v2' },
+    { status: 'unknown', why: 'Commande absente du contrat loop-events v1.4 : ignorée, l\'équipe IT est prévenue.' }),
+  gev(94, 'act', 'report.sent', 'Bilan envoyé à Greg : 32 appartements faits, 3 h 40 libérées.', { apartments: 32, freed_minutes: 220 }),
+  gev(95, 'in', 'greg.report.request', 'Greg demande le bilan ménage de la matinée pour le point de 11 h.', { scope: 'cleaning', period: 'morning' }),
+];
+// Live traffic, cycled while the view is open
+const GLIVE = [
+  () => [['out', 'room.progress', '<b>CLN-7B19</b> a fini la chambre de l\'app. 106.', { robot: 'CLN-7B19', apartment: '106', room: 'bedroom' }]],
+  () => [['in', 'greg.status.ask', 'Greg demande : « Le 207 sera prêt à quelle heure ? »', { apartment: '207' }],
+         ['act', 'status.reply', 'Réponse envoyée à Greg : app. 207 prêt vers <b>12 h 10</b>.', { apartment: '207', eta: '12:10' }]],
+  () => [['out', 'temi.question_answered', '<b>TEMI-4F2A</b> a répondu seul : « Où est la bagagerie ? »', { robot: 'TEMI-4F2A', lang: 'en' }]],
+  () => [['out', 'robot.docked', '<b>CLN-0A3E</b> est à sa base, réservoir plein dans 25 min.', { robot: 'CLN-0A3E' }]],
+  () => [['in', 'greg.kilo.recall', 'Greg rappelle le Kilo à la bagagerie après le check-in de M. Bernard.', { robot: 'KILO-3B8D' }],
+         ['act', 'kilo.route', '<b>KILO-3B8D</b> reprogrammé : retour à la bagagerie.', { robot: 'KILO-3B8D', to: 'bagagerie' }]],
+];
+let gLive = 0;
+// Errors and rejects: refused or unknown commands, retried webhooks, plus link incidents
+const GINC = () => {
+  const nowH = simH(Date.now()), span = nowH - DAY0;
+  const outA = DAY0 + span * 0.22, degA = DAY0 + span * 0.64;
+  return { out: [outA, outA + 0.2], deg: [degA, degA + 0.27] };
+};
+function gregErrors() {
+  const inc = GINC();
+  const list = GEVENTS.filter(e => ['refused', 'unknown', 'retried'].includes(e.status)).map(e => ({
+    id: e.id, kind: e.status === 'retried' ? 'warn' : 'err', at: fmtH(simH(e.at)),
+    title: e.status === 'refused' ? `Commande refusée : ${e.name}` : e.status === 'unknown' ? `Commande inconnue : ${e.name}` : `Webhook rejoué : ${e.name}`,
+    desc: e.why,
+    acts: e.status === 'refused' ? ['Voir le garde-fou'] : e.status === 'unknown' ? ['Ajouter au contrat', 'Voir le payload'] : ['Voir le payload'],
+    ev: e.id,
+  }));
+  list.push({ id: 'deg', kind: 'warn', at: fmtH(inc.deg[0]), title: 'Synchro dégradée 16 min', desc: 'Latence jusqu\'à 1,9 s : le PMS répondait lentement à Greg. Aucun événement perdu.', acts: [] });
+  list.push({ id: 'out', kind: 'err', at: fmtH(inc.out[0]), title: 'Coupure de 12 min', desc: 'Mise à jour de Greg (v2.3). 7 événements gardés en file par Loop, puis rejoués dans l\'ordre à la reconnexion.', acts: [] });
+  list.push({ id: 'tok', kind: 'ok', at: fmtH(DAY0 + 0.1), title: 'Jeton d\'accès renouvelé', desc: 'Renouvelé seul, sans coupure. Prochain renouvellement dans 24 h.', acts: [] });
+  return list;
+}
+// Capabilities Greg holds on the platform. Locked ones stay with humans.
+const GPERMS = [
+  { k: 'clean', on: true, t: 'Lancer et reprogrammer le ménage', d: 'Jamais dans un appartement occupé' },
+  { k: 'kilo', on: true, t: 'Envoyer le Kilo', d: 'Bagagerie ↔ étages, à la demande ou au check-in' },
+  { k: 'temi', on: true, t: 'Parler à travers Temi', d: 'Annonces et réponses aux clients, FR et EN' },
+  { k: 'read', on: true, t: 'Lire l\'état des robots et des appartements', d: 'Avancement, batteries, alertes' },
+  { k: 'video', on: false, lock: true, t: 'Voir les flux vidéo', d: 'RGPD : réservé aux opérateurs humains' },
+  { k: 'panic', on: false, lock: true, t: 'Déclencher ou lever la panique', d: 'Toujours une décision humaine' },
+];
+
+// Latency samples every 5 min since 7 h (deterministic), with this morning's outage and the midday slowdown
+function gregSamples() {
+  const nowH = simH(Date.now()), inc = GINC();
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const pts = [];
+  for (let h = DAY0; h <= nowH; h += 1 / 12) {
+    let ms = 120 + rnd() * 90 + (rnd() > .93 ? 160 : 0);
+    if (h >= inc.out[0] && h < inc.out[1]) ms = null;
+    else if (h >= inc.deg[0] && h < inc.deg[1]) ms = 1100 + rnd() * 800;
+    else if (GREG.pauses.some(p => h >= p[0] && h < p[1])) ms = null;
+    pts.push([h, ms]);
+  }
+  pts.push([nowH, GREG.state === 'paused' ? null : GREG.ms]);
+  return pts;
+}
+
+const gJSON = o => JSON.stringify(o, null, 2)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+  .replace(/"([^"]+)":/g, '<span class="k">"$1"</span>:')
+  .replace(/: "([^"]*)"/g, ': <span class="s">"$1"</span>')
+  .replace(/: (-?[\d.]+)/g, ': <span class="n">$1</span>');
+function gPayload(e) {
+  return gJSON({ event: e.name, id: 'evt_' + e.id + '_' + (e.at % 1e6).toString(36), at: new Date(e.at).toISOString().slice(0, 19) + 'Z',
+    building: 'saint-georges', direction: e.dir === 'in' ? 'greg→loop' : e.dir === 'out' ? 'loop→greg' : 'loop', data: e.data });
+}
+
+function renderGregPill() {
+  const pill = document.getElementById('greg-pill');
+  pill.dataset.state = GREG.state;
+  const q = GEVENTS.filter(e => e.status === 'queued').length;
+  setHTML('greg-pill-label', GREG.state === 'paused' ? 'Greg en pause' : 'Greg connecté');
+  setHTML('greg-pill-ms', GREG.state === 'paused' ? `${q} en file` : `${GREG.ms} ms`);
+}
+
+function renderGreg() {
+  renderGregPill();
+  if (document.getElementById('view-greg').hidden) return;
+  const paused = GREG.state === 'paused', last = GEVENTS[0];
+  const queued = GEVENTS.filter(e => e.status === 'queued').length;
+  const ok = GEVENTS.filter(e => e.dir === 'in' && e.status === 'ok').length;
+
+  setHTML('greg-head', `<div class="rf-top">
+      <span class="greg-av">${icon('sparkles', 26, { sw: 1.8 })}</span>
+      <div class="rf-id"><span class="mr-name"><b>Greg</b>${paused ? '<span class="chip warn">Synchro en pause</span>' : '<span class="chip ok"><span class="greg-dot" style="margin:0 4px 0 1px"></span>Connecté</span>'}</span>
+        <span class="sub">Agent IA des opérations Quartier Libre · ${paused ? `en pause depuis ${since(GREG.pausedAt)}, ${queued} événement${queued > 1 ? 's' : ''} en file` : `connecté depuis ${fmtH(simH(GREG.since))}`}</span></div>
+      <div class="acts">
+        <button class="btn" data-g="ping">${icon('refresh-cw', 14)}Tester la connexion</button>
+        ${paused ? `<button class="btn primary" data-g="resume">${icon('play', 14)}Reprendre et rejouer ${queued}</button>`
+                 : `<button class="btn" data-g="pause">${icon('pause', 14)}Mettre en pause</button>`}
+      </div>
+    </div>
+    <div class="kpis">${[
+      ['Envoyés à Greg', GREG.sent, '99,6 % livrés du 1ᵉʳ coup', .996, '#006fff', 'arrow-up-right'],
+      ['Commandes de Greg', GREG.recv, `${GREG.recv - GREG.refused} exécutées · ${GREG.refused} refusées`, (GREG.recv - GREG.refused) / GREG.recv, '#0f766e', 'arrow-down-left'],
+      ['Latence', paused ? '—' : `${GREG.ms} ms`, 'moyenne du jour 180 ms', paused ? 0 : 1 - Math.min(GREG.ms, 1000) / 1000, '#22a861', 'gauge'],
+      ['Disponibilité', '98,7 %', '1 coupure de 12 min', .987, '#1e3a8a', 'shield-check'],
+    ].map(([l, v, sub, k, col, ic]) => `<div class="kpi kpi-ring">${ring(k, col, ic)}<div><small>${l}</small><b>${v}</b><span>${sub}</span></div></div>`).join('')}</div>
+    <div class="greg-conn">
+      <div><small>Connexion</small><b>Serveur MCP + webhooks signés</b></div>
+      <div><small>Contrat</small><b><code>loop-events v1.4</code></b></div>
+      <div><small>Côté Greg</small><b>v2.3 · greg.quartierlibre.fr</b></div>
+      <div><small>Dernier échange</small><b>${last ? `${GDIR[last.dir].label}, il y a ${since(last.at)}` : '—'}</b></div>
+    </div>`);
+
+  // Automatic chain: Mme Haddad's checkout turned into a cleaning job without anyone touching it
+  const t = m => fmtH(simH(ago(m)));
+  setHTML('greg-chain-sub', 'Départ de Mme Haddad · app. 203');
+  setHTML('greg-chain', [
+    ['#1e3a8a', 'bot', t(14.5), 'Temi la voit partir', 'Hall : Mme Haddad sort avec 2 valises, reconnue à 94 %.'],
+    ['#006fff', 'arrow-up-right', t(14.4), 'Loop prévient Greg', '<code>guest.checkout_detected</code> livré en 120 ms.'],
+    ['linear-gradient(135deg,#0f172a,#1e3a8a 60%,#006fff)', 'sparkles', t(13.8), 'Greg vérifie', 'PMS : facture soldée. Salto : code révoqué. Prochaine arrivée 16 h.'],
+    ['#0f766e', 'arrow-down-left', t(13.6), 'Greg demande le ménage', 'App. 203 en priorité haute, avant l\'arrivée de 16 h.'],
+    ['#0ea5e9', 'brush-cleaning', t(13.3), 'CLN-2D84 s\'en charge', 'Ajouté à sa tournée après le 207 : prêt vers 12 h 55.'],
+  ].map(([bg, ic, at, b, p]) => `<div class="chain-step"><span class="node" style="background:${bg}">${icon(ic, 17)}</span><time>${at}</time><b>${b}</b><p>${p}</p></div>`).join(''));
+  setHTML('greg-chain-foot', '<span><b>0</b> intervention humaine</span><span><b>1 min 12</b> entre le départ et la planification</span><span><b>11</b> chaînes de ce type aujourd\'hui</span>');
+
+  renderGregSync();
+
+  // Filters with counts
+  const F = { all: ['Tout', () => true], out: ['Envoyés', e => e.dir === 'out'], in: ['Reçus', e => e.dir === 'in'], act: ['Actions', e => e.dir === 'act'],
+    err: ['Erreurs', e => ['refused', 'unknown', 'retried'].includes(e.status)] };
+  setHTML('greg-filter', Object.entries(F).map(([k, [l, f]]) => `<button data-gf="${k}" class="${GREG.filter === k ? 'on' : ''}">${l}<em>${GEVENTS.filter(f).length}</em></button>`).join(''));
+  const list = GEVENTS.filter(F[GREG.filter][1]);
+  const evEl = document.getElementById('greg-events');
+  const before = new Set([...evEl.querySelectorAll('.gev')].map(li => li.dataset.ev));
+  setHTML('greg-events', list.map(e => `<li class="gev" data-ev="${e.id}"><time>${fmtH(simH(e.at))}</time>
+      <span class="dir">${icon(GDIR[e.dir].ic, 12, { sw: 2.4 })}${GDIR[e.dir].label}</span>
+      <div class="t"><span>${e.text}</span><code>${e.name}</code>${e.why ? `<span style="color:${e.status === 'retried' ? '#9a5b00' : '#b42318'};margin-top:2px">${e.why}</span>` : ''}</div>
+      <div class="st">${GST[e.status](e)}${e.status === 'queued' ? '' : `<small>${e.ms} ms</small>`}</div>
+      ${GREG.open === e.id ? `<pre>${gPayload(e)}</pre>` : ''}</li>`).join(''));
+  evEl.querySelectorAll('.gev').forEach(li => {
+    const e = GEVENTS.find(x => x.id === li.dataset.ev);
+    li.querySelector('.dir').classList.add(e.dir);
+    if (before.size && !before.has(li.dataset.ev)) li.classList.add('fresh');
+  });
+
+  const errs = gregErrors();
+  const open = errs.filter(x => x.kind !== 'ok' && !GREG.fixed.has(x.id)).length;
+  setHTML('greg-err-count', open ? `${open} aujourd'hui` : 'Tout est traité');
+  setHTML('greg-errors', errs.map(x => `<li><span class="ic ${x.kind}">${icon(x.kind === 'ok' ? 'check' : x.kind === 'err' ? 'x' : 'triangle-alert', 13, { sw: 2.6 })}</span>
+      <div><div class="t">${x.title}<time>${x.at}</time></div><p>${x.desc}</p>
+      ${x.acts.length ? `<div class="acts">${x.acts.map(a => a === 'Ajouter au contrat' && GREG.fixed.has(x.id) ? '<span class="done">Demande envoyée à l\'équipe IT</span>'
+        : `<button data-gerr="${x.id}" data-gact="${a}" data-gev="${x.ev || ''}">${a}</button>`).join('')}</div>` : ''}</div></li>`).join(''));
+
+  setHTML('greg-perms', GPERMS.map((p, i) => `<li class="${p.lock ? 'locked' : ''}"><div><b>${p.t}</b><small>${p.lock ? icon('lock', 12) : ''}${p.d}</small></div>
+      <button class="sw-t ${p.on ? 'on' : ''}" data-gp="${i}" ${p.lock ? 'disabled title="Verrouillé"' : ''} aria-pressed="${p.on}"></button></li>`).join(''));
+}
+
+function renderGregSync() {
+  const pts = gregSamples(), span = DAY1 - DAY0, X = h => (h - DAY0) / span * 1000;
+  const MAXMS = 2000, Y = ms => 116 - Math.min(ms, MAXMS) / MAXMS * 108;
+  // Split the line wherever there is no sample (outage, pause)
+  const runs = [];
+  let cur = null;
+  pts.forEach(([h, ms]) => { if (ms === null) cur = null; else { if (!cur) runs.push(cur = []); cur.push([X(h), Y(ms), ms]); } });
+  const line = r => r.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join('');
+  const inc = GINC(), nowH = simH(Date.now());
+  const zone = ([a, b], c) => `<rect x="${X(a).toFixed(1)}" y="0" width="${(X(b) - X(a)).toFixed(1)}" height="116" fill="${c}" opacity=".1"/>`;
+  const pauses = GREG.pauses.concat(GREG.pausedAt ? [[simH(GREG.pausedAt), nowH]] : []);
+  setHTML('greg-sync', `<svg viewBox="0 0 1000 120" preserveAspectRatio="none">
+      ${[500, 1000, 2000].map(v => `<line x1="0" x2="1000" y1="${Y(v)}" y2="${Y(v)}" stroke="#e4e6ea" stroke-dasharray="3 4" vector-effect="non-scaling-stroke"/>`).join('')}
+      ${zone(inc.out, '#e5484d')}${zone(inc.deg, '#f0a020')}${pauses.map(p => zone(p, '#a0a7b0')).join('')}
+      ${runs.map(r => `<path d="${line(r)}L${r[r.length - 1][0].toFixed(1)} 116L${r[0][0].toFixed(1)} 116Z" fill="#22a861" opacity=".12"/>`).join('')}
+      ${runs.map(r => `<path d="${line(r)}" fill="none" stroke="#22a861" stroke-width="1.6" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`).join('')}
+    </svg>${[['2 s', 2000], ['1 s', 1000], ['500 ms', 500]].map(([l, v]) => `<span class="ylab" style="top:${Y(v) / 120 * 100}%">${l}</span>`).join('')}
+    <span class="now" style="left:${(X(nowH) / 10).toFixed(2)}%"></span>`);
+  // Status band: green by default, amber/red/grey over incidents, blank in the future
+  const pct = h => (X(h) / 10).toFixed(2) + '%', w = (a, b) => ((X(b) - X(a)) / 10).toFixed(2) + '%';
+  setHTML('greg-band', `<i style="left:0;width:${pct(nowH)};background:#22a861"></i>
+    <i style="left:${pct(inc.out[0])};width:${w(...inc.out)};background:#e5484d"></i>
+    <i style="left:${pct(inc.deg[0])};width:${w(...inc.deg)};background:#f0a020"></i>
+    ${pauses.map(p => `<i style="left:${pct(p[0])};width:${w(...p)};background:#a0a7b0"></i>`).join('')}
+    <span class="now" style="left:${pct(nowH)}"></span>`);
+  let ticks = '';
+  for (let h = DAY0; h <= DAY1; h += 2) ticks += `<span style="left:${pct(h)}">${h} h</span>`;
+  setHTML('greg-ticks', ticks);
+  setHTML('greg-inc', `<span>${icon('x', 12, { color: '#e5484d', sw: 3 })}<b>${fmtH(inc.out[0])}</b> coupure 12 min, mise à jour de Greg</span>
+    <span>${icon('triangle-alert', 12, { color: '#f0a020', sw: 2.6 })}<b>${fmtH(inc.deg[0])}</b> latence jusqu'à 1,9 s, PMS lent</span>
+    <span>${icon('check', 12, { color: '#22a861', sw: 3 })}<b>0</b> événement perdu</span>`);
+}
+
+// Live traffic: a new exchange every few seconds; while paused, Loop's events wait in a queue
+function gregTick() {
+  GREG.ms = Math.round(120 + Math.random() * 80);
+  const batch = GLIVE[gLive++ % GLIVE.length]();
+  batch.forEach(([dir, name, text, data]) => {
+    if (GREG.state === 'paused' && dir !== 'out') return;
+    const e = gev(0, dir, name, text, data, GREG.state === 'paused' ? { status: 'queued' } : {});
+    e.at = Date.now();
+    GEVENTS.unshift(e);
+    if (dir === 'out' && GREG.state !== 'paused') GREG.sent++;
+    if (dir === 'in') GREG.recv++;
+  });
+  renderGreg();
+}
+setInterval(gregTick, 6000);
+setInterval(() => { if (!document.getElementById('view-greg').hidden) document.querySelectorAll('#view-greg [data-since]').forEach(s => s.textContent = dur(Date.now() - +s.dataset.since)); }, 1000);
+
+document.getElementById('greg-pill').onclick = () => showView('greg');
+document.getElementById('view-greg').addEventListener('click', e => {
+  const el = e.target.closest('[data-g],[data-gf],[data-gp],[data-gerr],.gev');
+  if (!el || e.target.closest('pre')) return;
+  const d = el.dataset;
+  if (d.g === 'pause') { GREG.state = 'paused'; GREG.pausedAt = Date.now(); }
+  else if (d.g === 'resume') {
+    GREG.pauses.push([simH(GREG.pausedAt), simH(Date.now())]);
+    GREG.state = 'ok'; GREG.pausedAt = null;
+    // Replay in order, oldest first
+    GEVENTS.filter(x => x.status === 'queued').reverse().forEach(x => { x.status = 'replayed'; GREG.sent++; });
+  }
+  else if (d.g === 'ping') {
+    const b = el; b.disabled = true; b.innerHTML = `${icon('loader-circle', 14, { cls: 'spin' })}Test en cours…`;
+    setTimeout(() => { GREG.ms = Math.round(110 + Math.random() * 40); b.dataset.html = ''; renderGreg(); const nb = document.querySelector('#greg-head [data-g="ping"]'); if (nb) nb.innerHTML = `${icon('check', 14, { color: '#22a861', sw: 2.6 })}Greg répond en ${GREG.ms} ms`; document.getElementById('greg-head').dataset.html = ''; }, 900);
+    return;
+  }
+  else if (d.gf) GREG.filter = d.gf;
+  else if (d.gp !== undefined) GPERMS[+d.gp].on = !GPERMS[+d.gp].on;
+  else if (d.gerr) {
+    if (d.gact === 'Ajouter au contrat') GREG.fixed.add(d.gerr);
+    else if (d.gev) { GREG.filter = 'all'; GREG.open = d.gev; renderGreg(); document.querySelector(`.gev[data-ev="${d.gev}"]`)?.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
+  }
+  else if (d.ev) GREG.open = GREG.open === d.ev ? null : d.ev;
+  renderGreg();
+});
+
 // First render once everything above (reception state included) is initialised.
 renderAll();
+renderGregPill();
 requestAnimationFrame(step);
 if (location.hash.slice(1).split('/')[0] in VIEWS && location.hash.length > 1) showView(location.hash.slice(1));
 window.addEventListener('hashchange', () => showView(location.hash.slice(1) || 'building'));
