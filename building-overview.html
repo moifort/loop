@@ -60,7 +60,7 @@
   .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
 
   /* Stage: floor picker | flat building | context */
-  .stage { display: grid; grid-template-columns: 360px 560px minmax(300px, 1fr); gap: 20px; align-items: start; }
+  .stage { display: grid; grid-template-columns: 280px 560px minmax(300px, 1fr); gap: 20px; align-items: start; }
 
   /* ---------- Floor picker ---------- */
   .floors { display: flex; flex-direction: column; gap: 4px; }
@@ -71,7 +71,7 @@
   .fl .lv { font-weight: 600; color: var(--muted); font-size: 12px; }
   .fl .nm { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .fl .nm small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 4px; }
-  .fl .r2 { display: grid; grid-template-columns: 34px 1fr 1fr 64px; gap: 10px; align-items: center; margin-top: 7px; }
+  .fl .r2 { display: grid; grid-template-columns: 34px 1fr 56px; gap: 10px; align-items: center; margin-top: 7px; }
   .m { display: flex; flex-direction: column; gap: 3px; }
   .m .lb { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
   .m .lb b { color: var(--text); font-weight: 500; }
@@ -282,7 +282,7 @@ const LOBBY = {
 
 // occ = occupancy tonight (%), null for common areas.
 const FLOORS = [
-  { id: 5, label: 'É5', name: 'Suites', hint: 'sous les toits', area: 520, occ: 60, layout: suiteLevel(),
+  { id: 5, label: 'É5', name: 'Suites 501–505', area: 520, occ: 60, layout: suiteLevel(),
     robot: { name: 'Brume', state: 'idle', pct: 0, bat: 100, at: [4, 3], next: 'Démarre à 12 h 00' } },
   { id: 4, label: 'É4', name: 'App. 401–407', area: 610, occ: 86, layout: apartmentLevel(4),
     robot: { name: 'Écume', state: 'charge', pct: 55, bat: 22, at: [4, 3], next: 'Reprend à 14 h 30' } },
@@ -585,7 +585,6 @@ function floorPicker() {
         <span class="nm">${f.name}${f.hint ? `<small>${f.hint}</small>` : ''}</span>
         <span class="chip ${st.chip}">${st.label}</span></div>
       <div class="r2"><span></span>
-        ${metric('Occupation', f.occ, '#3b82f6')}
         ${metric('Ménage', r.pct, r.state === 'blocked' ? '#e5484d' : '#00a99d')}
         ${alertMetric(alertsOf(f.id))}
       </div>
