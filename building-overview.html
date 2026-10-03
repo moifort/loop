@@ -125,6 +125,7 @@
   .chip.err { background: var(--red-soft); color: #b42318; }
   .chip.idle { background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
   .chip.acc { background: #efeaff; color: #5b3fd6; }
+  .chip.occ { background: #e3e8ff; color: #3451b2; }
 
   /* ---------- Context column ---------- */
   .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
@@ -140,7 +141,7 @@
   .td.done .ck { background: var(--green); border-color: var(--green); }
   .td.done .t, .td.done p { text-decoration: line-through; color: var(--faint); }
   .td .t { font-weight: 600; display: flex; align-items: center; gap: 8px; }
-  .td .tags { margin-top: 7px; margin-bottom: 2px; }
+  .td .t .tags { margin-right: 2px; }
   .td p { color: var(--muted); margin-top: 2px; line-height: 1.45; }
   .td .acts { display: flex; gap: 14px; margin-top: 6px; }
   .td .acts button { color: var(--blue); font-weight: 500; font-size: 12px; }
@@ -290,16 +291,16 @@ const LOBBY = {
 
 // occ = occupancy tonight (%), null for common areas.
 const FLOORS = [
-  { id: 5, label: 'É5', name: 'Suites 501–505', area: 520, occ: 60, layout: suiteLevel(),
+  { id: 5, label: 'É5', name: 'Suites 501–505', occupied: ['504'], area: 520, occ: 60, layout: suiteLevel(),
     robot: { name: 'CLN-C6F2', state: 'run', pct: 22, bat: 96, at: [4, 3], next: 'Fin estimée 13 h 10' } },
-  { id: 4, label: 'É4', name: 'App. 401–407', area: 610, occ: 86, layout: apartmentLevel(4),
+  { id: 4, label: 'É4', name: 'App. 401–407', occupied: ['402', '407'], area: 610, occ: 86, layout: apartmentLevel(4),
     robot: { name: 'CLN-5E07', state: 'run', pct: 55, bat: 22, at: [4, 3], next: 'Recharge prévue à 15 %' } },
-  { id: 3, label: 'É3', name: 'App. 301–307', area: 610, occ: 100, layout: apartmentLevel(3),
+  { id: 3, label: 'É3', name: 'App. 301–307', occupied: ['302'], area: 610, occ: 100, layout: apartmentLevel(3),
     robot: { name: 'CLN-91C5', state: 'blocked', pct: 86, bat: 63, at: [11.4, 5.4], next: 'Obstacle dans l\'app. 307' },
     blockedRoom: '307' },
-  { id: 2, label: 'É2', name: 'App. 201–207', area: 610, occ: 71, layout: apartmentLevel(2),
+  { id: 2, label: 'É2', name: 'App. 201–207', occupied: ['204'], area: 610, occ: 71, layout: apartmentLevel(2),
     robot: { name: 'CLN-2D84', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' } },
-  { id: 1, label: 'É1', name: 'App. 101–107', area: 610, occ: 86, layout: apartmentLevel(1),
+  { id: 1, label: 'É1', name: 'App. 101–107', occupied: ['103', '106'], area: 610, occ: 86, layout: apartmentLevel(1),
     robot: { name: 'CLN-7B19', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
   { id: 0, label: 'RDC', name: 'Réception', hint: '& petit-déj.', area: 420, occ: null, layout: LOBBY,
     robot: { name: 'CLN-0A3E', state: 'run', pct: 70, bat: 92, at: [4.4, 5.4], base: [4.4, 5.4], next: 'Hall terminé vers 12 h 30' },
@@ -308,7 +309,7 @@ const FLOORS = [
 
 // To-do list, linked to a floor (alerts per floor are derived from it).
 const TODOS = [
-  { floor: 3, prio: 'high', short: 'CLN-91C5 bloqué', title: 'CLN-91C5 est bloqué dans le 307', desc: "Une valise est restée au sol au milieu de l'appartement, le robot ne peut pas la contourner. Il attend depuis 18 min.", acts: ['Envoyer un agent', 'Passer au suivant'] },
+  { floor: 3, prio: 'high', short: 'CLN-91C5 bloqué', title: 'CLN-91C5 est bloqué', desc: "Une valise est restée au sol au milieu de l'appartement, le robot ne peut pas la contourner. Il attend depuis 18 min.", acts: ['Envoyer un agent', 'Passer au suivant'] },
   { floor: 4, prio: 'med', short: 'CLN-5E07 batterie 22 %', title: 'CLN-5E07 a une batterie faible (22 %)', desc: "Retour automatique à la base prévu vers 15 %. Les 3 derniers appartements de l'étage seront faits après la recharge (environ 40 min).", acts: ['Recharger maintenant', 'Voir le planning'] },
   { floor: 5, prio: 'low', short: 'CLN-C6F2 brosse usée', title: 'CLN-C6F2 : brosse principale à remplacer', desc: "Usure estimée à 92 %. Le robot continue de nettoyer, mais la brosse doit être changée avant la prochaine tournée.", acts: ['Planifier l\'entretien', 'Commander une brosse'] },
 ];
@@ -323,6 +324,7 @@ const STATE = {
   live:    { chip: 'acc',  label: 'En service', color: '#7c5cff' },
 };
 const ROOM_STATE = {
+  occupied:{ chip: 'occ',  label: 'Occupé',     fill: '#e3e8ff' },
   clean:   { chip: 'ok',   label: 'Prêt',       fill: '#d9f3f0' },
   doing:   { chip: 'run',  label: 'En cours',   fill: '#bfeae4' },
   blocked: { chip: 'err',  label: 'Bloqué',     fill: '#fbd5d6' },
@@ -333,10 +335,13 @@ const ROOM_STATE = {
 let selected = 'all';
 const done = new Set();
 
+// Apartments a robot may clean: occupied ones (guest inside) are skipped.
+const cleanable = f => f.layout.rooms.filter(r => r.kind === 'apt' && !(f.occupied || []).includes(r.id));
 function roomStates(f) {
-  const apts = f.layout.rooms.filter(r => r.kind === 'apt');
+  const apts = cleanable(f);
   const n = Math.floor(f.robot.pct / 100 * apts.length + 1e-9);
   const out = {};
+  (f.occupied || []).forEach(id => out[id] = 'occupied');
   apts.forEach((r, i) => {
     if (f.blockedRoom === r.id) out[r.id] = 'blocked';
     else if (i < n) out[r.id] = 'clean';
@@ -470,6 +475,14 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   return s;
 }
 
+// Standing guest silhouette (occupied apartment).
+function guestGlyph(x, y, z) {
+  const [cx, cy] = P(x, y, z), c = '#3451b2';
+  return `<ellipse cx="${cx}" cy="${cy}" rx="7" ry="3.2" fill="rgba(0,0,0,.14)"/>` +
+    `<path d="M${cx - 5},${cy} L${cx - 5},${cy - 11} Q${cx - 5},${cy - 15} ${cx},${cy - 15} Q${cx + 5},${cy - 15} ${cx + 5},${cy - 11} L${cx + 5},${cy} Z" fill="${c}"/>` +
+    `<circle cx="${cx}" cy="${cy - 19}" r="3.6" fill="${c}"/>`;
+}
+
 // Open storey: cutaway with extruded rooms and robot position.
 function openFloor(f, z0) {
   const states = roomStates(f);
@@ -505,10 +518,16 @@ function openFloor(f, z0) {
   const roomLabels = [], robotTags = [];
   f.layout.rooms.filter(r => r.kind !== 'corridor' && r.kind !== 'core').forEach(r => {
     // Move the room number to the back of the room when a robot stands in it, so its tag never covers it.
-    const inside = [f.robot.at, f.greeter && f.greeter.at].some(a => a && a[0] > r.x1 && a[0] < r.x2 && a[1] > r.y1 && a[1] < r.y2);
+    const guest = (f.occupied || []).includes(r.id);
+    const inside = guest || [f.robot.at, f.greeter && f.greeter.at].some(a => a && a[0] > r.x1 && a[0] < r.x2 && a[1] > r.y1 && a[1] < r.y2);
     const c = inside ? P(r.x1 + 0.9, r.y1 + 0.7, z0) : P((r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2, z0);
     const st = r.kind === 'apt' ? states[r.id] : null;
     roomLabels.push(`<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">${r.id}</text>`);
+  });
+  // Guests in occupied apartments
+  f.layout.rooms.filter(q => (f.occupied || []).includes(q.id)).forEach(q => {
+    const gx = (q.x1 + q.x2) / 2 + 0.3, gy = (q.y1 + q.y2) / 2 + 0.3;
+    items.push({ d: gx + gy, svg: guestGlyph(gx, gy, z0) });
   });
   const r = f.robot, st = STATE[r.state];
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', overlay: robotTags }) });
@@ -622,7 +641,7 @@ function robotRoom(floorId) {
   const f = FLOORS.find(x => x.id === floorId), r = f.robot, [x, y] = r.at;
   const inside = f.layout.rooms.find(q => (q.kind === 'apt' || q.kind === 'lobby') && x > q.x1 && x < q.x2 && y > q.y1 && y < q.y2);
   if (inside) return inside.id;
-  const apts = f.layout.rooms.filter(q => q.kind === 'apt');
+  const apts = cleanable(f);
   if (r.sim && r.sim.room != null) return apts[r.sim.room].id;
   const near = apts.reduce((a, q) => Math.hypot((q.x1 + q.x2) / 2 - x, (q.y1 + q.y2) / 2 - y) < Math.hypot((a.x1 + a.x2) / 2 - x, (a.y1 + a.y2) / 2 - y) ? q : a);
   return near.id;
@@ -641,8 +660,7 @@ function renderTodo() {
     <li class="td ${done.has(t.i) ? 'done' : ''}">
       <button class="ck" data-i="${t.i}" title="Marquer comme traité">${done.has(t.i) ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>' : ''}</button>
       <div>
-        <div class="t"><span class="prio" style="background:${PRIO[t.prio]}"></span>${t.title}</div>
-        ${tagsFor(t)}
+        <div class="t">${tagsFor(t)}<span class="prio" style="background:${PRIO[t.prio]}"></span>${t.title}</div>
         <p>${t.desc}</p>
         ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage</button>` : ''}</div>`}
       </div>
@@ -659,7 +677,8 @@ function renderRooms() {
   const states = roomStates(f);
   const list = f.layout.rooms.filter(r => r.kind === 'apt');
   card.querySelector('h3').textContent = f.id === 0 ? 'Espaces' : 'Appartements';
-  document.getElementById('rooms-count').textContent = `${list.filter(r => states[r.id] === 'clean').length}/${list.length} prêts`;
+  const occ = list.filter(r => states[r.id] === 'occupied').length;
+  document.getElementById('rooms-count').textContent = `${list.filter(r => states[r.id] === 'clean').length}/${list.length - occ} prêts${occ ? ` · ${occ} occupé${occ > 1 ? 's' : ''}` : ''}`;
   document.getElementById('rooms').innerHTML = list.map(r => {
     const s = ROOM_STATE[states[r.id]];
     return `<div class="room"><span class="sw" style="background:${s.fill};border:1px solid #d5d9df"></span><span class="n">${f.id === 0 ? r.id : 'App. ' + r.id}</span><span class="s chip ${s.chip}">${s.label}</span></div>`;
@@ -704,7 +723,7 @@ tick(); setInterval(tick, 30000);
 // inside the current apartment, progress grows, blocked robots stay put.
 // =====================================================================
 const CORRIDOR_Y = 3.0, SPEED = 0.45, PROGRESS_PER_S = 0.12, BASE = [4, 3.0];
-const aptsOf = f => f.layout.rooms.filter(r => r.kind === 'apt');
+const aptsOf = cleanable;
 function roomPath(room) {
   const north = room.y2 <= 2.4;
   const ys = north ? [2.0, 1.45, 0.9, 0.4] : [4.0, 4.55, 5.1, 5.6];
