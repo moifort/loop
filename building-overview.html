@@ -79,11 +79,12 @@
   .fl { display: block; width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid transparent; }
   .fl:hover { background: var(--panel); border-color: var(--border); }
   .fl.sel { background: var(--panel); border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
-  .fl .r1 { display: grid; grid-template-columns: 28px 1fr auto; gap: 4px; align-items: center; }
-  .fl .lv { font-weight: 600; color: var(--muted); font-size: 12px; }
+  .fl .r1 { display: grid; grid-template-columns: 38px 1fr auto; gap: 4px; align-items: center; }
+  /* Level reads as the same dark badge as the [É3 | 307] tags */
+  .fl .lv { justify-self: start; display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border-radius: 3px; background: #3a4150; color: #fff; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
   .fl .nm { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .fl .nm small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 4px; }
-  .fl .r2 { display: grid; grid-template-columns: 28px 1fr 40px; gap: 4px; align-items: end; margin-top: 7px; }
+  .fl .r2 { display: grid; grid-template-columns: 38px 1fr 40px; gap: 4px; align-items: end; margin-top: 7px; }
   .m { display: flex; flex-direction: column; gap: 3px; }
   .m .lb { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
   .m .lb b { color: var(--text); font-weight: 500; white-space: nowrap; }
@@ -94,7 +95,14 @@
   .al.none b { color: var(--faint); font-weight: 500; }
 
   /* First item of the floor list, stretched to full width above the building */
-  #all-row { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  #all-row { margin-bottom: 8px; }
+  #all-row .fl:not(.sel) { background: var(--panel); border-color: var(--border); }
+  /* Floors live in one card so each row is anchored, separated by hairlines */
+  #floors { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 4px; gap: 0; }
+  #floors .fl { position: relative; border-radius: 9px; }
+  #floors .fl:hover:not(.sel) { background: var(--panel-2); border-color: transparent; }
+  #floors .fl + .fl::before { content: ''; position: absolute; left: 12px; right: 12px; top: -1px; height: 1px; background: var(--border); }
+  #floors .fl.sel::before, #floors .fl.sel + .fl::before { display: none; }
   /* No level column on the whole-building row: more room for issues */
   .fl.all .r1 { grid-template-columns: 1fr auto; }
   .fl.all .r2 { grid-template-columns: 1fr; }
