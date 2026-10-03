@@ -74,10 +74,16 @@
   /* First item of the floor list, stretched to full width above the building */
   #all-row { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
   .fl.all .lv svg { display: block; }
-  .issues { display: flex; flex-direction: column; gap: 4px; margin: 8px 0 0 42px; }
+  .issues { display: flex; flex-direction: column; gap: 5px; margin: 8px 0 0 42px; }
   .issue { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .issue:hover { text-decoration: underline; }
-  .issue .where { color: var(--muted); }
+  .tags { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+  .tag { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 5px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .tag.lvl { background: #1f2328; color: #fff; }
+  .tag.room { background: var(--panel); color: var(--text); border: 1px solid var(--border); }
+  .tag:hover { filter: brightness(.95); }
+  .issue .tags { margin-left: auto; flex-wrap: nowrap; flex: none; }
+  .issue .txt { overflow: hidden; text-overflow: ellipsis; }
 
   /* ---------- Building ---------- */
   .bld { width: 560px; }
@@ -111,7 +117,7 @@
   .td.done .ck { background: var(--green); border-color: var(--green); }
   .td.done .t, .td.done p { text-decoration: line-through; color: var(--faint); }
   .td .t { font-weight: 600; display: flex; align-items: center; gap: 8px; }
-  .td .t .where { color: var(--muted); font-weight: 500; font-size: 12px; }
+  .td .tags { margin-top: 5px; }
   .td p { color: var(--muted); margin-top: 2px; line-height: 1.45; }
   .td .acts { display: flex; gap: 14px; margin-top: 6px; }
   .td .acts button { color: var(--blue); font-weight: 500; font-size: 12px; }
@@ -279,9 +285,9 @@ const FLOORS = [
 
 // To-do list, linked to a floor (alerts per floor are derived from it).
 const TODOS = [
-  { floor: 3, prio: 'high', short: 'CLN-91C5 bloqué (307)', title: 'CLN-91C5 est bloqué dans le 307', desc: "Une valise est restée au sol au milieu de l'appartement, le robot ne peut pas la contourner. Il attend depuis 18 min.", acts: ['Envoyer un agent', 'Passer au suivant'] },
-  { floor: 4, prio: 'med', short: 'CLN-5E07 batterie 22 %', title: 'CLN-5E07 a une batterie faible (22 %)', desc: "Il devra recharger vers 15 % : 3 appartements risquent d'être prêts après l'arrivée de 15 h.", acts: ['Prévenir la réception', 'Voir le planning'] },
-  { floor: 5, prio: 'low', short: 'Départs 503–505 à confirmer', title: 'Confirmer les départs des suites 503 à 505', desc: 'CLN-C6F2 a fini la 501 et attaque la 502. Il continuera si les suites suivantes sont libérées.', acts: ['Confirmer'] },
+  { floor: 3, rooms: ['307'], prio: 'high', short: 'CLN-91C5 bloqué', title: 'CLN-91C5 est bloqué dans le 307', desc: "Une valise est restée au sol au milieu de l'appartement, le robot ne peut pas la contourner. Il attend depuis 18 min.", acts: ['Envoyer un agent', 'Passer au suivant'] },
+  { floor: 4, rooms: ['405', '406', '407'], prio: 'med', short: 'CLN-5E07 batterie 22 %', title: 'CLN-5E07 a une batterie faible (22 %)', desc: "Il devra recharger vers 15 % : 3 appartements risquent d'être prêts après l'arrivée de 15 h.", acts: ['Prévenir la réception', 'Voir le planning'] },
+  { floor: 5, rooms: ['503', '504', '505'], prio: 'low', short: 'Départs à confirmer', title: 'Confirmer les départs des suites 503 à 505', desc: 'CLN-C6F2 a fini la 501 et attaque la 502. Il continuera si les suites suivantes sont libérées.', acts: ['Confirmer'] },
 ];
 const PRIO = { high: '#e5484d', med: '#f0a020', low: '#a0a7b0' };
 
@@ -547,7 +553,6 @@ function floorPicker() {
   const clean = Math.round(FLOORS.reduce((a, f) => a + f.robot.pct * f.area, 0) / area);
   const issues = openTodos();
   const blocked = FLOORS.filter(f => f.robot.state === 'blocked').length;
-  const lvl = id => FLOORS.find(f => f.id === id).label;
   // "Tout le bâtiment": same structure as a floor row (r1 = level · name · state, r2 = details)
   document.getElementById('all-row').innerHTML = `
     <div class="fl all ${selected === 'all' ? 'sel' : ''}" data-id="all" role="button" tabindex="0">
@@ -559,7 +564,7 @@ function floorPicker() {
         ${alertMetric(issues)}
       </div>
       ${issues.length ? `<div class="issues">${issues.map(t => `
-        <span class="issue" data-go="${t.floor}">${BELL(PRIO[t.prio])}${t.short}<span class="where">· ${lvl(t.floor)}</span></span>`).join('')}</div>` : ''}
+        <span class="issue" data-go="${t.floor}">${BELL(PRIO[t.prio])}<span class="txt">${t.short}</span>${tagsFor(t, true)}</span>`).join('')}</div>` : ''}
     </div>`;
   const all = document.querySelector('#all-row .fl');
   all.onclick = () => select('all');
@@ -587,23 +592,30 @@ function floorPicker() {
 // To-do list, rooms, robots table
 // =====================================================================
 const scope = () => selected === 'all' ? FLOORS : FLOORS.filter(f => f.id === selected);
+// Floor + apartment tags shown on every notification.
+const roomRange = rooms => rooms.length > 1 ? `${rooms[0]}–${rooms[rooms.length - 1]}` : rooms[0];
+const tagsFor = (t, compact = false) => {
+  const rooms = t.rooms || [];
+  const list = compact && rooms.length > 1 ? [roomRange(rooms)] : rooms;
+  return `<span class="tags"><span class="tag lvl" data-go="${t.floor}">${FLOORS.find(f => f.id === t.floor).label}</span>${list.map(r => `<span class="tag room" data-go="${t.floor}">${r}</span>`).join('')}</span>`;
+};
 
 function renderTodo() {
   const list = TODOS.map((t, i) => ({ ...t, i })).filter(t => selected === 'all' || t.floor === selected);
   const open = list.filter(t => !done.has(t.i)).length;
   document.getElementById('todo-count').textContent = open ? `${open} à faire` : 'Tout est traité';
-  const lvl = id => FLOORS.find(f => f.id === id).label;
   document.getElementById('todo').innerHTML = list.length ? list.map(t => `
     <li class="td ${done.has(t.i) ? 'done' : ''}">
       <button class="ck" data-i="${t.i}" title="Marquer comme traité">${done.has(t.i) ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>' : ''}</button>
       <div>
-        <div class="t"><span class="prio" style="background:${PRIO[t.prio]}"></span>${t.title}${selected === 'all' ? `<span class="where">${lvl(t.floor)}</span>` : ''}</div>
+        <div class="t"><span class="prio" style="background:${PRIO[t.prio]}"></span>${t.title}</div>
+        ${tagsFor(t)}
         <p>${t.desc}</p>
         ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage</button>` : ''}</div>`}
       </div>
     </li>`).join('') : `<li class="empty"><span class="dot" style="background:var(--green)"></span>Rien à signaler sur cet étage.</li>`;
   document.querySelectorAll('#todo .ck').forEach(b => b.onclick = () => { const i = +b.dataset.i; done.has(i) ? done.delete(i) : done.add(i); renderAll(); });
-  document.querySelectorAll('#todo [data-go]').forEach(b => b.onclick = () => select(+b.dataset.go));
+  document.querySelectorAll('#todo [data-go]').forEach(b => b.onclick = e => { e.stopPropagation(); select(+b.dataset.go); });
 }
 
 function renderRooms() {
