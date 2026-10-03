@@ -268,6 +268,11 @@
   /* Two equal actions, bottom edge level with the feed */
   .temi-actions { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 12px; }
   .temi-actions .btn { justify-content: center; }
+  /* Temi's live state chip, right of the card title, pulsing in its own colour */
+  .temi-head { display: inline-flex; align-items: center; gap: 8px; }
+  .temi-head .chip, #temi-head-right .chip { font-weight: 550; animation: chip-pulse 1.8s ease-out infinite; }
+  @keyframes chip-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 40%, transparent); } 70%, 100% { box-shadow: 0 0 0 7px color-mix(in srgb, currentColor 0%, transparent); } }
+  @media (prefers-reduced-motion: reduce) { .temi-head .chip, #temi-head-right .chip { animation: none; } }
   .temi-go { display: inline-flex; align-items: center; gap: 4px; color: var(--blue); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
   #temi-card:hover .temi-go { text-decoration: underline; }
 
@@ -1417,8 +1422,9 @@ function renderTemiCard() {
     rooms.classList.toggle('collapsed', open !== 'rooms');
     below.classList.toggle('open-rooms', open === 'rooms');
   } else { todo.classList.remove('collapsed'); below.classList.remove('open-rooms'); }
-  document.getElementById('temi-title').innerHTML = compact ? `<span class="temi-name"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>` : "Robot d'accueil";
-  document.getElementById('temi-head-right').innerHTML = compact ? temiStateChip() : '<span class="temi-go">Ouvrir la vue Accueil <span aria-hidden="true">→</span></span>';
+  // setHTML: only touch the DOM when it changed, so the state chip's pulse keeps running
+  setHTML('temi-title', compact ? `<span class="temi-name"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>` : `<span class="temi-head">Robot d'accueil${temiStateChip()}</span>`);
+  setHTML('temi-head-right', compact ? temiStateChip() : '<span class="temi-go">Ouvrir la vue Accueil <span aria-hidden="true">→</span></span>');
   // Same figures as the reception view
   const remote = ACC.mode === 'remote', panic = !!ACC.panicAt;
   const alone = coverage().segs.filter(s => !s.plan && s.k !== 'desk').reduce((a, s) => a + s.b - s.a, 0);
@@ -1435,7 +1441,7 @@ function renderTemiCard() {
     </div>`;
   if (compact) { document.getElementById('temi-info').innerHTML = actions; return; }
   document.getElementById('temi-info').innerHTML = `
-    <div><span class="temi-name"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}${temiStateChip()}</span><small>Temi 3 · Réception</small>
+    <div><span class="temi-name"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span><small>Temi 3 · Réception</small>
       <div class="temi-stats">
         <div><small>Échanges</small><b>${f.greeter.visitors}</b></div>
         <div><small>Résolus seul</small><b>78 %</b></div>
