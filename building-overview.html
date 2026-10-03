@@ -214,7 +214,9 @@
   .rb-ic { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #fff; flex: none; }
   .rb b { font-weight: 500; display: block; }
   .rb small { color: var(--muted); }
-  .rb .batt { display: block; margin-top: 3px; line-height: 0; width: max-content; }
+  /* Under the robot name: location badge, then battery */
+  .rb .sub { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+  .rb .batt { display: block; line-height: 0; }
   .bar { height: 6px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 99px; overflow: hidden; width: 120px; }
   .bar i { display: block; height: 100%; border-radius: 99px; }
   .pct { display: flex; align-items: center; gap: 8px; }
@@ -365,7 +367,7 @@
       <div class="right" id="robots-count"></div>
     </div>
     <div class="table-scroll"><table>
-      <thead><tr><th>Robot</th><th>État</th><th>Avancement du jour</th><th>Prochaine étape</th><th>Étage</th></tr></thead>
+      <thead><tr><th>Robot</th><th>État</th><th>Avancement du jour</th><th>Prochaine étape</th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
@@ -482,7 +484,7 @@ const FLOORS = [
   { id: 1, label: 'É1', name: 'App. 101–107', occupied: ['103', '106'], area: 610, occ: 86, layout: apartmentLevel(1),
     robot: { name: 'CLN-7B19', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
   { id: 0, label: 'RDC', name: 'Réception', area: 420, occ: null, layout: LOBBY,
-    robot: { name: 'CLN-0A3E', state: 'run', pct: 70, bat: 92, at: [4.4, 5.4], base: [4.4, 5.4], next: 'Hall terminé vers 12 h 30' },
+    robot: { name: 'CLN-0A3E', state: 'charge', pct: 100, bat: 64, at: [4.4, 5.4], base: [4.4, 5.4], next: 'Hall terminé · pleine dans 25 min' },
     greeter: { name: 'TEMI-4F2A', state: 'live', visitors: 23, at: [2.6, 4.2], next: 'Recharge planifiée à 23 h' } },
 ];
 
@@ -924,36 +926,40 @@ let openPanel = null;
 document.getElementById('temi-card').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showView('accueil'); } };
 
 
-// iOS-style battery under the robot name: plain shape, no outline, one continuous fill in three levels.
-// Fill is dark as on iOS, red when almost empty, green when plugged in. Exact value on hover.
+// iOS-style battery under the robot name: plain shape, one continuous fill in three levels,
+// green / amber / red. Charging adds a white bolt, as on iOS. Exact value on hover.
 const BATTERY = [
-  { min: 70, fill: 1,   label: 'Batterie pleine' },
-  { min: 30, fill: .55, label: 'Batterie moyenne' },
-  { min: 0,  fill: .2,  label: 'Batterie presque vide', color: '#e5484d' },
+  { min: 70, fill: 1,   color: '#22a861', label: 'Batterie pleine' },
+  { min: 30, fill: .55, color: '#f0a020', label: 'Batterie moyenne' },
+  { min: 0,  fill: .2,  color: '#e5484d', label: 'Batterie presque vide' },
 ];
-function batteryIcon(pct, plugged) {
-  const b = BATTERY.find(x => pct >= x.min), color = plugged ? '#22a861' : b.color || '#1f2328';
-  return `<span class="batt" title="${b.label} · ${plugged || pct + ' %'}"><svg width="24" height="12" viewBox="0 0 24 12">
+function batteryIcon(pct, charging) {
+  const b = BATTERY.find(x => pct >= x.min);
+  const label = charging ? `En charge · ${charging === true ? pct + ' %' : charging}` : `${b.label} · ${pct} %`;
+  const bolt = charging ? '<path d="M11.6 2.2 7.4 6.7h2.9l-.9 3.1 4.2-4.5h-2.9Z" fill="#fff"/>' : '';
+  return `<span class="batt" title="${label}"><svg width="24" height="12" viewBox="0 0 24 12">
     <rect x="0" y="1" width="21" height="10" rx="3.2" fill="#e3e6ea"/>
     <path d="M22 4.3v3.4a1.7 1.7 0 0 0 0-3.4Z" fill="#e3e6ea"/>
-    <rect x="0" y="1" width="${(21 * b.fill).toFixed(1)}" height="10" rx="3.2" fill="${color}"/></svg></span>`;
+    <rect x="0" y="1" width="${(21 * (charging ? Math.max(b.fill, .55) : b.fill)).toFixed(1)}" height="10" rx="3.2" fill="${charging ? '#22a861' : b.color}"/>${bolt}</svg></span>`;
 }
+
+// Same split badge as the to-do list: [floor | room the robot is in, live], shortened to fit under the name.
+const ROOM_SHORT = { 'Réception': 'Réc.' };
+const placeTag = (lvl, room) => `<span class="tags"><span class="tag-lvl">${lvl}</span><span class="tag-room">${ROOM_SHORT[room] || room}</span></span>`;
 
 function renderRows() {
   const rows = [];
   [...scope()].sort((a, b) => a.id - b.id).forEach(f => {
-    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><b>${f.greeter.name}</b>${batteryIcon(100, 'Sur secteur')}</div></div></td>
+    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><b>${f.greeter.name}</b><span class="sub">${placeTag(f.label, 'Réception')}${batteryIcon(100, 'sur secteur')}</span></div></div></td>
       <td><span class="chip acc">En service</span></td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
-      <td class="muted">${f.greeter.next}</td>
-      <td>${f.label} <span class="muted">· Réception</span></td></tr>`);
+      <td class="muted">${f.greeter.next}</td></tr>`);
     const r = f.robot, st = STATE[r.state];
     rows.push(`<tr data-id="${f.id}">
-      <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span><div><b>${r.name}</b>${batteryIcon(r.bat)}</div></div></td>
+      <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span><div><b>${r.name}</b><span class="sub">${placeTag(f.label, robotRoom(f.id))}${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span></div></div></td>
       <td><span class="chip ${st.chip}">${st.label}</span></td>
       <td><div class="pct"><div class="bar"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? 'var(--red)' : 'var(--menage)'}"></i></div>${r.pct} %</div></td>
-      <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td>
-      <td>${f.label} <span class="muted">· ${f.name}</span></td></tr>`);
+      <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td></tr>`);
   });
   document.getElementById('rows').innerHTML = rows.join('');
   document.getElementById('robots-count').textContent = selected === 'all' ? '7 robots · 1 par étage + accueil' : `${rows.length} robot${rows.length > 1 ? 's' : ''} sur cet étage`;
