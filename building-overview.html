@@ -232,6 +232,7 @@
   .handoff b { font-weight: 600; }
   .live { position: relative; margin: 6px 16px 0; border-radius: 10px; overflow: hidden; background: #1c2029; aspect-ratio: 16 / 9; }
   .live > svg { width: 100%; height: 100%; }
+  .live video.cam { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .ov { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 6px; background: rgba(15,18,25,.62); color: #fff; font-size: 11px; font-weight: 500; backdrop-filter: blur(6px); }
   .ov.o-tl { top: 10px; left: 10px; } .ov.o-tr { top: 10px; right: 10px; }
   .ov.o-bl { bottom: 10px; left: 10px; } .ov.o-br { bottom: 10px; right: 10px; }
@@ -1064,6 +1065,22 @@ const VIDEO = (() => {
   s += '<rect x="398" y="262" width="36" height="58" rx="5" fill="#c0503f"/><path d="M408 262 v-14 h16 v14" fill="none" stroke="#2a2f3b" stroke-width="3"/><circle cx="404" cy="322" r="3" fill="#2a2f3b"/><circle cx="428" cy="322" r="3" fill="#2a2f3b"/>';
   return s + '<rect width="640" height="360" fill="url(#vig)"/></svg>';
 })();
+// Real lobby footage from the robot's height: a guest walks in, finds nobody at the desk and rings the bell.
+// Pexels video 5373058 (free licence); looped before a receptionist enters the frame at ~22 s.
+// Offline, the illustrated lobby underneath stays visible.
+const LOBBY_CLIP = { src: 'https://videos.pexels.com/video-files/5373058/5373058-sd_960_506_25fps.mp4', end: 21 };
+let lobbyVideo = null;
+function mountLobbyVideo(live) {
+  if (!lobbyVideo) {
+    lobbyVideo = document.createElement('video');
+    Object.assign(lobbyVideo, { src: LOBBY_CLIP.src, muted: true, loop: true, playsInline: true, preload: 'auto', className: 'cam' });
+    lobbyVideo.addEventListener('timeupdate', () => { if (lobbyVideo.currentTime >= LOBBY_CLIP.end) lobbyVideo.currentTime = 0; });
+  }
+  if (lobbyVideo.error) return;
+  // Re-rendering moves the same element, so playback carries on instead of restarting.
+  live.insertBefore(lobbyVideo, live.children[1]);
+  lobbyVideo.play().catch(() => {});
+}
 const CHECK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>';
 
 function renderLive() {
@@ -1072,7 +1089,7 @@ function renderLive() {
     : remote ? '<span class="chip occ">Piloté à distance</span>' : '<span class="chip acc">En autonomie</span>';
   const handoff = ACC.waiting && !remote ? `<div class="handoff">
       <span class="sev sev-med">En attente</span>
-      <p><b>Un client attend un humain depuis ${since(ACC.waiting)}.</b> Il demande une facture au nom de sa société ; Inès n'est pas au comptoir.</p>
+      <p><b>Une cliente attend un humain depuis ${since(ACC.waiting)}.</b> Elle demande une facture au nom de sa société ; Inès n'est pas au comptoir.</p>
       <button class="btn primary" data-act="take">Prendre la main</button></div>` : '';
   document.getElementById('acc-live').innerHTML = `${handoff}
     <div class="live">${VIDEO}
@@ -1087,6 +1104,7 @@ function renderLive() {
         : '<button class="btn primary" data-act="take">Prendre la main en visio</button><button class="btn">Parler dans le hall</button><button class="btn">Ramener à la base</button>'}
       <span class="note">${remote ? 'Latence 180 ms · Antananarivo → Paris' : 'Hery est disponible pour un relais'}</span>
     </div>`;
+  mountLobbyVideo(document.querySelector('#acc-live .live'));
   document.getElementById('acc-live-card').classList.toggle('alarm', panic);
 }
 
