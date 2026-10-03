@@ -310,7 +310,9 @@
   body.alarm #temi-card .chip { background: #fff; color: #b42318; }
   body.alarm #temi-card .btn.panic { background: #fff; border-color: #fff; color: #b42318; }
   body.alarm #temi-card .btn.panic:hover { background: #fdecec; }
-  .fl.trouble, #floors .fl.trouble:hover:not(.sel), .fl.trouble.sel { background: var(--red); border-color: var(--red); color: #fff; border-radius: 12px; }
+  .fl.trouble, #floors .fl.trouble:hover:not(.sel), .fl.trouble.sel { background: var(--red); border-color: var(--red); color: #fff; }
+  #floors .fl.trouble, #floors .fl.trouble::before, #floors .fl.trouble + .fl::before { border-radius: 0; }
+  #floors .fl.trouble::before, #floors .fl.trouble + .fl::before { display: none; }
   .fl.trouble .nm small, .fl.trouble .m .lb, .fl.trouble .m .lb b { color: #fff; }
   .fl.trouble .lv { background: rgba(0,0,0,.28); }
   .fl.trouble .chip { background: #fff; color: #b42318; }
