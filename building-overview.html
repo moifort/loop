@@ -292,6 +292,13 @@
   tr:last-child td { border-bottom: none; }
   tbody tr { cursor: pointer; }
   tbody tr:hover td { background: var(--panel-2); }
+  /* Robot pointed out on the building */
+  tbody tr.focus td { background: var(--blue-soft); }
+  /* Last cell: next step on the left, button to the robot's sheet on the right */
+  td .next { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  td .next .btn.sheet { height: 28px; padding: 0 10px; font-size: 12px; color: var(--text); }
+  td .next .btn.sheet:hover { background: var(--panel-2); }
+  tbody tr.trouble .btn.sheet { background: #fff; border-color: #fff; color: #b42318; }
   /* Robot in trouble (blocked, or greeter in alarm): the whole row turns solid red */
   tbody tr.trouble td, tbody tr.trouble:hover td { background: var(--red); color: #fff; border-bottom-color: var(--red); }
   tbody tr.trouble:hover td { background: #d23b40; }
@@ -318,6 +325,9 @@
 
   @keyframes pulse { 0% { r: 6; opacity: .55; } 100% { r: 18; opacity: 0; } }
   .pulse { animation: pulse 1.6s ease-out infinite; }
+  .focus-ring { animation: focus-ring 1.4s ease-in-out infinite; }
+  @keyframes focus-ring { 50% { opacity: .3; } }
+  @media (prefers-reduced-motion: reduce) { .focus-ring { animation: none; } }
 
   /* ---------- Alarm mode: the whole UI signals the problem ---------- */
   body.alarm .top { background: #fdecec; border-bottom-color: #f5c2c3; }
@@ -1153,6 +1163,8 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   const [cx, cy] = P(x, y, z);
   const h = opts.tall ? 26 : 5, rx = opts.tall ? 7 : 8, ry = rx * 0.5;
   let s = `<ellipse cx="${cx}" cy="${cy}" rx="${rx + 3}" ry="${ry + 1.5}" fill="rgba(0,0,0,.15)"/>`;
+  // Pointed out from the robots table: a ring around its base, breathing in the robot's colour.
+  if (opts.focus) s += `<ellipse class="focus-ring" style="animation-delay:-${Math.round(performance.now() % 1400)}ms" cx="${cx}" cy="${cy}" rx="${rx + 10}" ry="${(rx + 10) * .5}" fill="none" stroke="${color}" stroke-width="2.5"/>`;
   if (opts.pulse) s += `<circle class="pulse" cx="${cx}" cy="${cy - h / 2}" r="6" fill="${color}"/>`;
   s += `<path d="M${cx - rx},${cy} L${cx - rx},${cy - h} A${rx},${ry} 0 0 1 ${cx + rx},${cy - h} L${cx + rx},${cy} A${rx},${ry} 0 0 1 ${cx - rx},${cy} Z" fill="${color}"/>`;
   s += `<ellipse cx="${cx}" cy="${cy - h}" rx="${rx}" ry="${ry}" fill="#fff" opacity=".35"/>`;
@@ -1166,7 +1178,7 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   const badge = opts.alert
     ? `<circle cx="11" cy="10" r="7" fill="#e5484d"/><text x="11" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`
     : `<circle cx="10" cy="10" r="4" fill="${color}"/>`;
-  const tag = `<g${linkAttrs} transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><title>${opts.link ? 'Ouvrir la vue Accueil' : opts.help ? `${label} · psst, cliquez-moi` : label}</title><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : '#e4e6ea'}"/>${badge}<text x="${opts.alert ? 23 : 18}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text>${linkIcon}</g>`;
+  const tag = `<g${linkAttrs} transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><title>${opts.link ? 'Ouvrir la vue Accueil' : opts.help ? `${label} · psst, cliquez-moi` : label}</title><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : opts.focus ? color : '#e4e6ea'}"${opts.focus ? ' stroke-width="2.5"' : ''}/>${badge}<text x="${opts.alert ? 23 : 18}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text>${linkIcon}</g>`;
   // Labels go to the overlay layer when one is given, so walls never hide them.
   if (opts.overlay) opts.overlay.push(tag); else s += tag;
   if (opts.help && helpActive()) {
@@ -1244,13 +1256,13 @@ function openFloor(f, z0) {
       `<g transform="translate(${cx - 5},${cy - 16}) scale(.4167)" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">${ICON[st.icon]}</g>` });
   });
   const r = f.robot, st = STATE[r.state];
-  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', overlay: robotTags }) });
+  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', focus: focus === r.name, overlay: robotTags }) });
   if (f.porter) {
     const p = f.porter;
-    items.push({ d: p.at[0] + p.at[1] + 0.1, svg: robotGlyph(p.at[0], p.at[1], z0, STATE[p.state].color, p.name, { cart: true, overlay: robotTags }) });
+    items.push({ d: p.at[0] + p.at[1] + 0.1, svg: robotGlyph(p.at[0], p.at[1], z0, STATE[p.state].color, p.name, { cart: true, focus: focus === p.name, overlay: robotTags }) });
   }
   if (f.greeter) {
-    const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#1e3a8a', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, alert: !!ACC.panicAt, link: 'accueil' });
+    const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#1e3a8a', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, alert: !!ACC.panicAt, link: 'accueil', focus: focus === f.greeter.name });
     items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: ACC.panicAt ? alarmRobot(P(f.greeter.at[0], f.greeter.at[1], z0), glyph) : glyph });
   }
   items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
@@ -1542,30 +1554,43 @@ function batteryIcon(pct, charging) {
 const ROOM_SHORT = { 'Réception': 'Réc.', 'Petit-déjeuner': 'P.-déj.', 'Bagagerie': 'Bag.' };
 const placeTag = (lvl, room) => `<span class="tags"><span class="tag-lvl">${lvl}</span><span class="tag-room">${ROOM_SHORT[room] || room}</span></span>`;
 
+// Last cell: next step, then a button to the robot's sheet (reception view for the greeter, none for the cart yet).
+const nextCell = (text, open, cls = 'muted') => `<td class="${cls}"><div class="next"><span>${text}</span>${open
+  ? `<button class="btn sheet" data-open="${open}">${open === 'accueil' ? 'Vue Accueil' : 'Fiche'} <span aria-hidden="true">→</span></button>` : ''}</div></td>`;
+// Row attributes: floor + robot name, so a click selects the floor and points the robot out on the building.
+const rowAttrs = (f, name, trouble) => `data-id="${f.id}" data-name="${name}" class="${trouble ? 'trouble' : ''}${focus === name ? ' focus' : ''}" title="Voir ${name} sur le bâtiment"`;
+
 function renderRows() {
   const rows = [];
   [...scope()].sort((a, b) => a.id - b.id).forEach(f => {
-    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" class="${ACC.panicAt ? 'trouble' : ''}" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${TILE_ACCUEIL}</span><div><span class="nm-row"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>${placeTag(f.label, greeterRoom())}</div></div></td>
+    if (f.greeter) rows.push(`<tr ${rowAttrs(f, f.greeter.name, !!ACC.panicAt)}><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${TILE_ACCUEIL}</span><div><span class="nm-row"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>${placeTag(f.label, greeterRoom())}</div></div></td>
       <td>${temiStateChip()}</td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
-      <td class="muted">${f.greeter.next}</td></tr>`);
-    if (f.porter) { const p = f.porter; rows.push(`<tr data-id="${f.id}" title="Chariot à bagages Piaggio Kilo"><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${placeTag(f.label, 'Bagagerie')}</div></div></td>
+      ${nextCell(f.greeter.next, 'accueil')}</tr>`);
+    if (f.porter) { const p = f.porter; rows.push(`<tr ${rowAttrs(f, p.name)}><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${placeTag(f.label, 'Bagagerie')}</div></div></td>
       <td>${stateChip(STATE[p.state])}</td>
       <td><span class="muted">${p.trips} trajets bagages · Piaggio Kilo</span></td>
-      <td class="muted">${p.next}</td></tr>`); }
+      ${nextCell(p.next)}</tr>`); }
     const r = f.robot, st = STATE[r.state];
-    rows.push(`<tr data-id="${f.id}" data-robot="${r.name}" class="${r.state === 'blocked' ? 'trouble' : ''}" title="Ouvrir la fiche de ${r.name}">
+    rows.push(`<tr ${rowAttrs(f, r.name, r.state === 'blocked')}>
       <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${TILE_MENAGE}</span><div><span class="nm-row"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>${placeTag(f.label, robotRoom(f.id))}</div></div></td>
       <td>${stateChip(st)}</td>
       <td><div class="pct"><div class="bar"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? 'var(--red)' : 'var(--menage)'}"></i></div>${r.pct} %</div></td>
-      <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td></tr>`);
+      ${nextCell(r.next, 'robot/' + r.name, r.state === 'blocked' ? 'down' : 'muted')}</tr>`);
   });
   document.getElementById('rows').innerHTML = rows.join('');
   document.getElementById('robots-count').textContent = selected === 'all' ? '8 robots · 1 par étage + accueil + bagages' : `${rows.length} robot${rows.length > 1 ? 's' : ''} sur cet étage`;
-  document.querySelectorAll('#rows tr[data-view], #rows tr[data-robot]').forEach(tr => tr.onclick = () => showView(tr.dataset.view || 'robot/' + tr.dataset.robot));
+  document.querySelectorAll('#rows tr').forEach(tr => tr.onclick = e => {
+    const open = e.target.closest('[data-open]');
+    if (open) return showView(open.dataset.open);
+    select(+tr.dataset.id, tr.dataset.name);
+    document.querySelector('#view-building .stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 }
 
-function select(id) { selected = id; openPanel = null; renderAll(); }
+// focus: robot pointed out on the building (set from the robots table), cleared by any other selection.
+let focus = null;
+function select(id, robot = null) { selected = id; focus = robot; openPanel = null; renderAll(); }
 // Floating panic button: triggers the alarm and opens the reception view; while the alarm runs it pulses and just
 // brings you back there (the alarm is lifted from the reception view).
 const panicFab = document.getElementById('panic-fab');
