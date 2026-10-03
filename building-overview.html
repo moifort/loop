@@ -52,7 +52,8 @@
   .card-h .right .btn { margin-left: 8px; }
 
   /* Stage: floor picker | flat building | context */
-  .stage { display: grid; grid-template-columns: 280px 560px; gap: 20px; align-items: start; }
+  .stage { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
+  .stage .bld { justify-self: end; align-self: start; }
   /* To-do list (and apartments when a floor is selected) sit under the building */
   .below { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
   .below:has(#rooms-card:not([style*="none"])) { grid-template-columns: 1fr 340px; }
