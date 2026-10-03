@@ -63,7 +63,7 @@
   @container (max-width: 230px) {
     .fl .r1 { grid-template-columns: auto 1fr; gap: 6px; }
     .fl .r1 .chip { display: none; }
-    .fl .r2, .fl.all .r2 { grid-template-columns: 1fr 34px; }
+    .fl .r2 { grid-template-columns: 1fr 34px; }
     .fl .r2 > span:first-child { display: none; }
     .fl .nm small { display: none; }
     .issue .txt { display: none; }
@@ -97,7 +97,7 @@
   #all-row { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
   /* No level column on the whole-building row: more room for issues */
   .fl.all .r1 { grid-template-columns: 1fr auto; }
-  .fl.all .r2 { grid-template-columns: 1fr 40px; }
+  .fl.all .r2 { grid-template-columns: 1fr; }
   .issues { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
   .issue { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .issue:hover { text-decoration: underline; }
@@ -607,7 +607,6 @@ function floorPicker() {
         ${issues.length ? `<span class="chip ${blocked ? 'err' : 'warn'}">${issues.length} problème${issues.length > 1 ? 's' : ''}</span>` : '<span class="chip ok">Tout va bien</span>'}</div>
       <div class="r2">
         ${metric('Ménage', clean, '#00a99d')}
-        ${alertMetric(issues)}
       </div>
       ${issues.length ? `<div class="issues">${issues.map(t => `
         <span class="issue" data-go="${t.floor}">${BELL(PRIO[t.prio])}<span class="txt">${t.short}</span>${tagsFor(t)}</span>`).join('')}</div>` : ''}
