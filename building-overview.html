@@ -711,7 +711,7 @@ tick(); setInterval(tick, 30000);
 // Real-time simulation: running robots follow corridor → door → zigzag
 // inside the current apartment, progress grows, blocked robots stay put.
 // =====================================================================
-const CORRIDOR_Y = 3.0, SPEED = 1.4, PROGRESS_PER_S = 0.35, BASE = [4, 3.0];
+const CORRIDOR_Y = 3.0, SPEED = 0.45, PROGRESS_PER_S = 0.12, BASE = [4, 3.0];
 const aptsOf = f => f.layout.rooms.filter(r => r.kind === 'apt');
 function roomPath(room) {
   const north = room.y2 <= 2.4;
