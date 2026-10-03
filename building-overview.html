@@ -74,6 +74,11 @@
   /* To-do list (and apartments when a floor is selected) sit under the building */
   .below { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
   .below:has(#rooms-card:not([style*="none"])) { grid-template-columns: 1fr 340px; }
+  /* Floor view: the to-do card takes the full row height (as tall as the apartments list), all-clear centred */
+  .below:has(#rooms-card:not([style*="none"])):not(.with-temi) { align-items: stretch; }
+  .below:not(.with-temi) #todo-card { display: flex; flex-direction: column; }
+  .below:not(.with-temi) #todo-card > .todos { flex: 1; display: flex; flex-direction: column; }
+  .below:not(.with-temi) #todo-card .all-good { flex: 1; justify-content: center; padding-top: 0; }
   /* Floor with a greeter: robot on the left, to-do and spaces stacked on the right as an accordion */
   /* Right column stacks from the top: first row hugs its card, the second takes the leftover height */
   /* Fixed-height row: the Temi card fills it; on the right the open accordion panel takes what is left and scrolls */
