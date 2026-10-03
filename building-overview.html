@@ -512,7 +512,6 @@ const LUCIDE = {
   'brush-cleaning': '<path d="m16 22-1-4"/><path d="M19 14a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2h-3a1 1 0 0 1-1-1V4a2 2 0 0 0-4 0v5a1 1 0 0 1-1 1H6a2 2 0 0 0-2 2v1a1 1 0 0 0 1 1"/><path d="M19 14H5l-1.973 6.767A1 1 0 0 0 4 22h16a1 1 0 0 0 .973-1.233z"/><path d="m8 22 1-4"/>',
   'user': '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
   'exclamation': '<path d="M12 7v6"/><path d="M12 17h.01"/>',
-  'sparkles': '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>',
   'arrow-up-right': '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
   'zap': '<path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/>',
 };
@@ -1011,8 +1010,9 @@ function renderRooms() {
   }).join('');
 }
 
-const ICON_MENAGE = icon('sparkles', 15, { color: '#fff' });
-const ICON_ACCUEIL = icon('concierge-bell', 15, { color: '#fff' });
+// Robot-type icons: robot head for the greeter, small broom for cleaning robots
+const ICON_MENAGE = icon('brush-cleaning', 15, { color: '#fff' });
+const ICON_ACCUEIL = icon('bot', 15, { color: '#fff' });
 // Temi with a branded shell: Quartier Libre gold band on the base.
 const TEMI_SVG = `<svg width="66" height="122" viewBox="0 0 80 150">
   <ellipse cx="40" cy="144" rx="27" ry="4" fill="rgba(31,35,40,.12)"/>
