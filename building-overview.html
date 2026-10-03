@@ -262,26 +262,26 @@ const LOBBY = {
 // occ = occupancy tonight (%), null for common areas.
 const FLOORS = [
   { id: 5, label: 'É5', name: 'Suites 501–505', area: 520, occ: 60, layout: suiteLevel(),
-    robot: { name: 'Brume', state: 'run', pct: 22, bat: 96, at: [4, 3], next: 'Suites libérées en cours' } },
+    robot: { name: 'CLN-C6F2', state: 'run', pct: 22, bat: 96, at: [4, 3], next: 'Suites libérées en cours' } },
   { id: 4, label: 'É4', name: 'App. 401–407', area: 610, occ: 86, layout: apartmentLevel(4),
-    robot: { name: 'Écume', state: 'run', pct: 55, bat: 22, at: [4, 3], next: 'Recharge prévue à 15 %' } },
+    robot: { name: 'CLN-5E07', state: 'run', pct: 55, bat: 22, at: [4, 3], next: 'Recharge prévue à 15 %' } },
   { id: 3, label: 'É3', name: 'App. 301–307', area: 610, occ: 100, layout: apartmentLevel(3),
-    robot: { name: 'Pluie', state: 'blocked', pct: 86, bat: 63, at: [10.4, 4.9], next: 'Obstacle dans l\'app. 307' },
+    robot: { name: 'CLN-91C5', state: 'blocked', pct: 86, bat: 63, at: [10.4, 4.9], next: 'Obstacle dans l\'app. 307' },
     blockedRoom: '307' },
   { id: 2, label: 'É2', name: 'App. 201–207', area: 610, occ: 71, layout: apartmentLevel(2),
-    robot: { name: 'Rosée', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' } },
+    robot: { name: 'CLN-2D84', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' } },
   { id: 1, label: 'É1', name: 'App. 101–107', area: 610, occ: 86, layout: apartmentLevel(1),
-    robot: { name: 'Averse', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
+    robot: { name: 'CLN-7B19', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
   { id: 0, label: 'RDC', name: 'Réception', hint: '& petit-déj.', area: 420, occ: null, layout: LOBBY,
-    robot: { name: 'Bruine', state: 'run', pct: 70, bat: 92, at: [4.4, 5.4], base: [4.4, 5.4], next: 'Hall terminé vers 12 h 30' },
-    greeter: { name: 'Léa', state: 'live', visitors: 23, at: [2.6, 4.2], next: '6 arrivées avant 18 h' } },
+    robot: { name: 'CLN-0A3E', state: 'run', pct: 70, bat: 92, at: [4.4, 5.4], base: [4.4, 5.4], next: 'Hall terminé vers 12 h 30' },
+    greeter: { name: 'TEMI-4F2A', state: 'live', visitors: 23, at: [2.6, 4.2], next: '6 arrivées avant 18 h' } },
 ];
 
 // To-do list, linked to a floor (alerts per floor are derived from it).
 const TODOS = [
-  { floor: 3, prio: 'high', short: 'Pluie bloqué dans le 307', title: 'Pluie est bloqué dans le 307', desc: "Une valise est restée au sol au milieu de l'appartement, le robot ne peut pas la contourner. Il attend depuis 18 min.", acts: ['Envoyer un agent', 'Passer au suivant'] },
-  { floor: 4, prio: 'med', short: 'Écume batterie faible (22 %)', title: 'Écume a une batterie faible (22 %)', desc: "Elle devra recharger vers 15 % : 3 appartements risquent d'être prêts après l'arrivée de 15 h.", acts: ['Prévenir la réception', 'Voir le planning'] },
-  { floor: 5, prio: 'low', short: 'Départs 503 à 505 à confirmer', title: 'Confirmer les départs des suites 503 à 505', desc: 'Brume a fini la 501 et attaque la 502. Elle continuera si les suites suivantes sont libérées.', acts: ['Confirmer'] },
+  { floor: 3, prio: 'high', short: 'CLN-91C5 bloqué (307)', title: 'CLN-91C5 est bloqué dans le 307', desc: "Une valise est restée au sol au milieu de l'appartement, le robot ne peut pas la contourner. Il attend depuis 18 min.", acts: ['Envoyer un agent', 'Passer au suivant'] },
+  { floor: 4, prio: 'med', short: 'CLN-5E07 batterie 22 %', title: 'CLN-5E07 a une batterie faible (22 %)', desc: "Il devra recharger vers 15 % : 3 appartements risquent d'être prêts après l'arrivée de 15 h.", acts: ['Prévenir la réception', 'Voir le planning'] },
+  { floor: 5, prio: 'low', short: 'Départs 503–505 à confirmer', title: 'Confirmer les départs des suites 503 à 505', desc: 'CLN-C6F2 a fini la 501 et attaque la 502. Il continuera si les suites suivantes sont libérées.', acts: ['Confirmer'] },
 ];
 const PRIO = { high: '#e5484d', med: '#f0a020', low: '#a0a7b0' };
 
@@ -431,9 +431,11 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   s += `<path d="M${cx - rx},${cy} L${cx - rx},${cy - h} A${rx},${ry} 0 0 1 ${cx + rx},${cy - h} L${cx + rx},${cy} A${rx},${ry} 0 0 1 ${cx - rx},${cy} Z" fill="${color}"/>`;
   s += `<ellipse cx="${cx}" cy="${cy - h}" rx="${rx}" ry="${ry}" fill="#fff" opacity=".35"/>`;
   if (opts.tall) s += `<rect x="${cx - 4}" y="${cy - h - 12}" width="8" height="10" rx="2" fill="${color}"/><rect x="${cx - 3}" y="${cy - h - 10}" width="6" height="4" rx="1" fill="#fff" opacity=".8"/>`;
-  if (opts.alert) s += `<circle cx="${cx + rx + 2}" cy="${cy - h - 6}" r="8" fill="#e5484d" stroke="#fff" stroke-width="2"/><text x="${cx + rx + 2}" y="${cy - h - 2}" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`;
-  const lw = label.length * 6.4 + 22;
-  s += `<g transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="#e4e6ea"/><circle cx="10" cy="10" r="4" fill="${color}"/><text x="18" y="14" font-size="11" font-weight="600" fill="#1f2328">${label}</text></g>`;
+  const lw = label.length * 7 + (opts.alert ? 30 : 22);
+  const badge = opts.alert
+    ? `<circle cx="11" cy="10" r="7" fill="#e5484d"/><text x="11" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`
+    : `<circle cx="10" cy="10" r="4" fill="${color}"/>`;
+  s += `<g transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : '#e4e6ea'}"/>${badge}<text x="${opts.alert ? 23 : 18}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text></g>`;
   return s;
 }
 
