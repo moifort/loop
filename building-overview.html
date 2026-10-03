@@ -11,7 +11,7 @@
     --blue: #006fff; --blue-soft: #e6f0ff;
     --green: #22a861; --green-soft: #e7f6ee; --amber: #f0a020; --amber-soft: #fff4e0;
     --red: #e5484d; --red-soft: #fdecec; --gray: #a0a7b0;
-    --accueil: #7c5cff; --menage: #2541b2; --menage-soft: #e7eaf6; --occ: #3b82f6;
+    --accueil: #1e3a8a; --menage: #2541b2; --menage-soft: #e7eaf6; --occ: #3b82f6;
     --shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -189,7 +189,7 @@
   .chip.warn { background: var(--amber-soft); color: #9a5b00; }
   .chip.err { background: var(--red-soft); color: #b42318; }
   .chip.idle { background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
-  .chip.acc { background: #efeaff; color: #5b3fd6; }
+  .chip.acc { background: #e4e8f3; color: #1e3a8a; }
   .chip.occ { background: #e3e8ff; color: #3451b2; }
   /* Occupied rooms: neutral grey, so they never read as the sapphire cleaning colour */
   .chip.guest { background: #eceef1; color: #4b5260; }
@@ -241,7 +241,7 @@
 
   /* Greeter robot card on the ground floor: opens the reception view */
   #temi-card { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
-  #temi-card:hover { border-color: #cfc4ff; box-shadow: 0 0 0 3px #f3f0ff; }
+  #temi-card:hover { border-color: #b4c1e6; box-shadow: 0 0 0 3px #e8ecf6; }
   .below.with-temi .temi { grid-template-columns: minmax(310px, 1.25fr) minmax(0, 1fr); }
   /* In the fixed-height row the feed fills the available height (cropped), it never dictates it */
   .below.with-temi .temi { align-items: stretch; }
@@ -728,7 +728,7 @@
     <div class="cov-wrap" id="acc-cov"></div>
     <div class="legend">
       <span><i class="sw" style="background:#22a861"></i>Réceptionniste au poste</span>
-      <span><i class="sw" style="background:#7c5cff"></i>Robot seul</span>
+      <span><i class="sw" style="background:#1e3a8a"></i>Robot seul</span>
       <span><i class="sw" style="background:#006fff"></i>Pris en main depuis Madagascar</span>
       <span><i class="sw" style="background:#22a861;opacity:.3"></i>Prévu</span>
     </div>
@@ -975,7 +975,7 @@ const STATE = {
   charge:  { chip: 'charge', label: 'En charge', color: '#22a861', pulse: true },
   blocked: { chip: 'err',  label: 'Bloqué',     color: '#e5484d' },
   idle:    { chip: 'idle', label: 'Planifié',   color: '#a0a7b0' },
-  live:    { chip: 'acc',  label: 'En service', color: '#7c5cff' },
+  live:    { chip: 'acc',  label: 'En service', color: '#1e3a8a' },
 };
 // Room states share one icon set (24×24 stroke paths) between map markers and list chips.
 const ICON = {
@@ -1240,7 +1240,7 @@ function openFloor(f, z0) {
   const r = f.robot, st = STATE[r.state];
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', overlay: robotTags }) });
   if (f.greeter) {
-    const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#7c5cff', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, alert: !!ACC.panicAt, link: 'accueil' });
+    const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#1e3a8a', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, alert: !!ACC.panicAt, link: 'accueil' });
     items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: ACC.panicAt ? alarmRobot(P(f.greeter.at[0], f.greeter.at[1], z0), glyph) : glyph });
   }
   items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
@@ -1428,7 +1428,7 @@ const TEMI_SVG = `<svg width="66" height="122" viewBox="0 0 80 150">
   <g fill="#c9ced6"><circle cx="33" cy="131" r="1.2"/><circle cx="37" cy="131" r="1.2"/><circle cx="41" cy="131" r="1.2"/><circle cx="45" cy="131" r="1.2"/><circle cx="49" cy="131" r="1.2"/></g>
   <rect x="36.5" y="40" width="7" height="12" rx="2" fill="#d4d8df"/>
   <rect x="10" y="10" width="60" height="36" rx="6" fill="#1f2328"/>
-  <rect x="13" y="13" width="54" height="30" rx="3.5" fill="#7c5cff"/>
+  <rect x="13" y="13" width="54" height="30" rx="3.5" fill="#1e3a8a"/>
   <circle cx="31" cy="25" r="3.2" fill="#fff"/><circle cx="49" cy="25" r="3.2" fill="#fff"/>
   <path d="M33 33 q7 5 14 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
 </svg>`;
@@ -1696,7 +1696,7 @@ const TOPQ = [['Wi-Fi', 6], ['Bagagerie', 5], ['Heure de check-out', 4], ['Taxi,
 // Planned day at the desk; the live part is rebuilt from ACC.
 const COV_PLAN = [[7, 8, 'robot'], [8, 10.5, 'desk'], [10.5, 10.6, 'remote'], [10.6, 10.8, 'robot'], [10.8, 13, 'desk'],
   [13, 13.4, 'robot'], [13.4, 13.5, 'remote'], [13.5, 13.8, 'robot'], [13.8, 19, 'desk'], [19, 23, 'robot']];
-const COV_COLOR = { desk: '#22a861', robot: '#7c5cff', remote: '#006fff' };
+const COV_COLOR = { desk: '#22a861', robot: '#1e3a8a', remote: '#006fff' };
 const DAY0 = 7, DAY1 = 23;
 function coverage() {
   const now = simH(Date.now()), away = simH(ACC.awayAt), segs = [];
@@ -1861,7 +1861,7 @@ const PX = 25;   // mini-plan scale: 12 × 6 units → 300 × 150
 function renderPosMap() {
   let s = '';
   LOBBY.rooms.filter(r => r.kind !== 'core').forEach(r => {
-    s += `<rect x="${r.x1 * PX}" y="${r.y1 * PX}" width="${(r.x2 - r.x1) * PX}" height="${(r.y2 - r.y1) * PX}" rx="3" fill="${r.kind === 'lobby' ? '#f2f0ff' : '#f6f7f9'}" stroke="#dfe2e7"/>`;
+    s += `<rect x="${r.x1 * PX}" y="${r.y1 * PX}" width="${(r.x2 - r.x1) * PX}" height="${(r.y2 - r.y1) * PX}" rx="3" fill="${r.kind === 'lobby' ? '#eef1f8' : '#f6f7f9'}" stroke="#dfe2e7"/>`;
     s += `<text x="${(r.x1 + r.x2) / 2 * PX}" y="${r.y1 * PX + 14}" text-anchor="middle" font-size="9" font-weight="600" fill="#9aa1ab">${r.id.toUpperCase()}</text>`;
   });
   // entrance gap on the facade
@@ -1873,7 +1873,7 @@ function renderPosMap() {
       ? `<g class="spot" data-go="${p.id}"><title>${p.where}</title><rect x="${x - 9}" y="${y - 9}" width="18" height="18" rx="5" fill="#e7f6ee" stroke="#9fd8b9"/><g transform="translate(${x - 6},${y - 6}) scale(.5)" fill="none" stroke="#22a861" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['zap']}</g></g>`
       : `<g class="spot" data-go="${p.id}"><title>${p.where}</title><circle cx="${x}" cy="${y}" r="5" fill="#e6f0ff" stroke="#b3d1ff"/></g>`;
   });
-  const rc = ACC.panicAt ? '#e5484d' : '#7c5cff';
+  const rc = ACC.panicAt ? '#e5484d' : '#1e3a8a';
   s += ACC.panicAt
     ? `<g id="pos-robot"><circle class="alarm-ring" style="${alarmPhase()}"/><circle class="robot-alarm" r="7" fill="${rc}" stroke="#fff" stroke-width="2.5" style="${alarmPhase()}"/></g>`
     : `<g id="pos-robot"><circle class="pulse" r="6" fill="${rc}"/><circle r="7" fill="${rc}" stroke="#fff" stroke-width="2.5"/></g>`;
@@ -2124,7 +2124,7 @@ function renderMenage() {
     ['Robots en ménage', `${run}/${fs.length}`, `${blocked} bloqué · ${charging} en charge`, run / fs.length, '#2541b2', 'brush-cleaning'],
     ['Avancement', `${progress} %`, 'tous étages', progress / 100, '#006fff', 'gauge'],
     ['Espaces prêts', `${ready}/${total}`, 'hors occupés', ready / total, '#22a861', 'check'],
-    ['Temps libéré', '3 h 40', 'objectif 5 h', 220 / 300, '#7c5cff', 'clock'],
+    ['Temps libéré', '3 h 40', 'objectif 5 h', 220 / 300, '#1e3a8a', 'clock'],
   ].map(([l, v, sub, k, col, ic]) => `<div class="kpi kpi-ring">${ring(k, col, ic)}<div><small>${l}</small><b>${v}</b><span>${sub}</span></div></div>`).join(''));
 
   // Most urgent open alert as a full-width banner
