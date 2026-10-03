@@ -107,11 +107,11 @@
   .issue { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .issue:hover { text-decoration: underline; }
   /* Floor + room(s) read as one two-tone badge: [É3 | 307] */
-  .tags { display: inline-flex; flex-wrap: nowrap; border-radius: 5px; overflow: hidden; vertical-align: middle; }
-  .tag { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; font-size: 11px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .tags { display: inline-flex; flex-wrap: nowrap; border-radius: 6px; overflow: hidden; vertical-align: middle; line-height: 1; }
+  .tag { display: inline-flex; align-items: center; justify-content: center; height: 22px; min-width: 30px; padding: 0 9px; font-size: 11.5px; font-weight: 600; letter-spacing: .02em; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .tag.lvl { background: #1f2328; color: #fff; }
-  .tag.room { background: #e9ecef; color: #1f2328; }
-  .tag.room + .tag.room { box-shadow: inset 2px 0 0 #fff; padding-left: 8px; }
+  .tag.room { background: #eceef1; color: #1f2328; }
+  .tag.room + .tag.room { border-left: 1px solid #fff; }
   .tag:hover { filter: brightness(.95); }
   .issue .tags { margin-left: auto; flex-wrap: nowrap; flex: none; }
   .issue .txt { overflow: hidden; text-overflow: ellipsis; }
@@ -145,7 +145,7 @@
   .td.done .ck { background: var(--green); border-color: var(--green); }
   .td.done .t, .td.done p { text-decoration: line-through; color: var(--faint); }
   .td .t { font-weight: 600; display: flex; align-items: center; gap: 8px; }
-  .td .tags { margin-top: 5px; }
+  .td .tags { margin-top: 7px; margin-bottom: 2px; }
   .td p { color: var(--muted); margin-top: 2px; line-height: 1.45; }
   .td .acts { display: flex; gap: 14px; margin-top: 6px; }
   .td .acts button { color: var(--blue); font-weight: 500; font-size: 12px; }
