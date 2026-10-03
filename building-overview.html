@@ -318,7 +318,12 @@
   .pos-map .spot:hover circle { fill: #cfe0ff; }
   .pos-meta { padding: 8px 16px 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
   .pos-meta b { color: var(--text); font-weight: 500; }
-  .pos-actions { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px 16px; }
+  .pos-actions { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 16px 14px; margin-top: auto; border-top: 1px solid var(--border); }
+  /* Position card as tall as the live feed next to it, move buttons as its footer */
+  .acc-grid:has(#acc-live-card) { align-items: stretch; }
+  .acc-grid:has(#acc-live-card) > .side { display: flex; flex-direction: column; }
+  #acc-pos-card { flex: 1; display: flex; flex-direction: column; }
+  .pos-meta { padding-bottom: 12px; }
   .pos-actions .btn { height: 28px; padding: 0 10px; font-size: 12px; gap: 5px; }
   .pos-actions .btn.on { background: var(--blue-soft); border-color: #b3d1ff; color: var(--blue); }
   .pos-actions .btn:disabled { opacity: .5; cursor: default; }
