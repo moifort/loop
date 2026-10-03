@@ -99,8 +99,9 @@
   #all-row { margin-bottom: 8px; }
   #all-row .fl:not(.sel) { background: var(--panel); border-color: var(--border); box-shadow: 0 1px 2px rgba(31,35,40,.06); }
   /* Floors live in one card so each row is anchored, separated by hairlines */
-  #floors { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 4px; gap: 0; }
-  #floors .fl { position: relative; border-radius: 9px; }
+  #floors { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; gap: 0; overflow: hidden; }
+  /* Rows span the full card width: pressed state is a flat full-bleed band, no rounded corners */
+  #floors .fl { position: relative; border-radius: 0; border-width: 0; padding: 11px 13px; }
   #floors .fl:hover:not(.sel) { background: var(--panel-2); border-color: transparent; }
   #floors .fl + .fl::before { content: ''; position: absolute; left: 12px; right: 12px; top: -1px; height: 1px; background: var(--border); }
   #floors .fl.sel::before, #floors .fl.sel + .fl::before { display: none; }
