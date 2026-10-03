@@ -311,6 +311,45 @@
   @keyframes alarm-ring { 0% { r: 8; opacity: .9; } 100% { r: 34; opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { body.alarm::after { animation: none; opacity: .8; } .robot-alarm, .alarm-ring { animation: none; } }
 
+  /* ---------- Cleaning robots view ---------- */
+  .acc-banner.danger { background: var(--red); color: #fff; }
+  .acc-banner .btn.light { background: #fff; border-color: transparent; color: #1f2328; font-weight: 600; }
+  .acc-banner .btn.ghost { background: transparent; border-color: rgba(255,255,255,.6); color: inherit; font-weight: 600; }
+  .acc-banner .btn.ghost:hover { background: rgba(255,255,255,.15); }
+  .men-robots { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; padding: 4px 16px 16px; }
+  .mr { border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+  .mr:hover { border-color: #b3d1ff; box-shadow: 0 0 0 3px var(--blue-soft); }
+  .mr.blocked { border-color: #f1a7a9; background: #fff7f7; }
+  .mr-h { display: flex; align-items: center; gap: 10px; }
+  .mr-h .rb-ic { width: 32px; height: 32px; }
+  .mr-h b { font-weight: 600; }
+  .mr-h .chip { margin-left: auto; }
+  .mr-name { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .mr-name .batt { line-height: 0; }
+  .mr-where { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; min-width: 0; }
+  .mr-where span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .mr-where.down span:last-child { color: var(--red); }
+  .cons { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .cons .m .lb { font-size: 11px; }
+  .men-stock { padding: 0 16px 8px; }
+  .stock-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-top: 1px solid var(--border); }
+  .stock-row:first-child { border-top: none; }
+  .stock-row .n { flex: 1; }
+  .stock-row small { display: block; color: var(--muted); font-size: 11px; }
+  .stock-row .order { color: var(--blue); font-weight: 500; font-size: 12px; }
+  .stock-row .order:hover { text-decoration: underline; }
+  .men-plan { padding: 6px 16px 0; display: flex; flex-direction: column; gap: 6px; position: relative; }
+  .plan-row { display: grid; grid-template-columns: 120px 1fr; align-items: center; gap: 10px; }
+  .plan-row .who { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+  .plan-track { position: relative; height: 18px; border-radius: 5px; background: var(--panel-2); border: 1px solid var(--border); overflow: hidden; }
+  .plan-track i { position: absolute; top: 0; bottom: 0; }
+  .plan-track i.plan { opacity: .28; }
+  .plan-now { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--text); border-radius: 2px; pointer-events: none; }
+  .plan-axis { margin-left: 130px; }
+  .men-log li { grid-template-columns: 44px 36px 1fr; }
+  .men-log .lv, .plan-row .lv { display: inline-flex; justify-content: center; height: 20px; padding: 0 5px; border-radius: 3px; font-size: 11px; line-height: 20px; font-weight: 600; background: #3a4150; color: #fff; }
+  .men-log .a b { color: var(--text); font-weight: 500; }
+
   /* ---------- Reception robot position ---------- */
   .pos-map { padding: 2px 16px 0; }
   .pos-map svg { width: 100%; max-width: 340px; height: auto; display: block; margin: 0 auto; }
@@ -431,6 +470,7 @@
   <button class="nav-btn active" data-view="building" title="Bâtiment"><i data-icon="building-2" data-size="20" data-sw="1.75"></i></button>
   <div class="nav-sep" role="separator"></div>
   <button class="nav-btn" data-view="accueil" title="Temi · Accueil"><i data-icon="bot" data-size="20" data-sw="1.75"></i></button>
+  <button class="nav-btn" data-view="menage" title="Robots de ménage"><i data-icon="brush-cleaning" data-size="20" data-sw="1.75"></i></button>
   <div class="nav-spacer"></div>
   <button class="nav-btn" title="Réglages"><i data-icon="settings" data-size="20" data-sw="1.75"></i></button>
 </nav>
@@ -441,7 +481,7 @@
   <button>Saint-Georges · 14 rue Henry Monnier, Paris 9e
     <i data-icon="chevron-down" data-size="14"></i>
   </button>
-  <span class="sep" data-crumb hidden>/</span><span data-crumb hidden>Accueil</span>
+  <span class="sep" data-crumb hidden>/</span><span data-crumb id="crumb-label" hidden>Accueil</span>
   <span class="right" id="clock"></span>
   <!-- Always-available panic button, in the top bar on every view -->
   <button class="panic-fab" id="panic-fab" title="Déclencher le bouton panique">
@@ -453,6 +493,8 @@
 <main>
 <!-- Reception view: full-width banner when a guest is waiting for a human -->
 <div class="acc-banner" id="acc-banner" hidden></div>
+<!-- Cleaning view: full-width banner for the most urgent robot alert -->
+<div class="acc-banner" id="men-banner" hidden></div>
 <div class="wrap" id="view-building">
 
   <div class="stage">
@@ -532,6 +574,55 @@
     <div class="card">
       <div class="card-h"><h3>Questions les plus fréquentes</h3><div class="right">aujourd'hui</div></div>
       <div class="topq" id="acc-top"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Cleaning robots view: fleet, maintenance, alerts, consumables -->
+<div class="wrap" id="view-menage" hidden>
+
+  <div class="card">
+    <div class="card-h"><h3>Flotte de ménage</h3><div class="right" id="men-fleet-sub"></div></div>
+    <div class="kpis" id="men-kpis"></div>
+  </div>
+
+  <div class="acc-grid">
+    <div class="card">
+      <div class="card-h"><h3>Robots de ménage</h3><div class="right">Consommables : usure ou remplissage</div></div>
+      <div class="men-robots" id="men-robots"></div>
+    </div>
+    <div class="side">
+      <div class="card">
+        <div class="card-h"><h3>Alertes</h3></div>
+        <ul class="todos" id="men-alerts"></ul>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3>Stock de consommables</h3><div class="right">Saint-Georges</div></div>
+        <div class="men-stock" id="men-stock"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><h3>Planning de la journée</h3><div class="right">7 h – 23 h</div></div>
+    <div class="men-plan" id="men-plan"></div>
+    <div class="legend">
+      <span><i class="sw" style="background:#00a99d"></i>Ménage</span>
+      <span><i class="sw" style="background:#f0a020"></i>En charge</span>
+      <span><i class="sw" style="background:#e5484d"></i>Bloqué</span>
+      <span><i class="sw" style="background:#00a99d;opacity:.3"></i>Prévu</span>
+    </div>
+  </div>
+
+  <div class="acc-grid">
+    <div class="card">
+      <div class="card-h"><h3>Maintenance à faire</h3><div class="right" id="men-maint-count"></div></div>
+      <ul class="todos" id="men-maint"></ul>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Journal des robots</h3><div class="right">aujourd'hui</div></div>
+      <ul class="log men-log" id="men-log"></ul>
     </div>
   </div>
 
@@ -1213,7 +1304,7 @@ floorList.addEventListener('mouseover', e => {
   if (id !== preview) { preview = id; renderBuilding(); }
 });
 floorList.addEventListener('mouseleave', () => { preview = null; renderBuilding(); });
-function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderRows(); }
+function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderRows(); if (typeof renderMenage === 'function') renderMenage(); }
 
 const tick = () => document.getElementById('clock').textContent =
   new Date().toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
@@ -1616,13 +1707,17 @@ setInterval(() => {
 }, 1000);
 setInterval(() => { if (!document.getElementById('view-accueil').hidden) renderCoverage(); }, 30000);
 
+// Views and their breadcrumb label (the building view has none)
+const VIEWS = { building: '', accueil: 'Accueil', menage: 'Ménage' };
 function showView(v) {
-  document.getElementById('view-building').hidden = v !== 'building';
-  document.getElementById('view-accueil').hidden = v !== 'accueil';
+  if (!(v in VIEWS)) v = 'building';
+  Object.keys(VIEWS).forEach(k => document.getElementById('view-' + k).hidden = k !== v);
   document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === v));
-  document.querySelectorAll('[data-crumb]').forEach(c => c.hidden = v !== 'accueil');
+  document.querySelectorAll('[data-crumb]').forEach(c => c.hidden = !VIEWS[v]);
+  document.getElementById('crumb-label').textContent = VIEWS[v];
   if (v !== 'accueil') document.getElementById('acc-banner').hidden = true;
-  history.replaceState(null, '', v === 'accueil' ? '#accueil' : location.pathname);
+  if (v !== 'menage') document.getElementById('men-banner').hidden = true;
+  history.replaceState(null, '', v === 'building' ? location.pathname : '#' + v);
   document.querySelector('main').scrollTop = 0;
   if (v === 'accueil') renderAccueil(); else renderAll();
 }
@@ -1631,11 +1726,160 @@ document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => 
 const iso = document.getElementById('iso');
 iso.addEventListener('click', e => { const l = e.target.closest('.map-link'); if (l) { e.stopPropagation(); showView(l.dataset.view); } }, true);
 iso.addEventListener('keydown', e => { const l = e.target.closest('.map-link'); if (l && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); showView(l.dataset.view); } });
+// =====================================================================
+// Cleaning robots view — fleet KPIs, robot cards with consumables, day planning,
+// alerts (shared with the building view), maintenance, stock and activity log.
+// =====================================================================
+const cleaners = () => [...FLOORS].sort((a, b) => a.id - b.id);
+// Consumables: wear or fill level (%), higher is worse
+const CONSUM = {
+  'CLN-0A3E': { brosse: 35, filtre: 20, bac: 40, eau: 55 },
+  'CLN-7B19': { brosse: 48, filtre: 62, bac: 88, eau: 30 },
+  'CLN-2D84': { brosse: 22, filtre: 35, bac: 30, eau: 45 },
+  'CLN-91C5': { brosse: 61, filtre: 45, bac: 52, eau: 40 },
+  'CLN-5E07': { brosse: 40, filtre: 81, bac: 25, eau: 70 },
+  'CLN-C6F2': { brosse: 92, filtre: 30, bac: 45, eau: 20 },
+};
+const CONS_LABEL = { brosse: 'Brosse', filtre: 'Filtre', bac: 'Bac poussière', eau: 'Eau sale' };
+const consColor = v => v >= 85 ? '#e5484d' : v >= 65 ? '#f0a020' : '#a0a7b0';
+const MAINT = [
+  { lvl: 'É5', robot: 'CLN-C6F2', prio: 'high', title: 'Remplacer la brosse principale', desc: 'Usure 92 %. À changer avant la prochaine tournée ; une seule brosse en stock.', acts: ['Commander des brosses'] },
+  { lvl: 'É1', robot: 'CLN-7B19', prio: 'med', title: 'Vider le bac à poussière', desc: 'Rempli à 88 %. Le robot le videra seul à sa base en fin de tournée, ou à la main maintenant.', acts: ['Prévenir l\'agent'] },
+  { lvl: 'É4', robot: 'CLN-5E07', prio: 'med', title: 'Changer le filtre', desc: 'Encrassé à 81 % ; l\'aspiration baisse. Prévu pendant sa recharge.', acts: ['Planifier pendant la recharge'] },
+  { lvl: 'É3', robot: 'CLN-91C5', prio: 'low', title: 'Nettoyer les capteurs de vide', desc: 'Trois arrêts d\'urgence cette semaine au même endroit (307). À faire après le déblocage.', acts: ['Planifier'] },
+  { lvl: 'Flotte', robot: '3 robots', prio: 'low', title: 'Mise à jour 5.1.2 disponible', desc: 'Améliore l\'évitement des petits objets (valises, chaussures). Installation cette nuit, à la base.', acts: ['Programmer cette nuit'] },
+  { lvl: 'É2', robot: 'CLN-2D84', prio: 'low', title: 'Révision trimestrielle', desc: 'Roues, batterie et capteurs. Technicien le 12 octobre à 10 h.', acts: ['Voir le rendez-vous'] },
+];
+const maintDone = new Set();
+const STOCK = [
+  { name: 'Brosses principales', qty: 1, min: 2, unit: '' },
+  { name: 'Filtres HEPA', qty: 6, min: 3, unit: '' },
+  { name: 'Lingettes de lavage', qty: 14, min: 8, unit: '' },
+  { name: 'Détergent parquet', qty: 2, min: 3, unit: ' L' },
+  { name: 'Sacs de station', qty: 9, min: 4, unit: '' },
+];
+const ordered = new Set();
+const MEN_LOG = [
+  { at: ago(1), lvl: 'É4', html: '<b>CLN-5E07</b> passe sous 25 % de batterie, retour à la base prévu vers 15 %.' },
+  { at: ago(6), lvl: 'É2', html: '<b>CLN-2D84</b> a terminé l\'app. 206 (14 min, 42 m²).' },
+  { at: ago(18), lvl: 'É3', html: '<b>CLN-91C5</b> s\'est arrêté dans l\'app. 307 : objet au sol (valise).' },
+  { at: ago(27), lvl: 'É1', html: '<b>CLN-7B19</b> a contourné un client dans le couloir et repris sa tournée.' },
+  { at: ago(46), lvl: 'É5', html: '<b>CLN-C6F2</b> signale une brosse principale usée à 92 %.' },
+  { at: ago(64), lvl: 'RDC', html: '<b>CLN-0A3E</b> a terminé le hall et rejoint sa base pour recharger.' },
+  { at: ago(95), lvl: 'É2', html: '<b>CLN-2D84</b> a pris l\'ascenseur vers l\'É2 (base partagée).' },
+];
+// Only touch the DOM when content changes, so hovers and animations survive the 1.5 s refresh
+const setHTML = (id, html) => { const el = document.getElementById(id); if (el.dataset.html !== html) { el.innerHTML = html; el.dataset.html = html; } };
+
+function planSegments(f) {
+  const r = f.robot, now = simH(Date.now()), k = f.id;
+  const segs = [], add = (a, b, c, plan = false) => { if (b > a) segs.push({ a, b, c, plan }); };
+  const start = 8.4 + k * 0.2, lunch = 11.6 + (k % 3) * 0.2;
+  add(start, Math.min(lunch, now), '#00a99d');
+  add(lunch, Math.min(lunch + 0.7, now), '#f0a020');
+  if (r.state === 'blocked') { add(lunch + 0.7, now - 0.3, '#00a99d'); add(now - 0.3, now, '#e5484d'); }
+  else if (r.state === 'charge' || r.state === 'done') { add(lunch + 0.7, 12.5 + k * 0.1, '#00a99d'); add(12.5 + k * 0.1, now, '#f0a020'); }
+  else add(lunch + 0.7, now, '#00a99d');
+  const left = Math.max(0.2, (100 - r.pct) / 100 * 3);
+  if (r.state === 'run' || r.state === 'blocked') { add(now, Math.min(DAY1, now + left), '#00a99d', true); add(Math.min(DAY1, now + left), DAY1, '#f0a020', true); }
+  else add(now, DAY1, '#f0a020', true);
+  return { segs, now };
+}
+
+function renderMenage() {
+  if (document.getElementById('view-menage').hidden) return;
+  const fs = cleaners(), area = fs.reduce((a, f) => a + f.area, 0);
+  const run = fs.filter(f => f.robot.state === 'run').length, blocked = fs.filter(f => f.robot.state === 'blocked').length;
+  const charging = fs.filter(f => f.robot.state === 'charge' || f.robot.state === 'done').length;
+  const progress = Math.round(fs.reduce((a, f) => a + f.robot.pct * f.area, 0) / area);
+  let ready = 0, total = 0;
+  fs.forEach(f => { const st = roomStates(f); f.layout.rooms.filter(r => r.kind === 'apt' && st[r.id] !== 'occupied').forEach(r => { total++; if (st[r.id] === 'clean') ready++; }); });
+  const open = openTodos();
+  setHTML('men-fleet-sub', `${fs.length} robots · 1 par étage`);
+  setHTML('men-kpis', [
+    ['Robots en ménage', `${run} / ${fs.length}`, `${blocked} bloqué · ${charging} en charge`],
+    ['Avancement du jour', `${progress} %`, 'tous étages'],
+    ['Espaces prêts', `${ready} / ${total}`, 'hors appartements occupés'],
+    ['Temps libéré', '3 h 40', 'objectif +30 % de productivité'],
+  ].map(([l, v, sub]) => `<div class="kpi"><small>${l}</small><b>${v}</b><span>${sub}</span></div>`).join(''));
+
+  // Most urgent open alert as a full-width banner
+  const top = ['high', 'med'].map(p => open.find(t => t.prio === p)).find(Boolean);
+  const banner = document.getElementById('men-banner');
+  banner.hidden = !top;
+  banner.classList.toggle('danger', !!top && top.prio === 'high');
+  if (top) setHTML('men-banner', `${icon('brush-cleaning', 18)}
+    <p><b>${top.title}.</b> ${top.desc}</p>
+    <button class="btn light" data-done="${top.i}">${top.acts[0]}</button>
+    <button class="btn ghost" data-floor="${top.floor}">Voir l'étage <span aria-hidden="true">→</span></button>`);
+
+  setHTML('men-robots', fs.map(f => {
+    const r = f.robot, st = STATE[r.state], c = CONSUM[r.name];
+    return `<div class="mr ${r.state === 'blocked' ? 'blocked' : ''}" data-floor="${f.id}" title="Voir l'étage ${f.label}">
+      <div class="mr-h"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span>
+        <span class="mr-name"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>
+        <span class="chip ${st.chip}">${st.label}</span></div>
+      <div class="mr-where ${r.state === 'blocked' ? 'down' : ''}">${placeTag(f.label, robotRoom(f.id))}<span>${r.next}</span></div>
+      ${metric('Ménage', r.pct, r.state === 'blocked' ? '#e5484d' : '#00a99d')}
+      <div class="cons">${Object.keys(CONS_LABEL).map(k => metric(CONS_LABEL[k], c[k], consColor(c[k]))).join('')}</div>
+    </div>`;
+  }).join(''));
+
+  setHTML('men-alerts', open.length ? open.map(t => `
+    <li class="td"><button class="ck" data-ck="${t.i}" title="Marquer comme traité"></button>
+      <div><div class="t">${tagsFor(t)}<span class="tt">${t.short}</span><span class="sev sev-${t.prio}">${PRIO_LABEL[t.prio]}</span></div>
+        <div class="acts"><button data-done="${t.i}">${t.acts[0]}</button><button data-floor="${t.floor}">Voir l'étage <span aria-hidden="true">→</span></button></div></div></li>`).join('')
+    : `<li class="all-good"><span class="ok-badge">${icon('check', 22, { color: '#fff', sw: 2.8 })}</span><b>Tout est en ordre</b><span>Aucune alerte sur les robots de ménage.</span></li>`);
+
+  setHTML('men-stock', STOCK.map((x, i) => {
+    const low = x.qty < x.min, done = ordered.has(i);
+    return `<div class="stock-row"><div class="n">${x.name}<small>Seuil de commande : ${x.min}${x.unit}</small></div>
+      <span class="chip ${low ? 'warn' : 'ok'}">${x.qty}${x.unit} en stock</span>
+      ${low ? (done ? '<span class="chip idle">Commandé</span>' : `<button class="order" data-order="${i}">Commander</button>`) : ''}</div>`;
+  }).join(''));
+
+  const span = DAY1 - DAY0, pct = h => ((Math.min(Math.max(h, DAY0), DAY1) - DAY0) / span * 100).toFixed(2) + '%';
+  let ticks = '';
+  for (let h = DAY0; h <= DAY1; h += 2) ticks += `<span style="left:${pct(h)}">${h} h</span>`;
+  const nowH = simH(Date.now());
+  setHTML('men-plan', fs.map(f => {
+    const { segs } = planSegments(f);
+    return `<div class="plan-row"><span class="who"><span class="lv">${f.label}</span>${f.robot.name}</span>
+      <div class="plan-track">${segs.map(g => `<i class="${g.plan ? 'plan' : ''}" style="left:${pct(g.a)};width:${((g.b - g.a) / span * 100).toFixed(2)}%;background:${g.c}"></i>`).join('')}<span class="plan-now" style="left:${pct(nowH)}"></span></div></div>`;
+  }).join('') + `<div class="ticks plan-axis">${ticks}</div>`);
+
+  const left = MAINT.filter((m, i) => !maintDone.has(i)).length;
+  setHTML('men-maint-count', left ? `${left} à faire` : 'Tout est fait');
+  setHTML('men-maint', MAINT.map((m, i) => {
+    const d = maintDone.has(i);
+    return `<li class="td ${d ? 'done' : ''}"><button class="ck" data-mdone="${i}" title="Marquer comme fait">${d ? icon('check', 11, { color: '#fff', sw: 3.5 }) : ''}</button>
+      <div><div class="t"><span class="tags"><span class="tag-lvl">${m.lvl}</span><span class="tag-room">${m.robot}</span></span><span class="tt">${m.title}</span><span class="sev sev-${m.prio}">${PRIO_LABEL[m.prio]}</span></div>
+        <p>${m.desc}</p>${d ? '' : `<div class="acts">${m.acts.map(a => `<button data-mdone="${i}">${a}</button>`).join('')}</div>`}</div></li>`;
+  }).join(''));
+
+  setHTML('men-log', MEN_LOG.map(l => `<li><time>${fmtH(simH(l.at))}</time><span><span class="lv">${l.lvl}</span></span><div class="a">${l.html}</div></li>`).join(''));
+}
+
+function menageAction(e) {
+  const el = e.target.closest('[data-done],[data-ck],[data-floor],[data-mdone],[data-order]');
+  if (!el) return;
+  e.stopPropagation();
+  const d = el.dataset;
+  if (d.done !== undefined) done.add(+d.done);
+  if (d.ck !== undefined) done.add(+d.ck);
+  if (d.mdone !== undefined) { const i = +d.mdone; maintDone.has(i) ? maintDone.delete(i) : maintDone.add(i); }
+  if (d.order !== undefined) ordered.add(+d.order);
+  if (d.floor !== undefined) { showView('building'); select(+d.floor); return; }
+  renderMenage();
+}
+document.getElementById('view-menage').addEventListener('click', menageAction);
+document.getElementById('men-banner').addEventListener('click', menageAction);
+
 // First render once everything above (reception state included) is initialised.
 renderAll();
 requestAnimationFrame(step);
-if (location.hash === '#accueil') showView('accueil');
-window.addEventListener('hashchange', () => showView(location.hash === '#accueil' ? 'accueil' : 'building'));
+if (location.hash.slice(1) in VIEWS && location.hash.length > 1) showView(location.hash.slice(1));
+window.addEventListener('hashchange', () => showView(location.hash.slice(1) || 'building'));
 </script>
 </body>
 </html>
