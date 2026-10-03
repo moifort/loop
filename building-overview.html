@@ -186,6 +186,16 @@
   .sev-med { background: #f0a020; color: #3d2600; }
   .sev-low { background: #eef0f3; color: #59636e; box-shadow: inset 0 0 0 1px rgba(31,35,40,.08); }
   .empty { padding: 4px 16px 16px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+  /* Empty to-do list: centred all-clear with a check that draws itself, then a slow breathing halo */
+  .all-good { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 14px 16px 22px; color: var(--muted); }
+  .all-good b { color: var(--text); font-weight: 600; margin-top: 8px; }
+  .ok-badge { position: relative; width: 44px; height: 44px; border-radius: 50%; background: var(--green); display: grid; place-items: center; animation: ok-pop .45s cubic-bezier(.2, 1.4, .4, 1) both; }
+  .ok-badge::after { content: ''; position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 0 0 rgba(34,168,97,.35); animation: ok-halo 2.8s ease-out .6s infinite; }
+  .ok-badge path { stroke-dasharray: 24; stroke-dashoffset: 24; animation: ok-draw .45s ease-out .25s forwards; }
+  @keyframes ok-pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes ok-draw { to { stroke-dashoffset: 0; } }
+  @keyframes ok-halo { 0% { box-shadow: 0 0 0 0 rgba(34,168,97,.35); } 70%, 100% { box-shadow: 0 0 0 14px rgba(34,168,97,0); } }
+  @media (prefers-reduced-motion: reduce) { .ok-badge, .ok-badge::after { animation: none; } .ok-badge path { animation: none; stroke-dashoffset: 0; } }
 
   .rooms { padding: 0 16px 8px; }
   .room { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid var(--border); }
@@ -860,7 +870,7 @@ function renderTodo() {
   const list = TODOS.map((t, i) => ({ ...t, i })).filter(t => selected === 'all' || t.floor === selected);
   const open = list.filter(t => !done.has(t.i)).length;
   document.getElementById('todo-count').textContent = open ? `${open} à faire` : 'Tout est traité';
-  document.getElementById('todo').innerHTML = list.length ? list.map(t => `
+  const html = list.length ? list.map(t => `
     <li class="td ${done.has(t.i) ? 'done' : ''}">
       <button class="ck" data-i="${t.i}" title="Marquer comme traité">${done.has(t.i) ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>' : ''}</button>
       <div>
@@ -868,7 +878,14 @@ function renderTodo() {
         <p>${t.desc}</p>
         ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage <span aria-hidden="true">→</span></button>` : ''}</div>`}
       </div>
-    </li>`).join('') : `<li class="empty"><span class="dot" style="background:var(--green)"></span>Rien à signaler sur cet étage.</li>`;
+    </li>`).join('') : `<li class="all-good">
+      <span class="ok-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></span>
+      <b>Tout va bien</b>
+      <span>${selected === 'all' ? 'Aucune tâche en attente dans le bâtiment.' : 'Rien à traiter sur cet étage.'}</span></li>`;
+  // The list re-renders every 1.5 s: only touch the DOM when it changed, or the empty-state animation would restart.
+  const ul = document.getElementById('todo');
+  if (ul.dataset.html === html) return;
+  ul.innerHTML = html; ul.dataset.html = html;
   document.querySelectorAll('#todo .ck').forEach(b => b.onclick = () => { const i = +b.dataset.i; done.has(i) ? done.delete(i) : done.add(i); renderAll(); });
   document.querySelectorAll('#todo [data-go]').forEach(b => b.onclick = e => { e.stopPropagation(); select(+b.dataset.go); });
 }
