@@ -263,6 +263,8 @@
   /* Same battery glyph as the robots table, right of the name */
   .temi-name { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-height: 20px; }
   .temi-name b { white-space: nowrap; }
+  /* Robot-type tile left of the name on the Temi and Kilo cards */
+  .nm-ic { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; flex: none; }
   .temi-info-sub { display: block; margin-top: 2px; }
   .temi-name .batt { line-height: 0; }
   .temi small { color: var(--muted); font-size: 12px; }
@@ -722,7 +724,7 @@
       <div class="temi" id="temi"></div>
     </div>
     <!-- Luggage cart (Piaggio Kilo): live position on its corridor, current errand, actions -->
-    <div class="card" id="kilo-card" role="link" tabindex="0" title="Voir le chariot sur le bâtiment">
+    <div class="card" id="kilo-card" role="link" tabindex="0" title="Ouvrir la fiche du Kilo">
       <div class="card-h"><h3 id="kilo-title"></h3><div class="right" id="kilo-head-right"></div></div>
       <div class="kilo" id="kilo"></div>
     </div>
@@ -1576,6 +1578,7 @@ const ICON_ACCUEIL = icon('bot', 15, { color: '#fff' });
 const TILE_MENAGE = icon('brush-cleaning', 20, { color: '#fff' });
 const TILE_ACCUEIL = icon('bot', 20, { color: '#fff' });
 const TILE_BAGAGES = icon('luggage', 20, { color: '#fff' });
+const nameTile = (bg, ic) => `<span class="nm-ic" style="background:${bg}">${icon(ic, 13, { color: '#fff', sw: 2.2 })}</span>`;
 // Temi with a branded shell: Quartier Libre gold band on the base.
 const TEMI_SVG = `<svg width="66" height="122" viewBox="0 0 80 150">
   <ellipse cx="40" cy="144" rx="27" ry="4" fill="rgba(31,35,40,.12)"/>
@@ -1621,7 +1624,7 @@ function renderTemiCard() {
     below.classList.toggle('open-rooms', open === 'rooms');
   } else { todo.classList.remove('collapsed'); below.classList.remove('open-rooms'); }
   // setHTML: only touch the DOM when it changed, so the state chip's pulse keeps running
-  setHTML('temi-title', compact ? `<span class="temi-name"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>` : `<span class="temi-head">Robot d'accueil${temiStateChip()}</span>`);
+  setHTML('temi-title', compact ? `<span class="temi-name">${nameTile('var(--accueil)', 'bot')}<b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>` : `<span class="temi-head">Robot d'accueil${temiStateChip()}</span>`);
   setHTML('temi-head-right', compact ? temiStateChip() : '<span class="temi-go">Ouvrir la vue Accueil <span aria-hidden="true">→</span></span>');
   // Same figures as the reception view
   const remote = ACC.mode === 'remote', panic = !!ACC.panicAt;
@@ -1639,7 +1642,7 @@ function renderTemiCard() {
     </div>`;
   if (compact) { document.getElementById('temi-info').innerHTML = actions; return; }
   document.getElementById('temi-info').innerHTML = `
-    <div><span class="temi-name"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span><small>Temi 3 · Réception</small>
+    <div><span class="temi-name">${nameTile('var(--accueil)', 'bot')}<b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span><small>Temi 3 · Réception</small>
       <div class="temi-stats">
         <div><small>Échanges</small><b>${f.greeter.visitors}</b></div>
         <div><small>Résolus seul</small><b>78 %</b></div>
@@ -1707,7 +1710,7 @@ function porterWhat(p) {
 }
 function renderKiloCard() {
   const f = FLOORS.find(x => x.porter), p = f.porter;
-  setHTML('kilo-title', `<span class="temi-name"><b>${p.name}</b>${batteryIcon(p.bat)}</span>`);
+  setHTML('kilo-title', `<span class="temi-name">${nameTile('var(--bagages)', 'luggage')}<b>${p.name}</b>${batteryIcon(p.bat)}</span>`);
   setHTML('kilo-head-right', stateChip(STATE[p.state]));
   const parked = p.state === 'parked';
   const track = parked ? '' : `<div class="kilo-track"><span class="rail"></span><span class="end l"></span><span class="end r"></span>
@@ -1730,15 +1733,13 @@ function placeKiloCart() {
   const pos = Math.max(0, Math.min(1, (p.at[0] - x0) / (x1 - x0)));
   el.style.left = `calc(12px + (100% - 24px) * ${pos.toFixed(4)})`;
 }
-// Buttons run the action; anywhere else on the card points the cart out on its floor.
+// Buttons run the action; anywhere else on the card opens the cart's sheet.
 document.getElementById('kilo-card').onclick = e => {
   const act = e.target.closest('[data-kilo]')?.dataset.kilo;
   if (act) return porterAction(act);
-  const f = FLOORS.find(x => x.porter);
-  if (f.porter.state === 'parked') return;
-  select(f.id, f.porter.name);
-  document.querySelector('#view-building .stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  showView('kilo');
 };
+document.getElementById('kilo-card').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showView('kilo'); } };
 
 // Last cell: next step, then a "Détail" button to the robot's sheet (the reception view is the greeter's sheet; none for the cart yet).
 const nextCell = (text, open, cls = 'muted') => `<td class="${cls}"><div class="next"><span>${text}</span>${open
