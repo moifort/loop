@@ -117,6 +117,8 @@
   .tag-lvl, .tag-room { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; font-size: 11px; line-height: 20px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; cursor: pointer; }
   .tag-lvl { background: #3a4150; color: #fff; }
   .tag-room { background: #eef0f3; color: #1f2328; }
+  /* On the sunken selected card the grey value half would vanish into the background */
+  .fl.sel .tag-room { background: var(--panel); }
   .tag:hover { filter: brightness(.95); }
   .issue .tags { margin-left: auto; flex-wrap: nowrap; flex: none; }
   .issue .txt { overflow: hidden; text-overflow: ellipsis; }
