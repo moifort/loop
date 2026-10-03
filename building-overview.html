@@ -316,6 +316,9 @@
   .btn.primary:hover { background: #005ee0; }
   .btn.danger { color: #b42318; border-color: #f5c2c3; }
   .btn.danger:hover { background: var(--red-soft); }
+  /* Same look as the top-bar panic button: solid red with the siren icon */
+  .btn.panic { background: var(--red); border-color: var(--red); color: #fff; font-weight: 600; }
+  .btn.panic:hover { background: #d23b40; border-color: #d23b40; }
   /* A guest is waiting for a human: the one thing to act on */
   .handoff { display: flex; align-items: center; gap: 12px; margin: 12px 16px; padding: 10px 12px; border-radius: 10px; background: var(--amber-soft); border: 1px solid #f6dca8; }
   .handoff p { flex: 1; line-height: 1.45; }
@@ -1071,7 +1074,7 @@ function renderTemiCard() {
       </div></div>
     <div class="temi-actions">
       <button class="btn primary" data-temi="take">Prendre la main</button>
-      <button class="btn danger" data-temi="panic">Panique</button>
+      <button class="btn panic" data-temi="panic">${icon('siren', 15)}Panique</button>
     </div>`;
 }
 // Card click opens the reception view. Its two buttons keep fixed labels: they start the takeover / alarm
