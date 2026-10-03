@@ -436,6 +436,29 @@
   .acc-grid:has(#acc-live-card) { align-items: stretch; }
   .acc-grid:has(#acc-live-card) > .side { display: flex; flex-direction: column; }
   #acc-pos-card { flex: 1; display: flex; flex-direction: column; }
+  /* Emergency numbers: shown on the reception view while the panic alarm runs */
+  #acc-sos-card { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-soft); }
+  #acc-sos-card .card-h h3 { color: #b42318; }
+  .sos-addr { margin: 0 16px 8px; padding: 7px 10px; border-radius: 8px; background: var(--red-soft); color: #b42318; font-size: 12px; line-height: 1.4; }
+  .sos-addr b { font-weight: 600; }
+  .sos { list-style: none; padding: 0 16px 10px; }
+  .sos li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--border); }
+  .sos li:first-child { border-top: none; }
+  .sos .num { min-width: 42px; height: 26px; padding: 0 6px; border-radius: 6px; background: #3a4150; color: #fff; font-weight: 700; font-size: 13px; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+  .sos .num.long { font-size: 11px; }
+  .sos .n { flex: 1; min-width: 0; line-height: 1.3; }
+  .sos .n small { display: block; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sos .btn { height: 28px; padding: 0 10px; font-size: 12px; gap: 5px; }
+  .sos li.on { background: var(--green-soft); margin: 0 -16px; padding: 7px 16px; border-top-color: transparent; }
+  .sos li.on .n small { color: #1c7c4a; font-weight: 500; }
+  .sos .btn.hang { background: var(--red); border-color: var(--red); color: #fff; font-weight: 600; }
+  .sos .btn:disabled { opacity: .45; cursor: default; }
+  /* While the alarm runs the robot is held at the counter: the numbers take the position card's place,
+     sized to the live feed (they scroll if the column is short) */
+  body.alarm #acc-pos-card { display: none; }
+  body.alarm .acc-grid:has(#acc-live-card) > .side { position: relative; min-height: 0; }
+  body.alarm #acc-sos-card { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  body.alarm #acc-sos-card .sos { flex: 1; min-height: 0; overflow-y: auto; }
   .pos-meta { padding-bottom: 12px; }
   .pos-actions .btn { height: 28px; padding: 0 10px; font-size: 12px; gap: 5px; }
   .pos-actions .btn.on { background: var(--blue-soft); border-color: #b3d1ff; color: var(--blue); }
@@ -622,6 +645,11 @@
       <div id="acc-live"></div>
     </div>
     <div class="side">
+      <div class="card" id="acc-sos-card" hidden>
+        <div class="card-h"><h3>Numéros d'urgence</h3><div class="right" id="acc-sos-state"></div></div>
+        <p class="sos-addr">Adresse à donner : <b>14 rue Henry Monnier, Paris 9e</b> · Quartier Libre Saint-Georges, réception au RDC</p>
+        <ul class="sos" id="acc-sos"></ul>
+      </div>
       <div class="card" id="acc-pos-card">
         <div class="card-h"><h3>Position du robot</h3><div class="right" id="acc-pos-state"></div></div>
         <div class="pos-map"><svg id="acc-pos-map" viewBox="-6 -16 312 186"></svg></div>
@@ -766,6 +794,8 @@
 <script>
 // Icons: Lucide (lucide.dev, ISC licence), path data copied from lucide-static so the mockup works offline.
 const LUCIDE = {
+  'phone': '<path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>',
+  'phone-off': '<path d="M10.1 13.9a14 14 0 0 0 3.732 2.668 1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2 18 18 0 0 1-12.728-5.272"/><path d="M22 2 2 22"/><path d="M4.76 13.582A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 .244.473"/>',
   'building-2': '<path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>',
   'concierge-bell': '<path d="M3 20a1 1 0 0 1-1-1v-1a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1Z"/><path d="M20 16a8 8 0 1 0-16 0"/><path d="M12 4v4"/><path d="M10 4h4"/>',
   'bot': '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
@@ -1792,7 +1822,31 @@ function goTo(id) {
   renderPos();
 }
 
-function renderAccueil() { renderLive(); renderPos(); renderPosMap(); renderCoverage(); renderLog(); }
+// Emergency numbers offered while the alarm runs. Calls are simulated: no real number is dialled from the mockup.
+const SOS = [
+  { num: '17', name: 'Police secours', sub: 'Agression, intrusion, menace' },
+  { num: '18', name: 'Pompiers', sub: 'Incendie, fumée, accident' },
+  { num: '15', name: 'SAMU', sub: 'Urgence médicale' },
+  { num: '112', name: 'Urgences européennes', sub: 'Depuis tout téléphone, toutes langues' },
+  { num: '06 12 48 90 33', name: 'Michael — direction', sub: 'Astreinte de l\'hôtel' },
+  { num: '01 48 78 22 10', name: 'Sécurité Vigilis', sub: 'Gardiennage, intervention sur site' },
+];
+function renderSos() {
+  const card = document.getElementById('acc-sos-card');
+  card.hidden = !ACC.panicAt;
+  if (!ACC.panicAt) return;
+  const c = ACC.call;
+  document.getElementById('acc-sos-state').innerHTML = c ? `<span class="chip ok">${icon('phone', 12)}En appel</span>` : '';
+  document.getElementById('acc-sos').innerHTML = SOS.map((x, i) => {
+    const on = c && c.i === i;
+    return `<li class="${on ? 'on' : ''}"><span class="num ${x.num.length > 3 ? 'long' : ''}">${x.num.length > 3 ? icon('phone', 13, { color: '#fff' }) : x.num}</span>
+      <div class="n">${x.name}<small>${on ? `Appel en cours · ${since(c.at)}` : x.num.length > 3 ? x.num + ' · ' + x.sub : x.sub}</small></div>
+      ${on ? `<button class="btn hang" data-act="hangup">${icon('phone-off', 13)}Raccrocher</button>`
+        : `<button class="btn call" data-act="call-${i}" ${c ? 'disabled' : ''}>${icon('phone', 13)}Appeler</button>`}</li>`;
+  }).join('');
+}
+
+function renderAccueil() { renderSos(); renderLive(); renderPos(); renderPosMap(); renderCoverage(); renderLog(); }
 
 function takeOver() {
   ACC.mode = 'remote'; ACC.takeoverAt = Date.now();
@@ -1809,6 +1863,18 @@ function release() {
 function runAccAction(act, source = 'le comptoir') {
   if (act.startsWith('go-')) return goTo(act.slice(3));
   if (act === 'mute') { ACC.muted = !ACC.muted; return renderLive(); }
+  if (act.startsWith('call-')) {
+    const x = SOS[+act.slice(5)];
+    ACC.call = { i: +act.slice(5), at: Date.now() };
+    LOG.unshift({ at: Date.now(), lang: '—', q: `Appel au ${x.num} (${x.name})`, a: 'Lancé depuis Loop pendant l\'alerte, adresse de l\'hôtel donnée.', out: 'alarm' });
+    return renderAccueil();
+  }
+  if (act === 'hangup' && ACC.call) {
+    const l = LOG.find(y => y.q.startsWith('Appel au ' + SOS[ACC.call.i].num));
+    if (l) l.a = `Appel terminé après ${dur(Date.now() - ACC.call.at)}.`;
+    ACC.call = null;
+    return renderAccueil();
+  }
   if (act === 'take') takeOver();
   if (act === 'release') release();
   if (act === 'panic') {
@@ -1821,6 +1887,7 @@ function runAccAction(act, source = 'le comptoir') {
     const l = LOG.find(x => x.out === 'alarm');
     if (l) l.a = `Alerte levée après ${dur(Date.now() - ACC.panicAt)}. Hery reste en visio.`;
     ACC.panicAt = null;
+    ACC.call = null;
   }
   // Alarm on/off repaints everything that shows it right away (map robot, body frame, cards)
   document.body.classList.toggle('alarm', !!ACC.panicAt);
