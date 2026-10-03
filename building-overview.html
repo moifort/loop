@@ -325,9 +325,10 @@
 
   @keyframes pulse { 0% { r: 6; opacity: .55; } 100% { r: 18; opacity: 0; } }
   .pulse { animation: pulse 1.6s ease-out infinite; }
-  .focus-ring { animation: focus-ring 1.4s ease-in-out infinite; }
-  @keyframes focus-ring { 50% { opacity: .3; } }
-  @media (prefers-reduced-motion: reduce) { .focus-ring { animation: none; } }
+  /* Sims-style plumbob floating above the robot picked in the robots table */
+  .plumbob { animation: plumbob 1.6s ease-in-out infinite; pointer-events: none; }
+  @keyframes plumbob { 50% { transform: translateY(-4px); } }
+  @media (prefers-reduced-motion: reduce) { .plumbob { animation: none; } }
 
   /* ---------- Alarm mode: the whole UI signals the problem ---------- */
   body.alarm .top { background: #fdecec; border-bottom-color: #f5c2c3; }
@@ -1187,12 +1188,21 @@ function cartBody(x, y, z, color, loaded) {
   return s + post(y2 - .04);
 }
 
+// Faceted green diamond, tip at (x, y): four lit facets and a dark outline. Bob phase follows the clock across redraws.
+function plumbob(x, y) {
+  const t = [x, y - 24], l = [x - 7, y - 12], r = [x + 7, y - 12], b = [x, y], m = [x, y - 12];
+  const f = (a, c, fill) => `<polygon points="${[a, c, m].map(q => q.join(',')).join(' ')}" fill="${fill}"/>`;
+  return `<g class="plumbob" style="animation-delay:-${Math.round(performance.now() % 1600)}ms">
+    <ellipse cx="${x}" cy="${y + 4}" rx="5" ry="1.6" fill="rgba(0,0,0,.18)"/>
+    ${f(t, l, '#9cf58f')}${f(t, r, '#5ad64e')}${f(l, b, '#3cba34')}${f(r, b, '#23952a')}
+    <polygon points="${[t, r, b, l].map(q => q.join(',')).join(' ')}" fill="none" stroke="#17702a" stroke-width="1" stroke-linejoin="round"/>
+    <path d="M${x - 3},${y - 17} L${x},${y - 21}" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".8"/></g>`;
+}
+
 function robotGlyph(x, y, z, color, label, opts = {}) {
   const [cx, cy] = P(x, y, z);
   const h = opts.cart ? 28 : opts.tall ? 26 : 5, rx = opts.cart ? 16 : opts.tall ? 7 : 8, ry = rx * 0.5;
   let s = opts.cart ? '' : `<ellipse cx="${cx}" cy="${cy}" rx="${rx + 3}" ry="${ry + 1.5}" fill="rgba(0,0,0,.15)"/>`;
-  // Pointed out from the robots table: a ring around its base, breathing in the robot's colour.
-  if (opts.focus) s += `<ellipse class="focus-ring" style="animation-delay:-${Math.round(performance.now() % 1400)}ms" cx="${cx}" cy="${cy}" rx="${rx + 10}" ry="${(rx + 10) * .5}" fill="none" stroke="${color}" stroke-width="2.5"/>`;
   if (opts.pulse) s += `<circle class="pulse" cx="${cx}" cy="${cy - h / 2}" r="6" fill="${color}"/>`;
   if (opts.cart) s += cartBody(x, y, z, color, opts.loaded);
   else {
@@ -1210,7 +1220,14 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
     : `<circle cx="10" cy="10" r="4" fill="${color}"/>`;
   const tag = `<g${linkAttrs} transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><title>${opts.link ? 'Ouvrir la vue Accueil' : opts.help ? `${label} · psst, cliquez-moi` : label}</title><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : opts.focus ? color : '#e4e6ea'}"${opts.focus ? ' stroke-width="2.5"' : ''}/>${badge}<text x="${opts.alert ? 23 : 18}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text>${linkIcon}</g>`;
   // Labels go to the overlay layer when one is given, so walls never hide them.
-  if (opts.overlay) opts.overlay.push(tag); else s += tag;
+  // The robot picked in the robots table goes to the top layer, so no other label covers it.
+  const layer = opts.focus && opts.top ? opts.top : opts.overlay;
+  if (layer) layer.push(tag); else s += tag;
+  // Pointed out from the robots table: a green plumbob bobbing above its label, as in The Sims.
+  if (opts.focus) {
+    const pb = plumbob(cx, cy - h - (opts.tall ? 42 : 30) - 5);
+    if (layer) layer.push(pb); else s += pb;
+  }
   if (opts.help && helpActive()) {
     const bubble = helpBubble(cx + lw / 4, cy - h - 35);
     if (opts.overlay) opts.overlay.push(bubble); else s += bubble;
@@ -1268,7 +1285,7 @@ function openFloor(f, z0) {
   f.layout.walls.forEach(([x1, y1, x2, y2]) => wall(x1, y1, x2, y2, WALL * 0.8, x1 === x2 ? '#efe9dc' : '#f7f4ee'));
   wall(0, D, W, D, LOW, STONE);
   wall(W, 0, W, D, LOW, STONE_SIDE);
-  const roomLabels = [], robotTags = [];
+  const roomLabels = [], robotTags = [], topTags = [];
   f.layout.rooms.filter(r => r.kind !== 'corridor' && r.kind !== 'core').forEach(r => {
     // Move the room number to the back of the room when a robot stands in it, so its tag never covers it.
     const guest = r.kind === 'apt';
@@ -1286,18 +1303,18 @@ function openFloor(f, z0) {
       `<g transform="translate(${cx - 5},${cy - 16}) scale(.4167)" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">${ICON[st.icon]}</g>` });
   });
   const r = f.robot, st = STATE[r.state];
-  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', focus: focus === r.name, overlay: robotTags }) });
+  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', focus: focus === r.name, overlay: robotTags, top: topTags }) });
   if (f.porter) {
     const p = f.porter;
     // Drawn in front of the corridor's front partitions (y = 3.6) along its whole length, so the tall cart stays visible.
-    items.push({ d: p.at[0] + 0.6 + 3.65, svg: robotGlyph(p.at[0], p.at[1], z0, STATE[p.state].color, p.name, { cart: true, loaded: p.loaded, focus: focus === p.name, overlay: robotTags }) });
+    items.push({ d: p.at[0] + 0.6 + 3.65, svg: robotGlyph(p.at[0], p.at[1], z0, STATE[p.state].color, p.name, { cart: true, loaded: p.loaded, focus: focus === p.name, overlay: robotTags, top: topTags }) });
   }
   if (f.greeter) {
-    const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#1e3a8a', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, alert: !!ACC.panicAt, link: 'accueil', focus: focus === f.greeter.name });
+    const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#1e3a8a', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, top: topTags, alert: !!ACC.panicAt, link: 'accueil', focus: focus === f.greeter.name });
     items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: ACC.panicAt ? alarmRobot(P(f.greeter.at[0], f.greeter.at[1], z0), glyph) : glyph });
   }
   items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
-  s += roomLabels.join('') + robotTags.join('');
+  s += roomLabels.join('') + robotTags.join('') + topTags.join('');
   return s;
 }
 
