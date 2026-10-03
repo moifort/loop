@@ -52,8 +52,9 @@
   .card-h .right .btn { margin-left: 8px; }
 
   /* Stage: floor picker | flat building | context */
-  /* Building has a fixed width; the floor list absorbs the rest (min 140px) */
-  .stage { display: grid; grid-template-columns: minmax(140px, 1fr) 560px; gap: 20px; align-items: start; }
+  /* Floor list: 140–320px; building: fixed 560px, pinned to the right */
+  .stage { display: grid; grid-template-columns: minmax(140px, 320px) minmax(560px, 1fr); gap: 20px; align-items: start; }
+  .stage .bld { justify-self: end; }
   .stage > .floors { container-type: inline-size; min-width: 0; }
   @container (max-width: 230px) {
     .fl .r1 { grid-template-columns: auto 1fr; gap: 6px; }
@@ -74,11 +75,11 @@
   .fl { display: block; width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid transparent; }
   .fl:hover { background: var(--panel); border-color: var(--border); }
   .fl.sel { background: var(--panel); border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
-  .fl .r1 { display: grid; grid-template-columns: 34px 1fr auto; gap: 8px; align-items: center; }
+  .fl .r1 { display: grid; grid-template-columns: 28px 1fr auto; gap: 4px; align-items: center; }
   .fl .lv { font-weight: 600; color: var(--muted); font-size: 12px; }
   .fl .nm { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .fl .nm small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 4px; }
-  .fl .r2 { display: grid; grid-template-columns: 34px 1fr 40px; gap: 10px; align-items: end; margin-top: 7px; }
+  .fl .r2 { display: grid; grid-template-columns: 28px 1fr 40px; gap: 4px; align-items: end; margin-top: 7px; }
   .m { display: flex; flex-direction: column; gap: 3px; }
   .m .lb { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
   .m .lb b { color: var(--text); font-weight: 500; white-space: nowrap; }
