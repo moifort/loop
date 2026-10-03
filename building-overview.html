@@ -46,7 +46,6 @@
 
   .hero { display: flex; align-items: center; gap: 24px; }
   .hero h1 { font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
-  .hero .status { margin-top: 6px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
   .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
   .stats { margin-left: auto; display: flex; gap: 28px; }
   .stat small { display: block; color: var(--muted); font-size: 12px; }
@@ -183,7 +182,6 @@
   <div class="hero">
     <div>
       <h1>Bonjour Michael</h1>
-      <div class="status" id="status"></div>
     </div>
     <div class="stats" id="stats"></div>
   </div>
@@ -601,7 +599,7 @@ function floorPicker() {
 }
 
 // =====================================================================
-// Hero: status line + unboxed stats with sparklines
+// Hero: unboxed stats with sparklines
 // =====================================================================
 const scope = () => selected === 'all' ? FLOORS : FLOORS.filter(f => f.id === selected);
 
@@ -616,13 +614,8 @@ function spark(data, color) {
 const ramp = (end, n = 8, start = 0) => Array.from({ length: n }, (_, i) => start + (end - start) * Math.pow(i / (n - 1), 0.85) + (i % 3 === 1 ? end * 0.03 : 0));
 
 function renderHero() {
-  const status = document.getElementById('status');
   const stats = document.getElementById('stats');
   if (selected === 'all') {
-    const blocked = FLOORS.filter(f => f.robot.state === 'blocked').length;
-    status.innerHTML = blocked
-      ? `<span class="dot" style="background:var(--amber)"></span><span><b>${7 - blocked} robots sur 7</b> travaillent normalement · <b class="down">${openTodos().length} point${openTodos().length > 1 ? 's' : ''} à traiter</b></span>`
-      : `<span class="dot" style="background:var(--green)"></span><span>Tout fonctionne normalement.</span>`;
     const apts = FLOORS.filter(f => f.id > 0).flatMap(f => Object.values(roomStates(f)));
     const ready = apts.filter(s => s === 'clean').length;
     const area = FLOORS.reduce((a, f) => a + f.area, 0);
@@ -634,9 +627,7 @@ function renderHero() {
       ['Robots disponibles', `6<span> / 7</span>`, [7, 7, 7, 7, 7, 6, 7, 6], '#3b82f6'],
     ].map(([l, v, d, c]) => `<div class="stat"><small>${l}</small><div class="v"><b>${v}</b>${spark(d, c)}</div></div>`).join('');
   } else {
-    const f = scope()[0], r = f.robot, st = STATE[r.state];
-    const who = f.greeter ? ` · ${f.greeter.name} à la réception` : '';
-    status.innerHTML = `<span class="dot" style="background:${st.color}"></span><span><b>${f.label} · ${f.name}${f.hint ? ' ' + f.hint : ''}</b> — ${r.name} ${st.label.toLowerCase()} · <span class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</span>${who}</span>`;
+    const f = scope()[0], r = f.robot;
     const states = Object.values(roomStates(f));
     stats.innerHTML = [
       [f.id === 0 ? 'Espaces prêts' : 'Appartements prêts', `${states.filter(s => s === 'clean').length}<span> / ${states.length}</span>`, ramp(states.filter(s => s === 'clean').length + 0.01), '#00a99d'],
