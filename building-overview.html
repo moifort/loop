@@ -195,13 +195,85 @@
 
   @keyframes pulse { 0% { r: 6; opacity: .55; } 100% { r: 18; opacity: 0; } }
   .pulse { animation: pulse 1.6s ease-out infinite; }
+
+  /* ---------- Reception view ---------- */
+  .wrap[hidden], .top [hidden] { display: none; }
+  .acc-grid { display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
+  @container (max-width: 900px) { .acc-grid { grid-template-columns: 1fr; } .kpis { grid-template-columns: repeat(2, 1fr) !important; } }
+  .side { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); font-weight: 500; white-space: nowrap; }
+  .btn:hover { background: var(--panel-2); }
+  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.primary:hover { background: #005ee0; }
+  .btn.danger { color: #b42318; border-color: #f5c2c3; }
+  .btn.danger:hover { background: var(--red-soft); }
+  /* A guest is waiting for a human: the one thing to act on */
+  .handoff { display: flex; align-items: center; gap: 12px; margin: 4px 16px 12px; padding: 10px 12px; border-radius: 10px; background: var(--amber-soft); border: 1px solid #f6dca8; }
+  .handoff p { flex: 1; line-height: 1.45; }
+  .handoff b { font-weight: 600; }
+  .live { position: relative; margin: 6px 16px 0; border-radius: 10px; overflow: hidden; background: #1c2029; aspect-ratio: 16 / 9; }
+  .live > svg { width: 100%; height: 100%; }
+  .ov { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 6px; background: rgba(15,18,25,.62); color: #fff; font-size: 11px; font-weight: 500; backdrop-filter: blur(6px); }
+  .ov.o-tl { top: 10px; left: 10px; } .ov.o-tr { top: 10px; right: 10px; }
+  .ov.o-bl { bottom: 10px; left: 10px; } .ov.o-br { bottom: 10px; right: 10px; }
+  .ov .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+  .ov.alarm { background: rgba(229,72,77,.92); }
+  .ov.alarm .rec { background: #fff; }
+  .pip { position: absolute; right: 10px; bottom: 42px; width: 132px; aspect-ratio: 4 / 3; border-radius: 8px; background: linear-gradient(160deg, #3a4566, #232a3d); border: 2px solid rgba(255,255,255,.85); display: grid; place-items: center; color: #fff; }
+  .pip .av { width: 40px; height: 40px; border-radius: 50%; background: #b9825a; display: grid; place-items: center; font-weight: 600; }
+  .pip small { position: absolute; left: 6px; bottom: 4px; font-size: 10px; }
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 12px 16px 16px; }
+  .controls .note { margin-left: auto; color: var(--muted); font-size: 12px; }
+  .who { padding: 0 16px 8px; }
+  .who-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border); }
+  .who-row:first-child { border-top: none; }
+  .who-row .av { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 600; flex: none; }
+  .who-row b { font-weight: 500; display: block; }
+  .who-row small { color: var(--muted); }
+  .who-row .chip { margin-left: auto; }
+  .panic { padding: 0 16px 16px; }
+  .panic p { color: var(--muted); line-height: 1.45; margin-bottom: 10px; }
+  .panic .last { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .card.alarm { border-color: #f5c2c3; box-shadow: 0 0 0 3px var(--red-soft); }
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px; }
+  .steps li { display: flex; gap: 8px; align-items: center; }
+  .steps li.wait { color: var(--muted); }
+  .steps .ic { width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center; flex: none; }
+  .steps li:not(.wait) .ic { background: var(--green); color: #fff; }
+  .steps li.wait .ic { border: 2px solid var(--faint); }
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 4px 16px 14px; }
+  .kpi small { display: block; color: var(--muted); font-size: 12px; margin-bottom: 2px; }
+  .kpi b { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .kpi span { color: var(--muted); font-size: 12px; margin-left: 4px; }
+  /* Coverage timeline: who held the reception, hour by hour */
+  .cov-wrap { position: relative; margin: 0 16px; }
+  .cov { position: relative; height: 26px; border-radius: 6px; background: var(--panel-2); border: 1px solid var(--border); overflow: hidden; }
+  .cov i { position: absolute; top: 0; bottom: 0; }
+  .cov i.plan { opacity: .22; }
+  .cov-wrap .now { position: absolute; top: -4px; height: 34px; width: 2px; margin-left: -1px; background: var(--text); border-radius: 2px; }
+  .ticks { position: relative; height: 18px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .ticks span { position: absolute; top: 4px; transform: translateX(-50%); white-space: nowrap; }
+  .ticks span:first-child { transform: none; }
+  .ticks span:last-child { transform: translateX(-100%); }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; padding: 8px 16px 16px; color: var(--muted); font-size: 12px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .log { list-style: none; }
+  .log li { display: grid; grid-template-columns: 44px 30px 1fr auto; gap: 10px; align-items: start; padding: 10px 16px; border-top: 1px solid var(--border); }
+  .log li:first-child { border-top: none; }
+  .log time { color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 1px; }
+  .lang { display: inline-flex; justify-content: center; height: 20px; padding: 0 5px; border-radius: 3px; font-size: 11px; line-height: 20px; font-weight: 600; background: #eef0f3; color: #59636e; }
+  .log .q { font-weight: 500; }
+  .log .a { color: var(--muted); margin-top: 2px; line-height: 1.45; }
+  .topq { padding: 2px 16px 14px; display: flex; flex-direction: column; gap: 9px; }
+  .topq .m .lb { font-size: 12px; color: var(--text); }
 </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="me" title="Michael — CEO">M</div>
-  <button class="nav-btn active" title="Bâtiment"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg></button>
+  <button class="nav-btn active" data-view="building" title="Bâtiment"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg></button>
+  <button class="nav-btn" data-view="accueil" title="Accueil"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17a8 8 0 0 1 16 0"/><path d="M2.5 17h19M12 9V7M10 7h4"/></svg></button>
   <button class="nav-btn" title="Plans"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></svg></button>
   <button class="nav-btn" title="Robots"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01"/></svg></button>
   <button class="nav-btn" title="Alertes"><span class="badge"></span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg></button>
@@ -216,11 +288,12 @@
   <button>Saint-Georges · 14 rue Henry Monnier, Paris 9e
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
   </button>
+  <span class="sep" data-crumb hidden>/</span><span data-crumb hidden>Accueil</span>
   <span class="right" id="clock"></span>
 </header>
 
 <main>
-<div class="wrap">
+<div class="wrap" id="view-building">
 
   <div class="stage">
     <div class="floors"><div id="all-row"></div><div id="floors" class="floors"></div></div>
@@ -254,6 +327,51 @@
       <thead><tr><th>Robot</th><th>Étage</th><th>État</th><th>Avancement du jour</th><th>Batterie</th><th>Prochaine étape</th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
+  </div>
+
+</div>
+
+<!-- Reception view: greeter robot, human takeover from Madagascar, panic button -->
+<div class="wrap" id="view-accueil" hidden>
+
+  <div class="acc-grid">
+    <div class="card" id="acc-live-card">
+      <div class="card-h"><h3>Réception en direct</h3><div class="right" id="acc-state"></div></div>
+      <div id="acc-live"></div>
+    </div>
+    <div class="side">
+      <div class="card">
+        <div class="card-h"><h3>Qui tient l'accueil</h3></div>
+        <div class="who" id="acc-who"></div>
+      </div>
+      <div class="card" id="acc-panic-card">
+        <div class="card-h"><h3>Bouton panique</h3><div class="right" id="acc-panic-state"></div></div>
+        <div class="panic" id="acc-panic"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><h3>Couverture de l'accueil aujourd'hui</h3><div class="right">7 h – 23 h</div></div>
+    <div class="kpis" id="acc-kpis"></div>
+    <div class="cov-wrap" id="acc-cov"></div>
+    <div class="legend">
+      <span><i class="sw" style="background:#22a861"></i>Réceptionniste au poste</span>
+      <span><i class="sw" style="background:#7c5cff"></i>Robot seul</span>
+      <span><i class="sw" style="background:#006fff"></i>Pris en main depuis Madagascar</span>
+      <span><i class="sw" style="background:#22a861;opacity:.3"></i>Prévu</span>
+    </div>
+  </div>
+
+  <div class="acc-grid">
+    <div class="card">
+      <div class="card-h"><h3>Échanges du robot</h3><div class="right" id="acc-log-count"></div></div>
+      <ul class="log" id="acc-log"></ul>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Questions les plus fréquentes</h3><div class="right">aujourd'hui</div></div>
+      <div class="topq" id="acc-top"></div>
+    </div>
   </div>
 
 </div>
@@ -719,7 +837,7 @@ const batColor = b => b < 25 ? 'var(--red)' : b < 50 ? 'var(--amber)' : 'var(--g
 function renderRows() {
   const rows = [];
   [...scope()].sort((a, b) => a.id - b.id).forEach(f => {
-    if (f.greeter) rows.push(`<tr data-id="${f.id}"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><b>${f.greeter.name}</b><small>Accueil</small></div></div></td>
+    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><b>${f.greeter.name}</b><small>Accueil</small></div></div></td>
       <td>${f.label} <span class="muted">· Réception</span></td><td><span class="chip acc">En service</span></td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
       <td><span class="bat"><span class="dot" style="background:var(--green)"></span>Sur secteur</span></td>
@@ -735,7 +853,7 @@ function renderRows() {
   });
   document.getElementById('rows').innerHTML = rows.join('');
   document.getElementById('robots-count').textContent = selected === 'all' ? '7 robots · 1 par étage + accueil' : `${rows.length} robot${rows.length > 1 ? 's' : ''} sur cet étage`;
-  document.querySelectorAll('#rows tr').forEach(tr => tr.onclick = () => select(+tr.dataset.id));
+  document.querySelectorAll('#rows tr').forEach(tr => tr.onclick = () => tr.dataset.view ? showView(tr.dataset.view) : select(+tr.dataset.id));
 }
 
 function select(id) { selected = id; renderAll(); }
@@ -809,6 +927,211 @@ function step(now) {
 }
 renderAll();
 requestAnimationFrame(step);
+
+// =====================================================================
+// Reception view — the greeter answers alone, a Madagascar operator can
+// take over by video, the panic button turns it into a witness.
+// Story of the day: Inès left the desk 12 min ago to move the suitcase
+// that blocks CLN-91C5 in 307, so the robot holds the reception alone.
+// =====================================================================
+const MIN = 60000, T0 = Date.now();
+// Outside opening hours the mockup replays a mid-afternoon so the day reads well.
+const MIDNIGHT = new Date(T0).setHours(0, 0, 0, 0);
+const H_REAL = (T0 - MIDNIGHT) / 3.6e6;
+const H_SHIFT = H_REAL < 9.5 || H_REAL > 22.5 ? 15.5 - H_REAL : 0;
+const simH = t => (t - MIDNIGHT) / 3.6e6 + H_SHIFT;
+const fmtH = h => `${Math.floor(h)}:${String(Math.floor((h % 1) * 60)).padStart(2, '0')}`;
+const ago = m => T0 - m * MIN;
+const dur = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
+const since = t => `<span data-since="${t}">${dur(Date.now() - t)}</span>`;
+
+const ACC = {
+  mode: 'auto',          // 'auto' = robot answers alone, 'remote' = operator speaks through it
+  takeoverAt: null, panicAt: null,
+  awayAt: ago(12),       // Inès left the desk for app. 307
+  waiting: ago(0.7),     // a guest asked for a human
+};
+const LOG = [
+  { at: ago(0.7), lang: 'FR', q: 'Je voudrais une facture au nom de ma société.', a: "Le robot a proposé d'appeler un opérateur.", out: 'wait' },
+  { at: ago(2), lang: 'EN', q: 'Can I leave my bags somewhere after check-out?', a: 'Bagagerie au rez-de-chaussée, code envoyé par SMS.', out: 'bot' },
+  { at: ago(9), lang: 'FR', q: "Mon code d'entrée ne marche plus.", a: 'Nouveau code Salto généré pendant la visio.', out: 'remote', min: 3 },
+  { at: ago(18), lang: 'EN', q: 'What time is breakfast served?', a: 'De 7 h 30 à 10 h 30, salle du rez-de-chaussée.', out: 'bot' },
+  { at: ago(26), lang: 'IT', q: 'Dove posso prendere un taxi?', a: 'Itinéraire vers la station la plus proche envoyé par SMS.', out: 'bot' },
+  { at: ago(41), lang: 'FR', q: 'Le Wi-Fi ne marche pas dans le 402.', a: 'Redémarrage à distance sans effet, ticket créé pour la maintenance.', out: 'ticket' },
+  { at: ago(55), lang: 'FR', q: "Colis pour l'appartement 204.", a: 'Livreur orienté vers Inès, colis déposé à la bagagerie.', out: 'desk' },
+  { at: ago(72), lang: 'EN', q: "I want a refund, the heating didn't work last night.", a: 'Hery a pris le relais en visio et ouvert une réclamation.', out: 'remote', min: 6 },
+];
+const OUT = {
+  bot:    () => '<span class="chip acc">Résolu par le robot</span>',
+  remote: l => `<span class="chip occ">Hery · visio ${l.min} min</span>`,
+  live:   () => `<span class="chip occ">Hery en visio · ${since(ACC.takeoverAt)}</span>`,
+  desk:   () => '<span class="chip ok">Transmis à Inès</span>',
+  ticket: () => '<span class="chip warn">Ticket maintenance</span>',
+  wait:   () => `<span class="chip err">En attente · ${since(ACC.waiting)}</span>`,
+  alarm:  () => '<span class="chip err">Alerte</span>',
+};
+const TOPQ = [['Wi-Fi', 6], ['Bagagerie', 5], ['Heure de check-out', 4], ['Taxi, métro', 3], ["Code d'entrée", 3], ['Autre', 2]];
+
+// Planned day at the desk; the live part is rebuilt from ACC.
+const COV_PLAN = [[7, 8, 'robot'], [8, 10.5, 'desk'], [10.5, 10.6, 'remote'], [10.6, 10.8, 'robot'], [10.8, 13, 'desk'],
+  [13, 13.4, 'robot'], [13.4, 13.5, 'remote'], [13.5, 13.8, 'robot'], [13.8, 19, 'desk'], [19, 23, 'robot']];
+const COV_COLOR = { desk: '#22a861', robot: '#7c5cff', remote: '#006fff' };
+const DAY0 = 7, DAY1 = 23;
+function coverage() {
+  const now = simH(Date.now()), away = simH(ACC.awayAt), segs = [];
+  const clip = (a, b, plan) => COV_PLAN.forEach(([x, y, k]) => { const s = Math.max(a, x), e = Math.min(b, y); if (e > s) segs.push({ a: s, b: e, k, plan }); });
+  clip(DAY0, away, false);
+  const take = ACC.takeoverAt ? simH(ACC.takeoverAt) : now;
+  segs.push({ a: away, b: take, k: 'robot' });
+  if (take < now) segs.push({ a: take, b: now, k: 'remote' });
+  clip(now, DAY1, true);
+  return { segs, now };
+}
+
+const VIDEO = (() => {
+  // Robot's front camera: Quartier Libre lobby, guest at the desk with a suitcase.
+  let s = '<svg viewBox="0 0 640 360" preserveAspectRatio="xMidYMid slice"><defs><radialGradient id="vig" cx="50%" cy="45%" r="75%"><stop offset="60%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity=".45"/></radialGradient></defs>';
+  s += '<rect width="640" height="225" fill="#e9e1d1"/><rect y="38" width="640" height="3" fill="#dcd2bf"/>';
+  s += '<polygon points="0,225 640,225 640,360 0,360" fill="#b98a5c"/>';
+  for (let x = -480; x <= 1120; x += 70) s += `<line x1="${320 + (x - 320) * 0.3}" y1="225" x2="${x}" y2="360" stroke="#a67a4f" stroke-width="1.5"/>`;
+  s += '<rect x="150" y="62" width="120" height="74" fill="#c9b79a"/><rect x="158" y="70" width="104" height="58" fill="#7c8a7a" opacity=".55"/>';
+  s += '<rect x="476" y="70" width="112" height="155" fill="#3a4150"/><rect x="488" y="82" width="88" height="131" fill="#9fb7c9" opacity=".85"/><line x1="532" y1="82" x2="532" y2="213" stroke="#3a4150" stroke-width="3"/>';
+  s += '<rect x="96" y="150" width="250" height="14" rx="2" fill="#4a5160"/><rect x="104" y="164" width="234" height="92" fill="#2f3542"/>';
+  s += '<text x="221" y="215" text-anchor="middle" fill="#d8c7a3" font-size="12" font-weight="600" letter-spacing="4" font-family="Didot, Georgia, serif">QUARTIER LIBRE</text>';
+  s += '<rect x="420" y="236" width="30" height="34" rx="3" fill="#8a6b4a"/><ellipse cx="435" cy="222" rx="20" ry="26" fill="#5f7d5a"/><ellipse cx="424" cy="206" rx="10" ry="18" fill="#6f8f69"/>';
+  s += '<circle cx="372" cy="150" r="15" fill="#2a2f3b"/><path d="M350 300 V188 q0-20 22-20 q22 0 22 20 V300 Z" fill="#3d4a6b"/><rect x="355" y="296" width="13" height="34" fill="#2a2f3b"/><rect x="376" y="296" width="13" height="34" fill="#2a2f3b"/>';
+  s += '<rect x="398" y="262" width="36" height="58" rx="5" fill="#c0503f"/><path d="M408 262 v-14 h16 v14" fill="none" stroke="#2a2f3b" stroke-width="3"/><circle cx="404" cy="322" r="3" fill="#2a2f3b"/><circle cx="428" cy="322" r="3" fill="#2a2f3b"/>';
+  return s + '<rect width="640" height="360" fill="url(#vig)"/></svg>';
+})();
+const CHECK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>';
+
+function renderLive() {
+  const remote = ACC.mode === 'remote', panic = !!ACC.panicAt;
+  document.getElementById('acc-state').innerHTML = panic ? '<span class="chip err">Alerte en cours</span>'
+    : remote ? '<span class="chip occ">Piloté à distance</span>' : '<span class="chip acc">En autonomie</span>';
+  const handoff = ACC.waiting && !remote ? `<div class="handoff">
+      <span class="sev sev-med">En attente</span>
+      <p><b>Un client attend un humain depuis ${since(ACC.waiting)}.</b> Il demande une facture au nom de sa société ; Inès n'est pas au comptoir.</p>
+      <button class="btn primary" data-act="take">Prendre la main</button></div>` : '';
+  document.getElementById('acc-live').innerHTML = `${handoff}
+    <div class="live">${VIDEO}
+      <span class="ov o-tl"><span class="rec"></span>EN DIRECT</span>
+      <span class="ov o-tr">TEMI-4F2A · caméra avant</span>
+      <span class="ov o-bl">${remote ? `Hery parle via le robot · ${since(ACC.takeoverAt)}` : 'Le robot répond seul · FR · EN · IT · ES'}</span>
+      ${panic ? '<span class="ov o-br alarm"><span class="rec"></span>Enregistrement audio et vidéo</span>' : '<span class="ov o-br">Enregistrement désactivé</span>'}
+      ${remote ? '<div class="pip"><span class="av">HR</span><small>Hery · Antananarivo</small></div>' : ''}
+    </div>
+    <div class="controls">
+      ${remote ? '<button class="btn primary" data-act="release">Rendre la main au robot</button><button class="btn">Couper le micro</button><button class="btn">Aller à la porte</button>'
+        : '<button class="btn primary" data-act="take">Prendre la main en visio</button><button class="btn">Parler dans le hall</button><button class="btn">Ramener à la base</button>'}
+      <span class="note">${remote ? 'Latence 180 ms · Antananarivo → Paris' : 'Hery est disponible pour un relais'}</span>
+    </div>`;
+  document.getElementById('acc-live-card').classList.toggle('alarm', panic);
+}
+
+function renderWho() {
+  const remote = ACC.mode === 'remote';
+  const row = (bg, ini, name, sub, chip) => `<div class="who-row"><span class="av" style="background:${bg}">${ini}</span><div><b>${name}</b><small>${sub}</small></div>${chip}</div>`;
+  document.getElementById('acc-who').innerHTML =
+    row('var(--accueil)', ICON_ACCUEIL, 'TEMI-4F2A', 'Robot d\'accueil · sur secteur', remote ? '<span class="chip occ">Relais visio</span>' : '<span class="chip acc">En autonomie</span>') +
+    row('#22a861', 'IN', 'Inès', `Réceptionniste · au 307 (É3) depuis ${Math.round((Date.now() - ACC.awayAt) / MIN)} min`, '<span class="chip warn">Hors du poste</span>') +
+    row('#b9825a', 'HR', 'Hery R.', 'Opérateur · Antananarivo', remote ? '<span class="chip occ">En visio</span>' : '<span class="chip ok">Disponible</span>');
+}
+
+function renderPanic() {
+  const card = document.getElementById('acc-panic-card'), el = document.getElementById('acc-panic');
+  card.classList.toggle('alarm', !!ACC.panicAt);
+  if (!ACC.panicAt) {
+    document.getElementById('acc-panic-state').innerHTML = '<span class="chip ok">Armé</span>';
+    el.innerHTML = `<p>Déclenchable depuis le robot, le comptoir et l'appli de l'agent. Le robot se place face au comptoir, allume son écran et enregistre le son et l'image ; Hery et l'astreinte sont prévenus. Rôle de témoin et de dissuasion, pas de sécurité.</p>
+      <div class="last">Dernier déclenchement : 14 mars 2026 · client agressif au comptoir</div>
+      <button class="btn danger" data-act="panic">Simuler un déclenchement</button>`;
+    return;
+  }
+  const t = (Date.now() - ACC.panicAt) / 1000;
+  const steps = [[0, 'Hery alerté, visio ouverte'], [2, 'Robot face au comptoir, écran allumé'], [3, 'Enregistrement audio et vidéo démarré'], [8, 'Astreinte sécurité appelée']];
+  document.getElementById('acc-panic-state').innerHTML = `<span class="chip err">En cours · ${since(ACC.panicAt)}</span>`;
+  el.innerHTML = `<ul class="steps">${steps.map(([s, label]) => `<li class="${t >= s ? '' : 'wait'}"><span class="ic">${t >= s ? CHECK : ''}</span>${label}</li>`).join('')}</ul>
+    <button class="btn danger" data-act="calm">Lever l'alerte</button>`;
+}
+
+function renderCoverage() {
+  const { segs, now } = coverage(), span = DAY1 - DAY0, pct = h => ((h - DAY0) / span * 100).toFixed(2) + '%';
+  const alone = segs.filter(s => !s.plan && s.k !== 'desk').reduce((a, s) => a + s.b - s.a, 0);
+  const takeovers = LOG.filter(l => l.out === 'remote' || l.out === 'live').length;
+  // 23 exchanges today (same figure as the robots table), the log only lists the latest ones.
+  const solved = 18, total = 23 + LOG.filter(l => l.out === 'alarm').length;
+  document.getElementById('acc-kpis').innerHTML = [
+    ['Accueil couvert', '100 %', 'depuis 7 h'],
+    ['Robot seul au comptoir', `${Math.floor(alone)} h ${String(Math.round(alone % 1 * 60)).padStart(2, '0')}`, 'sans frais de personnel'],
+    ['Résolus par le robot', `${solved} / ${total}`, `${Math.round(solved / total * 100)} %`],
+    ['Prises en main à distance', takeovers, '34 s d\'attente moy.'],
+  ].map(([l, v, s]) => `<div class="kpi"><small>${l}</small><b>${v}</b><span>${s}</span></div>`).join('');
+  let ticks = '';
+  for (let h = DAY0; h <= DAY1; h += 2) ticks += `<span style="left:${pct(h)}">${h} h</span>`;
+  document.getElementById('acc-cov').innerHTML = `<div class="cov">${segs.map(s => `<i class="${s.plan ? 'plan' : ''}" style="left:${pct(s.a)};width:${((s.b - s.a) / span * 100).toFixed(2)}%;background:${COV_COLOR[s.k]}" title="${fmtH(s.a)} – ${fmtH(s.b)}"></i>`).join('')}</div>
+    <span class="now" style="left:${pct(now)}" title="Maintenant · ${fmtH(now)}"></span><div class="ticks">${ticks}</div>`;
+}
+
+function renderLog() {
+  document.getElementById('acc-log-count').textContent = `${LOG.length} derniers`;
+  document.getElementById('acc-log').innerHTML = LOG.map(l => `<li>
+    <time>${fmtH(simH(l.at))}</time><span class="lang">${l.lang}</span>
+    <div><div class="q">${l.q}</div><div class="a">${l.a}</div></div>${OUT[l.out](l)}</li>`).join('');
+  const max = Math.max(...TOPQ.map(q => q[1]));
+  document.getElementById('acc-top').innerHTML = TOPQ.map(([q, n]) =>
+    `<div class="m"><div class="lb"><span>${q}</span><b>${n}</b></div><div class="mb"><i style="width:${n / max * 100}%;background:var(--accueil)"></i></div></div>`).join('');
+}
+
+function renderAccueil() { renderLive(); renderWho(); renderPanic(); renderCoverage(); renderLog(); }
+
+function takeOver() {
+  ACC.mode = 'remote'; ACC.takeoverAt = Date.now();
+  const w = LOG.find(l => l.out === 'wait');
+  if (w) { w.out = 'live'; w.a = 'Hery a pris le relais en visio.'; ACC.waiting = null; }
+}
+function release() {
+  const l = LOG.find(x => x.out === 'live');
+  if (l) { l.out = 'remote'; l.min = Math.max(1, Math.round((Date.now() - ACC.takeoverAt) / MIN)); }
+  ACC.mode = 'auto'; ACC.takeoverAt = null;
+}
+document.getElementById('view-accueil').addEventListener('click', e => {
+  const act = e.target.closest('[data-act]')?.dataset.act;
+  if (!act) return;
+  if (act === 'take') takeOver();
+  if (act === 'release') release();
+  if (act === 'panic') {
+    ACC.panicAt = Date.now();
+    if (ACC.mode !== 'remote') takeOver();
+    LOG.unshift({ at: Date.now(), lang: '—', q: 'Bouton panique déclenché depuis le comptoir', a: 'Visio ouverte avec Hery, enregistrement démarré.', out: 'alarm' });
+  }
+  if (act === 'calm') {
+    const l = LOG.find(x => x.out === 'alarm');
+    if (l) l.a = `Alerte levée après ${dur(Date.now() - ACC.panicAt)}. Hery reste en visio.`;
+    ACC.panicAt = null;
+  }
+  renderAccueil();
+});
+
+// Live counters tick every second; the panic checklist advances on its own.
+setInterval(() => {
+  if (document.getElementById('view-accueil').hidden) return;
+  document.querySelectorAll('#view-accueil [data-since]').forEach(s => s.textContent = dur(Date.now() - +s.dataset.since));
+  if (ACC.panicAt) renderPanic();
+}, 1000);
+setInterval(() => { if (!document.getElementById('view-accueil').hidden) renderCoverage(); }, 30000);
+
+function showView(v) {
+  document.getElementById('view-building').hidden = v !== 'building';
+  document.getElementById('view-accueil').hidden = v !== 'accueil';
+  document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+  document.querySelectorAll('[data-crumb]').forEach(c => c.hidden = v !== 'accueil');
+  history.replaceState(null, '', v === 'accueil' ? '#accueil' : location.pathname);
+  document.querySelector('main').scrollTop = 0;
+  if (v === 'accueil') renderAccueil();
+}
+document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
+if (location.hash === '#accueil') showView('accueil');
 </script>
 </body>
 </html>
