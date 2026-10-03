@@ -82,11 +82,10 @@
   .al .pips i { flex: 1; border-radius: 9px; background: #e9ecef; }
 
   /* First item of the floor list, stretched to full width above the building */
-  #all-row { margin-bottom: -16px; }
-  .fl.all .r2 { grid-template-columns: 34px 220px 1fr; gap: 16px; }
-  .fl.all .lv svg { width: 30px; height: 30px; }
-  .issues { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; }
-  .issue { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 2px 0; border-radius: 6px; }
+  #all-row { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .fl.all .lv svg { display: block; }
+  .issues { display: flex; flex-direction: column; gap: 4px; margin: 8px 0 0 42px; }
+  .issue { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .issue:hover { text-decoration: underline; }
   .issue .where { color: var(--muted); }
 
@@ -189,10 +188,8 @@
     <div class="stats" id="stats"></div>
   </div>
 
-  <div id="all-row"></div>
-
   <div class="stage">
-    <div class="floors" id="floors"></div>
+    <div class="floors"><div id="all-row"></div><div id="floors" class="floors"></div></div>
 
     <div class="bld">
       <svg id="iso" viewBox="0 0 560 650"></svg>
@@ -242,8 +239,8 @@ function apartmentLevel(n) {
   return {
     rooms: [
       r('corridor', 0, 2.4, 12, 3.6, 'corridor'),
-      r(`${n}01`, 0, 0, 3, 2.4), r(`${n}02`, 3, 0, 6, 2.4), r(`${n}03`, 6, 0, 9, 2.4), r(`${n}04`, 9, 0, 12, 2.4),
-      r(`${n}05`, 0, 3.6, 3, 6), r('core', 3, 3.6, 5, 6, 'core'), r(`${n}06`, 5, 3.6, 8.5, 6), r(`${n}07`, 8.5, 3.6, 12, 6),
+      { ...r(`${n}01`, 0, 0, 3, 2.4), door: 1.5 }, { ...r(`${n}02`, 3, 0, 6, 2.4), door: 4.5 }, { ...r(`${n}03`, 6, 0, 9, 2.4), door: 7.5 }, { ...r(`${n}04`, 9, 0, 12, 2.4), door: 10.5 },
+      { ...r(`${n}05`, 0, 3.6, 3, 6), door: 1.5 }, r('core', 3, 3.6, 5, 6, 'core'), { ...r(`${n}06`, 5, 3.6, 8.5, 6), door: 6.7 }, { ...r(`${n}07`, 8.5, 3.6, 12, 6), door: 10.2 },
     ],
     walls: [
       [3, 0, 3, 2.4], [6, 0, 6, 2.4], [9, 0, 9, 2.4],
@@ -258,8 +255,8 @@ function suiteLevel() {
   return {
     rooms: [
       r('corridor', 0, 2.4, 12, 3.6, 'corridor'),
-      r('501', 0, 0, 4, 2.4), r('502', 4, 0, 8, 2.4), r('503', 8, 0, 12, 2.4),
-      r('504', 0, 3.6, 3, 6), r('core', 3, 3.6, 5, 6, 'core'), r('505', 5, 3.6, 12, 6),
+      { ...r('501', 0, 0, 4, 2.4), door: 2 }, { ...r('502', 4, 0, 8, 2.4), door: 6 }, { ...r('503', 8, 0, 12, 2.4), door: 10 },
+      { ...r('504', 0, 3.6, 3, 6), door: 1.5 }, r('core', 3, 3.6, 5, 6, 'core'), { ...r('505', 5, 3.6, 12, 6), door: 8.5 },
     ],
     walls: [
       [4, 0, 4, 2.4], [8, 0, 8, 2.4], [3, 3.6, 3, 6], [5, 3.6, 5, 6],
@@ -283,26 +280,26 @@ const LOBBY = {
 // occ = occupancy tonight (%), null for common areas.
 const FLOORS = [
   { id: 5, label: 'É5', name: 'Suites 501–505', area: 520, occ: 60, layout: suiteLevel(),
-    robot: { name: 'Brume', state: 'idle', pct: 0, bat: 100, at: [4, 3], next: 'Démarre à 12 h 00' } },
+    robot: { name: 'Brume', state: 'run', pct: 22, bat: 96, at: [4, 3], next: 'Suites libérées en cours' } },
   { id: 4, label: 'É4', name: 'App. 401–407', area: 610, occ: 86, layout: apartmentLevel(4),
-    robot: { name: 'Écume', state: 'charge', pct: 55, bat: 22, at: [4, 3], next: 'Reprend à 14 h 30' } },
+    robot: { name: 'Écume', state: 'run', pct: 55, bat: 22, at: [4, 3], next: 'Recharge prévue à 15 %' } },
   { id: 3, label: 'É3', name: 'App. 301–307', area: 610, occ: 100, layout: apartmentLevel(3),
     robot: { name: 'Pluie', state: 'blocked', pct: 41, bat: 63, at: [10.5, 3], next: 'App. 304 non libéré' },
     blockedRoom: '304' },
   { id: 2, label: 'É2', name: 'App. 201–207', area: 610, occ: 71, layout: apartmentLevel(2),
-    robot: { name: 'Rosée', state: 'done', pct: 100, bat: 81, at: [4, 3], next: 'Terminé à 10 h 12' } },
+    robot: { name: 'Rosée', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' } },
   { id: 1, label: 'É1', name: 'App. 101–107', area: 610, occ: 86, layout: apartmentLevel(1),
-    robot: { name: 'Averse', state: 'run', pct: 64, bat: 58, at: [6.8, 4.9], next: 'Fin estimée 13 h 40' } },
+    robot: { name: 'Averse', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
   { id: 0, label: 'RDC', name: 'Réception', hint: '& petit-déj.', area: 420, occ: null, layout: LOBBY,
-    robot: { name: 'Bruine', state: 'done', pct: 100, bat: 92, at: [6, 4.6], next: 'Repasse à 15 h 00' },
+    robot: { name: 'Bruine', state: 'run', pct: 70, bat: 92, at: [4.4, 5.4], base: [4.4, 5.4], next: 'Hall terminé vers 12 h 30' },
     greeter: { name: 'Léa', state: 'live', visitors: 23, at: [2.6, 4.2], next: '6 arrivées avant 18 h' } },
 ];
 
 // To-do list, linked to a floor (alerts per floor are derived from it).
 const TODOS = [
   { floor: 3, prio: 'high', short: 'Pluie bloqué devant le 304', title: 'Pluie est bloqué devant le 304', desc: "Le client n'est pas encore parti (départ prévu 11 h). Le robot attend depuis 18 min.", acts: ['Appeler la réception', 'Passer au suivant'] },
-  { floor: 4, prio: 'med', short: 'Écume batterie faible (22 %)', title: 'Écume recharge, batterie 22 %', desc: "Reprise à 14 h 30 : 3 appartements seront prêts après l'arrivée de 15 h.", acts: ['Prévenir la réception', 'Voir le planning'] },
-  { floor: 5, prio: 'low', short: 'Départs des suites à confirmer', title: 'Confirmer les départs des suites', desc: 'Brume démarre à 12 h si les suites 501 à 503 sont libérées.', acts: ['Confirmer'] },
+  { floor: 4, prio: 'med', short: 'Écume batterie faible (22 %)', title: 'Écume a une batterie faible (22 %)', desc: "Elle devra recharger vers 15 % : 3 appartements risquent d'être prêts après l'arrivée de 15 h.", acts: ['Prévenir la réception', 'Voir le planning'] },
+  { floor: 5, prio: 'low', short: 'Départs 503 à 505 à confirmer', title: 'Confirmer les départs des suites 503 à 505', desc: 'Brume a fini la 501 et attaque la 502. Elle continuera si les suites suivantes sont libérées.', acts: ['Confirmer'] },
 ];
 const PRIO = { high: '#e5484d', med: '#f0a020', low: '#a0a7b0' };
 
@@ -446,7 +443,7 @@ function closedFloor(f, z0, opts) { return f.id === 5 ? mansardFloor(f, z0, opts
 
 function robotGlyph(x, y, z, color, label, opts = {}) {
   const [cx, cy] = P(x, y, z);
-  const h = opts.tall ? 26 : 12, rx = opts.tall ? 7 : 10, ry = rx * 0.5;
+  const h = opts.tall ? 26 : 5, rx = opts.tall ? 7 : 8, ry = rx * 0.5;
   let s = `<ellipse cx="${cx}" cy="${cy}" rx="${rx + 3}" ry="${ry + 1.5}" fill="rgba(0,0,0,.15)"/>`;
   if (opts.pulse) s += `<circle class="pulse" cx="${cx}" cy="${cy - h / 2}" r="6" fill="${color}"/>`;
   s += `<path d="M${cx - rx},${cy} L${cx - rx},${cy - h} A${rx},${ry} 0 0 1 ${cx + rx},${cy - h} L${cx + rx},${cy} A${rx},${ry} 0 0 1 ${cx - rx},${cy} Z" fill="${color}"/>`;
@@ -454,7 +451,7 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   if (opts.tall) s += `<rect x="${cx - 4}" y="${cy - h - 12}" width="8" height="10" rx="2" fill="${color}"/><rect x="${cx - 3}" y="${cy - h - 10}" width="6" height="4" rx="1" fill="#fff" opacity=".8"/>`;
   if (opts.alert) s += `<circle cx="${cx + rx + 2}" cy="${cy - h - 6}" r="8" fill="#e5484d" stroke="#fff" stroke-width="2"/><text x="${cx + rx + 2}" y="${cy - h - 2}" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`;
   const lw = label.length * 6.4 + 22;
-  s += `<g transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 34)})"><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="#e4e6ea"/><circle cx="10" cy="10" r="4" fill="${color}"/><text x="18" y="14" font-size="11" font-weight="600" fill="#1f2328">${label}</text></g>`;
+  s += `<g transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="#e4e6ea"/><circle cx="10" cy="10" r="4" fill="${color}"/><text x="18" y="14" font-size="11" font-weight="600" fill="#1f2328">${label}</text></g>`;
   return s;
 }
 
@@ -471,9 +468,20 @@ function openFloor(f, z0) {
     s += poly([P(r.x1, r.y1, z0), P(r.x2, r.y1, z0), P(r.x2, r.y2, z0), P(r.x1, r.y2, z0)], `fill="${fill}" stroke="#e1e5ea" stroke-width=".6"`);
   });
   const items = [];
-  const wall = (x1, y1, x2, y2, h, shade) => items.push({ d: (x1 + x2) / 2 + (y1 + y2) / 2, svg:
-    poly(quad(x1, y1, x2, y2, z0, z0 + h), `fill="${shade}" stroke="#d3c7ae" stroke-width=".6"`) +
-    line(P(x1, y1, z0 + h), P(x2, y2, z0 + h), 'stroke="#b9ab8f" stroke-width="2.2" stroke-linecap="round"') });
+  // Each wall is cut into <= 0.5 unit pieces: sorting long walls by their midpoint
+  // draws a long back wall over a short partition in front of it.
+  const wall = (x1, y1, x2, y2, h, shade) => {
+    const n = Math.max(1, Math.ceil(Math.hypot(x2 - x1, y2 - y1) / 0.5));
+    for (let i = 0; i < n; i++) {
+      const ax = x1 + (x2 - x1) * i / n, ay = y1 + (y2 - y1) * i / n;
+      const bx = x1 + (x2 - x1) * (i + 1) / n, by = y1 + (y2 - y1) * (i + 1) / n;
+      let svg = poly(quad(ax, ay, bx, by, z0, z0 + h), `fill="${shade}" stroke="${shade}" stroke-width=".8"`) +
+        line(P(ax, ay, z0 + h), P(bx, by, z0 + h), 'stroke="#b9ab8f" stroke-width="2.2"');
+      if (i === 0) svg += line(P(ax, ay, z0), P(ax, ay, z0 + h), 'stroke="#d3c7ae" stroke-width=".8"');
+      if (i === n - 1) svg += line(P(bx, by, z0), P(bx, by, z0 + h), 'stroke="#d3c7ae" stroke-width=".8"');
+      items.push({ d: (ax + bx) / 2 + (ay + by) / 2, svg });
+    }
+  };
   wall(0, 0, W, 0, WALL, '#f3eee3');
   wall(0, 0, 0, D, WALL, '#e8e0cf');
   f.layout.walls.forEach(([x1, y1, x2, y2]) => wall(x1, y1, x2, y2, WALL * 0.8, x1 === x2 ? '#efe9dc' : '#f7f4ee'));
@@ -554,24 +562,21 @@ const BELL = c => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" s
 function floorPicker() {
   const area = FLOORS.reduce((a, f) => a + f.area, 0);
   const clean = Math.round(FLOORS.reduce((a, f) => a + f.robot.pct * f.area, 0) / area);
-  const m2 = Math.round(FLOORS.reduce((a, f) => a + f.area * f.robot.pct / 100, 0));
   const issues = openTodos();
   const blocked = FLOORS.filter(f => f.robot.state === 'blocked').length;
   const lvl = id => FLOORS.find(f => f.id === id).label;
   // "Tout le bâtiment": same structure as a floor row (r1 = level · name · state, r2 = details)
   document.getElementById('all-row').innerHTML = `
     <div class="fl all ${selected === 'all' ? 'sel' : ''}" data-id="all" role="button" tabindex="0">
-      <div class="r1">
-        <span class="lv">${rings([[clean / 100, '#00a99d']], 30)}</span>
-        <span class="nm">Tout le bâtiment<small>${clean} % nettoyé · ${m2.toLocaleString('fr-FR')} m² sur ${area.toLocaleString('fr-FR')}</small></span>
-        ${issues.length ? `<span class="chip ${blocked ? 'err' : 'warn'}">${issues.length} problème${issues.length > 1 ? 's' : ''}</span>` : '<span class="chip ok">Tout va bien</span>'}
-      </div>
+      <div class="r1"><span class="lv"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg></span>
+        <span class="nm">Tout le bâtiment</span>
+        ${issues.length ? `<span class="chip ${blocked ? 'err' : 'warn'}">${issues.length} problème${issues.length > 1 ? 's' : ''}</span>` : '<span class="chip ok">Tout va bien</span>'}</div>
       <div class="r2"><span></span>
-        ${metric('Nettoyage', clean, '#00a99d')}
-        <div class="issues">${issues.length ? issues.map(t => `
-          <span class="issue" data-go="${t.floor}">${BELL(PRIO[t.prio])}${t.short}<span class="where">· ${lvl(t.floor)}</span></span>`).join('')
-          : `<span class="issue muted">${BELL('#22a861')}Aucun problème en cours</span>`}</div>
+        ${metric('Ménage', clean, '#00a99d')}
+        ${alertMetric(issues)}
       </div>
+      ${issues.length ? `<div class="issues">${issues.map(t => `
+        <span class="issue" data-go="${t.floor}">${BELL(PRIO[t.prio])}${t.short}<span class="where">· ${lvl(t.floor)}</span></span>`).join('')}</div>` : ''}
     </div>`;
   const all = document.querySelector('#all-row .fl');
   all.onclick = () => select('all');
@@ -710,7 +715,71 @@ function renderAll() { floorPicker(); renderBuilding(); renderHero(); renderTodo
 const tick = () => document.getElementById('clock').textContent =
   new Date().toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
 tick(); setInterval(tick, 30000);
+
+// =====================================================================
+// Real-time simulation: running robots follow corridor → door → zigzag
+// inside the current apartment, progress grows, blocked robots stay put.
+// =====================================================================
+const CORRIDOR_Y = 3.0, SPEED = 1.4, PROGRESS_PER_S = 0.35, BASE = [4, 3.0];
+const aptsOf = f => f.layout.rooms.filter(r => r.kind === 'apt');
+function roomPath(room) {
+  const north = room.y2 <= 2.4;
+  const ys = north ? [2.0, 1.45, 0.9, 0.4] : [4.0, 4.55, 5.1, 5.6];
+  const a = room.x1 + 0.4, b = room.x2 - 0.4;
+  const path = [[room.door, CORRIDOR_Y], [room.door, ys[0]]];
+  ys.forEach((y, i) => path.push(...(i % 2 ? [[b, y], [a, y]] : [[a, y], [b, y]])));
+  path.push([room.door, ys[ys.length - 1]], [room.door, CORRIDOR_Y]);
+  return path;
+}
+function lobbyPath() {
+  const path = [];
+  [0.7, 1.5, 2.3, 3.1].forEach((y, i) => path.push(...(i % 2 ? [[4.4, y], [0.6, y]] : [[0.6, y], [4.4, y]])));
+  return path.concat([[4.4, 3.1], [4.4, 5.4]]);
+}
+function planFor(f) {
+  const r = f.robot;
+  if (r.pct >= 100) return { path: [r.base || BASE], loop: false };
+  if (f.id === 0) return { path: lobbyPath(), loop: true };
+  const apts = aptsOf(f);
+  const i = Math.min(Math.floor(r.pct / 100 * apts.length), apts.length - 1);
+  return { path: roomPath(apts[i]), loop: true, room: i };
+}
+FLOORS.forEach(f => {
+  const r = f.robot;
+  r.progress = r.pct;
+  if (r.state === 'run') { const p = planFor(f); r.sim = { ...p, idx: 0 }; }
+});
+
+let last = performance.now(), sinceUi = 0;
+function step(now) {
+  const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  let moved = false;
+  FLOORS.forEach(f => {
+    const r = f.robot;
+    if (r.state !== 'run' || !r.sim) return;
+    // progress
+    r.progress = Math.min(100, r.progress + PROGRESS_PER_S * dt);
+    r.pct = Math.floor(r.progress);
+    // movement toward the next waypoint
+    const target = r.sim.path[r.sim.idx];
+    const dx = target[0] - r.at[0], dy = target[1] - r.at[1], dist = Math.hypot(dx, dy), stepLen = SPEED * dt;
+    if (dist > stepLen) { r.at = [r.at[0] + dx / dist * stepLen, r.at[1] + dy / dist * stepLen]; moved = true; return; }
+    r.at = [target[0], target[1]]; moved = true;
+    r.sim.idx++;
+    if (r.sim.idx < r.sim.path.length) return;
+    // loop finished, robot is back in the corridor: next room or base
+    if (r.pct >= 100 && r.sim.loop) { r.sim = { path: [r.base || BASE], loop: false, idx: 0 }; return; }
+    if (!r.sim.loop) { r.state = 'done'; r.next = 'Terminé à ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); r.sim = null; return; }
+    const p = planFor(f);
+    r.sim = { ...p, idx: 0 };
+  });
+  sinceUi += dt;
+  if (sinceUi > 1.5) { sinceUi = 0; renderAll(); }
+  else if (moved && selected !== 'all') renderBuilding();
+  requestAnimationFrame(step);
+}
 renderAll();
+requestAnimationFrame(step);
 </script>
 </body>
 </html>
