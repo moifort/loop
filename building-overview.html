@@ -1598,8 +1598,8 @@ function temiStateChip() {
   const [chip, label] = ACC.panicAt ? ['err', 'Alerte en cours']
     : ACC.pos && ACC.pos.target ? ['occ', `Vers ${spot(ACC.pos.target).label.toLowerCase()}`]
     : ACC.mode === 'remote' ? ['occ', 'En visio avec Hery']
-    : ACC.waiting ? ['warn', 'Client en attente']
-    : ['acc', 'Accueille un client'];
+    : ACC.waiting ? ['warn', `${ACC.guest} attend`]
+    : ['acc', `Accueille ${ACC.guest}`];
   return `<span class="chip ${chip}">${label}</span>`;
 }
 
@@ -1697,6 +1697,9 @@ const placeTag = (lvl, room) => `<span class="tags"><span class="tag-lvl">${lvl}
 const porterPlace = f => f.porter.state === 'parked' ? placeTag('RDC', 'Bagagerie') : placeTag(f.label, f.porter.state === 'unload' ? '204' : 'Couloir');
 // Check-in times follow the clock: the current guest checked in just before the run started, the next one is due ~25 min later.
 const checkin = (p, k) => { if (p.anchor === undefined) p.anchor = simH(T0) - 0.1; return fmtH(p.anchor + k * 0.4); };
+// State chip naming the guest while the cart is with them.
+const porterChip = p => stateChip(p.state === 'deliver' ? { ...STATE.deliver, label: `Avec ${p.guests[p.guest].name}` }
+  : p.state === 'unload' ? { ...STATE.unload, label: `Chez ${p.guests[p.guest].name}` } : STATE[p.state]);
 // What it is doing, with the guest it serves.
 function porterWhat(p) {
   const g = p.guests[p.guest], n = p.guests[(p.guest + 1) % p.guests.length];
@@ -1711,7 +1714,7 @@ function porterWhat(p) {
 function renderKiloCard() {
   const f = FLOORS.find(x => x.porter), p = f.porter;
   setHTML('kilo-title', `<span class="temi-name">${nameTile('var(--bagages)', 'luggage')}<b>${p.name}</b>${batteryIcon(p.bat)}</span>`);
-  setHTML('kilo-head-right', stateChip(STATE[p.state]));
+  setHTML('kilo-head-right', porterChip(p));
   const parked = p.state === 'parked';
   const track = parked ? '' : `<div class="kilo-track"><span class="rail"></span><span class="end l"></span><span class="end r"></span>
       <span class="cart ${p.loaded ? '' : 'empty'}" title="${p.loaded ? `Chargé · ${p.guests[p.guest].bags} valises` : 'Vide · revient seul'}">${icon('luggage', 14, { color: p.loaded ? '#fff' : 'currentColor', sw: 2.2 })}</span></div>
@@ -1756,7 +1759,7 @@ function renderRows() {
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
       ${nextCell(f.greeter.next, 'accueil')}</tr>`);
     if (f.porter) { const p = f.porter; special.push(`<tr ${rowAttrs(f, p.name)}><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${porterPlace(f)}</div></div></td>
-      <td>${stateChip(STATE[p.state])}</td>
+      <td>${porterChip(p)}</td>
       <td><span class="muted">${p.trips} trajets bagages · Piaggio Kilo</span></td>
       ${nextCell(STATE[p.state].next, 'kilo')}</tr>`); }
     const r = f.robot, st = STATE[r.state];
@@ -1950,6 +1953,7 @@ const ACC = {
   takeoverAt: null, panicAt: null,
   awayAt: ago(12),       // Inès left the desk for app. 307
   waiting: ago(0.7),     // a guest asked for a human
+  guest: 'Mme Lefèvre',  // the guest at the counter (asked for an invoice in her company's name)
 };
 const LOG = [
   { at: ago(0.7), lang: 'FR', q: 'Je voudrais une facture au nom de ma société.', a: "Le robot a proposé d'appeler un opérateur.", out: 'wait' },
@@ -2720,7 +2724,7 @@ function renderKiloSheet() {
   const g = p.guests[p.guest], nx = p.guests[(p.guest + 1) % p.guests.length];
   setHTML('kf-head', `<button class="rf-back" data-kback>← Bâtiment</button>
     <div class="rf-top"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span>
-      <div class="rf-id"><span class="mr-name"><b>${p.name}</b>${batteryIcon(p.bat)}${stateChip(st)}</span>
+      <div class="rf-id"><span class="mr-name"><b>${p.name}</b>${batteryIcon(p.bat)}${porterChip(p)}</span>
         <span class="sub">${porterPlace(f)}<span>${info.model} · n° ${info.serial} · en service depuis ${info.since} · logiciel ${info.fw}</span></span></div>
       <div class="acts">
         <button class="btn" data-kilo="reprog">${icon('clock', 14)}Reprogrammer</button>
@@ -2759,7 +2763,7 @@ function renderKiloSheet() {
   }[p.state]);
 
   // Current errand
-  setHTML('kf-mission-state', stateChip(st));
+  setHTML('kf-mission-state', porterChip(p));
   const row = (l, v) => `<div class="rf-row"><span>${l}</span><b>${v}</b></div>`;
   setHTML('kf-mission', parked || p.state === 'lift'
     ? row('Mission', 'aucune en cours') + row('Client suivant', `${nx.name}<small>check-in à ${checkin(p, 1)}</small>`) + row('Valises', `${nx.bags}`) + row('Destination', 'app. 204 · É2')
