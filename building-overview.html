@@ -579,6 +579,14 @@
   .kpi small { display: block; color: var(--muted); font-size: 12px; margin-bottom: 2px; }
   .kpi b { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
   .kpi span { color: var(--muted); font-size: 12px; margin-left: 4px; }
+  /* Ring KPIs: ring on the left, label / value / one muted line stacked on the right */
+  .kpi-ring { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .kpi-ring > div { min-width: 0; }
+  .kpi-ring small { margin-bottom: 0; font-size: 11px; letter-spacing: .01em; }
+  .kpi-ring b { display: block; font-size: 19px; line-height: 1.2; }
+  .kpi-ring span { display: block; margin-left: 0; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ring { position: relative; display: grid; place-items: center; flex: none; }
+  .ring svg { position: absolute; inset: 0; }
   /* Coverage timeline: who held the reception, hour by hour */
   .cov-wrap { position: relative; margin: 0 16px; }
   .cov { position: relative; height: 26px; border-radius: 6px; background: var(--panel-2); border: 1px solid var(--border); overflow: hidden; }
@@ -836,6 +844,8 @@
 <script>
 // Icons: Lucide (lucide.dev, ISC licence), path data copied from lucide-static so the mockup works offline.
 const LUCIDE = {
+  'clock': '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  'gauge': '<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
   'phone': '<path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>',
   'phone-off': '<path d="M10.1 13.9a14 14 0 0 0 3.732 2.668 1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2 18 18 0 0 1-12.728-5.272"/><path d="M22 2 2 22"/><path d="M4.76 13.582A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 .244.473"/>',
   'building-2': '<path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>',
@@ -1264,6 +1274,13 @@ function rings(vals, size = 58) {
     s += `<circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="${col}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(L * Math.min(v, 1)).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 ${c} ${c})"/>`;
   });
   return s + '</svg>';
+}
+// Single fitness-style ring with a small icon in the middle (value 0..1)
+function ring(v, color, ic, size = 46) {
+  const c = size / 2, sw = 5, r = c - sw / 2, L = 2 * Math.PI * r;
+  return `<span class="ring" style="width:${size}px;height:${size}px;color:${color}"><svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="currentColor" stroke-opacity=".15" stroke-width="${sw}"/>
+    <circle cx="${c}" cy="${c}" r="${r}" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${(L * Math.max(0, Math.min(v, 1))).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 ${c} ${c})"/></svg>${icon(ic, 16, { sw: 2.2 })}</span>`;
 }
 const metric = (label, v, color) => `<div class="m"><div class="lb"><span>${label}</span><b>${v === null ? '—' : v + ' %'}</b></div><div class="mb"><i style="width:${v || 0}%;background:${color}"></i></div></div>`;
 // Bell + counter, coloured by the most severe open alert.
@@ -2086,12 +2103,13 @@ function renderMenage() {
   fs.forEach(f => { const st = roomStates(f); f.layout.rooms.filter(r => r.kind === 'apt' && st[r.id] !== 'occupied').forEach(r => { total++; if (st[r.id] === 'clean') ready++; }); });
   const open = openTodos();
   setHTML('men-fleet-sub', `${fs.length} robots · 1 par étage`);
+  // Fitness-style rings: one per figure, minimal (ring + value + one muted line)
   setHTML('men-kpis', [
-    ['Robots en ménage', `${run} / ${fs.length}`, `${blocked} bloqué · ${charging} en charge`],
-    ['Avancement du jour', `${progress} %`, 'tous étages'],
-    ['Espaces prêts', `${ready} / ${total}`, 'hors appartements occupés'],
-    ['Temps libéré', '3 h 40', 'objectif +30 % de productivité'],
-  ].map(([l, v, sub]) => `<div class="kpi"><small>${l}</small><b>${v}</b><span>${sub}</span></div>`).join(''));
+    ['Robots en ménage', `${run}/${fs.length}`, `${blocked} bloqué · ${charging} en charge`, run / fs.length, '#00a99d', 'brush-cleaning'],
+    ['Avancement', `${progress} %`, 'tous étages', progress / 100, '#22a861', 'gauge'],
+    ['Espaces prêts', `${ready}/${total}`, 'hors occupés', ready / total, '#006fff', 'check'],
+    ['Temps libéré', '3 h 40', 'objectif 5 h', 220 / 300, '#7c5cff', 'clock'],
+  ].map(([l, v, sub, k, col, ic]) => `<div class="kpi kpi-ring">${ring(k, col, ic)}<div><small>${l}</small><b>${v}</b><span>${sub}</span></div></div>`).join(''));
 
   // Most urgent open alert as a full-width banner
   const top = ['high', 'med'].map(p => open.find(t => t.prio === p)).find(Boolean);
