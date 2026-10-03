@@ -55,6 +55,15 @@
   /* Floor list: 140–320px; building: fixed 560px, pinned to the right */
   .stage { display: grid; grid-template-columns: minmax(140px, 320px) minmax(560px, 1fr); gap: 20px; align-items: start; }
   .stage .bld { justify-self: center; }
+  .wrap { container-type: inline-size; }
+  /* Not enough room for list + building side by side: stack them, building shrinks if needed */
+  @container (max-width: 740px) {
+    .stage { grid-template-columns: 1fr; }
+    .stage > .floors { max-width: none; }
+    .stage .bld { width: 100%; max-width: 560px; }
+    .stage .bld svg { width: 100%; }
+    .below { grid-template-columns: 1fr !important; }
+  }
   .stage > .floors { container-type: inline-size; min-width: 0; }
   @container (max-width: 230px) {
     .fl .r1 { grid-template-columns: auto 1fr; gap: 6px; }
@@ -107,7 +116,7 @@
 
   /* ---------- Building ---------- */
   .bld { width: 560px; }
-  .bld svg { width: 560px; height: auto; }
+  .bld svg { width: 560px; max-width: 100%; height: auto; }
   .bld svg .floor { cursor: pointer; }
   .bld svg .floor:hover { filter: brightness(1.03); }
   .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
@@ -148,6 +157,7 @@
   .room .n { font-weight: 500; }
   .room .s { margin-left: auto; }
 
+  .table-scroll { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
   th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 8px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   td { padding: 10px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
@@ -225,10 +235,10 @@
       <h3>Robots</h3>
       <div class="right" id="robots-count"></div>
     </div>
-    <table>
+    <div class="table-scroll"><table>
       <thead><tr><th>Robot</th><th>Étage</th><th>État</th><th>Avancement du jour</th><th>Batterie</th><th>Prochaine étape</th></tr></thead>
       <tbody id="rows"></tbody>
-    </table>
+    </table></div>
   </div>
 
 </div>
