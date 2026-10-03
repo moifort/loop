@@ -52,8 +52,19 @@
   .card-h .right .btn { margin-left: 8px; }
 
   /* Stage: floor picker | flat building | context */
-  .stage { display: grid; grid-template-columns: 280px 1fr; gap: 20px; align-items: start; }
-  .stage .bld { justify-self: end; align-self: start; }
+  /* Building has a fixed width; the floor list absorbs the rest (min 140px) */
+  .stage { display: grid; grid-template-columns: minmax(140px, 1fr) 560px; gap: 20px; align-items: start; }
+  .stage > .floors { container-type: inline-size; min-width: 0; }
+  @container (max-width: 230px) {
+    .fl .r1 { grid-template-columns: auto 1fr; gap: 6px; }
+    .fl .r1 .chip { display: none; }
+    .fl .r2, .fl.all .r2 { grid-template-columns: 1fr 34px; }
+    .fl .r2 > span:first-child { display: none; }
+    .fl .nm small { display: none; }
+    .issue .txt { display: none; }
+    .m .lb span { display: none; }
+    .m .lb { justify-content: flex-end; }
+  }
   /* To-do list (and apartments when a floor is selected) sit under the building */
   .below { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
   .below:has(#rooms-card:not([style*="none"])) { grid-template-columns: 1fr 340px; }
@@ -70,7 +81,7 @@
   .fl .r2 { display: grid; grid-template-columns: 34px 1fr 40px; gap: 10px; align-items: end; margin-top: 7px; }
   .m { display: flex; flex-direction: column; gap: 3px; }
   .m .lb { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
-  .m .lb b { color: var(--text); font-weight: 500; }
+  .m .lb b { color: var(--text); font-weight: 500; white-space: nowrap; }
   .mb { height: 4px; border-radius: 9px; background: #e9ecef; overflow: hidden; }
   .mb i { display: block; height: 100%; border-radius: 9px; }
   .al { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 12px; }
@@ -547,7 +558,7 @@ function rings(vals, size = 58) {
   });
   return s + '</svg>';
 }
-const metric = (label, v, color) => `<div class="m"><div class="lb">${label}<b>${v === null ? '—' : v + ' %'}</b></div><div class="mb"><i style="width:${v || 0}%;background:${color}"></i></div></div>`;
+const metric = (label, v, color) => `<div class="m"><div class="lb"><span>${label}</span><b>${v === null ? '—' : v + ' %'}</b></div><div class="mb"><i style="width:${v || 0}%;background:${color}"></i></div></div>`;
 // Bell + counter, coloured by the most severe open alert.
 function alertMetric(list) {
   const worst = ['high', 'med', 'low'].find(p => list.some(t => t.prio === p));
