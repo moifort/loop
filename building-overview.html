@@ -329,7 +329,7 @@ const STATE = {
 // Room states share one icon set (24×24 stroke paths) between map markers and list chips.
 const ICON = {
   check:  '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
-  sync:   '<path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/>',
+  progress: '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/>',
   broom:  '<path d="M20 3 11.5 11.5"/><path d="M9.5 10.5 13.5 14.5 9 21 3 15Z"/><path d="M6 18l1.5-1.5"/>',
   guest:  '<circle cx="12" cy="8" r="4"/><path d="M4.5 21c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/>',
   alert:  '<path d="M12 6v8"/><path d="M12 18.5v.5"/>',
@@ -338,7 +338,7 @@ const iconSvg = (name, size = 12) => `<svg width="${size}" height="${size}" view
 const ROOM_STATE = {
   occupied:{ chip: 'occ',  label: 'Occupé',     fill: '#e3e8ff', color: '#3451b2', icon: 'guest' },
   clean:   { chip: 'ok',   label: 'Prêt',       fill: '#d9f3f0', color: '#22a861', icon: 'check' },
-  doing:   { chip: 'run',  label: 'En cours',   fill: '#bfeae4', color: '#00a99d', icon: 'sync' },
+  doing:   { chip: 'run',  label: 'En cours',   fill: '#bfeae4', color: '#00a99d', icon: 'progress' },
   blocked: { chip: 'err',  label: 'Bloqué',     fill: '#fbd5d6', color: '#e5484d', icon: 'alert' },
   todo:    { chip: 'warn', label: 'À nettoyer', fill: '#fdeccb', color: '#f0a020', icon: 'broom' },
 };
