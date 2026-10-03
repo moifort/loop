@@ -494,6 +494,9 @@
   .rf-bars .stop { color: var(--red); font-weight: 600; }
   .rf-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; padding: 4px 16px 10px; color: var(--muted); font-size: 11px; text-align: center; }
   .rf-plan { padding: 6px 16px 0; }
+  /* Luggage cart sheet: trips per day in the cart's violet */
+  .kf-bars i { background: var(--bagages); }
+  .kf-bars .today i { background: repeating-linear-gradient(135deg, var(--bagages) 0 6px, #a78bfa 6px 12px); }
   .rf-plan .plan-track { height: 22px; }
   .rf-plan .plan-axis { margin-left: 0; }
   .rf-todo-acts { display: flex; gap: 14px; margin-top: 6px; }
@@ -890,6 +893,60 @@
   </div>
 
 </div>
+
+<!-- Luggage cart sheet (Piaggio Kilo): where it is, current errand, day, stats, upkeep, logbook -->
+<div class="wrap" id="view-kilo" hidden>
+
+  <div class="card rf-head" id="kf-head"></div>
+
+  <div class="acc-grid">
+    <div class="card">
+      <div class="card-h"><h3>Où il se trouve</h3><div class="right" id="kf-map-sub"></div></div>
+      <div class="rf-map"><svg id="kf-map" viewBox="-8 -8 316 176"></svg></div>
+      <div class="pos-meta" id="kf-where"></div>
+      <div class="legend">
+        <span><i class="sw" style="background:#7c3aed"></i>Chargé, avec le client</span>
+        <span><i class="sw" style="background:#fff;box-shadow:inset 0 0 0 2px #7c3aed"></i>Vide, revient seul</span>
+        <span><i class="sw" style="background:#efe8fd"></i>Appartement servi</span>
+      </div>
+    </div>
+    <div class="side">
+      <div class="card">
+        <div class="card-h"><h3>Mission en cours</h3><div class="right" id="kf-mission-state"></div></div>
+        <div class="rf-rows" id="kf-mission"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3>Entretien</h3><div class="right">usure</div></div>
+        <div class="rf-cons" id="kf-cons"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rf-two">
+    <div class="card">
+      <div class="card-h"><h3>Sa journée</h3><div class="right">7 h – 23 h</div></div>
+      <div class="rf-plan" id="kf-plan"></div>
+      <div class="legend">
+        <span><i class="sw" style="background:#7c3aed"></i>Trajet bagages</span>
+        <span><i class="sw" style="background:#f0a020"></i>En charge</span>
+        <span><i class="sw" style="background:#7c3aed;opacity:.3"></i>Check-in prévu</span>
+      </div>
+      <ul class="log men-log" id="kf-log"></ul>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Statistiques</h3><div class="right">7 derniers jours</div></div>
+      <div class="rf-bars kf-bars" id="kf-bars"></div>
+      <div class="rf-days" id="kf-days"></div>
+      <div class="rf-rows" id="kf-stats"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><h3>Carnet d'intervention</h3><div class="right" id="kf-book-count"></div></div>
+    <ul class="rf-book" id="kf-book" style="list-style:none"></ul>
+  </div>
+
+</div>
 </main>
 
 <script>
@@ -991,7 +1048,7 @@ const FLOORS = [
     robot: { name: 'CLN-2D84', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' },
     // Luggage cart: the guest walks it from the lift to the apartment (motor assist), it drives back alone.
     porter: { name: 'KILO-3B8D', state: 'deliver', loaded: true, leg: 0, bat: 74, trips: 9, at: [4.6, 3.05],
-      guests: [{ name: 'M. Bernard', bags: 2, since: '14 h 52' }, { name: 'Mme Okafor', bags: 3, since: '15 h 10' }], guest: 0 } },
+      guests: [{ name: 'M. Bernard', bags: 2 }, { name: 'Mme Okafor', bags: 3 }], guest: 0 } },
   { id: 1, label: 'É1', name: 'App. 101–107', occupied: ['103', '106'], area: 610, occ: 86, layout: apartmentLevel(1),
     robot: { name: 'CLN-7B19', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
   { id: 0, label: 'RDC', name: 'Réception', area: 420, occ: null, layout: LOBBY,
@@ -1632,15 +1689,17 @@ const placeTag = (lvl, room) => `<span class="tags"><span class="tag-lvl">${lvl}
 
 // Where the luggage cart is: corridor of its floor, at the apartment door while unloading, or parked downstairs.
 const porterPlace = f => f.porter.state === 'parked' ? placeTag('RDC', 'Bagagerie') : placeTag(f.label, f.porter.state === 'unload' ? '204' : 'Couloir');
+// Check-in times follow the clock: the current guest checked in just before the run started, the next one is due ~25 min later.
+const checkin = (p, k) => { if (p.anchor === undefined) p.anchor = simH(T0) - 0.1; return fmtH(p.anchor + k * 0.4); };
 // What it is doing, with the guest it serves.
 function porterWhat(p) {
   const g = p.guests[p.guest], n = p.guests[(p.guest + 1) % p.guests.length];
   return {
-    deliver: `<b>Avec ${g.name}</b> · ${g.bags} valises vers l'app. 204<small>Check-in à ${g.since} · le client pousse, le moteur assiste</small>`,
+    deliver: `<b>Avec ${g.name}</b> · ${g.bags} valises vers l'app. 204<small>Check-in à ${checkin(p, 0)} · le client pousse, le moteur assiste</small>`,
     unload:  `<b>${g.name} vide le chariot</b> devant l'app. 204<small>${g.bags} valises · repart seul dans quelques secondes</small>`,
-    back:    `<b>Revient seul</b> vers l'ascenseur, à vide<small>${p.recalled ? 'Retour à la bagagerie demandé' : `Prochain client : ${n.name}, check-in à ${n.since}`}</small>`,
+    back:    `<b>Revient seul</b> vers l'ascenseur, à vide<small>${p.recalled ? 'Retour à la bagagerie demandé' : `Prochain client : ${n.name}, check-in à ${checkin(p, 1)}`}</small>`,
     lift:    `<b>Attend à l'ascenseur</b> de l'É2<small>Prochain client : ${n.name} · ${n.bags} valises</small>`,
-    parked:  `<b>Rangé à la bagagerie</b> au RDC<small>Prêt pour ${n.name}, check-in à ${n.since}</small>`,
+    parked:  `<b>Rangé à la bagagerie</b> au RDC<small>Prêt pour ${n.name}, check-in à ${checkin(p, 1)}</small>`,
   }[p.state];
 }
 function renderKiloCard() {
@@ -1695,7 +1754,7 @@ function renderRows() {
     if (f.porter) { const p = f.porter; special.push(`<tr ${rowAttrs(f, p.name)}><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${porterPlace(f)}</div></div></td>
       <td>${stateChip(STATE[p.state])}</td>
       <td><span class="muted">${p.trips} trajets bagages · Piaggio Kilo</span></td>
-      ${nextCell(STATE[p.state].next)}</tr>`); }
+      ${nextCell(STATE[p.state].next, 'kilo')}</tr>`); }
     const r = f.robot, st = STATE[r.state];
     rows.push(`<tr ${rowAttrs(f, r.name, r.state === 'blocked')}>
       <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${TILE_MENAGE}</span><div><span class="nm-row"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>${placeTag(f.label, robotRoom(f.id))}</div></div></td>
@@ -1737,7 +1796,7 @@ floorList.addEventListener('mouseover', e => {
   if (id !== preview) { preview = id; renderBuilding(); }
 });
 floorList.addEventListener('mouseleave', () => { preview = null; renderBuilding(); });
-function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderKiloCard(); renderRows(); if (typeof renderMenage === 'function') { renderMenage(); renderRobotSheet(); } }
+function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderKiloCard(); renderRows(); if (typeof renderMenage === 'function') { renderMenage(); renderRobotSheet(); renderKiloSheet(); } }
 
 const tick = () => document.getElementById('clock').textContent =
   new Date().toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
@@ -1795,7 +1854,7 @@ function movePorter(p, now, dt) {
     p.waitUntil = 0; p.leg = (p.leg + 1) % PORTER_STOPS.length;
     p.loaded = p.leg === 0; p.state = p.loaded ? 'deliver' : 'back';
     // Each new run out of the lift is the next guest's
-    if (p.loaded) p.guest = (p.guest + 1) % p.guests.length;
+    if (p.loaded) { p.guest = (p.guest + 1) % p.guests.length; p.anchor = simH(Date.now()) - 0.05; }
   }
   const stop = PORTER_STOPS[p.leg], dx = stop.at[0] - p.at[0], dy = stop.at[1] - p.at[1], dist = Math.hypot(dx, dy);
   const target = PORTER_SPEED * Math.max(0.12, Math.min(1, dist / PORTER_BRAKE));
@@ -1816,7 +1875,7 @@ function porterAction(act) {
   if (act === 'home') Object.assign(p, { recalled: true, leg: 1, loaded: false, state: 'back', waitUntil: 0 });
   if (act === 'reprog') {
     if (p.state === 'parked') p.at = [...PORTER_STOPS[1].at];
-    Object.assign(p, { recalled: false, leg: 0, loaded: true, state: 'deliver', waitUntil: 0, guest: (p.guest + 1) % p.guests.length });
+    Object.assign(p, { recalled: false, leg: 0, loaded: true, state: 'deliver', waitUntil: 0, guest: (p.guest + 1) % p.guests.length, anchor: simH(Date.now()) - 0.05 });
   }
   renderAll();
 }
@@ -1825,7 +1884,7 @@ function step(now) {
   const dt = Math.min(0.1, (now - last) / 1000); last = now;
   let moved = false;
   FLOORS.forEach(f => {
-    if (f.porter && movePorter(f.porter, now, dt)) { placeKiloCart(); if (shown() === f.id) moved = true; }
+    if (f.porter && movePorter(f.porter, now, dt)) { placeKiloCart(); placeKiloSheetCart(); if (shown() === f.id) moved = true; }
     const r = f.robot;
     // Demo loop: a finished robot shows "Terminé" for a moment, then starts a new round from the first apartment.
     if (r.state === 'done' && r.restartAt && now >= r.restartAt) {
@@ -2225,7 +2284,7 @@ setInterval(() => {
 setInterval(() => { if (!document.getElementById('view-accueil').hidden) renderCoverage(); }, 30000);
 
 // Views and their breadcrumb label (the building view has none)
-const VIEWS = { building: '', accueil: 'Accueil', menage: 'Ménage', robot: 'Ménage' };
+const VIEWS = { building: '', accueil: 'Accueil', menage: 'Ménage', robot: 'Ménage', kilo: 'Bagages' };
 // v may carry an argument: 'robot/CLN-91C5' opens that robot's sheet
 function showView(v) {
   let [view, arg] = String(v).split('/');
@@ -2239,8 +2298,8 @@ function showView(v) {
   if (v !== 'accueil') document.getElementById('acc-banner').hidden = true;
   if (v !== 'menage') document.getElementById('men-banner').hidden = true;
   if (v !== 'robot') document.getElementById('rf-banner').hidden = true;
-  document.querySelectorAll('[data-crumb2]').forEach(c => c.hidden = v !== 'robot');
-  document.getElementById('crumb-sub').textContent = v === 'robot' ? sheetRobot : '';
+  document.querySelectorAll('[data-crumb2]').forEach(c => c.hidden = v !== 'robot' && v !== 'kilo');
+  document.getElementById('crumb-sub').textContent = v === 'robot' ? sheetRobot : v === 'kilo' ? FLOORS.find(f => f.porter).porter.name : '';
   history.replaceState(null, '', v === 'building' ? location.pathname : '#' + v + (v === 'robot' ? '/' + sheetRobot : ''));
   document.querySelector('main').scrollTop = 0;
   if (v === 'accueil') renderAccueil(); else renderAll();
@@ -2616,6 +2675,131 @@ function sheetAction(e) {
 }
 document.getElementById('view-robot').addEventListener('click', sheetAction);
 document.getElementById('rf-banner').addEventListener('click', sheetAction);
+
+// =====================================================================
+// Luggage cart sheet — KILO-3B8D (Piaggio Kilo), floor 2 corridor.
+// =====================================================================
+const KILO_INFO = { model: 'Piaggio Kilo', serial: 'PFF-K1-0412', since: 'août 2026', fw: '2.3.1', hours: 214, payload: '130 kg',
+  base: 'Bagagerie, RDC', autonomy: '7 h',
+  // Trips per day over the week (today live), average minutes per trip
+  week: [14, 17, 12, 19, 16, 21, 0], perTrip: '6 min',
+  wear: [['Roues motrices', 18, 0.3], ['Pneus', 26, 0.4], ['Capteurs avant (nettoyage)', 55, 4], ['Batterie (perte de capacité)', 4, 0]],
+  book: [
+    { d: '30 sept.', k: 'maint', who: 'Karim (maintenance)', txt: 'Capteurs avant nettoyés, plateau resserré.' },
+    { d: '24 sept.', k: 'incident', who: 'Automatique', txt: 'Arrêt de sécurité : enfant devant le chariot au RDC. Reprise seule après 20 s.' },
+    { d: '15 sept.', k: 'update', who: 'Automatique', txt: 'Mise à jour 2.3.1 : vitesse plafonnée à 3 km/h dans les couloirs.' },
+    { d: '28 août', k: 'review', who: 'Technicien Piaggio', txt: 'Mise en service : cartographie du RDC et de l\'É2, appel de l\'ascenseur testé.' },
+  ] };
+// Today's runs (simulated hours): done ones feed the timeline and the log, later check-ins are planned.
+const KILO_DAY = [
+  [9.2, 'Mme Laurent', 3, '503', 'É5'], [9.9, 'M. Chen', 1, '106', 'É1'], [10.6, 'Famille Rossi', 4, '305', 'É3'],
+  [11.3, 'M. Haddad', 2, '402', 'É4'], [12.6, 'Mme Novak', 2, '201', 'É2'], [13.2, 'M. Diallo', 1, '303', 'É3'],
+  [13.8, 'Mme Schmidt', 3, '407', 'É4'], [14.4, 'M. et Mme Petit', 2, '105', 'É1'],
+  [16.2, 'M. Garcia', 2, '502', 'É5'], [17.5, 'Mme Ito', 1, '304', 'É3'],
+  [18.6, 'Famille Martin', 5, '505', 'É5'], [20.1, 'M. Russo', 2, '103', 'É1'],
+];
+const kiloFloor = () => FLOORS.find(f => f.porter);
+// Today's count starts from the runs already done at load time; each new run adds one.
+kiloFloor().porter.trips = KILO_DAY.filter(([h]) => h <= simH(T0)).length;
+function renderKiloSheet() {
+  if (document.getElementById('view-kilo').hidden) return;
+  const f = kiloFloor(), p = f.porter, st = STATE[p.state], info = KILO_INFO, parked = p.state === 'parked';
+  const g = p.guests[p.guest], nx = p.guests[(p.guest + 1) % p.guests.length];
+  setHTML('kf-head', `<button class="rf-back" data-kback>← Bâtiment</button>
+    <div class="rf-top"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span>
+      <div class="rf-id"><span class="mr-name"><b>${p.name}</b>${batteryIcon(p.bat)}${stateChip(st)}</span>
+        <span class="sub">${porterPlace(f)}<span>${info.model} · n° ${info.serial} · en service depuis ${info.since} · logiciel ${info.fw}</span></span></div>
+      <div class="acts">
+        <button class="btn" data-kilo="reprog">${icon('clock', 14)}Reprogrammer</button>
+        <button class="btn" data-kilo="home"${parked || p.recalled ? ' disabled' : ''}>${icon('luggage', 14)}Retour bagagerie</button>
+        ${parked ? '' : `<button class="btn" data-kfloor>Voir l'étage <span aria-hidden="true">→</span></button>`}
+      </div></div>
+    <div class="kpis">${[
+      ['Trajets du jour', `${p.trips}`, `${p.trips * 2 + 3} valises portées`],
+      ['Batterie', `${p.bat} %`, `autonomie moy. ${info.autonomy}`],
+      ['Temps par trajet', info.perTrip, 'de la bagagerie à la porte'],
+      ['Charge maximale', info.payload, 'sur le plateau'],
+    ].map(([l, v, sub]) => `<div class="kpi"><small>${l}</small><b>${v}</b><span>${sub}</span></div>`).join('')}</div>`);
+
+  // Floor plan: the floor of its run, served apartment tinted, dashed route lift → 204, cart moved every frame
+  let m = '';
+  f.layout.rooms.forEach(q => {
+    const fill = q.kind === 'core' ? '#eef0f3' : q.kind === 'corridor' ? '#fafbfc' : q.id === '204' ? '#efe8fd' : '#f6f7f9';
+    m += `<rect x="${q.x1 * RF_PX}" y="${q.y1 * RF_PX}" width="${(q.x2 - q.x1) * RF_PX}" height="${(q.y2 - q.y1) * RF_PX}" fill="${fill}" stroke="#dfe2e7"/>`;
+    if (q.kind === 'apt') m += `<text x="${(q.x1 + q.x2) / 2 * RF_PX}" y="${q.y1 * RF_PX + 14}" text-anchor="middle" font-size="9" font-weight="600" fill="${q.id === '204' ? '#6d28d9' : '#9aa1ab'}">${q.id}</text>`;
+    if (q.kind === 'core') m += `<text x="${(q.x1 + q.x2) / 2 * RF_PX}" y="${(q.y1 + q.y2) / 2 * RF_PX + 3}" text-anchor="middle" font-size="8" font-weight="600" fill="#b8bec6">ASC.</text>`;
+  });
+  const [ax, ay] = PORTER_STOPS[1].at, [bx, by] = PORTER_STOPS[0].at;
+  m += `<line x1="${ax * RF_PX}" y1="${ay * RF_PX}" x2="${bx * RF_PX}" y2="${by * RF_PX}" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="3 4" opacity=".6"/>`;
+  m += `<circle cx="${bx * RF_PX}" cy="${(by - 0.6) * RF_PX}" r="3" fill="#7c3aed"/>`;
+  m += parked ? '' : `<g id="kf-cart"><rect x="-11" y="-6" width="22" height="12" rx="3" fill="${p.loaded ? '#7c3aed' : '#fff'}" stroke="${p.loaded ? '#fff' : '#7c3aed'}" stroke-width="2"/></g>`;
+  setHTML('kf-map', m);
+  placeKiloSheetCart();
+  setHTML('kf-map-sub', parked ? 'RDC · Bagagerie' : `${f.label} · ${f.name}`);
+  const toDoor = Math.round(Math.abs(bx - p.at[0]) * 2), toLift = Math.round(Math.abs(p.at[0] - ax) * 2);
+  setHTML('kf-where', {
+    deliver: `Dans le couloir de l'${f.label}, avec <b>${g.name}</b>. Encore ${toDoor} m jusqu'à l'app. 204.`,
+    unload: `Devant la porte de l'<b>app. 204</b>, ${g.name} vide le chariot.`,
+    back: `Revient seul vers l'ascenseur, à ${toLift} m.`,
+    lift: `Devant l'<b>ascenseur de l'${f.label}</b>, prêt à redescendre.`,
+    parked: `Rangé à la <b>bagagerie du RDC</b>, en charge.`,
+  }[p.state]);
+
+  // Current errand
+  setHTML('kf-mission-state', stateChip(st));
+  const row = (l, v) => `<div class="rf-row"><span>${l}</span><b>${v}</b></div>`;
+  setHTML('kf-mission', parked || p.state === 'lift'
+    ? row('Mission', 'aucune en cours') + row('Client suivant', `${nx.name}<small>check-in à ${checkin(p, 1)}</small>`) + row('Valises', `${nx.bags}`) + row('Destination', 'app. 204 · É2')
+    : row('Client', `${g.name}<small>check-in à ${checkin(p, 0)}</small>`) + row('Valises', `${g.bags}`) + row('Destination', 'app. 204 · É2')
+      + row('Étape', { deliver: 'le client pousse, le moteur assiste', unload: 'déchargement devant la porte', back: 'retour seul, à vide' }[p.state])
+      + row('Client suivant', `${nx.name}<small>check-in à ${checkin(p, 1)}</small>`));
+
+  // Upkeep: wear levels, higher is worse
+  setHTML('kf-cons', info.wear.map(([l, v, rate]) => `<div>${metric(l, v, consColor(v))}<small style="color:var(--muted);font-size:11px">${
+    rate ? `à prévoir dans ≈ ${Math.round((90 - v) / rate)} j` : 'contrôlée à chaque révision'}</small></div>`).join(''));
+
+  // Day timeline + log
+  const now = simH(Date.now()), span = DAY1 - DAY0, pct = h => ((Math.min(Math.max(h, DAY0), DAY1) - DAY0) / span * 100).toFixed(2) + '%';
+  let segs = `<i style="left:${pct(12)};width:${(0.6 / span * 100).toFixed(2)}%;background:#f0a020"${12 > now ? ' class="plan"' : ''}></i>`;
+  // The run in progress, from its guest's check-in to now
+  if (!parked && p.state !== 'lift') { checkin(p, 0); segs += `<i style="left:${pct(p.anchor)};width:${((now - p.anchor) / span * 100).toFixed(2)}%;background:#7c3aed"></i>`; }
+  KILO_DAY.forEach(([h]) => segs += `<i${h > now ? ' class="plan"' : ''} style="left:${pct(h)};width:${(0.12 / span * 100).toFixed(2)}%;background:#7c3aed"></i>`);
+  let ticks = '';
+  for (let h = DAY0; h <= DAY1; h += 2) ticks += `<span style="left:${pct(h)}">${h} h</span>`;
+  setHTML('kf-plan', `<div class="plan-track">${segs}<span class="plan-now" style="left:${pct(now)}"></span></div><div class="ticks plan-axis">${ticks}</div>`);
+  const past = KILO_DAY.filter(([h]) => h <= now).reverse().slice(0, 6);
+  setHTML('kf-log', past.length ? past.map(([h, who, bags, apt, lvl]) => `<li><time>${fmtH(h)}</time><span><span class="lv">${lvl}</span></span><div class="a"><b>${who}</b> · ${bags} valise${bags > 1 ? 's' : ''} jusqu'à l'app. ${apt}</div></li>`).join('')
+    : '<li><time></time><span></span><div class="a">Aucun trajet pour l\'instant.</div></li>');
+
+  // 7 days, today last (live)
+  const week = [...info.week.slice(0, 6), p.trips], max = Math.max(...week);
+  const days = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'], today = (new Date().getDay() + 6) % 7;
+  setHTML('kf-bars', week.map((v, i) => `<div class="${i === 6 ? 'today' : ''}" title="${v} trajets"><span>${v}</span><i style="height:${Math.round(v / max * 78)}px"></i></div>`).join(''));
+  setHTML('kf-days', week.map((v, i) => `<span>${i === 6 ? 'auj.' : days[(today - 6 + i + 7) % 7]}</span>`).join(''));
+  const total = week.reduce((a, v) => a + v, 0);
+  setHTML('kf-stats', `
+    <div class="rf-row"><span>Trajets</span><b>${total}</b></div>
+    <div class="rf-row"><span>Valises portées</span><b>≈ ${Math.round(total * 2.3)}</b></div>
+    <div class="rf-row"><span>Temps moyen par trajet</span><b>${info.perTrip}</b></div>
+    <div class="rf-row"><span>Arrêts de sécurité</span><b>1<small>enfant devant le chariot, le 24 sept.</small></b></div>
+    <div class="rf-row"><span>Temps libéré pour la réception</span><b>${(total * 6 / 60).toFixed(1).replace('.', ',')} h</b></div>`);
+
+  setHTML('kf-book-count', `${info.book.length} entrées`);
+  setHTML('kf-book', info.book.map(b => `<li><time>${b.d}</time><div>
+    <div class="t"><span class="chip ${BOOK_KIND[b.k].chip}">${BOOK_KIND[b.k].label}</span><span class="who">${b.who}</span></div>
+    <p>${b.txt}</p></div></li>`).join(''));
+}
+function placeKiloSheetCart() {
+  const el = document.getElementById('kf-cart');
+  if (el) { const [x, y] = kiloFloor().porter.at; el.setAttribute('transform', `translate(${(x * RF_PX).toFixed(1)},${(y * RF_PX).toFixed(1)})`); }
+}
+document.getElementById('view-kilo').addEventListener('click', e => {
+  const el = e.target.closest('[data-kilo],[data-kback],[data-kfloor]');
+  if (!el) return;
+  if (el.dataset.kilo) return porterAction(el.dataset.kilo);
+  showView('building');
+  if (el.dataset.kfloor !== undefined) { const f = kiloFloor(); select(f.id, f.porter.name); }
+});
 
 // First render once everything above (reception state included) is initialised.
 renderAll();
