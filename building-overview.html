@@ -118,7 +118,10 @@
   .bld svg .floor:hover { filter: brightness(1.03); }
   .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
 
-  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  /* Status badge — Shopify Polaris Badge anatomy: 2px/8px padding, 8px radius, 12px/16px medium text,
+     tinted background with text and icon in the same tone, icon tucked into the left padding */
+  .chip { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 8px; font-size: 12px; line-height: 16px; font-weight: 550; white-space: nowrap; }
+  .chip svg { width: 14px; height: 14px; flex: none; margin: -2px 0 -2px -3px; }
   .chip.ok { background: var(--green-soft); color: #137a44; }
   .chip.run { background: var(--menage-soft); color: #00756c; }
   .chip.warn { background: var(--amber-soft); color: #9a5b00; }
@@ -685,7 +688,7 @@ function renderRooms() {
   document.getElementById('rooms').innerHTML = list.map(r => {
     const s = ROOM_STATE[states[r.id]];
     const icon = iconSvg(s.icon);
-    return `<div class="room"><span class="sw" style="background:${s.fill};border:1px solid #d5d9df"></span><span class="n">${f.id === 0 ? r.id : 'App. ' + r.id}</span><span class="s chip ${s.chip}">${icon}${s.label}</span></div>`;
+    return `<div class="room"><span class="n">${f.id === 0 ? r.id : 'App. ' + r.id}</span><span class="s chip ${s.chip}">${icon}${s.label}</span></div>`;
   }).join('');
 }
 
