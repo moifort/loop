@@ -1649,7 +1649,7 @@ function renderKiloCard() {
   setHTML('kilo-head-right', stateChip(STATE[p.state]));
   const parked = p.state === 'parked';
   const track = parked ? '' : `<div class="kilo-track"><span class="rail"></span><span class="end l"></span><span class="end r"></span>
-      <span class="cart ${p.loaded ? '' : 'empty'}">${icon('luggage', 14, { color: p.loaded ? '#fff' : 'currentColor', sw: 2.2 })}</span></div>
+      <span class="cart ${p.loaded ? '' : 'empty'}" title="${p.loaded ? `Chargé · ${p.guests[p.guest].bags} valises` : 'Vide · revient seul'}">${icon('luggage', 14, { color: p.loaded ? '#fff' : 'currentColor', sw: 2.2 })}</span></div>
     <div class="kilo-ends"><span>Ascenseur É2</span><span>App. 204</span></div>`;
   setHTML('kilo', `<div style="display:flex;align-items:center;gap:8px">${porterPlace(f)}<small class="muted">${p.trips} trajets aujourd'hui · Piaggio Kilo</small></div>
     ${track}
@@ -1782,10 +1782,11 @@ let last = performance.now(), sinceUi = 0;
 // Luggage cart loop on its floor: lift → door of 204 with the guest (loaded), pause while they unload,
 // then back to the lift alone (empty), pause, and again.
 // Walking pace with a soft start and stop: speed eases toward the target and slows down near each stop.
-const PORTER_SPEED = 0.38, PORTER_EASE = 1.8, PORTER_BRAKE = 1.2;
+// About 2 min from the lift to app. 204 (5.9 plan units), as a guest walking with their bags.
+const PORTER_SPEED = 0.05, PORTER_EASE = 0.6, PORTER_BRAKE = 0.6;
 const PORTER_STOPS = [
-  { at: [10.5, 3.05], wait: 3500, state: 'unload' },
-  { at: [4.6, 3.05], wait: 2500, state: 'lift' },
+  { at: [10.5, 3.05], wait: 20000, state: 'unload' },
+  { at: [4.6, 3.05], wait: 15000, state: 'lift' },
 ];
 function movePorter(p, now, dt) {
   if (p.state === 'parked') return false;
