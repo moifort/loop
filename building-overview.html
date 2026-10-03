@@ -334,8 +334,17 @@
   /* Easter egg: click the stuck robot and a small cartoon "HELP!" appears above its label */
   .help-tag { cursor: pointer; }
   .help-tag:hover rect { stroke: #e5484d; }
-  .help-bubble { animation: help-pop 3.2s ease-out forwards; }
-  @keyframes help-pop { 0% { opacity: 0; transform: translateY(3px); } 12%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-3px); } }
+  /* Pops in with a cartoon bounce, floats gently, then drifts up and fades */
+  .help-bubble { animation: help-pop 3.2s linear forwards; transform-box: fill-box; transform-origin: 50% 100%; }
+  @keyframes help-pop {
+    0% { opacity: 0; transform: scale(.2) translateY(6px); }
+    8% { opacity: 1; transform: scale(1.3) translateY(-3px); }
+    14% { transform: scale(.9) translateY(0); }
+    19% { transform: scale(1.06); }
+    24% { transform: scale(1); }
+    40% { transform: translateY(-3px); } 56% { transform: translateY(0); } 72% { transform: translateY(-3px); }
+    86% { opacity: 1; transform: translateY(-2px); }
+    100% { opacity: 0; transform: translateY(-10px) scale(.9); } }
   @media (prefers-reduced-motion: reduce) { .help-bubble { animation: none; } }
   @keyframes robot-blink { 50% { opacity: .4; } }
   .alarm-ring { fill: none; stroke: #e5484d; stroke-width: 3; animation: alarm-ring 1s ease-out infinite; }
@@ -1128,10 +1137,13 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
 }
 
 // Easter egg state: the map re-renders often, so the animations follow the click time to stay smooth.
-const HELP_MS = 3200;
-let helpAt = -Infinity;   // never shown until clicked
-const helpActive = () => performance.now() - helpAt < HELP_MS;
-const helpPhase = () => `animation-delay:-${Math.round(performance.now() - helpAt)}ms`;
+// It also comes back on its own every HELP_EVERY ms while the robot is stuck.
+const HELP_MS = 3200, HELP_EVERY = 9000;
+let helpAt = -Infinity;
+let helpShown = false;
+const helpElapsed = () => { const now = performance.now(), c = now - helpAt; return c < HELP_MS ? c : (now + 4000) % HELP_EVERY; };
+const helpActive = () => helpElapsed() < HELP_MS;
+const helpPhase = () => `animation-delay:-${Math.round(helpElapsed())}ms`;
 // A small, calm cartoon "HELP!" above the stuck robot's label: fades in, then away.
 function helpBubble(x, y) {
   return `<text class="help-bubble" style="${helpPhase()};pointer-events:none" x="${x}" y="${y}" text-anchor="middle" font-family="'Comic Sans MS','Chalkboard SE','Marker Felt',cursive" font-size="13" font-weight="900" fill="#e5484d" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HELP!</text>`;
@@ -1582,6 +1594,8 @@ function step(now) {
     r.sim = { ...p, idx: 0 };
   });
   sinceUi += dt;
+  // Redraw the map right when the stuck robot's HELP! starts or ends, so its pop is not missed
+  if (helpActive() !== helpShown) { helpShown = !helpShown; renderBuilding(); }
   if (sinceUi > 1.5) { sinceUi = 0; renderAll(); }
   else if (moved && shown() !== 'all') renderBuilding();
   if (moved && !document.getElementById('view-robot').hidden) placeSheetRobot();
