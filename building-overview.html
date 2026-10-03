@@ -278,6 +278,16 @@
   tr:last-child td { border-bottom: none; }
   tbody tr { cursor: pointer; }
   tbody tr:hover td { background: var(--panel-2); }
+  /* Robot in trouble (blocked, or greeter in alarm): the whole row turns solid red */
+  tbody tr.trouble td, tbody tr.trouble:hover td { background: var(--red); color: #fff; border-bottom-color: var(--red); }
+  tbody tr.trouble:hover td { background: #d23b40; }
+  tr.trouble .rb-ic { background: rgba(255,255,255,.22) !important; }
+  tr.trouble .chip { background: #fff; color: #b42318; }
+  tr.trouble .tag-lvl { background: rgba(0,0,0,.28); }
+  tr.trouble .tag-room { background: #fff; color: #b42318; }
+  tr.trouble .muted, tr.trouble .down { color: #fff; }
+  tr.trouble .bar { background: rgba(255,255,255,.3); border-color: transparent; }
+  tr.trouble .bar i { background: #fff !important; }
   .rb { display: flex; align-items: center; gap: 10px; }
   .rb-ic { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; color: #fff; flex: none; }
   .rb b { font-weight: 500; display: block; }
@@ -1443,12 +1453,12 @@ const placeTag = (lvl, room) => `<span class="tags"><span class="tag-lvl">${lvl}
 function renderRows() {
   const rows = [];
   [...scope()].sort((a, b) => a.id - b.id).forEach(f => {
-    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${TILE_ACCUEIL}</span><div><span class="nm-row"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>${placeTag(f.label, greeterRoom())}</div></div></td>
+    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" class="${ACC.panicAt ? 'trouble' : ''}" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${TILE_ACCUEIL}</span><div><span class="nm-row"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>${placeTag(f.label, greeterRoom())}</div></div></td>
       <td>${temiStateChip()}</td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
       <td class="muted">${f.greeter.next}</td></tr>`);
     const r = f.robot, st = STATE[r.state];
-    rows.push(`<tr data-id="${f.id}" data-robot="${r.name}" title="Ouvrir la fiche de ${r.name}">
+    rows.push(`<tr data-id="${f.id}" data-robot="${r.name}" class="${r.state === 'blocked' ? 'trouble' : ''}" title="Ouvrir la fiche de ${r.name}">
       <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${TILE_MENAGE}</span><div><span class="nm-row"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>${placeTag(f.label, robotRoom(f.id))}</div></div></td>
       <td><span class="chip ${st.chip}">${st.label}</span></td>
       <td><div class="pct"><div class="bar"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? 'var(--red)' : 'var(--menage)'}"></i></div>${r.pct} %</div></td>
