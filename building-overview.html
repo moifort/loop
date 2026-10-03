@@ -106,10 +106,12 @@
   .issues { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
   .issue { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .issue:hover { text-decoration: underline; }
-  .tags { display: inline-flex; gap: 4px; flex-wrap: wrap; }
-  .tag { display: inline-flex; align-items: center; height: 18px; padding: 0 6px; border-radius: 5px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  /* Floor + room(s) read as one two-tone badge: [É3 | 307] */
+  .tags { display: inline-flex; flex-wrap: nowrap; border-radius: 5px; overflow: hidden; vertical-align: middle; }
+  .tag { display: inline-flex; align-items: center; height: 20px; padding: 0 7px; font-size: 11px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .tag.lvl { background: #1f2328; color: #fff; }
-  .tag.room { background: var(--panel); color: var(--text); border: 1px solid var(--border); }
+  .tag.room { background: #e9ecef; color: #1f2328; }
+  .tag.room + .tag.room { box-shadow: inset 2px 0 0 #fff; padding-left: 8px; }
   .tag:hover { filter: brightness(.95); }
   .issue .tags { margin-left: auto; flex-wrap: nowrap; flex: none; }
   .issue .txt { overflow: hidden; text-overflow: ellipsis; }
@@ -298,7 +300,7 @@ const LOBBY = {
 // occ = occupancy tonight (%), null for common areas.
 const FLOORS = [
   { id: 5, label: 'É5', name: 'Suites 501–505', area: 520, occ: 60, layout: suiteLevel(),
-    robot: { name: 'CLN-C6F2', state: 'run', pct: 22, bat: 96, at: [4, 3], next: 'Suites libérées en cours' } },
+    robot: { name: 'CLN-C6F2', state: 'run', pct: 22, bat: 96, at: [4, 3], next: 'Fin estimée 13 h 10' } },
   { id: 4, label: 'É4', name: 'App. 401–407', area: 610, occ: 86, layout: apartmentLevel(4),
     robot: { name: 'CLN-5E07', state: 'run', pct: 55, bat: 22, at: [4, 3], next: 'Recharge prévue à 15 %' } },
   { id: 3, label: 'É3', name: 'App. 301–307', area: 610, occ: 100, layout: apartmentLevel(3),
@@ -310,14 +312,14 @@ const FLOORS = [
     robot: { name: 'CLN-7B19', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
   { id: 0, label: 'RDC', name: 'Réception', hint: '& petit-déj.', area: 420, occ: null, layout: LOBBY,
     robot: { name: 'CLN-0A3E', state: 'run', pct: 70, bat: 92, at: [4.4, 5.4], base: [4.4, 5.4], next: 'Hall terminé vers 12 h 30' },
-    greeter: { name: 'TEMI-4F2A', state: 'live', visitors: 23, at: [2.6, 4.2], next: '6 arrivées avant 18 h' } },
+    greeter: { name: 'TEMI-4F2A', state: 'live', visitors: 23, at: [2.6, 4.2], next: 'Recharge planifiée à 23 h' } },
 ];
 
 // To-do list, linked to a floor (alerts per floor are derived from it).
 const TODOS = [
   { floor: 3, rooms: ['307'], prio: 'high', short: 'CLN-91C5 bloqué', title: 'CLN-91C5 est bloqué dans le 307', desc: "Une valise est restée au sol au milieu de l'appartement, le robot ne peut pas la contourner. Il attend depuis 18 min.", acts: ['Envoyer un agent', 'Passer au suivant'] },
-  { floor: 4, rooms: ['405', '406', '407'], prio: 'med', short: 'CLN-5E07 batterie 22 %', title: 'CLN-5E07 a une batterie faible (22 %)', desc: "Il devra recharger vers 15 % : 3 appartements risquent d'être prêts après l'arrivée de 15 h.", acts: ['Prévenir la réception', 'Voir le planning'] },
-  { floor: 5, rooms: ['503', '504', '505'], prio: 'low', short: 'Départs à confirmer', title: 'Confirmer les départs des suites 503 à 505', desc: 'CLN-C6F2 a fini la 501 et attaque la 502. Il continuera si les suites suivantes sont libérées.', acts: ['Confirmer'] },
+  { floor: 4, rooms: ['405', '406', '407'], prio: 'med', short: 'CLN-5E07 batterie 22 %', title: 'CLN-5E07 a une batterie faible (22 %)', desc: "Retour automatique à la base prévu vers 15 %. Les 3 derniers appartements de l'étage seront faits après la recharge (environ 40 min).", acts: ['Recharger maintenant', 'Voir le planning'] },
+  { floor: 5, rooms: [], prio: 'low', short: 'CLN-C6F2 brosse usée', title: 'CLN-C6F2 : brosse principale à remplacer', desc: "Usure estimée à 92 %. Le robot continue de nettoyer, mais la brosse doit être changée avant la prochaine tournée.", acts: ['Planifier l\'entretien', 'Commander une brosse'] },
 ];
 const PRIO = { high: '#e5484d', med: '#f0a020', low: '#a0a7b0' };
 
@@ -625,10 +627,9 @@ function floorPicker() {
 // =====================================================================
 const scope = () => selected === 'all' ? FLOORS : FLOORS.filter(f => f.id === selected);
 // Floor + apartment tags shown on every notification.
-const roomRange = rooms => rooms.length > 1 ? `${rooms[0]}–${rooms[rooms.length - 1]}` : rooms[0];
+// Compact (whole-building row): floor only. Full (to-do list): floor + every apartment.
 const tagsFor = (t, compact = false) => {
-  const rooms = t.rooms || [];
-  const list = compact && rooms.length > 1 ? [roomRange(rooms)] : rooms;
+  const list = compact ? [] : (t.rooms || []);
   return `<span class="tags"><span class="tag lvl" data-go="${t.floor}">${FLOORS.find(f => f.id === t.floor).label}</span>${list.map(r => `<span class="tag room" data-go="${t.floor}">${r}</span>`).join('')}</span>`;
 };
 
