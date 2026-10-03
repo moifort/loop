@@ -263,6 +263,9 @@
   /* Same battery glyph as the robots table, right of the name */
   .temi-name { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-height: 20px; }
   .temi-name b { white-space: nowrap; }
+  /* Luggage cart marker next to the floor name in the floor list */
+  .fl-kilo { display: inline-flex; vertical-align: -2px; margin-left: 6px; color: var(--bagages); }
+  .fl.trouble .fl-kilo { color: #fff; }
   /* Robot-type icon left of the name on the Temi and Kilo cards, in the robot's colour, no tile */
   .nm-ic { display: grid; place-items: center; flex: none; }
   .temi-info-sub { display: block; margin-top: 2px; }
@@ -1466,6 +1469,9 @@ function alertMetric(list) {
 
 const BELL = c => icon('bell', 14, { color: c, sw: 2.2 });
 
+// Floor the luggage cart is on: its run floor, or the ground floor once parked in the luggage room.
+const kiloHere = f => { const k = FLOORS.find(x => x.porter), p = k.porter; return (p.state === 'parked' ? f.id === 0 : f.id === k.id) ? p.name : ''; };
+
 function floorPicker() {
   const area = FLOORS.reduce((a, f) => a + f.area, 0);
   const clean = Math.round(FLOORS.reduce((a, f) => a + f.robot.pct * f.area, 0) / area);
@@ -1496,7 +1502,7 @@ function floorPicker() {
     const trouble = r.state === 'blocked' || (f.greeter && ACC.panicAt);
     h += `<button class="fl ${selected === f.id ? 'sel' : ''} ${trouble ? 'trouble' : ''}" data-id="${f.id}">
       <div class="r1"><span class="lv">${f.label}</span>
-        <span class="nm">${f.name}${f.hint ? `<small>${f.hint}</small>` : ''}</span>
+        <span class="nm">${f.name}${kiloHere(f) ? `<span class="fl-kilo" title="${kiloHere(f)} est à cet étage">${icon('luggage', 14, { sw: 2.2 })}</span>` : ''}${f.hint ? `<small>${f.hint}</small>` : ''}</span>
         ${f.greeter && ACC.panicAt ? '<span class="chip err">Alerte</span>' : `${stateChip(st)}`}</div>
       <div class="r2"><span></span>
         ${metric('Ménage', r.pct, r.state === 'blocked' ? '#e5484d' : '#0ea5e9')}
