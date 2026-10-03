@@ -284,7 +284,7 @@
   .kilo-track .rail { position: absolute; left: 6px; right: 6px; top: 16px; height: 2px; border-radius: 2px; background: repeating-linear-gradient(90deg, #d9dde3 0 6px, transparent 6px 10px); }
   .kilo-track .end { position: absolute; top: 12px; width: 10px; height: 10px; border-radius: 3px; background: #fff; border: 2px solid #c4c9d0; }
   .kilo-track .end.l { left: 0; } .kilo-track .end.r { right: 0; border-color: var(--bagages); }
-  .kilo-track .cart { position: absolute; top: 5px; width: 24px; height: 24px; margin-left: -12px; border-radius: 7px; background: var(--bagages); display: grid; place-items: center; box-shadow: 0 0 0 3px #fff; transition: left 1.5s linear; }
+  .kilo-track .cart { position: absolute; top: 5px; width: 24px; height: 24px; margin-left: -12px; border-radius: 7px; background: var(--bagages); display: grid; place-items: center; box-shadow: 0 0 0 3px #fff; }
   .kilo-track .cart.empty { background: #fff; border: 2px solid var(--bagages); color: var(--bagages); }
   .kilo-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
   .kilo .btn:disabled { opacity: .5; cursor: default; }
@@ -1644,13 +1644,12 @@ function porterWhat(p) {
   }[p.state];
 }
 function renderKiloCard() {
-  const f = FLOORS.find(x => x.porter), p = f.porter, [x0, x1] = [PORTER_STOPS[1].at[0], PORTER_STOPS[0].at[0]];
-  const pos = Math.max(0, Math.min(1, (p.at[0] - x0) / (x1 - x0)));
+  const f = FLOORS.find(x => x.porter), p = f.porter;
   setHTML('kilo-title', `<span class="temi-name"><b>${p.name}</b>${batteryIcon(p.bat)}</span>`);
   setHTML('kilo-head-right', stateChip(STATE[p.state]));
   const parked = p.state === 'parked';
   const track = parked ? '' : `<div class="kilo-track"><span class="rail"></span><span class="end l"></span><span class="end r"></span>
-      <span class="cart ${p.loaded ? '' : 'empty'}" style="left:calc(12px + (100% - 24px) * ${pos.toFixed(3)})">${icon('luggage', 14, { color: p.loaded ? '#fff' : 'currentColor', sw: 2.2 })}</span></div>
+      <span class="cart ${p.loaded ? '' : 'empty'}">${icon('luggage', 14, { color: p.loaded ? '#fff' : 'currentColor', sw: 2.2 })}</span></div>
     <div class="kilo-ends"><span>Ascenseur É2</span><span>App. 204</span></div>`;
   setHTML('kilo', `<div style="display:flex;align-items:center;gap:8px">${porterPlace(f)}<small class="muted">${p.trips} trajets aujourd'hui · Piaggio Kilo</small></div>
     ${track}
@@ -1659,6 +1658,15 @@ function renderKiloCard() {
       <button class="btn" data-kilo="reprog">${icon('clock', 15)}Reprogrammer</button>
       <button class="btn" data-kilo="home"${parked || p.recalled ? ' disabled' : ''}>${icon('luggage', 15)}Retour bagagerie</button>
     </div>`);
+  placeKiloCart();
+}
+// The card's cart follows the real position every frame (the card itself only re-renders on changes).
+function placeKiloCart() {
+  const el = document.querySelector('#kilo .cart');
+  if (!el) return;
+  const p = FLOORS.find(x => x.porter).porter, [x0, x1] = [PORTER_STOPS[1].at[0], PORTER_STOPS[0].at[0]];
+  const pos = Math.max(0, Math.min(1, (p.at[0] - x0) / (x1 - x0)));
+  el.style.left = `calc(12px + (100% - 24px) * ${pos.toFixed(4)})`;
 }
 // Buttons run the action; anywhere else on the card points the cart out on its floor.
 document.getElementById('kilo-card').onclick = e => {
@@ -1773,7 +1781,8 @@ FLOORS.forEach(f => {
 let last = performance.now(), sinceUi = 0;
 // Luggage cart loop on its floor: lift → door of 204 with the guest (loaded), pause while they unload,
 // then back to the lift alone (empty), pause, and again.
-const PORTER_SPEED = 0.7;
+// Walking pace with a soft start and stop: speed eases toward the target and slows down near each stop.
+const PORTER_SPEED = 0.38, PORTER_EASE = 1.8, PORTER_BRAKE = 1.2;
 const PORTER_STOPS = [
   { at: [10.5, 3.05], wait: 3500, state: 'unload' },
   { at: [4.6, 3.05], wait: 2500, state: 'lift' },
@@ -1787,9 +1796,12 @@ function movePorter(p, now, dt) {
     // Each new run out of the lift is the next guest's
     if (p.loaded) p.guest = (p.guest + 1) % p.guests.length;
   }
-  const stop = PORTER_STOPS[p.leg], dx = stop.at[0] - p.at[0], dy = stop.at[1] - p.at[1], dist = Math.hypot(dx, dy), len = PORTER_SPEED * dt;
-  if (dist > len) { p.at = [p.at[0] + dx / dist * len, p.at[1] + dy / dist * len]; return true; }
-  p.at = [...stop.at];
+  const stop = PORTER_STOPS[p.leg], dx = stop.at[0] - p.at[0], dy = stop.at[1] - p.at[1], dist = Math.hypot(dx, dy);
+  const target = PORTER_SPEED * Math.max(0.12, Math.min(1, dist / PORTER_BRAKE));
+  p.v = (p.v || 0) + (target - (p.v || 0)) * Math.min(1, dt * PORTER_EASE);
+  const len = p.v * dt;
+  if (dist > Math.max(len, 0.005)) { p.at = [p.at[0] + dx / dist * len, p.at[1] + dy / dist * len]; return true; }
+  p.at = [...stop.at]; p.v = 0;
   // Sent back to the luggage room: it goes down in the lift and waits there
   if (p.recalled && p.leg === 1) { p.state = 'parked'; p.recalled = false; return true; }
   p.state = stop.state; p.waitUntil = now + stop.wait;
@@ -1812,7 +1824,7 @@ function step(now) {
   const dt = Math.min(0.1, (now - last) / 1000); last = now;
   let moved = false;
   FLOORS.forEach(f => {
-    if (f.porter && movePorter(f.porter, now, dt) && shown() === f.id) moved = true;
+    if (f.porter && movePorter(f.porter, now, dt)) { placeKiloCart(); if (shown() === f.id) moved = true; }
     const r = f.robot;
     // Demo loop: a finished robot shows "Terminé" for a moment, then starts a new round from the first apartment.
     if (r.state === 'done' && r.restartAt && now >= r.restartAt) {
