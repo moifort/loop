@@ -345,7 +345,13 @@
   /* Same look as the top-bar panic button: solid red with the siren icon */
   .btn.panic { background: var(--red); border-color: var(--red); color: #fff; font-weight: 600; }
   .btn.panic:hover { background: #d23b40; border-color: #d23b40; }
-  /* A guest is waiting for a human: the one thing to act on */
+  /* A guest is waiting for a human: solid full-width banner right under the top bar */
+  .acc-banner { margin: -20px -24px 20px; padding: 12px 24px; background: #f0a020; color: #2b1a00; display: flex; align-items: center; gap: 12px; }
+  .acc-banner[hidden] { display: none; }
+  .acc-banner p { flex: 1; line-height: 1.45; }
+  .acc-banner b { font-weight: 600; }
+  .acc-banner .btn { border-color: transparent; color: #2b1a00; font-weight: 600; }
+  .acc-banner .btn:hover { background: #fff7e8; }
   .handoff { display: flex; align-items: center; gap: 12px; margin: 12px 16px; padding: 10px 12px; border-radius: 10px; background: var(--amber-soft); border: 1px solid #f6dca8; }
   .handoff p { flex: 1; line-height: 1.45; }
   .handoff b { font-weight: 600; }
@@ -436,6 +442,8 @@
 </header>
 
 <main>
+<!-- Reception view: full-width banner when a guest is waiting for a human -->
+<div class="acc-banner" id="acc-banner" hidden></div>
 <div class="wrap" id="view-building">
 
   <div class="stage">
@@ -1409,11 +1417,13 @@ document.addEventListener('visibilitychange', () => {
 
 function renderLive() {
   const remote = ACC.mode === 'remote', panic = !!ACC.panicAt;
-  const handoff = ACC.waiting && !remote ? `<div class="handoff">
-      <span class="sev sev-med">En attente</span>
+  const banner = document.getElementById('acc-banner');
+  const waiting = ACC.waiting && !remote;
+  banner.hidden = !waiting || document.getElementById('view-accueil').hidden;
+  banner.innerHTML = waiting ? `${icon('user', 18)}
       <p><b>Un client attend un humain depuis ${since(ACC.waiting)}.</b> Il demande une facture au nom de sa société ; Inès n'est pas au comptoir.</p>
-      <button class="btn primary" data-act="take">Prendre la main</button></div>` : '';
-  document.getElementById('acc-live').innerHTML = `${handoff}
+      <button class="btn" data-act="take">${icon('hand', 15)}Contrôler</button>` : '';
+  document.getElementById('acc-live').innerHTML = `
     <div class="live">${VIDEO}
       ${panic ? '<span class="ov o-tl alarm"><span class="rec"></span>EN DIRECT · ENREGISTREMENT</span>' : '<span class="ov o-tl"><span class="rec"></span>EN DIRECT</span>'}
       <span class="ov o-bl">${remote ? `Hery parle via le robot · ${since(ACC.takeoverAt)}` : 'Le robot répond seul · FR · EN · IT · ES'}</span>
@@ -1422,8 +1432,8 @@ function renderLive() {
     </div>
     <div class="controls">
       ${panic ? '<button class="btn danger" data-act="calm">Lever l\'alerte</button>' : ''}
-      ${remote ? '<button class="btn primary" data-act="release">Rendre la main au robot</button><button class="btn">Couper le micro</button><button class="btn" data-act="go-entree">Aller à la porte</button>'
-        : '<button class="btn primary" data-act="take">Prendre la main en visio</button><button class="btn">Parler dans le hall</button><button class="btn" data-act="go-base">Ramener à la base</button>'}
+      ${remote ? '<button class="btn primary" data-act="release">Rendre le contrôle au robot</button><button class="btn">Couper le micro</button><button class="btn" data-act="go-entree">Aller à la porte</button>'
+        : `<button class="btn primary" data-act="take">${icon('hand', 15)}Contrôler</button><button class="btn">Parler dans le hall</button><button class="btn" data-act="go-base">Ramener à la base</button>`}
       <span class="note">${remote ? 'Latence 180 ms · Antananarivo → Paris' : 'Hery est disponible pour un relais'}</span>
     </div>`;
   const live = document.querySelector('#acc-live .live');
@@ -1585,6 +1595,10 @@ function runAccAction(act, source = 'le comptoir') {
   if (!document.getElementById('view-accueil').hidden) renderAccueil();
   else renderTemiCard();
 }
+document.getElementById('acc-banner').addEventListener('click', e => {
+  const act = e.target.closest('[data-act]')?.dataset.act;
+  if (act) runAccAction(act);
+});
 document.getElementById('view-accueil').addEventListener('click', e => {
   const act = e.target.closest('[data-act]')?.dataset.act;
   if (act) return runAccAction(act);
@@ -1604,6 +1618,7 @@ function showView(v) {
   document.getElementById('view-accueil').hidden = v !== 'accueil';
   document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === v));
   document.querySelectorAll('[data-crumb]').forEach(c => c.hidden = v !== 'accueil');
+  if (v !== 'accueil') document.getElementById('acc-banner').hidden = true;
   history.replaceState(null, '', v === 'accueil' ? '#accueil' : location.pathname);
   document.querySelector('main').scrollTop = 0;
   if (v === 'accueil') renderAccueil(); else renderAll();
