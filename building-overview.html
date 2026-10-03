@@ -73,6 +73,12 @@
   /* To-do list (and apartments when a floor is selected) sit under the building */
   .below { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
   .below:has(#rooms-card:not([style*="none"])) { grid-template-columns: 1fr 340px; }
+  .below:has(#temi-card:not([style*="none"])) { grid-template-columns: 1fr 300px 300px; }
+  /* Not enough room for three columns: to-do list on its own row, apartments and Temi side by side */
+  @container (max-width: 1100px) {
+    .below:has(#temi-card:not([style*="none"])) { grid-template-columns: 1fr 1fr; }
+    .below:has(#temi-card:not([style*="none"])) > .card:first-child { grid-column: 1 / -1; }
+  }
 
   /* ---------- Floor picker ---------- */
   .floors { display: flex; flex-direction: column; gap: 4px; }
@@ -175,6 +181,19 @@
   .room:first-child { border-top: none; }
   .room .n { font-weight: 500; }
   .room .s { margin-left: auto; }
+
+  /* Greeter robot card on the ground floor: opens the reception view */
+  #temi-card { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+  #temi-card:hover { border-color: #cfc4ff; box-shadow: 0 0 0 3px #f3f0ff; }
+  .temi { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 4px 16px 4px; align-items: center; }
+  .temi-pic { height: 132px; border-radius: 10px; background: linear-gradient(180deg, #f6f3ff, #ece6ff); display: grid; place-items: center; }
+  .temi b { font-weight: 600; display: block; }
+  .temi small { color: var(--muted); }
+  .temi-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; margin-top: 10px; }
+  .temi-stats div small { display: block; font-size: 11px; }
+  .temi-stats div b { font-size: 16px; font-variant-numeric: tabular-nums; }
+  .temi-go { display: block; padding: 10px 16px 14px; color: var(--blue); font-weight: 500; font-size: 12px; }
+  #temi-card:hover .temi-go { text-decoration: underline; }
 
   .table-scroll { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
@@ -315,6 +334,11 @@
     <div class="card" id="rooms-card">
       <div class="card-h"><h3>Appartements</h3><div class="right" id="rooms-count"></div></div>
       <div class="rooms" id="rooms"></div>
+    </div>
+    <div class="card" id="temi-card" role="link" tabindex="0" title="Ouvrir la vue Accueil">
+      <div class="card-h"><h3>Robot d'accueil</h3><div class="right" id="temi-state"></div></div>
+      <div class="temi" id="temi"></div>
+      <span class="temi-go">Ouvrir la vue Accueil <span aria-hidden="true">→</span></span>
     </div>
   </div>
 
@@ -832,6 +856,43 @@ function renderRooms() {
 
 const ICON_MENAGE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M9 13h6"/></svg>';
 const ICON_ACCUEIL = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="6" y="8" width="12" height="11" rx="3"/><path d="M12 4v4M10 13h.01M14 13h.01"/></svg>';
+// Temi with a branded shell: Quartier Libre gold band on the base.
+const TEMI_SVG = `<svg width="66" height="122" viewBox="0 0 80 150">
+  <ellipse cx="40" cy="144" rx="27" ry="4" fill="rgba(31,35,40,.12)"/>
+  <path d="M31 113 L34.5 50 H45.5 L49 113 Z" fill="#fff" stroke="#dcdfe5"/>
+  <rect x="13" y="108" width="54" height="34" rx="15" fill="#fff" stroke="#dcdfe5"/>
+  <rect x="13.5" y="117" width="53" height="5" fill="#c8a96a"/>
+  <g fill="#c9ced6"><circle cx="33" cy="131" r="1.2"/><circle cx="37" cy="131" r="1.2"/><circle cx="41" cy="131" r="1.2"/><circle cx="45" cy="131" r="1.2"/><circle cx="49" cy="131" r="1.2"/></g>
+  <rect x="36.5" y="40" width="7" height="12" rx="2" fill="#d4d8df"/>
+  <rect x="10" y="10" width="60" height="36" rx="6" fill="#1f2328"/>
+  <rect x="13" y="13" width="54" height="30" rx="3.5" fill="#7c5cff"/>
+  <circle cx="31" cy="25" r="3.2" fill="#fff"/><circle cx="49" cy="25" r="3.2" fill="#fff"/>
+  <path d="M33 33 q7 5 14 0" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+</svg>`;
+
+function renderTemiCard() {
+  const card = document.getElementById('temi-card');
+  const f = selected === 'all' ? null : FLOORS.find(x => x.id === selected);
+  if (!f || !f.greeter) { card.style.display = 'none'; return; }
+  card.style.display = '';
+  // Same figures as the reception view
+  const remote = ACC.mode === 'remote', panic = !!ACC.panicAt;
+  const alone = coverage().segs.filter(s => !s.plan && s.k !== 'desk').reduce((a, s) => a + s.b - s.a, 0);
+  const relays = LOG.filter(l => l.out === 'remote' || l.out === 'live').length;
+  document.getElementById('temi-state').innerHTML = panic ? '<span class="chip err">Alerte</span>'
+    : remote ? '<span class="chip occ">Piloté à distance</span>' : '<span class="chip acc">En autonomie</span>';
+  document.getElementById('temi').innerHTML = `<div class="temi-pic">${TEMI_SVG}</div>
+    <div><b>${f.greeter.name}</b><small>Temi 3 · Réception · sur secteur</small>
+      <div class="temi-stats">
+        <div><small>Échanges</small><b>${f.greeter.visitors}</b></div>
+        <div><small>Résolus seul</small><b>78 %</b></div>
+        <div><small>Temps solo</small><b>${Math.floor(alone)} h ${String(Math.round(alone % 1 * 60)).padStart(2, '0')}</b></div>
+        <div><small>Relais visio</small><b>${relays}</b></div>
+      </div></div>`;
+}
+document.getElementById('temi-card').onclick = () => showView('accueil');
+document.getElementById('temi-card').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showView('accueil'); } };
+
 const batColor = b => b < 25 ? 'var(--red)' : b < 50 ? 'var(--amber)' : 'var(--green)';
 
 function renderRows() {
@@ -857,7 +918,7 @@ function renderRows() {
 }
 
 function select(id) { selected = id; renderAll(); }
-function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderRows(); }
+function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderRows(); }
 
 const tick = () => document.getElementById('clock').textContent =
   new Date().toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
