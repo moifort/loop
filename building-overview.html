@@ -282,7 +282,7 @@ const FLOORS = [
   { id: 4, label: 'É4', name: 'App. 401–407', area: 610, occ: 86, layout: apartmentLevel(4),
     robot: { name: 'CLN-5E07', state: 'run', pct: 55, bat: 22, at: [4, 3], next: 'Recharge prévue à 15 %' } },
   { id: 3, label: 'É3', name: 'App. 301–307', area: 610, occ: 100, layout: apartmentLevel(3),
-    robot: { name: 'CLN-91C5', state: 'blocked', pct: 86, bat: 63, at: [10.4, 4.9], next: 'Obstacle dans l\'app. 307' },
+    robot: { name: 'CLN-91C5', state: 'blocked', pct: 86, bat: 63, at: [11.4, 5.4], next: 'Obstacle dans l\'app. 307' },
     blockedRoom: '307' },
   { id: 2, label: 'É2', name: 'App. 201–207', area: 610, occ: 71, layout: apartmentLevel(2),
     robot: { name: 'CLN-2D84', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' } },
@@ -491,7 +491,9 @@ function openFloor(f, z0) {
   wall(W, 0, W, D, LOW, STONE_SIDE);
   const roomLabels = [], robotTags = [];
   f.layout.rooms.filter(r => r.kind !== 'corridor' && r.kind !== 'core').forEach(r => {
-    const c = P((r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2, z0);
+    // Move the room number to the back of the room when a robot stands in it, so its tag never covers it.
+    const inside = [f.robot.at, f.greeter && f.greeter.at].some(a => a && a[0] > r.x1 && a[0] < r.x2 && a[1] > r.y1 && a[1] < r.y2);
+    const c = inside ? P(r.x1 + 0.9, r.y1 + 0.7, z0) : P((r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2, z0);
     const st = r.kind === 'apt' ? states[r.id] : null;
     roomLabels.push(`<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">${r.id}</text>`);
   });
