@@ -331,7 +331,7 @@
   .fl.trouble .mb i { background: #fff !important; }
   .fl.trouble .al { color: #fff; } .fl.trouble .al svg, .fl.trouble .al svg * { stroke: #fff; }
   .robot-alarm { animation: robot-blink 1s ease-in-out infinite; }
-  /* Easter egg: click the stuck robot and a small "help…" appears next to it */
+  /* Easter egg: click the stuck robot and a small cartoon "HELP!" appears above its label */
   .help-tag { cursor: pointer; }
   .help-tag:hover rect { stroke: #e5484d; }
   .help-bubble { animation: help-pop 3.2s ease-out forwards; }
@@ -1121,7 +1121,7 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   // Labels go to the overlay layer when one is given, so walls never hide them.
   if (opts.overlay) opts.overlay.push(tag); else s += tag;
   if (opts.help && helpActive()) {
-    const bubble = helpBubble(cx + lw / 2 + 5, cy - h - 30 + 15);
+    const bubble = helpBubble(cx + lw / 4, cy - h - 35);
     if (opts.overlay) opts.overlay.push(bubble); else s += bubble;
   }
   return s;
@@ -1132,9 +1132,9 @@ const HELP_MS = 3200;
 let helpAt = -Infinity;   // never shown until clicked
 const helpActive = () => performance.now() - helpAt < HELP_MS;
 const helpPhase = () => `animation-delay:-${Math.round(performance.now() - helpAt)}ms`;
-// A small, calm "help" right of the stuck robot's label: fades in, then away.
+// A small, calm cartoon "HELP!" above the stuck robot's label: fades in, then away.
 function helpBubble(x, y) {
-  return `<text class="help-bubble" style="${helpPhase()};pointer-events:none" x="${x}" y="${y}" font-size="11" font-style="italic" font-weight="600" fill="#b42318" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">help…</text>`;
+  return `<text class="help-bubble" style="${helpPhase()};pointer-events:none" x="${x}" y="${y}" text-anchor="middle" font-family="'Comic Sans MS','Chalkboard SE','Marker Felt',cursive" font-size="13" font-weight="900" fill="#e5484d" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HELP!</text>`;
 }
 
 // Open storey: cutaway with extruded rooms and robot position.
