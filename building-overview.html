@@ -437,22 +437,28 @@
   .acc-grid:has(#acc-live-card) > .side { display: flex; flex-direction: column; }
   #acc-pos-card { flex: 1; display: flex; flex-direction: column; }
   /* Emergency numbers: shown on the reception view while the panic alarm runs */
-  #acc-sos-card { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-soft); }
-  #acc-sos-card .card-h h3 { color: #b42318; }
-  .sos-addr { margin: 0 16px 8px; padding: 7px 10px; border-radius: 8px; background: var(--red-soft); color: #b42318; font-size: 12px; line-height: 1.4; }
+  /* Solid red, like every card in trouble; contents inverted to white */
+  #acc-sos-card { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 0 0 3px var(--red-soft); }
+  #acc-sos-card .card-h h3 { color: #fff; }
+  #acc-sos-card .chip { background: #fff; color: #1c7c4a; }
+  .sos-addr { margin: 0 16px 8px; padding: 7px 10px; border-radius: 8px; background: rgba(0,0,0,.16); color: #fff; font-size: 12px; line-height: 1.4; }
   .sos-addr b { font-weight: 600; }
   .sos { list-style: none; padding: 0 16px 10px; }
-  .sos li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--border); }
+  .sos li { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid rgba(255,255,255,.3); }
   .sos li:first-child { border-top: none; }
-  .sos .num { min-width: 42px; height: 26px; padding: 0 6px; border-radius: 6px; background: #3a4150; color: #fff; font-weight: 700; font-size: 13px; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
+  .sos .num { min-width: 42px; height: 26px; padding: 0 6px; border-radius: 6px; background: #fff; color: #b42318; font-weight: 700; font-size: 13px; display: grid; place-items: center; font-variant-numeric: tabular-nums; }
   .sos .num.long { font-size: 11px; }
-  .sos .n { flex: 1; min-width: 0; line-height: 1.3; }
-  .sos .n small { display: block; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sos .n { flex: 1; min-width: 0; line-height: 1.3; font-weight: 500; }
+  .sos .n small { display: block; color: rgba(255,255,255,.85); font-size: 11px; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .sos .btn { height: 28px; padding: 0 10px; font-size: 12px; gap: 5px; }
-  .sos li.on { background: var(--green-soft); margin: 0 -16px; padding: 7px 16px; border-top-color: transparent; }
+  .sos .btn.call { background: #fff; border-color: #fff; color: #b42318; }
+  .sos .btn.call:hover { background: #fdecec; }
+  /* Call in progress: the row turns white so it stands out on the red card */
+  .sos li.on { background: #fff; color: var(--text); margin: 0 -16px; padding: 7px 16px; border-top-color: transparent; }
+  .sos li.on .num { background: #3a4150; color: #fff; }
   .sos li.on .n small { color: #1c7c4a; font-weight: 500; }
   .sos .btn.hang { background: var(--red); border-color: var(--red); color: #fff; font-weight: 600; }
-  .sos .btn:disabled { opacity: .45; cursor: default; }
+  .sos .btn:disabled { opacity: .55; cursor: default; }
   /* While the alarm runs the robot is held at the counter: the numbers take the position card's place,
      sized to the live feed (they scroll if the column is short) */
   body.alarm #acc-pos-card { display: none; }
@@ -1842,7 +1848,7 @@ function renderSos() {
   document.getElementById('acc-sos-state').innerHTML = c ? `<span class="chip ok">${icon('phone', 12)}En appel</span>` : '';
   document.getElementById('acc-sos').innerHTML = SOS.map((x, i) => {
     const on = c && c.i === i;
-    return `<li class="${on ? 'on' : ''}"><span class="num ${x.num.length > 3 ? 'long' : ''}">${x.num.length > 3 ? icon('phone', 13, { color: '#fff' }) : x.num}</span>
+    return `<li class="${on ? 'on' : ''}"><span class="num ${x.num.length > 3 ? 'long' : ''}">${x.num.length > 3 ? icon('phone', 13) : x.num}</span>
       <div class="n">${x.name}<small>${on ? `Appel en cours · ${since(c.at)}` : x.num.length > 3 ? x.num + ' · ' + x.sub : x.sub}</small></div>
       ${on ? `<button class="btn hang" data-act="hangup">${icon('phone-off', 13)}Raccrocher</button>`
         : `<button class="btn call" data-act="call-${i}" ${c ? 'disabled' : ''}>${icon('phone', 13)}Appeler</button>`}</li>`;
