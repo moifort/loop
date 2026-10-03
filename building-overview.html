@@ -271,6 +271,11 @@
   /* Temi's live state chip, right of the card title, pulsing in its own colour */
   .temi-head { display: inline-flex; align-items: center; gap: 8px; }
   .temi-head .chip, #temi-head-right .chip { font-weight: 550; animation: chip-pulse 1.8s ease-out infinite; }
+  /* Charging: green chip pulsing in its own colour */
+  .chip.charge { background: var(--green-soft); color: #1c7c4a; }
+  .chip.pulsing { animation: chip-pulse 1.8s ease-out infinite; }
+  .mr.blocked .chip.pulsing, .fl.trouble .chip.pulsing, tr.trouble .chip.pulsing { animation: none; }
+  @media (prefers-reduced-motion: reduce) { .chip.pulsing { animation: none; } }
   @keyframes chip-pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 40%, transparent); } 70%, 100% { box-shadow: 0 0 0 7px color-mix(in srgb, currentColor 0%, transparent); } }
   @media (prefers-reduced-motion: reduce) { .temi-head .chip, #temi-head-right .chip { animation: none; } }
   .temi-go { display: inline-flex; align-items: center; gap: 4px; color: var(--blue); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
@@ -960,10 +965,12 @@ const TODOS = [
 const PRIO = { high: '#e5484d', med: '#f0a020', low: '#a0a7b0' };
 const PRIO_LABEL = { high: 'Urgent', med: 'Important', low: 'Mineur' };
 
+// State chip; pulsing ones follow the clock so the many redraws do not restart the pulse.
+const stateChip = st => `<span class="chip ${st.chip}${st.pulse ? ' pulsing' : ''}"${st.pulse ? ` style="animation-delay:-${Math.round(performance.now() % 1800)}ms"` : ''}>${st.label}</span>`;
 const STATE = {
   run:     { chip: 'run',  label: 'En ménage',  color: '#00b8d9' },
   done:    { chip: 'ok',   label: 'Terminé',    color: '#22a861' },
-  charge:  { chip: 'warn', label: 'En charge',  color: '#f0a020' },
+  charge:  { chip: 'charge', label: 'En charge', color: '#22a861', pulse: true },
   blocked: { chip: 'err',  label: 'Bloqué',     color: '#e5484d' },
   idle:    { chip: 'idle', label: 'Planifié',   color: '#a0a7b0' },
   live:    { chip: 'acc',  label: 'En service', color: '#7c5cff' },
@@ -1330,7 +1337,7 @@ function floorPicker() {
     h += `<button class="fl ${selected === f.id ? 'sel' : ''} ${trouble ? 'trouble' : ''}" data-id="${f.id}">
       <div class="r1"><span class="lv">${f.label}</span>
         <span class="nm">${f.name}${f.hint ? `<small>${f.hint}</small>` : ''}</span>
-        ${f.greeter && ACC.panicAt ? '<span class="chip err">Alerte</span>' : `<span class="chip ${st.chip}">${st.label}</span>`}</div>
+        ${f.greeter && ACC.panicAt ? '<span class="chip err">Alerte</span>' : `${stateChip(st)}`}</div>
       <div class="r2"><span></span>
         ${metric('Ménage', r.pct, r.state === 'blocked' ? '#e5484d' : '#00b8d9')}
         ${alertMetric(alertsOf(f.id))}
@@ -1532,7 +1539,7 @@ function renderRows() {
     const r = f.robot, st = STATE[r.state];
     rows.push(`<tr data-id="${f.id}" data-robot="${r.name}" class="${r.state === 'blocked' ? 'trouble' : ''}" title="Ouvrir la fiche de ${r.name}">
       <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${TILE_MENAGE}</span><div><span class="nm-row"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>${placeTag(f.label, robotRoom(f.id))}</div></div></td>
-      <td><span class="chip ${st.chip}">${st.label}</span></td>
+      <td>${stateChip(st)}</td>
       <td><div class="pct"><div class="bar"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? 'var(--red)' : 'var(--menage)'}"></i></div>${r.pct} %</div></td>
       <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td></tr>`);
   });
@@ -2133,7 +2140,7 @@ function renderMenage() {
     return `<div class="mr ${r.state === 'blocked' ? 'blocked' : ''}" data-robot="${r.name}" title="Ouvrir la fiche de ${r.name}">
       <div class="mr-h"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span>
         <span class="mr-name"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>
-        <span class="chip ${st.chip}">${st.label}</span></div>
+        ${stateChip(st)}</div>
       <div class="mr-where ${r.state === 'blocked' ? 'down' : ''}">${placeTag(f.label, robotRoom(f.id))}<span>${r.next}</span></div>
       ${metric('Ménage', r.pct, r.state === 'blocked' ? '#e5484d' : '#00b8d9')}
       <div class="cons">${Object.keys(CONS_LABEL).map(k => metric(CONS_LABEL[k], c[k], consColor(c[k]))).join('')}</div>
@@ -2285,7 +2292,7 @@ function renderRobotSheet() {
   const room = robotRoom(f.id), roomName = f.id === 0 ? room : 'app. ' + room;
   setHTML('rf-head', `<button class="rf-back" data-back>← Robots de ménage</button>
     <div class="rf-top"><span class="rb-ic" style="background:var(--menage)">${TILE_MENAGE}</span>
-      <div class="rf-id"><span class="mr-name"><b>${r.name}</b>${batteryIcon(r.bat, charging)}<span class="chip ${st.chip}">${st.label}</span></span>
+      <div class="rf-id"><span class="mr-name"><b>${r.name}</b>${batteryIcon(r.bat, charging)}${stateChip(st)}</span>
         <span class="sub">${placeTag(f.label, room)}<span>${info.model} · n° ${info.serial} · en service depuis ${info.since} · logiciel ${info.fw}</span></span></div>
       <div class="acts">
         ${r.state === 'run' ? `<button class="btn" data-recall>${icon('zap', 14)}Rappeler à la base</button>` : ''}
