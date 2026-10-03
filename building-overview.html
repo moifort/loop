@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Loop — Vue bâtiment</title>
+<title>Loop — Quartier Libre Saint-Georges</title>
 <style>
   :root {
     --bg: #f4f5f6; --panel: #ffffff; --panel-2: #f9fafb; --border: #e4e6ea;
     --text: #1f2328; --muted: #7d8590; --faint: #b8bec6;
+    --brand: #1d2654;
     --blue: #006fff; --blue-soft: #e6f0ff;
     --green: #22a861; --green-soft: #e7f6ee; --amber: #f0a020; --amber-soft: #fff4e0;
     --red: #e5484d; --red-soft: #fdecec; --gray: #a0a7b0;
@@ -18,14 +19,15 @@
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, "Segoe UI", sans-serif;
     font-size: 13px; color: var(--text); background: var(--bg);
-    display: grid; grid-template-columns: 60px 1fr; grid-template-rows: 52px 1fr; height: 100vh; overflow: hidden;
+    display: grid; grid-template-columns: 64px 1fr; grid-template-rows: 56px 1fr; height: 100vh; overflow: hidden;
   }
   svg { display: block; }
   button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
 
   /* ---------- Sidebar ---------- */
-  .nav { grid-row: 1 / 3; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 4px; }
-  .logo { width: 34px; height: 34px; border-radius: 10px; background: var(--blue); display: grid; place-items: center; margin-bottom: 14px; }
+  .nav { grid-row: 1 / 3; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 8px 0; gap: 4px; }
+  .logo { width: 46px; height: 52px; display: grid; place-items: center; margin-bottom: 12px; }
+  .logo img { height: 46px; width: auto; }
   .nav-btn { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; color: var(--muted); position: relative; }
   .nav-btn:hover { background: var(--panel-2); color: var(--text); }
   .nav-btn.active { background: var(--blue-soft); color: var(--blue); }
@@ -34,6 +36,8 @@
 
   /* ---------- Header ---------- */
   .top { background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; gap: 14px; }
+  .wordmark { font-size: 12px; letter-spacing: .16em; color: var(--brand); font-weight: 500; white-space: nowrap; }
+  .vsep { width: 1px; height: 22px; background: var(--border); }
   .site { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; padding: 6px 10px; border-radius: 8px; }
   .site:hover { background: var(--panel-2); }
   .site small { color: var(--muted); font-weight: 400; }
@@ -42,12 +46,7 @@
 
   /* ---------- Main ---------- */
   main { overflow-y: auto; padding: 20px 24px 40px; }
-  .wrap { max-width: 1440px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
-
-  .welcome { display: flex; align-items: center; gap: 12px; background: var(--blue-soft); border: 1px solid #cfe1ff; color: #0b3d91; border-radius: 12px; padding: 10px 14px; }
-  .welcome b { font-weight: 600; }
-  .welcome .x { margin-left: auto; color: #0b3d91; opacity: .6; padding: 2px 6px; border-radius: 6px; }
-  .welcome .x:hover { opacity: 1; background: rgba(0,0,0,.05); }
+  .wrap { max-width: 1480px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
 
   .hero { display: flex; align-items: flex-end; gap: 16px; }
   .hero h1 { font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
@@ -59,37 +58,30 @@
   .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
   .btn.sm { padding: 4px 9px; font-size: 12px; }
 
-  .layout { display: grid; grid-template-columns: 1fr 380px; gap: 16px; align-items: start; }
-  .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  /* Stage: floor list | flat building | context column */
+  .stage { display: grid; grid-template-columns: 250px 560px minmax(320px, 1fr); gap: 20px; align-items: start; }
 
-  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
-  .card-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; }
-  .card-h h3 { font-size: 13px; font-weight: 600; }
-  .card-h .right { margin-left: auto; display: flex; gap: 6px; align-items: center; color: var(--muted); font-size: 12px; }
-  .card-b { padding: 14px 16px 16px; }
+  .floors { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 0; }
+  .floors .ttl { color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; padding: 0 10px 6px; }
+  .fl { display: grid; grid-template-columns: 36px 1fr auto; gap: 8px; align-items: center; padding: 9px 10px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; text-align: left; width: 100%; }
+  .fl:hover { background: var(--panel); border-color: var(--border); }
+  .fl.sel { background: var(--panel); border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
+  .fl .lv { font-weight: 600; color: var(--muted); font-size: 12px; }
+  .fl .nm { font-weight: 500; }
+  .fl .sub { color: var(--muted); font-size: 12px; margin-top: 1px; }
+  .fl.all { margin-bottom: 6px; }
+  .fl.all .lv { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; background: var(--brand); color: #fff; }
+  .mini { width: 46px; height: 5px; border-radius: 9px; background: #e9ecef; overflow: hidden; margin-top: 5px; }
+  .mini i { display: block; height: 100%; }
 
-  .seg { display: inline-flex; background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 2px; }
-  .seg button { padding: 4px 10px; border-radius: 6px; color: var(--muted); font-size: 12px; font-weight: 500; display: inline-flex; gap: 6px; align-items: center; }
-  .seg button.on { background: var(--panel); color: var(--text); box-shadow: var(--shadow); }
+  .bld { width: 560px; }
+  .bld svg { width: 560px; height: auto; }
+  .bld svg .floor { cursor: pointer; }
+  .bld svg .floor:hover .front { fill: #eef1f4; }
+  .bld-caption { display: flex; align-items: center; gap: 10px; justify-content: center; color: var(--muted); font-size: 12px; margin-top: 4px; flex-wrap: wrap; }
+  .bld-caption span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
 
-  /* ---------- Building ---------- */
-  .building { position: relative; display: grid; grid-template-columns: 1fr 300px; gap: 8px; align-items: center; padding: 6px 16px 16px; }
-  .building svg .floor { cursor: pointer; }
-  .building svg .floor .face { transition: opacity .15s; }
-  .building svg .floor:hover .front-base { fill: #eef1f4; }
-  .building svg .floor.sel .front-base { fill: #e6f0ff; }
-  .building svg .floor.sel .outline { stroke: var(--blue); stroke-width: 2; }
-  .legend { display: flex; gap: 14px; color: var(--muted); font-size: 12px; padding: 0 16px 14px; flex-wrap: wrap; }
-  .legend span { display: inline-flex; align-items: center; gap: 6px; }
-  .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
-
-  .floors { display: flex; flex-direction: column; gap: 6px; }
-  .flabel { display: grid; grid-template-columns: 34px 1fr auto; gap: 8px; align-items: center; padding: 7px 10px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; }
-  .flabel:hover { background: var(--panel-2); }
-  .flabel.sel { border-color: var(--blue); background: var(--blue-soft); }
-  .flabel .lv { font-weight: 600; color: var(--muted); font-size: 12px; }
-  .flabel .nm { font-weight: 500; display: flex; align-items: center; gap: 6px; }
-  .flabel .sub { color: var(--muted); font-size: 12px; }
   .chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
   .chip.ok { background: var(--green-soft); color: #137a44; }
   .chip.run { background: var(--menage-soft); color: #00756c; }
@@ -98,14 +90,40 @@
   .chip.idle { background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
   .chip.acc { background: #efeaff; color: #5b3fd6; }
 
-  /* ---------- Table ---------- */
+  .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
+  .card-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; }
+  .card-h h3 { font-size: 13px; font-weight: 600; }
+  .card-h .right { margin-left: auto; display: flex; gap: 6px; align-items: center; color: var(--muted); font-size: 12px; }
+  .card-b { padding: 14px 16px 16px; }
+
+  .todo { display: flex; gap: 12px; padding: 12px; border-radius: 10px; background: var(--red-soft); border: 1px solid #f7c9cb; }
+  .todo + .todo { margin-top: 8px; }
+  .todo .ic { width: 32px; height: 32px; border-radius: 8px; background: var(--red); color: #fff; display: grid; place-items: center; flex: none; }
+  .todo b { display: block; font-weight: 600; }
+  .todo p { color: #7a271a; margin-top: 2px; line-height: 1.4; }
+  .todo .acts { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+  .allgood { display: flex; gap: 10px; align-items: center; color: var(--muted); font-size: 12px; }
+  .todo ~ .allgood { padding-top: 12px; }
+
+  .kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 10px; }
+  .kpis small { color: var(--muted); font-size: 12px; display: block; }
+  .kpis b { font-size: 22px; font-weight: 600; letter-spacing: -.02em; }
+  .kpis span { font-size: 12px; }
+  .up { color: var(--green); } .down { color: var(--red); } .muted { color: var(--muted); }
+
+  .rooms { display: flex; flex-direction: column; }
+  .room { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .room:last-child { border-bottom: none; }
+  .room .n { font-weight: 500; }
+  .room .s { margin-left: auto; }
+
   table { width: 100%; border-collapse: collapse; }
   th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 8px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   td { padding: 10px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
   tr:last-child td { border-bottom: none; }
   tbody tr { cursor: pointer; }
   tbody tr:hover td { background: var(--panel-2); }
-  tbody tr.sel td { background: var(--blue-soft); }
   .rb { display: flex; align-items: center; gap: 10px; }
   .rb-ic { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #fff; flex: none; }
   .rb b { font-weight: 500; display: block; }
@@ -113,52 +131,30 @@
   .bar { height: 6px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 99px; overflow: hidden; width: 120px; }
   .bar i { display: block; height: 100%; border-radius: 99px; }
   .pct { display: flex; align-items: center; gap: 8px; }
-  .muted { color: var(--muted); }
   .bat { display: inline-flex; align-items: center; gap: 6px; }
 
-  /* ---------- Right column ---------- */
-  .todo { display: flex; gap: 12px; padding: 12px; border-radius: 10px; background: var(--red-soft); border: 1px solid #f7c9cb; }
-  .todo .ic { width: 32px; height: 32px; border-radius: 8px; background: var(--red); color: #fff; display: grid; place-items: center; flex: none; }
-  .todo b { display: block; font-weight: 600; }
-  .todo p { color: #7a271a; margin-top: 2px; line-height: 1.4; }
-  .todo .acts { display: flex; gap: 6px; margin-top: 10px; }
-  .allgood { display: flex; gap: 10px; align-items: center; color: var(--muted); padding: 10px 2px 0; font-size: 12px; }
-
-  .plan-h { display: flex; align-items: center; gap: 8px; }
-  .plan-h .t { font-weight: 600; }
-  .plan svg { width: 100%; height: auto; margin-top: 10px; border-radius: 8px; }
-  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
-  .fact { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
-  .fact small { color: var(--muted); font-size: 11px; display: block; }
-  .fact b { font-size: 15px; font-weight: 600; }
-
-  .day { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .day .k small { color: var(--muted); font-size: 12px; display: block; }
-  .day .k b { font-size: 22px; font-weight: 600; letter-spacing: -.02em; }
-  .day .k span { font-size: 12px; }
-  .up { color: var(--green); } .down { color: var(--red); }
-
-  @keyframes pulse { 0% { r: 7; opacity: .6; } 100% { r: 16; opacity: 0; } }
+  @keyframes pulse { 0% { r: 6; opacity: .55; } 100% { r: 18; opacity: 0; } }
   .pulse { animation: pulse 1.6s ease-out infinite; }
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M7 4v9a5 5 0 0 0 10 0V4"/></svg></div>
+  <div class="logo" title="Quartier Libre Collection"><img src="assets/quartier-libre-collection-mark.png" alt="Quartier Libre Collection"></div>
   <button class="nav-btn active" title="Bâtiment"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg></button>
   <button class="nav-btn" title="Plans"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></svg></button>
   <button class="nav-btn" title="Robots"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01"/></svg></button>
   <button class="nav-btn" title="Alertes"><span class="badge"></span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg></button>
   <button class="nav-btn" title="Rapports"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></button>
   <div class="nav-spacer"></div>
-  <button class="nav-btn" title="Réglages"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg></button>
+  <button class="nav-btn" title="Réglages"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></button>
 </nav>
 
 <header class="top">
+  <span class="wordmark">QUARTIER LIBRE COLLECTION</span>
+  <span class="vsep"></span>
   <button class="site">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1.5"/></svg>
-    Tour Horizon <small>· Lyon Part-Dieu</small>
+    Quartier Libre Saint-Georges <small>· 14 rue Henry Monnier, Paris 9<sup>e</sup></small>
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
   </button>
   <div class="right">
@@ -170,15 +166,9 @@
 <main>
 <div class="wrap">
 
-  <div class="welcome" id="welcome">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
-    <div><b>Bienvenue sur votre bâtiment.</b> Chaque étage se remplit à mesure que le ménage avance. Cliquez sur un étage pour voir son plan.</div>
-    <button class="x" onclick="document.getElementById('welcome').remove()">Compris</button>
-  </div>
-
   <div class="hero">
     <div>
-      <h1>Bonjour Claire</h1>
+      <h1 id="title">Bonjour Claire</h1>
       <div class="status" id="status"></div>
     </div>
     <div class="actions">
@@ -193,45 +183,12 @@
     </div>
   </div>
 
-  <div class="layout">
-    <div class="col">
+  <div class="stage">
+    <div class="floors" id="floors"></div>
 
-      <div class="card">
-        <div class="card-h">
-          <h3>Le bâtiment en ce moment</h3>
-          <div class="right">
-            <div class="seg" id="lens">
-              <button class="on" data-lens="all">Tout</button>
-              <button data-lens="menage"><span class="dot" style="background:var(--menage)"></span>Ménage</button>
-              <button data-lens="accueil"><span class="dot" style="background:var(--accueil)"></span>Accueil</button>
-            </div>
-          </div>
-        </div>
-        <div class="building">
-          <svg id="iso" viewBox="20 96 520 590"></svg>
-          <div class="floors" id="floors"></div>
-        </div>
-        <div class="legend">
-          <span><i class="sw" style="background:var(--menage)"></i>Nettoyé aujourd'hui</span>
-          <span><i class="sw" style="background:#e9ecef;border:1px solid var(--border)"></i>Reste à faire</span>
-          <span><i class="sw" style="background:var(--red)"></i>Robot bloqué</span>
-          <span><i class="sw" style="background:var(--accueil)"></i>Robot d'accueil</span>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-h">
-          <h3>Robots</h3>
-          <div class="right">7 robots · 1 par étage + accueil</div>
-        </div>
-        <div style="padding-top:8px">
-          <table>
-            <thead><tr><th>Robot</th><th>Étage</th><th>État</th><th>Avancement du jour</th><th>Batterie</th><th>Prochaine étape</th></tr></thead>
-            <tbody id="rows"></tbody>
-          </table>
-        </div>
-      </div>
-
+    <div class="bld">
+      <svg id="iso" viewBox="0 0 560 640"></svg>
+      <div class="bld-caption" id="caption"></div>
     </div>
 
     <div class="col">
@@ -239,21 +196,27 @@
         <div class="card-h"><h3>À traiter</h3><div class="right" id="todo-count"></div></div>
         <div class="card-b" id="todo"></div>
       </div>
-
-      <div class="card plan">
-        <div class="card-h"><h3>Plan de l'étage</h3><div class="right"><button class="btn sm">Ouvrir le plan</button></div></div>
-        <div class="card-b" id="plan"></div>
-      </div>
-
       <div class="card">
-        <div class="card-h"><h3>Aujourd'hui</h3><div class="right">depuis 6 h 00</div></div>
-        <div class="card-b day">
-          <div class="k"><small>Surface nettoyée</small><b>3 940 m²</b> <span class="muted">/ 6 200</span></div>
-          <div class="k"><small>Visiteurs accueillis</small><b>47</b> <span class="up">+12 % vs mardi</span></div>
-          <div class="k"><small>Robots disponibles</small><b>6/7</b> <span class="muted">1 bloqué</span></div>
-          <div class="k"><small>Interventions humaines</small><b>1</b> <span class="muted">en attente</span></div>
-        </div>
+        <div class="card-h"><h3 id="kpi-title">Aujourd'hui</h3><div class="right">depuis 6 h 00</div></div>
+        <div class="card-b kpis" id="kpis"></div>
       </div>
+      <div class="card" id="rooms-card">
+        <div class="card-h"><h3>Appartements de l'étage</h3><div class="right" id="rooms-count"></div></div>
+        <div class="card-b rooms" id="rooms"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h">
+      <h3>Robots</h3>
+      <div class="right" id="robots-count"></div>
+    </div>
+    <div style="padding-top:8px">
+      <table>
+        <thead><tr><th>Robot</th><th>Étage</th><th>État</th><th>Avancement du jour</th><th>Batterie</th><th>Prochaine étape</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
     </div>
   </div>
 
@@ -261,122 +224,360 @@
 </main>
 
 <script>
-// ---------- Data ----------
+// =====================================================================
+// Data — Quartier Libre Saint-Georges, RDC + 5 levels, one cleaning
+// robot per level and a greeter robot in the lobby.
+// Plan units: building footprint is W x D (x to the right, y to the back).
+// =====================================================================
+const W = 12, D = 6;
+
+// Apartment level layout: north row, corridor (y 2.4–3.6), south row.
+function apartmentLevel(n, names) {
+  const r = (id, x1, y1, x2, y2, kind = 'apt') => ({ id, x1, y1, x2, y2, kind });
+  return {
+    rooms: [
+      r('corridor', 0, 2.4, 12, 3.6, 'corridor'),
+      r(`${n}01`, 0, 0, 3, 2.4), r(`${n}02`, 3, 0, 6, 2.4), r(`${n}03`, 6, 0, 9, 2.4), r(`${n}04`, 9, 0, 12, 2.4),
+      r(`${n}05`, 0, 3.6, 3, 6), r('core', 3, 3.6, 5, 6, 'core'), r(`${n}06`, 5, 3.6, 8.5, 6), r(`${n}07`, 8.5, 3.6, 12, 6),
+    ],
+    walls: [
+      // party walls
+      [3, 0, 3, 2.4], [6, 0, 6, 2.4], [9, 0, 9, 2.4],
+      [3, 3.6, 3, 6], [5, 3.6, 5, 6], [8.5, 3.6, 8.5, 6],
+      // corridor walls with a door gap per apartment
+      [0, 2.4, 1.1, 2.4], [1.9, 2.4, 4.1, 2.4], [4.9, 2.4, 7.1, 2.4], [7.9, 2.4, 10.1, 2.4], [10.9, 2.4, 12, 2.4],
+      [0, 3.6, 1.1, 3.6], [1.9, 3.6, 3, 3.6], [5, 3.6, 6.3, 3.6], [7.1, 3.6, 9.8, 3.6], [10.6, 3.6, 12, 3.6],
+    ],
+    names,
+  };
+}
+const LOBBY = {
+  rooms: [
+    { id: 'Réception', x1: 0, y1: 0, x2: 5, y2: 6, kind: 'lobby' },
+    { id: 'Petit-déjeuner', x1: 5, y1: 0, x2: 9, y2: 3.4, kind: 'apt' },
+    { id: 'Bagagerie', x1: 9, y1: 0, x2: 12, y2: 3.4, kind: 'apt' },
+    { id: 'core', x1: 5, y1: 3.4, x2: 7, y2: 6, kind: 'core' },
+    { id: 'Laverie', x1: 7, y1: 3.4, x2: 9.5, y2: 6, kind: 'apt' },
+    { id: 'Bureau', x1: 9.5, y1: 3.4, x2: 12, y2: 6, kind: 'apt' },
+  ],
+  walls: [[5, 0, 5, 1.2], [5, 2.2, 5, 3.4], [9, 0, 9, 3.4], [5, 3.4, 5.6, 3.4], [6.4, 3.4, 12, 3.4], [7, 3.4, 7, 6], [9.5, 3.4, 9.5, 6], [5, 3.4, 5, 6]],
+};
+
 const FLOORS = [
-  { id: 5, label: 'É5', name: 'Direction', area: 820,
-    robot: { name: 'Brume', state: 'idle', pct: 0, bat: 100, next: 'Démarre à 18 h 00' } },
-  { id: 4, label: 'É4', name: 'Open space B', area: 1180,
-    robot: { name: 'Écume', state: 'charge', pct: 55, bat: 22, next: 'Reprend à 14 h 30' } },
-  { id: 3, label: 'É3', name: 'Salles de réunion', area: 1050,
-    robot: { name: 'Pluie', state: 'blocked', pct: 41, bat: 63, next: 'Porte fermée — salle 312' } },
-  { id: 2, label: 'É2', name: 'Open space A', area: 1180,
-    robot: { name: 'Rosée', state: 'done', pct: 100, bat: 81, next: 'Terminé à 10 h 12' } },
-  { id: 1, label: 'É1', name: 'Restaurant', area: 1150,
-    robot: { name: 'Averse', state: 'run', pct: 64, bat: 58, next: 'Fin estimée 13 h 40' } },
-  { id: 0, label: 'RDC', name: 'Hall & accueil', area: 820,
-    robot: { name: 'Bruine', state: 'done', pct: 100, bat: 92, next: 'Repasse à 15 h 00 (hall)' },
-    greeter: { name: 'Léa', state: 'live', visitors: 47, next: '3 visiteurs attendus avant 14 h' } },
+  { id: 5, label: 'É5', name: 'Suites sous les toits', area: 520, layout: apartmentLevel(5),
+    robot: { name: 'Brume', state: 'idle', pct: 0, bat: 100, at: [4, 3], next: 'Démarre à 12 h 00 (départs clients)' } },
+  { id: 4, label: 'É4', name: 'Appartements 401–407', area: 610, layout: apartmentLevel(4),
+    robot: { name: 'Écume', state: 'charge', pct: 55, bat: 22, at: [4, 3], next: 'Reprend à 14 h 30' } },
+  { id: 3, label: 'É3', name: 'Appartements 301–307', area: 610, layout: apartmentLevel(3),
+    robot: { name: 'Pluie', state: 'blocked', pct: 41, bat: 63, at: [10.5, 3], next: 'Appartement 304 non libéré' },
+    blockedRoom: '304' },
+  { id: 2, label: 'É2', name: 'Appartements 201–207', area: 610, layout: apartmentLevel(2),
+    robot: { name: 'Rosée', state: 'done', pct: 100, bat: 81, at: [4, 3], next: 'Terminé à 10 h 12' } },
+  { id: 1, label: 'É1', name: 'Appartements 101–107', area: 610, layout: apartmentLevel(1),
+    robot: { name: 'Averse', state: 'run', pct: 64, bat: 58, at: [6.8, 4.9], next: 'Fin estimée 13 h 40' } },
+  { id: 0, label: 'RDC', name: 'Réception & petit-déjeuner', area: 420, layout: LOBBY,
+    robot: { name: 'Bruine', state: 'done', pct: 100, bat: 92, at: [6, 4.6], next: 'Repasse à 15 h 00 (hall)' },
+    greeter: { name: 'Léa', state: 'live', visitors: 23, at: [2.6, 4.2], next: '6 arrivées attendues avant 18 h' } },
 ];
 const STATE = {
-  run:     { chip: 'run',  label: 'En ménage',   color: 'var(--menage)' },
-  done:    { chip: 'ok',   label: 'Terminé',     color: 'var(--green)' },
-  charge:  { chip: 'warn', label: 'En charge',   color: 'var(--amber)' },
-  blocked: { chip: 'err',  label: 'Bloqué',      color: 'var(--red)' },
-  idle:    { chip: 'idle', label: 'Planifié',    color: 'var(--gray)' },
-  live:    { chip: 'acc',  label: 'En service',  color: 'var(--accueil)' },
+  run:     { chip: 'run',  label: 'En ménage',  color: '#00a99d' },
+  done:    { chip: 'ok',   label: 'Terminé',    color: '#22a861' },
+  charge:  { chip: 'warn', label: 'En charge',  color: '#f0a020' },
+  blocked: { chip: 'err',  label: 'Bloqué',     color: '#e5484d' },
+  idle:    { chip: 'idle', label: 'Planifié',   color: '#a0a7b0' },
+  live:    { chip: 'acc',  label: 'En service', color: '#7c5cff' },
 };
-let selected = 3;
-let lens = 'all';
+const ROOM_STATE = {
+  clean:   { chip: 'ok',   label: 'Prêt',        fill: '#d9f3f0' },
+  doing:   { chip: 'run',  label: 'En cours',    fill: '#bfeae4' },
+  blocked: { chip: 'err',  label: 'Non libéré',  fill: '#fbd5d6' },
+  todo:    { chip: 'idle', label: 'À faire',     fill: '#ffffff' },
+};
 
-// ---------- Isometric building ----------
-const S = 24, W = 12, D = 5, H = 54, OX = 150, OY = 120;
-const P = (x, y, z) => [OX + (x - y) * 0.866 * S, OY + (x + y) * 0.5 * S + (FLOORS.length * H) - z];
-const pts = a => a.map(p => p.join(',')).join(' ');
+// Selection drives the whole page: 'all' or a floor id.
+let selected = 'all';
+
+// Room status derived from the robot's progress along its route.
+function roomStates(f) {
+  const apts = f.layout.rooms.filter(r => r.kind === 'apt');
+  const done = Math.floor(f.robot.pct / 100 * apts.length + 1e-9);
+  const out = {};
+  apts.forEach((r, i) => {
+    if (f.blockedRoom === r.id) out[r.id] = 'blocked';
+    else if (i < done) out[r.id] = 'clean';
+    else if (i === done && f.robot.state === 'run') out[r.id] = 'doing';
+    else out[r.id] = 'todo';
+  });
+  return out;
+}
+
+// =====================================================================
+// Isometric renderer
+// =====================================================================
+const S = 30, H = 54, OX = 200, OY = 350;
+const P = (x, y, z) => [OX + (x - y) * 0.866 * S, OY + (x + y) * 0.5 * S - z];
+const pts = a => a.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+const poly = (a, attrs) => `<polygon points="${pts(a)}" ${attrs}/>`;
+const levelIndex = id => id; // RDC = 0 … É5 = 5
+
+function quad(x1, y1, x2, y2, z0, z1) { return [P(x1, y1, z0), P(x2, y2, z0), P(x2, y2, z1), P(x1, y1, z1)]; }
+
+// Closed storey: facade + side + slab; optional cleaning progress fill.
+function closedFloor(f, z0, opts) {
+  const z1 = z0 + H - 5;
+  const r = f.robot;
+  const p = opts.progress ? r.pct / 100 : 0;
+  const fill = r.state === 'blocked' ? '#e5484d' : '#00a99d';
+  let s = `<g class="floor" data-id="${f.id}">`;
+  s += poly(quad(0, D, W, D, z0, z1), 'class="front" fill="#f6f7f9"');
+  if (p > 0) s += poly(quad(0, D, W * p, D, z0, z1), `fill="${fill}" opacity=".82"`);
+  for (let k = 0; k < 8; k++) {
+    const x = 0.55 + k * 1.45;
+    s += poly(quad(x, D, x + 0.85, D, z0 + 12, z1 - 10), 'fill="rgba(255,255,255,.5)"');
+  }
+  s += poly(quad(W, 0, W, D, z0, z1), 'fill="#dfe3e8"');
+  if (p >= 1) s += poly(quad(W, 0, W, D, z0, z1), `fill="${fill}" opacity=".5"`);
+  for (let k = 0; k < 4; k++) {
+    const y = 0.5 + k * 1.45;
+    s += poly(quad(W, y, W, y + 0.8, z0 + 12, z1 - 10), 'fill="rgba(255,255,255,.35)"');
+  }
+  s += poly(quad(0, D, W, D, z1, z1 + 5), 'fill="#cfd5dc"') + poly(quad(W, 0, W, D, z1, z1 + 5), 'fill="#bfc6ce"');
+  if (opts.progress && r.state === 'blocked') {
+    const c = P(W * p, D, (z0 + z1) / 2);
+    s += `<circle cx="${c[0]}" cy="${c[1]}" r="9" fill="#e5484d" stroke="#fff" stroke-width="2"/><text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">!</text>`;
+  }
+  if (opts.progress && r.state === 'run') {
+    const c = P(W * p, D, (z0 + z1) / 2);
+    s += `<circle class="pulse" cx="${c[0]}" cy="${c[1]}" r="6" fill="#00a99d"/><circle cx="${c[0]}" cy="${c[1]}" r="6" fill="#fff" stroke="#00a99d" stroke-width="3"/>`;
+  }
+  return s + '</g>';
+}
+
+// Robot glyph standing at plan position (x, y) on level z.
+function robotGlyph(x, y, z, color, label, opts = {}) {
+  const [cx, cy] = P(x, y, z);
+  const h = opts.tall ? 26 : 12, rx = opts.tall ? 7 : 10, ry = rx * 0.5;
+  let s = `<ellipse cx="${cx}" cy="${cy}" rx="${rx + 3}" ry="${ry + 1.5}" fill="rgba(0,0,0,.15)"/>`;
+  if (opts.pulse) s += `<circle class="pulse" cx="${cx}" cy="${cy - h / 2}" r="6" fill="${color}"/>`;
+  s += `<path d="M${cx - rx},${cy} L${cx - rx},${cy - h} A${rx},${ry} 0 0 1 ${cx + rx},${cy - h} L${cx + rx},${cy} A${rx},${ry} 0 0 1 ${cx - rx},${cy} Z" fill="${color}"/>`;
+  s += `<ellipse cx="${cx}" cy="${cy - h}" rx="${rx}" ry="${ry}" fill="#fff" opacity=".35"/>`;
+  if (opts.tall) s += `<rect x="${cx - 4}" y="${cy - h - 12}" width="8" height="10" rx="2" fill="${color}"/><rect x="${cx - 3}" y="${cy - h - 10}" width="6" height="4" rx="1" fill="#fff" opacity=".8"/>`;
+  if (opts.alert) s += `<circle cx="${cx + rx + 2}" cy="${cy - h - 6}" r="8" fill="#e5484d" stroke="#fff" stroke-width="2"/><text x="${cx + rx + 2}" y="${cy - h - 2}" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`;
+  const lw = label.length * 6.4 + 22;
+  s += `<g transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 34)})"><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="#e4e6ea"/><circle cx="10" cy="10" r="4" fill="${color}"/><text x="18" y="14" font-size="11" font-weight="600" fill="#1f2328">${label}</text></g>`;
+  return s;
+}
+
+// Open storey: cutaway with extruded rooms and robot position.
+function openFloor(f, z0) {
+  const states = roomStates(f);
+  const WALL = 30, LOW = 7;
+  let s = '';
+  // slab under the open floor
+  s += poly(quad(0, D, W, D, z0 - 6, z0), 'fill="#cfd5dc"') + poly(quad(W, 0, W, D, z0 - 6, z0), 'fill="#bfc6ce"');
+  // floor tiles
+  f.layout.rooms.forEach(r => {
+    let fill = '#f2f4f7';
+    if (r.kind === 'apt') fill = ROOM_STATE[states[r.id]].fill;
+    if (r.kind === 'corridor' || r.kind === 'lobby') fill = f.robot.pct > 0 ? '#e6f6f3' : '#f2f4f7';
+    if (r.kind === 'core') fill = '#e4e7eb';
+    s += poly([P(r.x1, r.y1, z0), P(r.x2, r.y1, z0), P(r.x2, r.y2, z0), P(r.x1, r.y2, z0)], `fill="${fill}" stroke="#e1e5ea" stroke-width=".6"`);
+  });
+  // collect vertical items for painter's algorithm (far → near: smaller x + y first)
+  const items = [];
+  const wall = (x1, y1, x2, y2, h, shade) => items.push({ d: (x1 + x2) / 2 + (y1 + y2) / 2, svg:
+    poly(quad(x1, y1, x2, y2, z0, z0 + h), `fill="${shade}" stroke="#c3c9d1" stroke-width=".6"`) +
+    `<line x1="${P(x1, y1, z0 + h)[0]}" y1="${P(x1, y1, z0 + h)[1]}" x2="${P(x2, y2, z0 + h)[0]}" y2="${P(x2, y2, z0 + h)[1]}" stroke="#9aa3ad" stroke-width="2.2" stroke-linecap="round"/>` });
+  // back exterior walls (tall), front exterior walls (low cut)
+  wall(0, 0, W, 0, WALL, '#eef0f3');
+  wall(0, 0, 0, D, WALL, '#e2e6ea');
+  f.layout.walls.forEach(([x1, y1, x2, y2]) => wall(x1, y1, x2, y2, WALL * 0.8, x1 === x2 ? '#e7eaee' : '#f4f5f7'));
+  wall(0, D, W, D, LOW, '#dde2e7');
+  wall(W, 0, W, D, LOW, '#d3d9df');
+  // labels for rooms (flat on the floor, drawn with tiles depth)
+  f.layout.rooms.filter(r => r.kind !== 'corridor').forEach(r => {
+    const c = P((r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2, z0);
+    const txt = r.kind === 'core' ? '' : r.id;
+    const st = r.kind === 'apt' ? states[r.id] : null;
+    items.push({ d: (r.x1 + r.x2) / 2 + (r.y1 + r.y2) / 2 - 0.4, svg:
+      `<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}">${txt}</text>` });
+  });
+  // robots
+  const r = f.robot, st = STATE[r.state];
+  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked' }) });
+  if (f.greeter) {
+    const g = f.greeter;
+    items.push({ d: g.at[0] + g.at[1] + 0.1, svg: robotGlyph(g.at[0], g.at[1], z0, '#7c5cff', g.name, { tall: true, pulse: true }) });
+  }
+  // blocked door marker
+  if (f.blockedRoom) {
+    const room = f.layout.rooms.find(x => x.id === f.blockedRoom);
+    const a = P(room.x1 + 1.1, room.y2, z0), b = P(room.x1 + 1.9, room.y2, z0);
+    items.push({ d: room.x1 + 1.5 + room.y2 + 0.05, svg: `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" stroke="#e5484d" stroke-width="5" stroke-linecap="round"/>` });
+  }
+  items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
+  return s;
+}
+
+// Dashed silhouette of the storeys above the cut.
+function ghost(zFrom, zTo) {
+  const st = 'fill="none" stroke="#aeb6c0" stroke-width="1" stroke-dasharray="4 4"';
+  let s = `<g opacity=".7">`;
+  s += poly([P(0, 0, zTo), P(W, 0, zTo), P(W, D, zTo), P(0, D, zTo)], st);
+  [[0, D], [W, D], [W, 0], [0, 0]].forEach(([x, y]) => { const a = P(x, y, zFrom), b = P(x, y, zTo); s += `<line x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}" ${st}/>`; });
+  return s + '</g>';
+}
 
 function renderBuilding() {
   const svg = document.getElementById('iso');
-  let out = '';
-  // ground shadow
-  out += `<polygon points="${pts([P(-1.2,-1.2,0),P(W+1.2,-1.2,0),P(W+1.2,D+1.2,0),P(-1.2,D+1.2,0)])}" fill="#e9f0ea"/>`;
-  // floors from bottom to top
-  [...FLOORS].reverse().forEach((f, i) => {
-    const z0 = i * H, z1 = z0 + H - 4;
-    const r = f.robot;
-    const showMenage = lens !== 'accueil';
-    const fill = r.state === 'blocked' ? 'var(--red)' : 'var(--menage)';
-    const p = showMenage ? r.pct / 100 : 0;
-    const dim = lens === 'accueil' && !f.greeter ? 0.35 : 1;
-    // front face: y = D, x from 0..W
-    const front = [P(0,D,z0), P(W,D,z0), P(W,D,z1), P(0,D,z1)];
-    const prog = [P(0,D,z0), P(W*p,D,z0), P(W*p,D,z1), P(0,D,z1)];
-    // side face: x = W, y from 0..D
-    const side = [P(W,0,z0), P(W,D,z0), P(W,D,z1), P(W,0,z1)];
-    const sideProg = [P(W,D-D*p*0.999,z0), P(W,D,z0), P(W,D,z1), P(W,D-D*p*0.999,z1)];
-    // slab
-    const slab = [P(0,D,z1), P(W,D,z1), P(W,D,z1+4), P(0,D,z1+4)];
-    const slabSide = [P(W,0,z1), P(W,D,z1), P(W,D,z1+4), P(W,0,z1+4)];
-    let windows = '';
-    for (let k = 0; k < 8; k++) {
-      const x = 0.6 + k * 1.45;
-      windows += `<polygon points="${pts([P(x,D,z0+14),P(x+0.9,D,z0+14),P(x+0.9,D,z1-12),P(x,D,z1-12)])}" fill="rgba(255,255,255,.45)" />`;
-    }
-    out += `<g class="floor ${f.id === selected ? 'sel' : ''}" data-id="${f.id}" opacity="${dim}">
-      <polygon class="face front-base" points="${pts(front)}" fill="#f6f7f9"/>
-      <polygon class="face" points="${pts(prog)}" fill="${fill}" opacity=".85"/>
-      ${windows}
-      <polygon class="face" points="${pts(side)}" fill="#dfe3e8"/>
-      ${p > 0.999 ? `<polygon points="${pts(side)}" fill="${fill}" opacity=".55"/>` : ''}
-      <polygon points="${pts(slab)}" fill="#cfd5dc"/><polygon points="${pts(slabSide)}" fill="#bfc6ce"/>
-      <polygon class="outline" points="${pts(front)}" fill="none" stroke="transparent"/>
-      ${lens !== 'accueil' && r.state === 'blocked' ? (() => { const c = P(W*p, D, (z0+z1)/2); return `<circle cx="${c[0]}" cy="${c[1]}" r="9" fill="var(--red)" stroke="#fff" stroke-width="2"/><text x="${c[0]}" y="${c[1]+4}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">!</text>`; })() : ''}
-      ${lens !== 'accueil' && r.state === 'run' ? (() => { const c = P(W*p, D, (z0+z1)/2); return `<circle class="pulse" cx="${c[0]}" cy="${c[1]}" r="7" fill="var(--menage)"/><circle cx="${c[0]}" cy="${c[1]}" r="6" fill="#fff" stroke="var(--menage)" stroke-width="3"/>`; })() : ''}
-    </g>`;
-  });
-  // roof
-  const zt = FLOORS.length * H;
-  out += `<polygon points="${pts([P(0,0,zt),P(W,0,zt),P(W,D,zt),P(0,D,zt)])}" fill="#eceff2" stroke="#d5d9df"/>`;
-  // entrance + greeter robot at ground floor
-  const e = [P(4.6,D,0), P(6.4,D,0), P(6.4,D,30), P(4.6,D,30)];
-  out += `<polygon points="${pts(e)}" fill="#9fb3c8"/>`;
-  if (lens !== 'menage') {
-    const g = P(5.5, D + 1.1, 0);
-    out += `<circle class="pulse" cx="${g[0]}" cy="${g[1]-10}" r="7" fill="var(--accueil)"/>
-      <circle cx="${g[0]}" cy="${g[1]-10}" r="8" fill="var(--accueil)" stroke="#fff" stroke-width="2.5"/>
-      <g transform="translate(${g[0]+14},${g[1]-1})"><rect width="92" height="22" rx="11" fill="#fff" stroke="#e4e6ea"/><circle cx="11" cy="11" r="4" fill="var(--accueil)"/><text x="20" y="15" font-size="11" font-weight="600" fill="#1f2328">Léa · accueil</text></g>`;
+  const top = FLOORS.length * H;
+  let s = poly([P(-1.4, -1.4, 0), P(W + 1.4, -1.4, 0), P(W + 1.4, D + 1.6, 0), P(-1.4, D + 1.6, 0)], 'fill="#e8ece9"');
+  // pavement line in front of the entrance
+  s += poly([P(-1.4, D + 0.5, 0), P(W + 1.4, D + 0.5, 0), P(W + 1.4, D + 1.6, 0), P(-1.4, D + 1.6, 0)], 'fill="#dde2de"');
+  const ordered = [...FLOORS].sort((a, b) => a.id - b.id);
+  if (selected === 'all') {
+    ordered.forEach(f => s += closedFloor(f, f.id * H, { progress: true }));
+    // mansard roof
+    s += poly([P(0, 0, top), P(W, 0, top), P(W, D, top), P(0, D, top)], 'fill="#3a4466"');
+    s += poly([P(0.6, 0.6, top + 10), P(W - 0.6, 0.6, top + 10), P(W - 0.6, D - 0.6, top + 10), P(0.6, D - 0.6, top + 10)], 'fill="#4b5679"');
+    // entrance + greeter in front
+    s += poly(quad(1.4, D, 3.2, D, 0, 34), 'fill="#1d2654"');
+    const g = FLOORS.find(f => f.greeter).greeter;
+    s += robotGlyph(2.3, D + 0.9, 0, '#7c5cff', `${g.name} · accueil`, { tall: true, pulse: true });
+  } else {
+    const sel = FLOORS.find(f => f.id === selected);
+    ordered.filter(f => f.id < selected).forEach(f => s += closedFloor(f, f.id * H, { progress: false }));
+    s += openFloor(sel, sel.id * H);
+    if (sel.id < FLOORS.length - 1) s += ghost(sel.id * H + H, top);
   }
-  svg.innerHTML = out;
+  svg.innerHTML = s;
   svg.querySelectorAll('.floor').forEach(g => g.onclick = () => select(+g.dataset.id));
+
+  const cap = document.getElementById('caption');
+  cap.innerHTML = selected === 'all'
+    ? `<span><i class="sw" style="background:#00a99d"></i>Nettoyé aujourd'hui</span><span><i class="sw" style="background:#e9ecef"></i>Reste à faire</span><span><i class="sw" style="background:#e5484d"></i>Robot bloqué</span><span><i class="sw" style="background:#7c5cff"></i>Robot d'accueil</span>`
+    : Object.entries(ROOM_STATE).map(([, v]) => `<span><i class="sw" style="background:${v.fill};border:1px solid #d5d9df"></i>${v.label}</span>`).join('') + `<span class="muted">· Cliquez sur « Tout le bâtiment » pour revenir</span>`;
 }
 
-// ---------- Floor labels next to the building ----------
-function renderFloorLabels() {
-  document.getElementById('floors').innerHTML = FLOORS.map(f => {
+// =====================================================================
+// Side panels
+// =====================================================================
+function floorPicker() {
+  const allPct = Math.round(FLOORS.reduce((a, f) => a + f.robot.pct * f.area, 0) / FLOORS.reduce((a, f) => a + f.area, 0));
+  const blocked = FLOORS.filter(f => f.robot.state === 'blocked').length;
+  let h = `<div class="ttl">Étages</div>
+    <button class="fl all ${selected === 'all' ? 'sel' : ''}" data-id="all">
+      <span class="lv"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="1"/></svg></span>
+      <div><div class="nm">Tout le bâtiment</div><div class="sub">${allPct} % nettoyé · 7 robots</div></div>
+      ${blocked ? `<span class="chip err">${blocked}</span>` : ''}
+    </button>`;
+  FLOORS.forEach(f => {
     const r = f.robot, st = STATE[r.state];
-    const g = f.greeter ? `<span class="chip acc">Léa · ${f.greeter.visitors} visiteurs</span>` : '';
-    return `<div class="flabel ${f.id === selected ? 'sel' : ''}" data-id="${f.id}">
+    h += `<button class="fl ${selected === f.id ? 'sel' : ''}" data-id="${f.id}">
       <span class="lv">${f.label}</span>
-      <div><div class="nm">${f.name}</div><div class="sub">${r.name} · ${r.pct} % nettoyé</div></div>
-      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="chip ${st.chip}">${st.label}</span>${g}</div>
-    </div>`;
-  }).join('');
-  document.querySelectorAll('.flabel').forEach(el => el.onclick = () => select(+el.dataset.id));
+      <div><div class="nm">${f.name}</div>
+        <div class="sub">${r.name}${f.greeter ? ' · ' + f.greeter.name : ''}</div>
+        <div class="mini"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? '#e5484d' : '#00a99d'}"></i></div></div>
+      <span class="chip ${st.chip}">${st.label}</span>
+    </button>`;
+  });
+  const el = document.getElementById('floors');
+  el.innerHTML = h;
+  el.querySelectorAll('.fl').forEach(b => b.onclick = () => select(b.dataset.id === 'all' ? 'all' : +b.dataset.id));
 }
 
-// ---------- Table ----------
+const scope = () => selected === 'all' ? FLOORS : FLOORS.filter(f => f.id === selected);
+const floorName = f => f.id === 0 ? 'au rez-de-chaussée' : `au ${f.id}<sup>e</sup> étage`;
+
+function renderHero() {
+  const fs = scope();
+  const blocked = fs.filter(f => f.robot.state === 'blocked');
+  const robots = fs.length + fs.filter(f => f.greeter).length;
+  document.getElementById('title').innerHTML = selected === 'all' ? 'Bonjour Claire' : `${fs[0].label} · ${fs[0].name}`;
+  if (selected !== 'all') {
+    const f = fs[0], r = f.robot, st = STATE[r.state];
+    const who = f.greeter ? ` · ${f.greeter.name} est à la réception (${f.greeter.visitors} clients accueillis)` : '';
+    document.getElementById('status').innerHTML = `<span class="dot" style="background:${st.color}"></span><span><b>${r.name}</b> : ${st.label.toLowerCase()} · ${r.pct} % de l'étage nettoyé · <span class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</span>${who}</span>`;
+    return;
+  }
+  document.getElementById('status').innerHTML = blocked.length
+    ? `<span class="dot" style="background:var(--amber)"></span><span><b>${robots - blocked.length} robot${robots - blocked.length > 1 ? 's' : ''} sur ${robots}</b> travaille${robots - blocked.length > 1 ? 'nt' : ''} normalement · <b class="down">${blocked.length} demande votre attention</b></span>`
+    : `<span class="dot" style="background:var(--green)"></span><span>Tout fonctionne normalement${selected === 'all' ? '' : ' sur cet étage'}.</span>`;
+}
+
+function renderTodo() {
+  const blocked = scope().filter(f => f.robot.state === 'blocked');
+  document.getElementById('todo-count').textContent = blocked.length ? `${blocked.length} action` : '';
+  document.getElementById('todo').innerHTML = blocked.map(f => `
+    <div class="todo">
+      <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 8v5M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></div>
+      <div>
+        <b>${f.robot.name} est bloqué ${floorName(f)}</b>
+        <p>Le client de l'appartement ${f.blockedRoom} n'est pas encore parti (départ prévu 11 h). Le robot attend depuis 18 min devant la porte.</p>
+        <div class="acts">
+          <button class="btn sm primary">Appeler la réception</button>
+          ${selected === 'all' ? `<button class="btn sm" onclick="select(${f.id})">Voir l'étage</button>` : ''}
+          <button class="btn sm">Passer au suivant</button>
+        </div>
+      </div>
+    </div>`).join('') +
+    `<div class="allgood"><span class="dot" style="background:var(--green)"></span>${blocked.length ? "Rien d'autre à signaler." : 'Rien à signaler.'} ${selected === 'all' ? 'Léa est à la réception, les autres robots suivent leur planning.' : ''}</div>`;
+}
+
+function renderKpis() {
+  const el = document.getElementById('kpis');
+  if (selected === 'all') {
+    const apts = FLOORS.filter(f => f.id > 0).flatMap(f => Object.values(roomStates(f)));
+    const ready = apts.filter(s => s === 'clean').length;
+    const m2 = Math.round(FLOORS.reduce((a, f) => a + f.area * f.robot.pct / 100, 0));
+    const area = FLOORS.reduce((a, f) => a + f.area, 0);
+    document.getElementById('kpi-title').textContent = "Aujourd'hui";
+    el.innerHTML = `
+      <div><small>Appartements prêts</small><b>${ready}</b> <span class="muted">/ ${apts.length}</span></div>
+      <div><small>Clients accueillis par Léa</small><b>23</b> <span class="up">+4 vs hier</span></div>
+      <div><small>Surface nettoyée</small><b>${m2.toLocaleString('fr-FR')} m²</b> <span class="muted">/ ${area.toLocaleString('fr-FR')}</span></div>
+      <div><small>Robots disponibles</small><b>6/7</b> <span class="muted">1 bloqué</span></div>`;
+  } else {
+    const f = FLOORS.find(x => x.id === selected), r = f.robot;
+    const st = Object.values(roomStates(f));
+    document.getElementById('kpi-title').textContent = `Aujourd'hui · ${f.label}`;
+    el.innerHTML = `
+      <div><small>${f.id === 0 ? 'Espaces prêts' : 'Appartements prêts'}</small><b>${st.filter(s => s === 'clean').length}</b> <span class="muted">/ ${st.length}</span></div>
+      <div><small>Nettoyé</small><b>${r.pct} %</b> <span class="muted">${Math.round(f.area * r.pct / 100)} / ${f.area} m²</span></div>
+      <div><small>Batterie de ${r.name}</small><b>${r.bat} %</b> <span class="${r.bat < 25 ? 'down' : 'muted'}">${r.bat < 25 ? 'faible' : 'ok'}</span></div>
+      <div><small>Prochaine étape</small><b style="font-size:13px;line-height:1.5;display:block">${r.next}</b></div>`;
+  }
+}
+
+function renderRooms() {
+  const card = document.getElementById('rooms-card');
+  if (selected === 'all') { card.style.display = 'none'; return; }
+  card.style.display = '';
+  const f = FLOORS.find(x => x.id === selected);
+  const states = roomStates(f);
+  const list = f.layout.rooms.filter(r => r.kind === 'apt');
+  card.querySelector('h3').textContent = f.id === 0 ? 'Espaces du rez-de-chaussée' : "Appartements de l'étage";
+  document.getElementById('rooms-count').textContent = `${list.filter(r => states[r.id] === 'clean').length}/${list.length} prêts`;
+  document.getElementById('rooms').innerHTML = list.map(r => {
+    const s = ROOM_STATE[states[r.id]];
+    return `<div class="room"><span class="sw" style="background:${s.fill};border:1px solid #d5d9df"></span><span class="n">${f.id === 0 ? r.id : 'Appartement ' + r.id}</span><span class="s chip ${s.chip}">${s.label}</span></div>`;
+  }).join('');
+}
+
 const ICON_MENAGE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M9 13h6"/></svg>';
 const ICON_ACCUEIL = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="6" y="8" width="12" height="11" rx="3"/><path d="M12 4v4M10 13h.01M14 13h.01"/></svg>';
-function batColor(b) { return b < 25 ? 'var(--red)' : b < 50 ? 'var(--amber)' : 'var(--green)'; }
+const batColor = b => b < 25 ? 'var(--red)' : b < 50 ? 'var(--amber)' : 'var(--green)';
+
 function renderRows() {
   const rows = [];
-  const g = FLOORS.find(f => f.greeter);
-  rows.push(`<tr data-id="0"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><b>Léa</b><small>Accueil</small></div></div></td>
-    <td>RDC</td><td><span class="chip acc">En service</span></td>
-    <td><span class="muted">${g.greeter.visitors} visiteurs accueillis</span></td>
-    <td><span class="bat"><span class="dot" style="background:var(--green)"></span>Sur secteur</span></td>
-    <td class="muted">${g.greeter.next}</td></tr>`);
-  [...FLOORS].reverse().forEach(f => {
+  [...scope()].sort((a, b) => a.id - b.id).forEach(f => {
+    if (f.greeter) rows.push(`<tr data-id="${f.id}"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><b>${f.greeter.name}</b><small>Accueil</small></div></div></td>
+      <td>${f.label} <span class="muted">· Réception</span></td><td><span class="chip acc">En service</span></td>
+      <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
+      <td><span class="bat"><span class="dot" style="background:var(--green)"></span>Sur secteur</span></td>
+      <td class="muted">${f.greeter.next}</td></tr>`);
     const r = f.robot, st = STATE[r.state];
-    rows.push(`<tr data-id="${f.id}" class="${f.id === selected ? 'sel' : ''}">
+    rows.push(`<tr data-id="${f.id}">
       <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span><div><b>${r.name}</b><small>Ménage</small></div></div></td>
       <td>${f.label} <span class="muted">· ${f.name}</span></td>
       <td><span class="chip ${st.chip}">${st.label}</span></td>
@@ -385,83 +586,13 @@ function renderRows() {
       <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td></tr>`);
   });
   document.getElementById('rows').innerHTML = rows.join('');
+  document.getElementById('robots-count').textContent = selected === 'all' ? '7 robots · 1 par étage + accueil' : `${rows.length} robot${rows.length > 1 ? 's' : ''} sur cet étage`;
   document.querySelectorAll('#rows tr').forEach(tr => tr.onclick = () => select(+tr.dataset.id));
 }
 
-// ---------- Status line + to-do ----------
-function renderStatus() {
-  const blocked = FLOORS.filter(f => f.robot.state === 'blocked');
-  const total = FLOORS.length + 1;
-  const okCount = total - blocked.length;
-  document.getElementById('status').innerHTML = blocked.length
-    ? `<span class="dot" style="background:var(--amber)"></span><span><b>${okCount} robots sur ${total}</b> travaillent normalement · <b class="down">${blocked.length} demande votre attention</b></span>`
-    : `<span class="dot" style="background:var(--green)"></span><span>Tout fonctionne normalement.</span>`;
-  document.getElementById('todo-count').textContent = blocked.length ? `${blocked.length} action` : '';
-  document.getElementById('todo').innerHTML = blocked.map(f => `
-    <div class="todo">
-      <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 8v5M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></div>
-      <div>
-        <b>${f.robot.name} est bloqué au ${f.label === 'RDC' ? 'rez-de-chaussée' : f.label.replace('É', '') + '<sup>e</sup> étage'}</b>
-        <p>La porte de la salle 312 est fermée. Le robot attend depuis 18 min ; il reste 59 % de l'étage à nettoyer.</p>
-        <div class="acts"><button class="btn sm primary">Prévenir l'agent d'étage</button><button class="btn sm" onclick="select(${f.id})">Voir sur le plan</button><button class="btn sm">Ignorer la salle</button></div>
-      </div>
-    </div>`).join('') + `<div class="allgood"><span class="dot" style="background:var(--green)"></span>Rien d'autre à signaler. Léa est à l'accueil, les 5 autres robots suivent leur planning.</div>`;
-}
-
-// ---------- 2D floor plan with cleaning coverage (InnerSpace heatmap → cleaning coverage) ----------
-function renderPlan() {
-  const f = FLOORS.find(x => x.id === selected);
-  const r = f.robot, st = STATE[r.state];
-  // rooms in cleaning route order: [x, y, w, h, label]
-  const rooms = [
-    [10, 10, 70, 60, '301'], [80, 10, 70, 60, '302'], [150, 10, 70, 60, '303'], [220, 10, 90, 60, '304'],
-    [10, 110, 90, 70, '310'], [100, 110, 70, 70, '311'], [170, 110, 70, 70, '312'], [240, 110, 70, 70, '313'],
-  ].map(rm => [...rm.slice(0, 4), f.label === 'RDC' ? rm[4].replace('3', '0') : rm[4].replace('3', String(f.id))]);
-  const corridor = [10, 70, 300, 40];
-  const order = [0, 1, 2, 3, 7, 6, 5, 4];
-  const doneCount = Math.round(r.pct / 100 * (rooms.length + 1));
-  let svg = `<svg viewBox="0 0 320 190"><rect width="320" height="190" fill="#fbfbfc"/>`;
-  // corridor cleaned first
-  svg += `<rect x="${corridor[0]}" y="${corridor[1]}" width="${corridor[2]}" height="${corridor[3]}" fill="${doneCount > 0 ? 'var(--menage-soft)' : '#f2f4f7'}"/>`;
-  order.forEach((ri, k) => {
-    const [x, y, w, h, n] = rooms[ri];
-    const isBlocked = r.state === 'blocked' && n.endsWith('12');
-    const clean = k + 1 < doneCount;
-    const fill = isBlocked ? 'var(--red-soft)' : clean ? 'var(--menage-soft)' : '#ffffff';
-    svg += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="#d5d9df" stroke-width="2"/>
-      <text x="${x + 6}" y="${y + 14}" font-size="9" fill="#7d8590">${n}</text>`;
-    if (isBlocked) svg += `<line x1="${x + w/2 - 10}" y1="${y}" x2="${x + w/2 + 10}" y2="${y}" stroke="var(--red)" stroke-width="4"/>`;
-  });
-  // robot position
-  let pos = [40, 90];
-  if (r.state === 'blocked') pos = [205, 98];
-  else if (r.state === 'run') pos = [265, 90];
-  else if (r.state === 'charge') pos = [295, 98];
-  else if (r.state === 'done' || r.state === 'idle') pos = [20, 98];
-  svg += `<rect x="12" y="92" width="14" height="14" rx="3" fill="#e4e6ea"/><text x="30" y="103" font-size="8" fill="#7d8590">base</text>`;
-  if (r.state === 'run') svg += `<circle class="pulse" cx="${pos[0]}" cy="${pos[1]}" r="7" fill="var(--menage)"/>`;
-  svg += `<circle cx="${pos[0]}" cy="${pos[1]}" r="7" fill="${st.color}" stroke="#fff" stroke-width="2.5"/>`;
-  if (f.greeter) svg += `<circle cx="160" cy="180" r="7" fill="var(--accueil)" stroke="#fff" stroke-width="2.5"/><text x="172" y="183" font-size="9" font-weight="600" fill="#5b3fd6">Léa</text>`;
-  svg += `</svg>`;
-  const remaining = Math.round(f.area * (1 - r.pct / 100));
-  document.getElementById('plan').innerHTML = `
-    <div class="plan-h"><span class="t">${f.label} · ${f.name}</span><span class="chip ${st.chip}">${st.label}</span></div>
-    ${svg}
-    <div class="facts">
-      <div class="fact"><small>Nettoyé</small><b>${r.pct} %</b></div>
-      <div class="fact"><small>Reste</small><b>${remaining} m²</b></div>
-      <div class="fact"><small>Robot</small><b>${r.name}</b></div>
-      <div class="fact"><small>Prochaine étape</small><b style="font-size:12px">${r.next}</b></div>
-    </div>`;
-}
-
 function select(id) { selected = id; renderAll(); }
-function renderAll() { renderBuilding(); renderFloorLabels(); renderRows(); renderStatus(); renderPlan(); }
+function renderAll() { floorPicker(); renderBuilding(); renderHero(); renderTodo(); renderKpis(); renderRooms(); renderRows(); }
 
-document.querySelectorAll('#lens button').forEach(b => b.onclick = () => {
-  document.querySelectorAll('#lens button').forEach(x => x.classList.remove('on'));
-  b.classList.add('on'); lens = b.dataset.lens; renderBuilding();
-});
 const tick = () => document.getElementById('clock').textContent =
   new Date().toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
 tick(); setInterval(tick, 30000);
