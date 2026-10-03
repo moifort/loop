@@ -271,10 +271,10 @@
   .pos-actions .btn.on { background: var(--blue-soft); border-color: #b3d1ff; color: var(--blue); }
   .pos-actions .btn:disabled { opacity: .5; cursor: default; }
 
-  /* ---------- Floating panic button ---------- */
-  .panic-fab { position: fixed; top: 72px; right: 24px; z-index: 50; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px 0 13px; border-radius: 999px; background: var(--red); color: #fff; font-weight: 600; box-shadow: 0 6px 16px rgba(229,72,77,.35), 0 1px 3px rgba(16,24,40,.12); transition: transform .12s, background .12s; }
-  .panic-fab:hover { background: #d23b40; transform: translateY(-1px); }
-  .panic-fab:active { transform: translateY(0) scale(.98); }
+  /* ---------- Panic button (top bar) ---------- */
+  .top .panic-fab { margin-left: 14px; display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 14px 0 11px; border-radius: 999px; background: var(--red); color: #fff; font-weight: 600; box-shadow: 0 2px 6px rgba(229,72,77,.3); transition: background .12s; }
+  .top .panic-fab:hover { background: #d23b40; }
+  .top .panic-fab:active { transform: scale(.98); }
   .panic-fab.alarm { animation: fab-alarm 1.2s ease-out infinite; }
   @keyframes fab-alarm { 0% { box-shadow: 0 0 0 0 rgba(229,72,77,.55), 0 6px 16px rgba(229,72,77,.35); } 100% { box-shadow: 0 0 0 16px rgba(229,72,77,0), 0 6px 16px rgba(229,72,77,.35); } }
   @media (prefers-reduced-motion: reduce) { .panic-fab.alarm { animation: none; } }
@@ -372,13 +372,12 @@
   </button>
   <span class="sep" data-crumb hidden>/</span><span data-crumb hidden>Accueil</span>
   <span class="right" id="clock"></span>
+  <!-- Always-available panic button, in the top bar on every view -->
+  <button class="panic-fab" id="panic-fab" title="Déclencher le bouton panique">
+    <i data-icon="siren" data-size="18"></i>
+    <span id="panic-fab-label">Panique</span>
+  </button>
 </header>
-
-<!-- Always-available panic button, fixed on the right edge on every view -->
-<button class="panic-fab" id="panic-fab" title="Déclencher le bouton panique">
-  <i data-icon="siren" data-size="18"></i>
-  <span id="panic-fab-label">Panique</span>
-</button>
 
 <main>
 <div class="wrap" id="view-building">
