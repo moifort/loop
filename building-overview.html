@@ -347,7 +347,7 @@ const alertsOf = id => openTodos().filter(t => t.floor === id);
 // =====================================================================
 // Isometric renderer — Haussmann facade
 // =====================================================================
-const S = 30, H = 54, OX = 200, OY = 355;
+const S = 30, H = 54, OX = 240, OY = 355;
 const P = (x, y, z) => [OX + (x - y) * 0.866 * S, OY + (x + y) * 0.5 * S - z];
 const pts = a => a.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
 const poly = (a, attrs) => `<polygon points="${pts(a)}" ${attrs}/>`;
@@ -524,7 +524,7 @@ function ghost(zFrom, zTo) {
 function renderBuilding() {
   const svg = document.getElementById('iso');
   const top = FLOORS.length * H;
-  let s = poly([P(-1.4, -1.4, 0), P(W + 1.4, -1.4, 0), P(W + 1.4, D + 1.8, 0), P(-1.4, D + 1.8, 0)], 'fill="#e6e8e4"');
+  let s = poly([P(-1.4, -0.5, 0), P(W + 0.5, -0.5, 0), P(W + 0.5, D + 1.8, 0), P(-1.4, D + 1.8, 0)], 'fill="#e6e8e4"');
   s += poly([P(-1.4, D + 0.6, 0), P(W + 1.4, D + 0.6, 0), P(W + 1.4, D + 1.8, 0), P(-1.4, D + 1.8, 0)], 'fill="#d9dcd6"');
   // street lamp, as in the brand illustration
   const lb = P(0.2, D + 1.2, 0), lt = P(0.2, D + 1.2, 58);
