@@ -78,7 +78,8 @@
   .floors { display: flex; flex-direction: column; gap: 4px; }
   .fl { display: block; width: 100%; padding: 10px 12px; border-radius: 12px; border: 1px solid transparent; }
   .fl:hover { background: var(--panel); border-color: var(--border); }
-  .fl.sel { background: var(--panel); border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft); }
+  /* Selected reads as pressed in: sunken tint + inner shadow instead of a focus ring */
+  .fl.sel { background: #eceef1; border-color: #d6dade; box-shadow: inset 0 2px 4px rgba(31,35,40,.12), inset 0 1px 1px rgba(31,35,40,.08); }
   .fl .r1 { display: grid; grid-template-columns: 38px 1fr auto; gap: 4px; align-items: center; }
   /* Level reads as the same dark badge as the [É3 | 307] tags */
   .fl .lv { justify-self: start; display: inline-flex; align-items: center; height: 20px; padding: 0 6px; border-radius: 3px; background: #3a4150; color: #fff; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; }
@@ -96,7 +97,7 @@
 
   /* First item of the floor list, stretched to full width above the building */
   #all-row { margin-bottom: 8px; }
-  #all-row .fl:not(.sel) { background: var(--panel); border-color: var(--border); }
+  #all-row .fl:not(.sel) { background: var(--panel); border-color: var(--border); box-shadow: 0 1px 2px rgba(31,35,40,.06); }
   /* Floors live in one card so each row is anchored, separated by hairlines */
   #floors { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 4px; gap: 0; }
   #floors .fl { position: relative; border-radius: 9px; }
