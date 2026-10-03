@@ -263,8 +263,8 @@
   /* Same battery glyph as the robots table, right of the name */
   .temi-name { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-height: 20px; }
   .temi-name b { white-space: nowrap; }
-  /* Robot-type tile left of the name on the Temi and Kilo cards */
-  .nm-ic { width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center; flex: none; }
+  /* Robot-type icon left of the name on the Temi and Kilo cards, in the robot's colour, no tile */
+  .nm-ic { display: grid; place-items: center; flex: none; }
   .temi-info-sub { display: block; margin-top: 2px; }
   .temi-name .batt { line-height: 0; }
   .temi small { color: var(--muted); font-size: 12px; }
@@ -1578,7 +1578,7 @@ const ICON_ACCUEIL = icon('bot', 15, { color: '#fff' });
 const TILE_MENAGE = icon('brush-cleaning', 20, { color: '#fff' });
 const TILE_ACCUEIL = icon('bot', 20, { color: '#fff' });
 const TILE_BAGAGES = icon('luggage', 20, { color: '#fff' });
-const nameTile = (bg, ic) => `<span class="nm-ic" style="background:${bg}">${icon(ic, 13, { color: '#fff', sw: 2.2 })}</span>`;
+const nameTile = (color, ic) => `<span class="nm-ic" style="color:${color}">${icon(ic, 17, { sw: 2 })}</span>`;
 // Temi with a branded shell: Quartier Libre gold band on the base.
 const TEMI_SVG = `<svg width="66" height="122" viewBox="0 0 80 150">
   <ellipse cx="40" cy="144" rx="27" ry="4" fill="rgba(31,35,40,.12)"/>
