@@ -54,7 +54,7 @@
   /* Stage: floor picker | flat building | context */
   /* Floor list: 140–320px; building: fixed 560px, pinned to the right */
   .stage { display: grid; grid-template-columns: minmax(140px, 320px) minmax(560px, 1fr); gap: 20px; align-items: start; }
-  .stage .bld { justify-self: end; }
+  .stage .bld { justify-self: center; }
   .stage > .floors { container-type: inline-size; min-width: 0; }
   @container (max-width: 230px) {
     .fl .r1 { grid-template-columns: auto 1fr; gap: 6px; }
