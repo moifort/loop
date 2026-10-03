@@ -130,6 +130,7 @@
   .issues { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
   .issue { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .issue:hover { text-decoration: underline; }
+  .issue.alarm-issue .txt { color: #b42318; font-weight: 600; }
   /* Floor + room(s) read as one two-tone badge: [É3 | 307] */
   /* Split badge (shields.io anatomy): 20px, 3px radius, 11px text, 6px side padding, dark label + light value */
   .tags { display: inline-flex; flex: none; height: 20px; border-radius: 3px; overflow: hidden; vertical-align: middle; box-shadow: inset 0 0 0 1px rgba(31,35,40,.08); }
@@ -267,6 +268,22 @@
 
   @keyframes pulse { 0% { r: 6; opacity: .55; } 100% { r: 18; opacity: 0; } }
   .pulse { animation: pulse 1.6s ease-out infinite; }
+
+  /* ---------- Alarm mode: the whole UI signals the problem ---------- */
+  body.alarm .top { background: #fdecec; border-bottom-color: #f5c2c3; }
+  /* Red halo in the foreground over the whole page: strong at the edges, fading towards the centre, pulsing.
+     Clicks go through it. */
+  body.alarm::after { content: ''; position: fixed; inset: 0; z-index: 100; pointer-events: none;
+    box-shadow: inset 0 0 90px 10px rgba(229,72,77,.5), inset 0 0 240px 40px rgba(229,72,77,.2);
+    animation: alarm-halo 1.4s ease-in-out infinite; }
+  @keyframes alarm-halo { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  body.alarm #temi-card { border-color: #f1a7a9; background: #fff7f7; box-shadow: 0 0 0 3px var(--red-soft); }
+  body.alarm #temi-card .card-h h3 { color: #b42318; }
+  .robot-alarm { animation: robot-blink 1s ease-in-out infinite; }
+  @keyframes robot-blink { 50% { opacity: .4; } }
+  .alarm-ring { fill: none; stroke: #e5484d; stroke-width: 3; animation: alarm-ring 1s ease-out infinite; }
+  @keyframes alarm-ring { 0% { r: 8; opacity: .9; } 100% { r: 34; opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { body.alarm::after { animation: none; opacity: .8; } .robot-alarm, .alarm-ring { animation: none; } }
 
   /* ---------- Reception robot position ---------- */
   .pos-map { padding: 2px 16px 0; }
@@ -711,6 +728,11 @@ function stoneFloor(f, z0, opts) {
     const c = P(W * p, D, (z0 + z1) / 2);
     s += `<circle class="pulse" cx="${c[0]}" cy="${c[1]}" r="6" fill="#00a99d"/><circle cx="${c[0]}" cy="${c[1]}" r="6" fill="#fff" stroke="#00a99d" stroke-width="3"/>`;
   }
+  // Panic alarm: the greeter shows on the facade as a pulsing red marker (whole-building view), linking to the reception view
+  if (opts.progress && f.greeter && ACC.panicAt) {
+    const c = P(f.greeter.at[0], D, (z0 + z1) / 2 + 4);
+    s += `<g class="map-link" data-view="accueil" role="link" tabindex="0"><title>Alerte panique · ouvrir la vue Accueil</title><circle class="pulse" cx="${c[0]}" cy="${c[1]}" r="9" fill="#e5484d"/><circle cx="${c[0]}" cy="${c[1]}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${c[0]}" y="${c[1] + 4.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>`;
+  }
   return s + '</g>';
 }
 
@@ -745,6 +767,12 @@ function mansardFloor(f, z0, opts) {
 }
 
 function closedFloor(f, z0, opts) { return f.id === 5 ? mansardFloor(f, z0, opts) : stoneFloor(f, z0, opts); }
+
+// Panic alarm: the robot blinks red and sends out a widening red ring. The map re-renders often, so the
+// phase follows the clock to keep the pulse smooth across redraws.
+const alarmPhase = () => `animation-delay:-${Math.round(performance.now() % 1000)}ms`;
+const alarmRobot = ([cx, cy], glyph) =>
+  `<circle class="alarm-ring" cx="${cx}" cy="${cy}" style="${alarmPhase()}"/><g class="robot-alarm" style="${alarmPhase()}">${glyph}</g>`;
 
 function robotGlyph(x, y, z, color, label, opts = {}) {
   const [cx, cy] = P(x, y, z);
@@ -818,7 +846,10 @@ function openFloor(f, z0) {
   });
   const r = f.robot, st = STATE[r.state];
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', overlay: robotTags }) });
-  if (f.greeter) items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, '#7c5cff', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, link: 'accueil' }) });
+  if (f.greeter) {
+    const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#7c5cff', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, alert: !!ACC.panicAt, link: 'accueil' });
+    items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: ACC.panicAt ? alarmRobot(P(f.greeter.at[0], f.greeter.at[1], z0), glyph) : glyph });
+  }
   items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
   s += roomLabels.join('') + robotTags.join('');
   return s;
@@ -887,16 +918,19 @@ function floorPicker() {
     <div class="fl all ${selected === 'all' ? 'sel' : ''}" data-id="all" role="button" tabindex="0">
       <div class="r1">
         <span class="nm">Tout le bâtiment</span>
-        ${issues.length ? `<span class="chip ${blocked ? 'err' : 'warn'}">${issues.length} problème${issues.length > 1 ? 's' : ''}</span>` : '<span class="chip ok">Tout va bien</span>'}</div>
+        ${ACC.panicAt ? '<span class="chip err">Alerte panique</span>'
+          : issues.length ? `<span class="chip ${blocked ? 'err' : 'warn'}">${issues.length} problème${issues.length > 1 ? 's' : ''}</span>` : '<span class="chip ok">Tout va bien</span>'}</div>
       <div class="r2">
         ${metric('Ménage', clean, '#00a99d')}
       </div>
-      ${issues.length ? `<div class="issues">${issues.map(t => `
+      ${issues.length || ACC.panicAt ? `<div class="issues">${ACC.panicAt ? `
+        <span class="issue alarm-issue" data-view="accueil">${BELL('#e5484d')}<span class="txt">TEMI-4F2A alerte panique</span>${placeTag('RDC', greeterRoom())}</span>` : ''}${issues.map(t => `
         <span class="issue" data-go="${t.floor}">${BELL(PRIO[t.prio])}<span class="txt">${t.short}</span>${tagsFor(t)}</span>`).join('')}</div>` : ''}
     </div>`;
   const all = document.querySelector('#all-row .fl');
   all.onclick = () => select('all');
   document.querySelectorAll('#all-row .issue[data-go]').forEach(i => i.onclick = e => { e.stopPropagation(); select(+i.dataset.go); });
+  document.querySelectorAll('#all-row .issue[data-view]').forEach(i => i.onclick = e => { e.stopPropagation(); showView(i.dataset.view); });
 
   let h = '';
   FLOORS.forEach(f => {
@@ -904,7 +938,7 @@ function floorPicker() {
     h += `<button class="fl ${selected === f.id ? 'sel' : ''}" data-id="${f.id}">
       <div class="r1"><span class="lv">${f.label}</span>
         <span class="nm">${f.name}${f.hint ? `<small>${f.hint}</small>` : ''}</span>
-        <span class="chip ${st.chip}">${st.label}</span></div>
+        ${f.greeter && ACC.panicAt ? '<span class="chip err">Alerte</span>' : `<span class="chip ${st.chip}">${st.label}</span>`}</div>
       <div class="r2"><span></span>
         ${metric('Ménage', r.pct, r.state === 'blocked' ? '#e5484d' : '#00a99d')}
         ${alertMetric(alertsOf(f.id))}
@@ -1105,6 +1139,7 @@ panicFab.onclick = () => { if (!ACC.panicAt) runAccAction('panic', 'le tableau d
 setInterval(() => {
   const on = !!ACC.panicAt;
   panicFab.classList.toggle('alarm', on);
+  document.body.classList.toggle('alarm', on);
   document.getElementById('panic-fab-label').textContent = on ? `Alerte en cours · ${dur(Date.now() - ACC.panicAt)}` : 'Panique';
   panicFab.title = on ? 'Voir l\'alerte en cours' : 'Déclencher le bouton panique';
 }, 500);
@@ -1413,7 +1448,10 @@ function renderPosMap() {
       ? `<g class="spot" data-go="${p.id}"><title>${p.where}</title><rect x="${x - 9}" y="${y - 9}" width="18" height="18" rx="5" fill="#e7f6ee" stroke="#9fd8b9"/><g transform="translate(${x - 6},${y - 6}) scale(.5)" fill="none" stroke="#22a861" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['zap']}</g></g>`
       : `<g class="spot" data-go="${p.id}"><title>${p.where}</title><circle cx="${x}" cy="${y}" r="5" fill="#e6f0ff" stroke="#b3d1ff"/></g>`;
   });
-  s += `<g id="pos-robot"><circle class="pulse" r="6" fill="#7c5cff"/><circle r="7" fill="#7c5cff" stroke="#fff" stroke-width="2.5"/></g>`;
+  const rc = ACC.panicAt ? '#e5484d' : '#7c5cff';
+  s += ACC.panicAt
+    ? `<g id="pos-robot"><circle class="alarm-ring" style="${alarmPhase()}"/><circle class="robot-alarm" r="7" fill="${rc}" stroke="#fff" stroke-width="2.5" style="${alarmPhase()}"/></g>`
+    : `<g id="pos-robot"><circle class="pulse" r="6" fill="${rc}"/><circle r="7" fill="${rc}" stroke="#fff" stroke-width="2.5"/></g>`;
   const svg = document.getElementById('acc-pos-map');
   svg.innerHTML = s;
   placePosRobot();
@@ -1489,6 +1527,9 @@ function runAccAction(act, source = 'le comptoir') {
     if (l) l.a = `Alerte levée après ${dur(Date.now() - ACC.panicAt)}. Hery reste en visio.`;
     ACC.panicAt = null;
   }
+  // Alarm on/off repaints everything that shows it right away (map robot, body frame, cards)
+  document.body.classList.toggle('alarm', !!ACC.panicAt);
+  renderAll();
   if (!document.getElementById('view-accueil').hidden) renderAccueil();
   else renderTemiCard();
 }
