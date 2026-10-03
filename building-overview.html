@@ -2309,8 +2309,10 @@ function showView(v) {
   if (v !== 'accueil') document.getElementById('acc-banner').hidden = true;
   if (v !== 'menage') document.getElementById('men-banner').hidden = true;
   if (v !== 'robot') document.getElementById('rf-banner').hidden = true;
-  document.querySelectorAll('[data-crumb2]').forEach(c => c.hidden = v !== 'robot' && v !== 'kilo');
-  document.getElementById('crumb-sub').textContent = v === 'robot' ? sheetRobot : v === 'kilo' ? FLOORS.find(f => f.porter).porter.name : '';
+  // Robot sheets show the robot's name after the section: Ménage / CLN-…, Accueil / TEMI-…, Bagages / KILO-…
+  const sub = v === 'robot' ? sheetRobot : v === 'kilo' ? FLOORS.find(f => f.porter).porter.name : v === 'accueil' ? greeterOf().name : '';
+  document.querySelectorAll('[data-crumb2]').forEach(c => c.hidden = !sub);
+  document.getElementById('crumb-sub').textContent = sub;
   history.replaceState(null, '', v === 'building' ? location.pathname : '#' + v + (v === 'robot' ? '/' + sheetRobot : ''));
   document.querySelector('main').scrollTop = 0;
   if (v === 'accueil') renderAccueil(); else renderAll();
