@@ -1188,15 +1188,14 @@ function cartBody(x, y, z, color, loaded) {
   return s + post(y2 - .04);
 }
 
-// Faceted green diamond, tip at (x, y): four lit facets and a dark outline. Bob phase follows the clock across redraws.
-function plumbob(x, y) {
-  const t = [x, y - 24], l = [x - 7, y - 12], r = [x + 7, y - 12], b = [x, y], m = [x, y - 12];
-  const f = (a, c, fill) => `<polygon points="${[a, c, m].map(q => q.join(',')).join(' ')}" fill="${fill}"/>`;
+// Minimal plumbob, tip at (x, y): flat diamond in the robot's colour, lit left facet and shaded right one,
+// like the building's faces. Bob phase follows the clock across redraws.
+function plumbob(x, y, color) {
+  const t = `${x},${y - 18}`, m = (dy) => `${x},${y - dy}`;
   return `<g class="plumbob" style="animation-delay:-${Math.round(performance.now() % 1600)}ms">
-    <ellipse cx="${x}" cy="${y + 4}" rx="5" ry="1.6" fill="rgba(0,0,0,.18)"/>
-    ${f(t, l, '#9cf58f')}${f(t, r, '#5ad64e')}${f(l, b, '#3cba34')}${f(r, b, '#23952a')}
-    <polygon points="${[t, r, b, l].map(q => q.join(',')).join(' ')}" fill="none" stroke="#17702a" stroke-width="1" stroke-linejoin="round"/>
-    <path d="M${x - 3},${y - 17} L${x},${y - 21}" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".8"/></g>`;
+    <ellipse cx="${x}" cy="${y + 4}" rx="4" ry="1.3" fill="rgba(0,0,0,.12)"/>
+    <polygon points="${t} ${x - 5.5},${y - 9} ${m(0)}" fill="color-mix(in srgb, ${color} 70%, #fff)"/>
+    <polygon points="${t} ${x + 5.5},${y - 9} ${m(0)}" fill="${color}"/></g>`;
 }
 
 function robotGlyph(x, y, z, color, label, opts = {}) {
@@ -1223,13 +1222,14 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   // The robot picked in the robots table goes to the top layer, so no other label covers it.
   const layer = opts.focus && opts.top ? opts.top : opts.overlay;
   if (layer) layer.push(tag); else s += tag;
-  // Pointed out from the robots table: a green plumbob bobbing above its label, as in The Sims.
+  // Pointed out from the robots table: a small plumbob bobbing above its label, as in The Sims.
   if (opts.focus) {
-    const pb = plumbob(cx, cy - h - (opts.tall ? 42 : 30) - 5);
+    const pb = plumbob(cx, cy - h - (opts.tall ? 42 : 30) - 5, color);
     if (layer) layer.push(pb); else s += pb;
   }
   if (opts.help && helpActive()) {
-    const bubble = helpBubble(cx + lw / 4, cy - h - 35);
+    // Shifted right when the plumbob sits above the label, so the two never overlap
+    const bubble = helpBubble(cx + lw / (opts.focus ? 2 : 4), cy - h - 35);
     if (opts.overlay) opts.overlay.push(bubble); else s += bubble;
   }
   return s;
@@ -1245,11 +1245,10 @@ const helpActive = () => helpElapsed() < HELP_MS;
 const helpPhase = () => `animation-delay:-${Math.round(helpElapsed())}ms`;
 // A small, calm cartoon "HELP!" above the stuck robot's label: fades in, then away.
 function helpBubble(x, y) {
-  // Comic-book lettering: white letters, thick ink outline and a hard offset shadow, slightly tilted
-  const font = `text-anchor="middle" font-family="'Comic Sans MS','Chalkboard SE','Marker Felt',cursive" font-size="15" font-weight="900" letter-spacing=".5" stroke-linejoin="round" paint-order="stroke"`;
-  return `<g class="help-bubble" style="${helpPhase()};pointer-events:none"><g transform="rotate(-7 ${x} ${y})">
-    <text x="${x + 2}" y="${y + 2}" ${font} fill="#1f2328" stroke="#1f2328" stroke-width="4">HELP!</text>
-    <text x="${x}" y="${y}" ${font} fill="#fff" stroke="#1f2328" stroke-width="3.5">HELP!</text>
+  // Comic-book lettering kept light: white letters, thin soft outline, no offset shadow, slight tilt
+  const font = `text-anchor="middle" font-family="'Comic Sans MS','Chalkboard SE','Marker Felt',cursive" font-size="13" font-weight="800" letter-spacing=".5" stroke-linejoin="round" paint-order="stroke"`;
+  return `<g class="help-bubble" style="${helpPhase()};pointer-events:none"><g transform="rotate(-5 ${x} ${y})">
+    <text x="${x}" y="${y}" ${font} fill="#fff" stroke="#7d8590" stroke-width="2">HELP!</text>
   </g></g>`;
 }
 
