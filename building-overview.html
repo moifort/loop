@@ -330,6 +330,24 @@
   .fl.trouble .mb i { background: #fff !important; }
   .fl.trouble .al { color: #fff; } .fl.trouble .al svg, .fl.trouble .al svg * { stroke: #fff; }
   .robot-alarm { animation: robot-blink 1s ease-in-out infinite; }
+  /* Easter egg: click the stuck robot and it shouts a cartoon "HELP!" while wriggling */
+  .help-tag { cursor: pointer; }
+  .help-tag:hover rect { stroke: #e5484d; }
+  .help-shake { animation: help-shake .5s ease-in-out 6; transform-box: fill-box; transform-origin: center bottom; }
+  @keyframes help-shake { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(-9deg) translateY(-2px); } 40% { transform: rotate(8deg); } 60% { transform: rotate(-6deg) translateY(-1px); } 80% { transform: rotate(4deg); } }
+  .help-bubble { animation: help-pop 3.2s cubic-bezier(.2, 1.6, .4, 1) forwards; transform-box: fill-box; transform-origin: 15% 100%; }
+  @keyframes help-pop {
+    0% { transform: scale(0) rotate(-25deg); opacity: 0; }
+    10% { transform: scale(1.25) rotate(6deg); opacity: 1; }
+    16% { transform: scale(.92) rotate(-4deg); }
+    22%, 40%, 58%, 76% { transform: scale(1) rotate(-6deg); }
+    31%, 49%, 67% { transform: scale(1.06) rotate(4deg); }
+    88% { transform: scale(1) rotate(-3deg); opacity: 1; }
+    100% { transform: scale(.4) rotate(10deg) translateY(-12px); opacity: 0; } }
+  .help-marks text { animation: help-float 1s ease-out infinite; }
+  .help-marks text:nth-child(2) { animation-delay: -.35s; } .help-marks text:nth-child(3) { animation-delay: -.7s; }
+  @keyframes help-float { 0% { transform: translateY(4px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-10px); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .help-shake, .help-marks text { animation: none; } .help-bubble { animation-duration: .01s; animation-fill-mode: none; } }
   @keyframes robot-blink { 50% { opacity: .4; } }
   .alarm-ring { fill: none; stroke: #e5484d; stroke-width: 3; animation: alarm-ring 1s ease-out infinite; }
   @keyframes alarm-ring { 0% { r: 8; opacity: .9; } 100% { r: 34; opacity: 0; } }
@@ -1105,14 +1123,44 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   // Linked labels (greeter → reception view) get an "open" arrow at the end and a pointer.
   const lw = label.length * 7 + (opts.alert ? 30 : 22) + (opts.link ? 20 : 0);
   const linkIcon = opts.link ? `<g transform="translate(${lw - 17},4) scale(.5)" fill="none" stroke="#006fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['arrow-up-right']}</g>` : '';
-  const linkAttrs = opts.link ? ` class="map-link" data-view="${opts.link}" role="link" tabindex="0"` : '';
+  const linkAttrs = opts.link ? ` class="map-link" data-view="${opts.link}" role="link" tabindex="0"`
+    : opts.help ? ` class="help-tag" data-help="1"` : '';
   const badge = opts.alert
     ? `<circle cx="11" cy="10" r="7" fill="#e5484d"/><text x="11" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`
     : `<circle cx="10" cy="10" r="4" fill="${color}"/>`;
-  const tag = `<g${linkAttrs} transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><title>${opts.link ? 'Ouvrir la vue Accueil' : label}</title><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : '#e4e6ea'}"/>${badge}<text x="${opts.alert ? 23 : 18}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text>${linkIcon}</g>`;
+  const tag = `<g${linkAttrs} transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><title>${opts.link ? 'Ouvrir la vue Accueil' : opts.help ? `${label} · psst, cliquez-moi` : label}</title><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : '#e4e6ea'}"/>${badge}<text x="${opts.alert ? 23 : 18}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text>${linkIcon}</g>`;
   // Labels go to the overlay layer when one is given, so walls never hide them.
   if (opts.overlay) opts.overlay.push(tag); else s += tag;
+  if (opts.help && helpActive()) {
+    const bubble = helpBubble(cx + lw / 2 - 6, cy - h - 34);
+    if (opts.overlay) opts.overlay.push(bubble); else s += bubble;
+    s = `<g class="help-shake" style="${helpPhase()}">${s}</g>`;
+  }
   return s;
+}
+
+// Easter egg state: the map re-renders often, so the animations follow the click time to stay smooth.
+const HELP_MS = 3200;
+let helpAt = 0;
+const helpActive = () => performance.now() - helpAt < HELP_MS;
+const helpPhase = () => `animation-delay:-${Math.round(performance.now() - helpAt)}ms`;
+// Comic starburst with a tail pointing down-left at the robot, "HELP!" in bold cartoon lettering.
+function helpBubble(x, y) {
+  const cx = x + 40, cy = y - 26, n = 16;
+  const pts = [];
+  for (let i = 0; i < n * 2; i++) {
+    const a = i / (n * 2) * Math.PI * 2, k = i % 2 ? 1 : 0.78 + (i % 4 === 0 ? 0.06 : 0);
+    pts.push([cx + Math.cos(a) * 46 * k, cy + Math.sin(a) * 27 * k]);
+  }
+  const tail = `M${cx - 22},${cy + 12} L${x - 2},${y + 4} L${cx - 8},${cy + 19} Z`;
+  const comic = `font-family="'Comic Sans MS','Chalkboard SE','Marker Felt',cursive" font-weight="900"`;
+  return `<g class="help-bubble" style="${helpPhase()};pointer-events:none">
+    <path d="${tail}" fill="#ffe14d" stroke="#1f2328" stroke-width="2.2" stroke-linejoin="round"/>
+    <polygon points="${pts.map(p => p.map(v => v.toFixed(1)).join(',')).join(' ')}" fill="#ffe14d" stroke="#1f2328" stroke-width="2.2" stroke-linejoin="round"/>
+    <text x="${cx + 1.5}" y="${cy + 8.5}" text-anchor="middle" font-size="22" ${comic} fill="#1f2328">HELP!</text>
+    <text x="${cx}" y="${cy + 7}" text-anchor="middle" font-size="22" ${comic} fill="#e5484d" stroke="#fff" stroke-width=".8" paint-order="stroke">HELP!</text>
+    <g class="help-marks" ${comic} font-size="13" fill="#e5484d"><text x="${cx + 44}" y="${cy - 20}">!</text><text x="${cx + 52}" y="${cy - 6}">!</text><text x="${cx - 52}" y="${cy - 16}">?</text></g>
+  </g>`;
 }
 
 // Open storey: cutaway with extruded rooms and robot position.
@@ -1165,7 +1213,7 @@ function openFloor(f, z0) {
       `<g transform="translate(${cx - 5},${cy - 16}) scale(.4167)" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">${ICON[st.icon]}</g>` });
   });
   const r = f.robot, st = STATE[r.state];
-  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', overlay: robotTags }) });
+  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', overlay: robotTags }) });
   if (f.greeter) {
     const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#7c5cff', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, alert: !!ACC.panicAt, link: 'accueil' });
     items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: ACC.panicAt ? alarmRobot(P(f.greeter.at[0], f.greeter.at[1], z0), glyph) : glyph });
@@ -1956,6 +2004,14 @@ function showView(v) {
 document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
 // Map labels that link to another view (the greeter's label opens the reception view). The SVG re-renders, so delegate.
 const iso = document.getElementById('iso');
+// Easter egg: the stuck robot cries for help when its label is clicked
+iso.addEventListener('click', e => {
+  if (!e.target.closest('[data-help]')) return;
+  e.stopPropagation();
+  helpAt = performance.now();
+  renderBuilding();
+  setTimeout(renderBuilding, HELP_MS + 50);
+}, true);
 iso.addEventListener('click', e => { const l = e.target.closest('.map-link'); if (l) { e.stopPropagation(); showView(l.dataset.view); } }, true);
 iso.addEventListener('keydown', e => { const l = e.target.closest('.map-link'); if (l && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); showView(l.dataset.view); } });
 // =====================================================================
