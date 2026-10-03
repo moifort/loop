@@ -47,8 +47,8 @@
 
 
   /* Stage: floor picker | flat building | context */
-  /* Floor list: 250–320px right next to the fixed 532px building; the pair hugs the left edge, aligned with the cards below */
-  .stage { display: grid; grid-template-columns: minmax(250px, 320px) 532px; justify-content: start; gap: 12px; align-items: start; }
+  /* Floor list: 250–320px on the left edge, aligned with the cards below; the fixed 532px building is centred in the remaining space */
+  .stage { display: grid; grid-template-columns: minmax(250px, 320px) minmax(532px, 1fr); gap: 12px 0; align-items: start; }
   .wrap { container-type: inline-size; }
   /* Not enough room for list + building side by side: stack them, building shrinks if needed */
   @container (max-width: 800px) {
@@ -122,7 +122,7 @@
   .issue .txt { overflow: hidden; text-overflow: ellipsis; }
 
   /* ---------- Building ---------- */
-  .bld { width: 532px; }
+  .bld { width: 532px; justify-self: center; }
   .bld svg { width: 532px; max-width: 100%; height: auto; }
   .bld svg .floor { cursor: pointer; }
   .bld svg .floor:hover { filter: brightness(1.03); }
