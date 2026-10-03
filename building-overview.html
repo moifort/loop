@@ -361,8 +361,12 @@
   .acc-banner .btn.light { background: #fff; border-color: transparent; color: #1f2328; font-weight: 600; }
   .acc-banner .btn.ghost { background: transparent; border-color: rgba(255,255,255,.6); color: inherit; font-weight: 600; }
   .acc-banner .btn.ghost:hover { background: rgba(255,255,255,.15); }
-  .men-robots { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; padding: 4px 16px 16px; }
-  .mr { border: 1px solid var(--border); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+  .men-flat { min-width: 0; }
+  .sec-h { display: flex; align-items: center; gap: 8px; padding: 2px 2px 10px; }
+  .sec-h h3 { font-size: 13px; font-weight: 600; }
+  .sec-h .right { margin-left: auto; color: var(--muted); font-size: 12px; }
+  .men-robots { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+  .mr { background: var(--panel); box-shadow: var(--shadow); border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
   .mr:hover { border-color: #b3d1ff; box-shadow: 0 0 0 3px var(--blue-soft); }
   /* Robot in alert: solid red card, everything inside inverted to white */
   .mr.blocked { background: var(--red); border-color: var(--red); color: #fff; }
@@ -743,8 +747,9 @@
   </div>
 
   <div class="acc-grid">
-    <div class="card">
-      <div class="card-h"><h3>Robots de ménage</h3><div class="right">Consommables : usure ou remplissage</div></div>
+    <!-- Robot cards sit flat on the page, without a surrounding card -->
+    <div class="men-flat">
+      <div class="sec-h"><h3>Robots de ménage</h3><div class="right">Consommables : usure ou remplissage</div></div>
       <div class="men-robots" id="men-robots"></div>
     </div>
     <div class="side">
