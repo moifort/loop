@@ -1154,7 +1154,12 @@ const helpActive = () => helpElapsed() < HELP_MS;
 const helpPhase = () => `animation-delay:-${Math.round(helpElapsed())}ms`;
 // A small, calm cartoon "HELP!" above the stuck robot's label: fades in, then away.
 function helpBubble(x, y) {
-  return `<text class="help-bubble" style="${helpPhase()};pointer-events:none" x="${x}" y="${y}" text-anchor="middle" font-family="'Comic Sans MS','Chalkboard SE','Marker Felt',cursive" font-size="13" font-weight="900" fill="#e5484d" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">HELP!</text>`;
+  // Comic-book lettering: white letters, thick ink outline and a hard offset shadow, slightly tilted
+  const font = `text-anchor="middle" font-family="'Comic Sans MS','Chalkboard SE','Marker Felt',cursive" font-size="15" font-weight="900" letter-spacing=".5" stroke-linejoin="round" paint-order="stroke"`;
+  return `<g class="help-bubble" style="${helpPhase()};pointer-events:none"><g transform="rotate(-7 ${x} ${y})">
+    <text x="${x + 2}" y="${y + 2}" ${font} fill="#1f2328" stroke="#1f2328" stroke-width="4">HELP!</text>
+    <text x="${x}" y="${y}" ${font} fill="#fff" stroke="#1f2328" stroke-width="3.5">HELP!</text>
+  </g></g>`;
 }
 
 // Open storey: cutaway with extruded rooms and robot position.
