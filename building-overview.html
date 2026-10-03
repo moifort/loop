@@ -266,10 +266,10 @@
   .temi-name { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-height: 20px; }
   .temi-name b { white-space: nowrap; }
   /* Luggage cart marker next to the floor name in the floor list */
-  .fl-kilo { display: inline-flex; vertical-align: -2px; margin-left: 6px; color: var(--bagages); }
-  .fl.trouble .fl-kilo { color: #fff; }
+  .fl-kilo { display: inline-flex; vertical-align: 1px; margin-left: 6px; height: 20px; padding: 0 6px; border-radius: 6px; background: #efe8fd; color: var(--bagages); }
+  .fl.trouble .fl-kilo { background: #fff; }
   /* Moving: small green dot pulsing; stopped: grey pause bars */
-  .fl-kilo { align-items: center; gap: 3px; }
+  .fl-kilo { align-items: center; gap: 4px; }
   .fl-kilo .kmove { width: 7px; height: 7px; border-radius: 50%; background: #22a861; animation: kmove 1.2s ease-out infinite; }
   @keyframes kmove { 0% { box-shadow: 0 0 0 0 rgba(34,168,97,.5); } 100% { box-shadow: 0 0 0 5px rgba(34,168,97,0); } }
   .fl-kilo .kstop { width: 7px; height: 8px; border-left: 2.5px solid #a0a7b0; border-right: 2.5px solid #a0a7b0; box-sizing: border-box; }
