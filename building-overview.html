@@ -237,9 +237,10 @@
   .rb-ic { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #fff; flex: none; }
   .rb b { font-weight: 500; display: block; }
   .rb small { color: var(--muted); }
-  /* Robot name with its live location badge on the right, battery underneath */
+  /* Robot name with its battery on the right, live location badge underneath */
   .rb .nm-row { display: flex; align-items: center; gap: 8px; }
-  .rb .batt { display: block; line-height: 0; margin-top: 3px; width: max-content; }
+  .rb .batt { display: block; line-height: 0; }
+  .rb > div > .tags { display: flex; width: max-content; margin-top: 4px; }
   .bar { height: 6px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 99px; overflow: hidden; width: 120px; }
   .bar i { display: block; height: 100%; border-radius: 99px; }
   .pct { display: flex; align-items: center; gap: 8px; }
@@ -992,13 +993,13 @@ const placeTag = (lvl, room) => `<span class="tags"><span class="tag-lvl">${lvl}
 function renderRows() {
   const rows = [];
   [...scope()].sort((a, b) => a.id - b.id).forEach(f => {
-    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><span class="nm-row"><b>${f.greeter.name}</b>${placeTag(f.label, 'Réception')}</span>${batteryIcon(100, 'sur secteur')}</div></div></td>
+    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><span class="nm-row"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>${placeTag(f.label, 'Réception')}</div></div></td>
       <td><span class="chip acc">En service</span></td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
       <td class="muted">${f.greeter.next}</td></tr>`);
     const r = f.robot, st = STATE[r.state];
     rows.push(`<tr data-id="${f.id}">
-      <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span><div><span class="nm-row"><b>${r.name}</b>${placeTag(f.label, robotRoom(f.id))}</span>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</div></div></td>
+      <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span><div><span class="nm-row"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>${placeTag(f.label, robotRoom(f.id))}</div></div></td>
       <td><span class="chip ${st.chip}">${st.label}</span></td>
       <td><div class="pct"><div class="bar"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? 'var(--red)' : 'var(--menage)'}"></i></div>${r.pct} %</div></td>
       <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td></tr>`);
