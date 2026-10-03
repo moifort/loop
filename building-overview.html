@@ -81,11 +81,14 @@
   .al .pips { display: flex; gap: 3px; height: 4px; }
   .al .pips i { flex: 1; border-radius: 9px; background: #e9ecef; }
 
-  .fl.all { padding: 12px; margin-bottom: 8px; }
-  .fl.all .r1 { grid-template-columns: 58px 1fr auto; gap: 12px; }
-  .rings-legend { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; font-size: 12px; color: var(--muted); }
-  .rings-legend span { display: flex; align-items: center; gap: 6px; }
-  .rings-legend b { color: var(--text); font-weight: 500; }
+  /* First item of the floor list, stretched to full width above the building */
+  #all-row { margin-bottom: -16px; }
+  .fl.all .r2 { grid-template-columns: 34px 220px 1fr; gap: 16px; }
+  .fl.all .lv svg { width: 30px; height: 30px; }
+  .issues { display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center; }
+  .issue { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; padding: 2px 0; border-radius: 6px; }
+  .issue:hover { text-decoration: underline; }
+  .issue .where { color: var(--muted); }
 
   /* ---------- Building ---------- */
   .bld { width: 560px; }
@@ -185,6 +188,8 @@
     </div>
     <div class="stats" id="stats"></div>
   </div>
+
+  <div id="all-row"></div>
 
   <div class="stage">
     <div class="floors" id="floors"></div>
@@ -295,9 +300,9 @@ const FLOORS = [
 
 // To-do list, linked to a floor (alerts per floor are derived from it).
 const TODOS = [
-  { floor: 3, prio: 'high', title: 'Pluie est bloqué devant le 304', desc: "Le client n'est pas encore parti (départ prévu 11 h). Le robot attend depuis 18 min.", acts: ['Appeler la réception', 'Passer au suivant'] },
-  { floor: 4, prio: 'med', title: 'Écume recharge, batterie 22 %', desc: "Reprise à 14 h 30 : 3 appartements seront prêts après l'arrivée de 15 h.", acts: ['Prévenir la réception', 'Voir le planning'] },
-  { floor: 5, prio: 'low', title: 'Confirmer les départs des suites', desc: 'Brume démarre à 12 h si les suites 501 à 503 sont libérées.', acts: ['Confirmer'] },
+  { floor: 3, prio: 'high', short: 'Pluie bloqué devant le 304', title: 'Pluie est bloqué devant le 304', desc: "Le client n'est pas encore parti (départ prévu 11 h). Le robot attend depuis 18 min.", acts: ['Appeler la réception', 'Passer au suivant'] },
+  { floor: 4, prio: 'med', short: 'Écume batterie faible (22 %)', title: 'Écume recharge, batterie 22 %', desc: "Reprise à 14 h 30 : 3 appartements seront prêts après l'arrivée de 15 h.", acts: ['Prévenir la réception', 'Voir le planning'] },
+  { floor: 5, prio: 'low', short: 'Départs des suites à confirmer', title: 'Confirmer les départs des suites', desc: 'Brume démarre à 12 h si les suites 501 à 503 sont libérées.', acts: ['Confirmer'] },
 ];
 const PRIO = { high: '#e5484d', med: '#f0a020', low: '#a0a7b0' };
 
@@ -544,25 +549,35 @@ function alertMetric(list) {
   return `<div class="al m"><div class="lb">Alertes<b>${list.length}</b></div><div class="pips">${pips}</div></div>`;
 }
 
+const BELL = c => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg>`;
+
 function floorPicker() {
   const area = FLOORS.reduce((a, f) => a + f.area, 0);
   const clean = Math.round(FLOORS.reduce((a, f) => a + f.robot.pct * f.area, 0) / area);
-  const occFloors = FLOORS.filter(f => f.occ !== null);
-  const occ = Math.round(occFloors.reduce((a, f) => a + f.occ, 0) / occFloors.length);
-  const okRobots = 7 - FLOORS.filter(f => f.robot.state === 'blocked').length;
-  const nAlerts = openTodos().length;
-  let h = `<button class="fl all ${selected === 'all' ? 'sel' : ''}" data-id="all">
+  const m2 = Math.round(FLOORS.reduce((a, f) => a + f.area * f.robot.pct / 100, 0));
+  const issues = openTodos();
+  const blocked = FLOORS.filter(f => f.robot.state === 'blocked').length;
+  const lvl = id => FLOORS.find(f => f.id === id).label;
+  // "Tout le bâtiment": same structure as a floor row (r1 = level · name · state, r2 = details)
+  document.getElementById('all-row').innerHTML = `
+    <div class="fl all ${selected === 'all' ? 'sel' : ''}" data-id="all" role="button" tabindex="0">
       <div class="r1">
-        ${rings([[clean / 100, '#00a99d'], [occ / 100, '#3b82f6'], [okRobots / 7, '#7c5cff']])}
-        <div><div class="nm">Tout le bâtiment</div>
-          <div class="rings-legend">
-            <span><i class="dot" style="background:#00a99d"></i>Ménage <b>${clean} %</b></span>
-            <span><i class="dot" style="background:#3b82f6"></i>Occupation <b>${occ} %</b></span>
-            <span><i class="dot" style="background:#7c5cff"></i>Robots opérationnels <b>${okRobots}/7</b></span>
-          </div></div>
-        ${nAlerts ? `<span class="chip err">${nAlerts} alerte${nAlerts > 1 ? 's' : ''}</span>` : ''}
+        <span class="lv">${rings([[clean / 100, '#00a99d']], 30)}</span>
+        <span class="nm">Tout le bâtiment<small>${clean} % nettoyé · ${m2.toLocaleString('fr-FR')} m² sur ${area.toLocaleString('fr-FR')}</small></span>
+        ${issues.length ? `<span class="chip ${blocked ? 'err' : 'warn'}">${issues.length} problème${issues.length > 1 ? 's' : ''}</span>` : '<span class="chip ok">Tout va bien</span>'}
       </div>
-    </button>`;
+      <div class="r2"><span></span>
+        ${metric('Nettoyage', clean, '#00a99d')}
+        <div class="issues">${issues.length ? issues.map(t => `
+          <span class="issue" data-go="${t.floor}">${BELL(PRIO[t.prio])}${t.short}<span class="where">· ${lvl(t.floor)}</span></span>`).join('')
+          : `<span class="issue muted">${BELL('#22a861')}Aucun problème en cours</span>`}</div>
+      </div>
+    </div>`;
+  const all = document.querySelector('#all-row .fl');
+  all.onclick = () => select('all');
+  document.querySelectorAll('#all-row .issue[data-go]').forEach(i => i.onclick = e => { e.stopPropagation(); select(+i.dataset.go); });
+
+  let h = '';
   FLOORS.forEach(f => {
     const r = f.robot, st = STATE[r.state];
     h += `<button class="fl ${selected === f.id ? 'sel' : ''}" data-id="${f.id}">
@@ -578,7 +593,7 @@ function floorPicker() {
   });
   const el = document.getElementById('floors');
   el.innerHTML = h;
-  el.querySelectorAll('.fl').forEach(b => b.onclick = () => select(b.dataset.id === 'all' ? 'all' : +b.dataset.id));
+  el.querySelectorAll('.fl').forEach(b => b.onclick = () => select(+b.dataset.id));
 }
 
 // =====================================================================
