@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loop — Vue bâtiment</title>
+<style>
+  :root {
+    --bg: #f4f5f6; --panel: #ffffff; --panel-2: #f9fafb; --border: #e4e6ea;
+    --text: #1f2328; --muted: #7d8590; --faint: #b8bec6;
+    --blue: #006fff; --blue-soft: #e6f0ff;
+    --green: #22a861; --green-soft: #e7f6ee; --amber: #f0a020; --amber-soft: #fff4e0;
+    --red: #e5484d; --red-soft: #fdecec; --gray: #a0a7b0;
+    --accueil: #7c5cff; --menage: #00a99d; --menage-soft: #d9f3f0;
+    --shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, "Segoe UI", sans-serif;
+    font-size: 13px; color: var(--text); background: var(--bg);
+    display: grid; grid-template-columns: 60px 1fr; grid-template-rows: 52px 1fr; height: 100vh; overflow: hidden;
+  }
+  svg { display: block; }
+  button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+
+  /* ---------- Sidebar ---------- */
+  .nav { grid-row: 1 / 3; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 4px; }
+  .logo { width: 34px; height: 34px; border-radius: 10px; background: var(--blue); display: grid; place-items: center; margin-bottom: 14px; }
+  .nav-btn { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; color: var(--muted); position: relative; }
+  .nav-btn:hover { background: var(--panel-2); color: var(--text); }
+  .nav-btn.active { background: var(--blue-soft); color: var(--blue); }
+  .nav-btn .badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--red); border: 2px solid var(--panel); }
+  .nav-spacer { flex: 1; }
+
+  /* ---------- Header ---------- */
+  .top { background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; gap: 14px; }
+  .site { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; padding: 6px 10px; border-radius: 8px; }
+  .site:hover { background: var(--panel-2); }
+  .site small { color: var(--muted); font-weight: 400; }
+  .top .right { margin-left: auto; display: flex; align-items: center; gap: 12px; color: var(--muted); }
+  .avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #5b8cff, #a35bff); color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 12px; }
+
+  /* ---------- Main ---------- */
+  main { overflow-y: auto; padding: 20px 24px 40px; }
+  .wrap { max-width: 1440px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+  .welcome { display: flex; align-items: center; gap: 12px; background: var(--blue-soft); border: 1px solid #cfe1ff; color: #0b3d91; border-radius: 12px; padding: 10px 14px; }
+  .welcome b { font-weight: 600; }
+  .welcome .x { margin-left: auto; color: #0b3d91; opacity: .6; padding: 2px 6px; border-radius: 6px; }
+  .welcome .x:hover { opacity: 1; background: rgba(0,0,0,.05); }
+
+  .hero { display: flex; align-items: flex-end; gap: 16px; }
+  .hero h1 { font-size: 22px; font-weight: 600; letter-spacing: -.01em; }
+  .hero .status { margin-top: 6px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex: none; }
+  .hero .actions { margin-left: auto; display: flex; gap: 8px; }
+  .btn { padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); font-weight: 500; display: inline-flex; gap: 6px; align-items: center; }
+  .btn:hover { background: var(--panel-2); }
+  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.sm { padding: 4px 9px; font-size: 12px; }
+
+  .layout { display: grid; grid-template-columns: 1fr 380px; gap: 16px; align-items: start; }
+  .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
+  .card-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 0; }
+  .card-h h3 { font-size: 13px; font-weight: 600; }
+  .card-h .right { margin-left: auto; display: flex; gap: 6px; align-items: center; color: var(--muted); font-size: 12px; }
+  .card-b { padding: 14px 16px 16px; }
+
+  .seg { display: inline-flex; background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 2px; }
+  .seg button { padding: 4px 10px; border-radius: 6px; color: var(--muted); font-size: 12px; font-weight: 500; display: inline-flex; gap: 6px; align-items: center; }
+  .seg button.on { background: var(--panel); color: var(--text); box-shadow: var(--shadow); }
+
+  /* ---------- Building ---------- */
+  .building { position: relative; display: grid; grid-template-columns: 1fr 300px; gap: 8px; align-items: center; padding: 6px 16px 16px; }
+  .building svg .floor { cursor: pointer; }
+  .building svg .floor .face { transition: opacity .15s; }
+  .building svg .floor:hover .front-base { fill: #eef1f4; }
+  .building svg .floor.sel .front-base { fill: #e6f0ff; }
+  .building svg .floor.sel .outline { stroke: var(--blue); stroke-width: 2; }
+  .legend { display: flex; gap: 14px; color: var(--muted); font-size: 12px; padding: 0 16px 14px; flex-wrap: wrap; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+  .floors { display: flex; flex-direction: column; gap: 6px; }
+  .flabel { display: grid; grid-template-columns: 34px 1fr auto; gap: 8px; align-items: center; padding: 7px 10px; border-radius: 10px; border: 1px solid transparent; cursor: pointer; }
+  .flabel:hover { background: var(--panel-2); }
+  .flabel.sel { border-color: var(--blue); background: var(--blue-soft); }
+  .flabel .lv { font-weight: 600; color: var(--muted); font-size: 12px; }
+  .flabel .nm { font-weight: 500; display: flex; align-items: center; gap: 6px; }
+  .flabel .sub { color: var(--muted); font-size: 12px; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .chip.ok { background: var(--green-soft); color: #137a44; }
+  .chip.run { background: var(--menage-soft); color: #00756c; }
+  .chip.warn { background: var(--amber-soft); color: #9a5b00; }
+  .chip.err { background: var(--red-soft); color: #b42318; }
+  .chip.idle { background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
+  .chip.acc { background: #efeaff; color: #5b3fd6; }
+
+  /* ---------- Table ---------- */
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 8px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  td { padding: 10px 16px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tr:last-child td { border-bottom: none; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover td { background: var(--panel-2); }
+  tbody tr.sel td { background: var(--blue-soft); }
+  .rb { display: flex; align-items: center; gap: 10px; }
+  .rb-ic { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #fff; flex: none; }
+  .rb b { font-weight: 500; display: block; }
+  .rb small { color: var(--muted); }
+  .bar { height: 6px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 99px; overflow: hidden; width: 120px; }
+  .bar i { display: block; height: 100%; border-radius: 99px; }
+  .pct { display: flex; align-items: center; gap: 8px; }
+  .muted { color: var(--muted); }
+  .bat { display: inline-flex; align-items: center; gap: 6px; }
+
+  /* ---------- Right column ---------- */
+  .todo { display: flex; gap: 12px; padding: 12px; border-radius: 10px; background: var(--red-soft); border: 1px solid #f7c9cb; }
+  .todo .ic { width: 32px; height: 32px; border-radius: 8px; background: var(--red); color: #fff; display: grid; place-items: center; flex: none; }
+  .todo b { display: block; font-weight: 600; }
+  .todo p { color: #7a271a; margin-top: 2px; line-height: 1.4; }
+  .todo .acts { display: flex; gap: 6px; margin-top: 10px; }
+  .allgood { display: flex; gap: 10px; align-items: center; color: var(--muted); padding: 10px 2px 0; font-size: 12px; }
+
+  .plan-h { display: flex; align-items: center; gap: 8px; }
+  .plan-h .t { font-weight: 600; }
+  .plan svg { width: 100%; height: auto; margin-top: 10px; border-radius: 8px; }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .fact { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+  .fact small { color: var(--muted); font-size: 11px; display: block; }
+  .fact b { font-size: 15px; font-weight: 600; }
+
+  .day { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .day .k small { color: var(--muted); font-size: 12px; display: block; }
+  .day .k b { font-size: 22px; font-weight: 600; letter-spacing: -.02em; }
+  .day .k span { font-size: 12px; }
+  .up { color: var(--green); } .down { color: var(--red); }
+
+  @keyframes pulse { 0% { r: 7; opacity: .6; } 100% { r: 16; opacity: 0; } }
+  .pulse { animation: pulse 1.6s ease-out infinite; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"><path d="M7 4v9a5 5 0 0 0 10 0V4"/></svg></div>
+  <button class="nav-btn active" title="Bâtiment"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg></button>
+  <button class="nav-btn" title="Plans"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></svg></button>
+  <button class="nav-btn" title="Robots"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01"/></svg></button>
+  <button class="nav-btn" title="Alertes"><span class="badge"></span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg></button>
+  <button class="nav-btn" title="Rapports"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></button>
+  <div class="nav-spacer"></div>
+  <button class="nav-btn" title="Réglages"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg></button>
+</nav>
+
+<header class="top">
+  <button class="site">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1.5"/></svg>
+    Tour Horizon <small>· Lyon Part-Dieu</small>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+  </button>
+  <div class="right">
+    <span id="clock"></span>
+    <div class="avatar">CM</div>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <div class="welcome" id="welcome">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1"/></svg>
+    <div><b>Bienvenue sur votre bâtiment.</b> Chaque étage se remplit à mesure que le ménage avance. Cliquez sur un étage pour voir son plan.</div>
+    <button class="x" onclick="document.getElementById('welcome').remove()">Compris</button>
+  </div>
+
+  <div class="hero">
+    <div>
+      <h1>Bonjour Claire</h1>
+      <div class="status" id="status"></div>
+    </div>
+    <div class="actions">
+      <button class="btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7"/></svg>
+        Rapport du jour
+      </button>
+      <button class="btn primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+        Demander un ménage
+      </button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="col">
+
+      <div class="card">
+        <div class="card-h">
+          <h3>Le bâtiment en ce moment</h3>
+          <div class="right">
+            <div class="seg" id="lens">
+              <button class="on" data-lens="all">Tout</button>
+              <button data-lens="menage"><span class="dot" style="background:var(--menage)"></span>Ménage</button>
+              <button data-lens="accueil"><span class="dot" style="background:var(--accueil)"></span>Accueil</button>
+            </div>
+          </div>
+        </div>
+        <div class="building">
+          <svg id="iso" viewBox="20 96 520 590"></svg>
+          <div class="floors" id="floors"></div>
+        </div>
+        <div class="legend">
+          <span><i class="sw" style="background:var(--menage)"></i>Nettoyé aujourd'hui</span>
+          <span><i class="sw" style="background:#e9ecef;border:1px solid var(--border)"></i>Reste à faire</span>
+          <span><i class="sw" style="background:var(--red)"></i>Robot bloqué</span>
+          <span><i class="sw" style="background:var(--accueil)"></i>Robot d'accueil</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h">
+          <h3>Robots</h3>
+          <div class="right">7 robots · 1 par étage + accueil</div>
+        </div>
+        <div style="padding-top:8px">
+          <table>
+            <thead><tr><th>Robot</th><th>Étage</th><th>État</th><th>Avancement du jour</th><th>Batterie</th><th>Prochaine étape</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col">
+      <div class="card">
+        <div class="card-h"><h3>À traiter</h3><div class="right" id="todo-count"></div></div>
+        <div class="card-b" id="todo"></div>
+      </div>
+
+      <div class="card plan">
+        <div class="card-h"><h3>Plan de l'étage</h3><div class="right"><button class="btn sm">Ouvrir le plan</button></div></div>
+        <div class="card-b" id="plan"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h3>Aujourd'hui</h3><div class="right">depuis 6 h 00</div></div>
+        <div class="card-b day">
+          <div class="k"><small>Surface nettoyée</small><b>3 940 m²</b> <span class="muted">/ 6 200</span></div>
+          <div class="k"><small>Visiteurs accueillis</small><b>47</b> <span class="up">+12 % vs mardi</span></div>
+          <div class="k"><small>Robots disponibles</small><b>6/7</b> <span class="muted">1 bloqué</span></div>
+          <div class="k"><small>Interventions humaines</small><b>1</b> <span class="muted">en attente</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<script>
+// ---------- Data ----------
+const FLOORS = [
+  { id: 5, label: 'É5', name: 'Direction', area: 820,
+    robot: { name: 'Brume', state: 'idle', pct: 0, bat: 100, next: 'Démarre à 18 h 00' } },
+  { id: 4, label: 'É4', name: 'Open space B', area: 1180,
+    robot: { name: 'Écume', state: 'charge', pct: 55, bat: 22, next: 'Reprend à 14 h 30' } },
+  { id: 3, label: 'É3', name: 'Salles de réunion', area: 1050,
+    robot: { name: 'Pluie', state: 'blocked', pct: 41, bat: 63, next: 'Porte fermée — salle 312' } },
+  { id: 2, label: 'É2', name: 'Open space A', area: 1180,
+    robot: { name: 'Rosée', state: 'done', pct: 100, bat: 81, next: 'Terminé à 10 h 12' } },
+  { id: 1, label: 'É1', name: 'Restaurant', area: 1150,
+    robot: { name: 'Averse', state: 'run', pct: 64, bat: 58, next: 'Fin estimée 13 h 40' } },
+  { id: 0, label: 'RDC', name: 'Hall & accueil', area: 820,
+    robot: { name: 'Bruine', state: 'done', pct: 100, bat: 92, next: 'Repasse à 15 h 00 (hall)' },
+    greeter: { name: 'Léa', state: 'live', visitors: 47, next: '3 visiteurs attendus avant 14 h' } },
+];
+const STATE = {
+  run:     { chip: 'run',  label: 'En ménage',   color: 'var(--menage)' },
+  done:    { chip: 'ok',   label: 'Terminé',     color: 'var(--green)' },
+  charge:  { chip: 'warn', label: 'En charge',   color: 'var(--amber)' },
+  blocked: { chip: 'err',  label: 'Bloqué',      color: 'var(--red)' },
+  idle:    { chip: 'idle', label: 'Planifié',    color: 'var(--gray)' },
+  live:    { chip: 'acc',  label: 'En service',  color: 'var(--accueil)' },
+};
+let selected = 3;
+let lens = 'all';
+
+// ---------- Isometric building ----------
+const S = 24, W = 12, D = 5, H = 54, OX = 150, OY = 120;
+const P = (x, y, z) => [OX + (x - y) * 0.866 * S, OY + (x + y) * 0.5 * S + (FLOORS.length * H) - z];
+const pts = a => a.map(p => p.join(',')).join(' ');
+
+function renderBuilding() {
+  const svg = document.getElementById('iso');
+  let out = '';
+  // ground shadow
+  out += `<polygon points="${pts([P(-1.2,-1.2,0),P(W+1.2,-1.2,0),P(W+1.2,D+1.2,0),P(-1.2,D+1.2,0)])}" fill="#e9f0ea"/>`;
+  // floors from bottom to top
+  [...FLOORS].reverse().forEach((f, i) => {
+    const z0 = i * H, z1 = z0 + H - 4;
+    const r = f.robot;
+    const showMenage = lens !== 'accueil';
+    const fill = r.state === 'blocked' ? 'var(--red)' : 'var(--menage)';
+    const p = showMenage ? r.pct / 100 : 0;
+    const dim = lens === 'accueil' && !f.greeter ? 0.35 : 1;
+    // front face: y = D, x from 0..W
+    const front = [P(0,D,z0), P(W,D,z0), P(W,D,z1), P(0,D,z1)];
+    const prog = [P(0,D,z0), P(W*p,D,z0), P(W*p,D,z1), P(0,D,z1)];
+    // side face: x = W, y from 0..D
+    const side = [P(W,0,z0), P(W,D,z0), P(W,D,z1), P(W,0,z1)];
+    const sideProg = [P(W,D-D*p*0.999,z0), P(W,D,z0), P(W,D,z1), P(W,D-D*p*0.999,z1)];
+    // slab
+    const slab = [P(0,D,z1), P(W,D,z1), P(W,D,z1+4), P(0,D,z1+4)];
+    const slabSide = [P(W,0,z1), P(W,D,z1), P(W,D,z1+4), P(W,0,z1+4)];
+    let windows = '';
+    for (let k = 0; k < 8; k++) {
+      const x = 0.6 + k * 1.45;
+      windows += `<polygon points="${pts([P(x,D,z0+14),P(x+0.9,D,z0+14),P(x+0.9,D,z1-12),P(x,D,z1-12)])}" fill="rgba(255,255,255,.45)" />`;
+    }
+    out += `<g class="floor ${f.id === selected ? 'sel' : ''}" data-id="${f.id}" opacity="${dim}">
+      <polygon class="face front-base" points="${pts(front)}" fill="#f6f7f9"/>
+      <polygon class="face" points="${pts(prog)}" fill="${fill}" opacity=".85"/>
+      ${windows}
+      <polygon class="face" points="${pts(side)}" fill="#dfe3e8"/>
+      ${p > 0.999 ? `<polygon points="${pts(side)}" fill="${fill}" opacity=".55"/>` : ''}
+      <polygon points="${pts(slab)}" fill="#cfd5dc"/><polygon points="${pts(slabSide)}" fill="#bfc6ce"/>
+      <polygon class="outline" points="${pts(front)}" fill="none" stroke="transparent"/>
+      ${lens !== 'accueil' && r.state === 'blocked' ? (() => { const c = P(W*p, D, (z0+z1)/2); return `<circle cx="${c[0]}" cy="${c[1]}" r="9" fill="var(--red)" stroke="#fff" stroke-width="2"/><text x="${c[0]}" y="${c[1]+4}" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">!</text>`; })() : ''}
+      ${lens !== 'accueil' && r.state === 'run' ? (() => { const c = P(W*p, D, (z0+z1)/2); return `<circle class="pulse" cx="${c[0]}" cy="${c[1]}" r="7" fill="var(--menage)"/><circle cx="${c[0]}" cy="${c[1]}" r="6" fill="#fff" stroke="var(--menage)" stroke-width="3"/>`; })() : ''}
+    </g>`;
+  });
+  // roof
+  const zt = FLOORS.length * H;
+  out += `<polygon points="${pts([P(0,0,zt),P(W,0,zt),P(W,D,zt),P(0,D,zt)])}" fill="#eceff2" stroke="#d5d9df"/>`;
+  // entrance + greeter robot at ground floor
+  const e = [P(4.6,D,0), P(6.4,D,0), P(6.4,D,30), P(4.6,D,30)];
+  out += `<polygon points="${pts(e)}" fill="#9fb3c8"/>`;
+  if (lens !== 'menage') {
+    const g = P(5.5, D + 1.1, 0);
+    out += `<circle class="pulse" cx="${g[0]}" cy="${g[1]-10}" r="7" fill="var(--accueil)"/>
+      <circle cx="${g[0]}" cy="${g[1]-10}" r="8" fill="var(--accueil)" stroke="#fff" stroke-width="2.5"/>
+      <g transform="translate(${g[0]+14},${g[1]-1})"><rect width="92" height="22" rx="11" fill="#fff" stroke="#e4e6ea"/><circle cx="11" cy="11" r="4" fill="var(--accueil)"/><text x="20" y="15" font-size="11" font-weight="600" fill="#1f2328">Léa · accueil</text></g>`;
+  }
+  svg.innerHTML = out;
+  svg.querySelectorAll('.floor').forEach(g => g.onclick = () => select(+g.dataset.id));
+}
+
+// ---------- Floor labels next to the building ----------
+function renderFloorLabels() {
+  document.getElementById('floors').innerHTML = FLOORS.map(f => {
+    const r = f.robot, st = STATE[r.state];
+    const g = f.greeter ? `<span class="chip acc">Léa · ${f.greeter.visitors} visiteurs</span>` : '';
+    return `<div class="flabel ${f.id === selected ? 'sel' : ''}" data-id="${f.id}">
+      <span class="lv">${f.label}</span>
+      <div><div class="nm">${f.name}</div><div class="sub">${r.name} · ${r.pct} % nettoyé</div></div>
+      <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="chip ${st.chip}">${st.label}</span>${g}</div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.flabel').forEach(el => el.onclick = () => select(+el.dataset.id));
+}
+
+// ---------- Table ----------
+const ICON_MENAGE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M9 13h6"/></svg>';
+const ICON_ACCUEIL = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="6" y="8" width="12" height="11" rx="3"/><path d="M12 4v4M10 13h.01M14 13h.01"/></svg>';
+function batColor(b) { return b < 25 ? 'var(--red)' : b < 50 ? 'var(--amber)' : 'var(--green)'; }
+function renderRows() {
+  const rows = [];
+  const g = FLOORS.find(f => f.greeter);
+  rows.push(`<tr data-id="0"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><b>Léa</b><small>Accueil</small></div></div></td>
+    <td>RDC</td><td><span class="chip acc">En service</span></td>
+    <td><span class="muted">${g.greeter.visitors} visiteurs accueillis</span></td>
+    <td><span class="bat"><span class="dot" style="background:var(--green)"></span>Sur secteur</span></td>
+    <td class="muted">${g.greeter.next}</td></tr>`);
+  [...FLOORS].reverse().forEach(f => {
+    const r = f.robot, st = STATE[r.state];
+    rows.push(`<tr data-id="${f.id}" class="${f.id === selected ? 'sel' : ''}">
+      <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span><div><b>${r.name}</b><small>Ménage</small></div></div></td>
+      <td>${f.label} <span class="muted">· ${f.name}</span></td>
+      <td><span class="chip ${st.chip}">${st.label}</span></td>
+      <td><div class="pct"><div class="bar"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? 'var(--red)' : 'var(--menage)'}"></i></div>${r.pct} %</div></td>
+      <td><span class="bat"><span class="dot" style="background:${batColor(r.bat)}"></span>${r.bat} %</span></td>
+      <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td></tr>`);
+  });
+  document.getElementById('rows').innerHTML = rows.join('');
+  document.querySelectorAll('#rows tr').forEach(tr => tr.onclick = () => select(+tr.dataset.id));
+}
+
+// ---------- Status line + to-do ----------
+function renderStatus() {
+  const blocked = FLOORS.filter(f => f.robot.state === 'blocked');
+  const total = FLOORS.length + 1;
+  const okCount = total - blocked.length;
+  document.getElementById('status').innerHTML = blocked.length
+    ? `<span class="dot" style="background:var(--amber)"></span><span><b>${okCount} robots sur ${total}</b> travaillent normalement · <b class="down">${blocked.length} demande votre attention</b></span>`
+    : `<span class="dot" style="background:var(--green)"></span><span>Tout fonctionne normalement.</span>`;
+  document.getElementById('todo-count').textContent = blocked.length ? `${blocked.length} action` : '';
+  document.getElementById('todo').innerHTML = blocked.map(f => `
+    <div class="todo">
+      <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 8v5M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></div>
+      <div>
+        <b>${f.robot.name} est bloqué au ${f.label === 'RDC' ? 'rez-de-chaussée' : f.label.replace('É', '') + '<sup>e</sup> étage'}</b>
+        <p>La porte de la salle 312 est fermée. Le robot attend depuis 18 min ; il reste 59 % de l'étage à nettoyer.</p>
+        <div class="acts"><button class="btn sm primary">Prévenir l'agent d'étage</button><button class="btn sm" onclick="select(${f.id})">Voir sur le plan</button><button class="btn sm">Ignorer la salle</button></div>
+      </div>
+    </div>`).join('') + `<div class="allgood"><span class="dot" style="background:var(--green)"></span>Rien d'autre à signaler. Léa est à l'accueil, les 5 autres robots suivent leur planning.</div>`;
+}
+
+// ---------- 2D floor plan with cleaning coverage (InnerSpace heatmap → cleaning coverage) ----------
+function renderPlan() {
+  const f = FLOORS.find(x => x.id === selected);
+  const r = f.robot, st = STATE[r.state];
+  // rooms in cleaning route order: [x, y, w, h, label]
+  const rooms = [
+    [10, 10, 70, 60, '301'], [80, 10, 70, 60, '302'], [150, 10, 70, 60, '303'], [220, 10, 90, 60, '304'],
+    [10, 110, 90, 70, '310'], [100, 110, 70, 70, '311'], [170, 110, 70, 70, '312'], [240, 110, 70, 70, '313'],
+  ].map(rm => [...rm.slice(0, 4), f.label === 'RDC' ? rm[4].replace('3', '0') : rm[4].replace('3', String(f.id))]);
+  const corridor = [10, 70, 300, 40];
+  const order = [0, 1, 2, 3, 7, 6, 5, 4];
+  const doneCount = Math.round(r.pct / 100 * (rooms.length + 1));
+  let svg = `<svg viewBox="0 0 320 190"><rect width="320" height="190" fill="#fbfbfc"/>`;
+  // corridor cleaned first
+  svg += `<rect x="${corridor[0]}" y="${corridor[1]}" width="${corridor[2]}" height="${corridor[3]}" fill="${doneCount > 0 ? 'var(--menage-soft)' : '#f2f4f7'}"/>`;
+  order.forEach((ri, k) => {
+    const [x, y, w, h, n] = rooms[ri];
+    const isBlocked = r.state === 'blocked' && n.endsWith('12');
+    const clean = k + 1 < doneCount;
+    const fill = isBlocked ? 'var(--red-soft)' : clean ? 'var(--menage-soft)' : '#ffffff';
+    svg += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="#d5d9df" stroke-width="2"/>
+      <text x="${x + 6}" y="${y + 14}" font-size="9" fill="#7d8590">${n}</text>`;
+    if (isBlocked) svg += `<line x1="${x + w/2 - 10}" y1="${y}" x2="${x + w/2 + 10}" y2="${y}" stroke="var(--red)" stroke-width="4"/>`;
+  });
+  // robot position
+  let pos = [40, 90];
+  if (r.state === 'blocked') pos = [205, 98];
+  else if (r.state === 'run') pos = [265, 90];
+  else if (r.state === 'charge') pos = [295, 98];
+  else if (r.state === 'done' || r.state === 'idle') pos = [20, 98];
+  svg += `<rect x="12" y="92" width="14" height="14" rx="3" fill="#e4e6ea"/><text x="30" y="103" font-size="8" fill="#7d8590">base</text>`;
+  if (r.state === 'run') svg += `<circle class="pulse" cx="${pos[0]}" cy="${pos[1]}" r="7" fill="var(--menage)"/>`;
+  svg += `<circle cx="${pos[0]}" cy="${pos[1]}" r="7" fill="${st.color}" stroke="#fff" stroke-width="2.5"/>`;
+  if (f.greeter) svg += `<circle cx="160" cy="180" r="7" fill="var(--accueil)" stroke="#fff" stroke-width="2.5"/><text x="172" y="183" font-size="9" font-weight="600" fill="#5b3fd6">Léa</text>`;
+  svg += `</svg>`;
+  const remaining = Math.round(f.area * (1 - r.pct / 100));
+  document.getElementById('plan').innerHTML = `
+    <div class="plan-h"><span class="t">${f.label} · ${f.name}</span><span class="chip ${st.chip}">${st.label}</span></div>
+    ${svg}
+    <div class="facts">
+      <div class="fact"><small>Nettoyé</small><b>${r.pct} %</b></div>
+      <div class="fact"><small>Reste</small><b>${remaining} m²</b></div>
+      <div class="fact"><small>Robot</small><b>${r.name}</b></div>
+      <div class="fact"><small>Prochaine étape</small><b style="font-size:12px">${r.next}</b></div>
+    </div>`;
+}
+
+function select(id) { selected = id; renderAll(); }
+function renderAll() { renderBuilding(); renderFloorLabels(); renderRows(); renderStatus(); renderPlan(); }
+
+document.querySelectorAll('#lens button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#lens button').forEach(x => x.classList.remove('on'));
+  b.classList.add('on'); lens = b.dataset.lens; renderBuilding();
+});
+const tick = () => document.getElementById('clock').textContent =
+  new Date().toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
+tick(); setInterval(tick, 30000);
+renderAll();
+</script>
+</body>
+</html>

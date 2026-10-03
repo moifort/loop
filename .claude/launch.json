@@ -4,8 +4,24 @@
     {
       "name": "research-gallery",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "research/unifi"],
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8765",
+        "--directory",
+        "research/unifi"
+      ],
       "port": 8765
+    },
+    {
+      "name": "mockups",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8766"
+      ],
+      "port": 8766
     }
   ]
 }
