@@ -523,6 +523,8 @@
   .fb-btn.call:hover { background: #1c9354; }
   .fb-btn.end { background: var(--red); }
   .fb-btn.end:hover { background: #d23b40; }
+  .fb-btn.panic { background: var(--red); }
+  .fb-btn.panic:hover { background: #d23b40; }
   .fb-pill { height: 46px; padding: 0 18px; border-radius: 999px; background: var(--red); color: #fff; font-weight: 600; }
   .fb-pill:hover { background: #d23b40; }
   .ov .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
@@ -1685,7 +1687,8 @@ document.addEventListener('visibilitychange', () => {
 // or a red camera-off to hand it back. Moving the robot stays in the position card.
 function facetimeBar(remote, panic) {
   const b = (act, ic, title, cls = '') => `<button class="fb-btn ${cls}" data-act="${act}" title="${title}" aria-label="${title}">${icon(ic, 20)}</button>`;
-  const lift = panic ? `<button class="fb-pill" data-act="calm">Lever l'alerte</button>` : '';
+  // Panic sits where 'Lever l'alerte' shows once the alarm runs
+  const lift = panic ? `<button class="fb-pill" data-act="calm">Lever l'alerte</button>` : b('panic', 'siren', 'Déclencher le bouton panique', 'panic');
   return lift
     + b('mute', ACC.muted ? 'mic-off' : 'mic', ACC.muted ? 'Réactiver le micro' : 'Couper le micro', ACC.muted ? 'on' : '')
     + (remote ? b('release', 'video-off', 'Rendre le contrôle au robot', 'end') : b('take', 'video', 'Contrôler', 'call'));
