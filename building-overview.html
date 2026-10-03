@@ -87,6 +87,15 @@
   .below.with-temi #todo-card { grid-area: todo; }
   .below.with-temi #rooms-card { grid-area: rooms; }
   @container (max-width: 800px) { .below.with-temi, .below.with-temi.open-rooms { height: auto; grid-template-rows: none; grid-template-areas: "temi" "todo" "rooms"; } }
+  /* Whole building: compact Temi card on the left of the to-do list */
+  .below.temi-compact { grid-template-columns: minmax(300px, 360px) 1fr; grid-template-areas: "temi todo"; }
+  .below.temi-compact #temi-card { grid-area: temi; }
+  .below.temi-compact #todo-card { grid-area: todo; }
+  @container (max-width: 800px) { .below.temi-compact { grid-template-areas: "temi" "todo"; } }
+  #temi-card.compact .temi { grid-template-columns: 1fr; gap: 0; }
+  #temi-card.compact .temi-pic { height: auto; aspect-ratio: 16 / 9; }
+  #temi-card.compact .temi-actions { margin-top: 0; }
+  #temi-card.compact h3 .temi-name { font-size: 13px; }
   .chev { display: none; color: var(--muted); transition: transform .15s; }
   .below.with-temi .chev { display: block; }
   .below.with-temi #todo-card .card-h, .below.with-temi #rooms-card .card-h { cursor: pointer; user-select: none; }
@@ -434,7 +443,7 @@
       <div class="rooms" id="rooms"></div>
     </div>
     <div class="card" id="temi-card" role="link" tabindex="0" title="Ouvrir la vue Accueil">
-      <div class="card-h"><h3>Robot d'accueil</h3><div class="right"><span class="temi-go">Ouvrir la vue Accueil <span aria-hidden="true">→</span></span></div></div>
+      <div class="card-h"><h3 id="temi-title">Robot d'accueil</h3><div class="right" id="temi-head-right"></div></div>
       <div class="temi" id="temi"></div>
     </div>
   </div>
@@ -1048,16 +1057,26 @@ function temiStateChip() {
 
 function renderTemiCard() {
   const card = document.getElementById('temi-card');
-  const f = selected === 'all' ? null : FLOORS.find(x => x.id === selected);
+  // Whole building: compact card (name in the title, feed + actions, no stats) next to the to-do list.
+  // Floor with a greeter: full card with the to-do / spaces accordion.
+  const compact = selected === 'all';
+  const f = compact ? FLOORS.find(x => x.greeter) : FLOORS.find(x => x.id === selected);
   const below = card.parentElement, todo = document.getElementById('todo-card'), rooms = document.getElementById('rooms-card');
-  below.classList.toggle('with-temi', !!(f && f.greeter));
-  if (!f || !f.greeter) { card.style.display = 'none'; todo.classList.remove('collapsed'); rooms.classList.remove('collapsed'); return; }
+  const full = !compact && !!(f && f.greeter);
+  below.classList.toggle('with-temi', full);
+  below.classList.toggle('temi-compact', compact);
+  card.classList.toggle('compact', compact);
+  if (!compact && !full) { card.style.display = 'none'; todo.classList.remove('collapsed'); rooms.classList.remove('collapsed'); return; }
   card.style.display = '';
-  // Accordion: one panel open at a time. The to-do list wins while it has something to handle.
-  const open = openPanel || (alertsOf(f.id).length ? 'todo' : 'rooms');
-  todo.classList.toggle('collapsed', open !== 'todo');
-  rooms.classList.toggle('collapsed', open !== 'rooms');
-  below.classList.toggle('open-rooms', open === 'rooms');
+  if (full) {
+    // Accordion: one panel open at a time. The to-do list wins while it has something to handle.
+    const open = openPanel || (alertsOf(f.id).length ? 'todo' : 'rooms');
+    todo.classList.toggle('collapsed', open !== 'todo');
+    rooms.classList.toggle('collapsed', open !== 'rooms');
+    below.classList.toggle('open-rooms', open === 'rooms');
+  } else { todo.classList.remove('collapsed'); below.classList.remove('open-rooms'); }
+  document.getElementById('temi-title').innerHTML = compact ? `<span class="temi-name"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>` : "Robot d'accueil";
+  document.getElementById('temi-head-right').innerHTML = compact ? temiStateChip() : '<span class="temi-go">Ouvrir la vue Accueil <span aria-hidden="true">→</span></span>';
   // Same figures as the reception view
   const remote = ACC.mode === 'remote', panic = !!ACC.panicAt;
   const alone = coverage().segs.filter(s => !s.plan && s.k !== 'desk').reduce((a, s) => a + s.b - s.a, 0);
@@ -1067,6 +1086,12 @@ function renderTemiCard() {
   if (!document.getElementById('temi-pic')) temi.innerHTML = `<div class="temi-pic" id="temi-pic">${TEMI_SVG}<span class="ov o-tl"><span class="rec"></span>EN DIRECT</span></div><div id="temi-info"></div>`;
   const pic = document.getElementById('temi-pic');
   if (!document.getElementById('view-building').hidden) mountClip('lobby', pic, pic.querySelector('.ov'));
+  const actions = `
+    <div class="temi-actions">
+      <button class="btn primary" data-temi="take">${icon('joystick', 15)}Contrôler</button>
+      <button class="btn panic" data-temi="panic">${icon('siren', 15)}Panique</button>
+    </div>`;
+  if (compact) { document.getElementById('temi-info').innerHTML = actions; return; }
   document.getElementById('temi-info').innerHTML = `
     <div><span class="temi-name"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}${temiStateChip()}</span><small>Temi 3 · Réception</small>
       <div class="temi-stats">
@@ -1074,11 +1099,7 @@ function renderTemiCard() {
         <div><small>Résolus seul</small><b>78 %</b></div>
         <div><small>Temps solo</small><b>${Math.floor(alone)} h ${String(Math.round(alone % 1 * 60)).padStart(2, '0')}</b></div>
         <div><small>Relais visio</small><b>${relays}</b></div>
-      </div></div>
-    <div class="temi-actions">
-      <button class="btn primary" data-temi="take">${icon('joystick', 15)}Contrôler</button>
-      <button class="btn panic" data-temi="panic">${icon('siren', 15)}Panique</button>
-    </div>`;
+      </div></div>${actions}`;
 }
 // Card click opens the reception view. Its two buttons keep fixed labels: they start the takeover / alarm
 // unless already running, then open the reception view, where the operator hands back or lifts the alarm.
