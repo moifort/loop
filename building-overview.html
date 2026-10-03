@@ -962,14 +962,14 @@ const FLOORS = [
     robot: { name: 'CLN-91C5', state: 'blocked', pct: 86, bat: 63, at: [11.4, 5.4], next: 'Obstacle dans l\'app. 307' },
     blockedRoom: '307' },
   { id: 2, label: 'É2', name: 'App. 201–207', occupied: ['204'], area: 610, occ: 71, layout: apartmentLevel(2),
-    robot: { name: 'CLN-2D84', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' } },
+    robot: { name: 'CLN-2D84', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' },
+    // Luggage cart: the guest walks it from the lift to the apartment (motor assist), it drives back alone.
+    porter: { name: 'KILO-3B8D', state: 'deliver', loaded: true, leg: 0, bat: 74, trips: 9, at: [4.6, 3.05] } },
   { id: 1, label: 'É1', name: 'App. 101–107', occupied: ['103', '106'], area: 610, occ: 86, layout: apartmentLevel(1),
     robot: { name: 'CLN-7B19', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
   { id: 0, label: 'RDC', name: 'Réception', area: 420, occ: null, layout: LOBBY,
     robot: { name: 'CLN-0A3E', state: 'charge', pct: 100, bat: 64, at: [4.4, 5.4], base: [4.4, 5.4], next: 'Hall terminé · pleine dans 25 min' },
-    greeter: { name: 'TEMI-4F2A', state: 'live', visitors: 23, at: [2.6, 4.2], next: 'Recharge planifiée à 23 h' },
-    // Luggage cart: the guest pushes it to the apartment (motor assist), it drives back to the luggage room alone.
-    porter: { name: 'KILO-3B8D', state: 'bag', bat: 74, trips: 9, at: [11.3, 2.7], next: 'Prochain check-in : app. 204 vers 15 h' } },
+    greeter: { name: 'TEMI-4F2A', state: 'live', visitors: 23, at: [2.6, 4.2], next: 'Recharge planifiée à 23 h' } },
 ];
 
 // To-do list, linked to a floor (alerts per floor are derived from it).
@@ -990,7 +990,10 @@ const STATE = {
   blocked: { chip: 'err',  label: 'Bloqué',     color: '#e5484d' },
   idle:    { chip: 'idle', label: 'Planifié',   color: '#a0a7b0' },
   live:    { chip: 'acc',  label: 'En service', color: '#1e3a8a' },
-  bag:     { chip: 'bag',  label: 'À la bagagerie', color: '#7c3aed' },
+  deliver: { chip: 'bag',  label: 'Avec un client', color: '#7c3aed', next: 'Bagages vers l\'app. 204' },
+  unload:  { chip: 'bag',  label: 'Déchargement',   color: '#7c3aed', next: 'Le client vide le chariot' },
+  back:    { chip: 'bag',  label: 'Retour seul',    color: '#7c3aed', next: 'Retour à l\'ascenseur' },
+  lift:    { chip: 'bag',  label: 'À l\'ascenseur', color: '#7c3aed', next: 'Prochain client à la réception' },
 };
 // Room states share one icon set (24×24 stroke paths) between map markers and list chips.
 const ICON = {
@@ -1159,16 +1162,43 @@ const alarmPhase = () => `animation-delay:-${Math.round(performance.now() % 1000
 const alarmRobot = ([cx, cy], glyph) =>
   `<circle class="alarm-ring" cx="${cx}" cy="${cy}" style="${alarmPhase()}"/><g class="robot-alarm" style="${alarmPhase()}">${glyph}</g>`;
 
+// Piaggio Kilo as a luxury-hotel bellman cart: rectangular platform on four wheels, two brass posts joined
+// by an arch at the back, suitcases on the deck while it carries a guest's luggage.
+// Seen from +x/+y, so only the top, front (y2) and right (x2) faces of each box are drawn.
+const BRASS = '#c8a96a';
+function isoBox(x1, y1, x2, y2, za, zb, top, front, side) {
+  return poly([P(x1, y1, zb), P(x2, y1, zb), P(x2, y2, zb), P(x1, y2, zb)], `fill="${top}"`) +
+    poly(quad(x1, y2, x2, y2, za, zb), `fill="${front}"`) + poly(quad(x2, y1, x2, y2, za, zb), `fill="${side}"`);
+}
+function cartBody(x, y, z, color, loaded) {
+  const L = 0.55, Wd = 0.3, x1 = x - L, x2 = x + L, y1 = y - Wd, y2 = y + Wd;
+  let s = poly([P(x1 - .08, y1 - .08, z), P(x2 + .12, y1 - .08, z), P(x2 + .12, y2 + .12, z), P(x1 - .08, y2 + .12, z)], 'fill="rgba(0,0,0,.15)"');
+  [[x1 + .1, y2], [x2 - .1, y2], [x2 - .1, y1]].forEach(([wx, wy]) => { const [a, b] = P(wx, wy, z + 1.6); s += `<circle cx="${a}" cy="${b}" r="1.8" fill="#2a2f3b"/>`; });
+  // Deck: robot base in its colour, carpet on top
+  s += isoBox(x1, y1, x2, y2, z + 2, z + 6, '#4b3a6b', color, `color-mix(in srgb, ${color} 75%, #000)`);
+  // Brass posts at the back end and the arched top rail
+  const post = (py) => line(P(x1 + .05, py, z + 6), P(x1 + .05, py, z + 28), `stroke="${BRASS}" stroke-width="1.8" stroke-linecap="round"`);
+  const [ax, ay] = P(x1 + .05, y1 + .04, z + 28), [bx, by] = P(x1 + .05, y2 - .04, z + 28);
+  s += post(y1 + .04) + `<path d="M${ax},${ay} Q${(ax + bx) / 2},${(ay + by) / 2 - 7} ${bx},${by}" fill="none" stroke="${BRASS}" stroke-width="1.8" stroke-linecap="round"/>`;
+  if (loaded) {
+    s += isoBox(x1 + .12, y1 + .04, x1 + .5, y2 - .04, z + 6, z + 20, '#3d4656', '#2a303c', '#323a48');
+    s += isoBox(x1 + .58, y1 + .06, x2 - .1, y2 - .08, z + 6, z + 14, '#c8a96a', '#a88a4f', '#b8995c');
+  }
+  return s + post(y2 - .04);
+}
+
 function robotGlyph(x, y, z, color, label, opts = {}) {
   const [cx, cy] = P(x, y, z);
-  const h = opts.tall ? 26 : 5, rx = opts.tall ? 7 : 8, ry = rx * 0.5;
-  let s = `<ellipse cx="${cx}" cy="${cy}" rx="${rx + 3}" ry="${ry + 1.5}" fill="rgba(0,0,0,.15)"/>`;
+  const h = opts.cart ? 28 : opts.tall ? 26 : 5, rx = opts.cart ? 16 : opts.tall ? 7 : 8, ry = rx * 0.5;
+  let s = opts.cart ? '' : `<ellipse cx="${cx}" cy="${cy}" rx="${rx + 3}" ry="${ry + 1.5}" fill="rgba(0,0,0,.15)"/>`;
   // Pointed out from the robots table: a ring around its base, breathing in the robot's colour.
   if (opts.focus) s += `<ellipse class="focus-ring" style="animation-delay:-${Math.round(performance.now() % 1400)}ms" cx="${cx}" cy="${cy}" rx="${rx + 10}" ry="${(rx + 10) * .5}" fill="none" stroke="${color}" stroke-width="2.5"/>`;
   if (opts.pulse) s += `<circle class="pulse" cx="${cx}" cy="${cy - h / 2}" r="6" fill="${color}"/>`;
-  s += `<path d="M${cx - rx},${cy} L${cx - rx},${cy - h} A${rx},${ry} 0 0 1 ${cx + rx},${cy - h} L${cx + rx},${cy} A${rx},${ry} 0 0 1 ${cx - rx},${cy} Z" fill="${color}"/>`;
-  s += `<ellipse cx="${cx}" cy="${cy - h}" rx="${rx}" ry="${ry}" fill="#fff" opacity=".35"/>`;
-  if (opts.cart) s += `<rect x="${cx - 4}" y="${cy - h - 11}" width="8" height="10" rx="1.5" fill="${color}" stroke="#fff" stroke-width=".8"/><path d="M${cx - 1.8},${cy - h - 11} v-2 h3.6 v2" fill="none" stroke="${color}" stroke-width="1.2"/>`;
+  if (opts.cart) s += cartBody(x, y, z, color, opts.loaded);
+  else {
+    s += `<path d="M${cx - rx},${cy} L${cx - rx},${cy - h} A${rx},${ry} 0 0 1 ${cx + rx},${cy - h} L${cx + rx},${cy} A${rx},${ry} 0 0 1 ${cx - rx},${cy} Z" fill="${color}"/>`;
+    s += `<ellipse cx="${cx}" cy="${cy - h}" rx="${rx}" ry="${ry}" fill="#fff" opacity=".35"/>`;
+  }
   if (opts.tall) s += `<rect x="${cx - 4}" y="${cy - h - 12}" width="8" height="10" rx="2" fill="${color}"/><rect x="${cx - 3}" y="${cy - h - 10}" width="6" height="4" rx="1" fill="#fff" opacity=".8"/>`;
   // Linked labels (greeter → reception view) get an "open" arrow at the end and a pointer.
   const lw = label.length * 7 + (opts.alert ? 30 : 22) + (opts.link ? 20 : 0);
@@ -1259,7 +1289,8 @@ function openFloor(f, z0) {
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', focus: focus === r.name, overlay: robotTags }) });
   if (f.porter) {
     const p = f.porter;
-    items.push({ d: p.at[0] + p.at[1] + 0.1, svg: robotGlyph(p.at[0], p.at[1], z0, STATE[p.state].color, p.name, { cart: true, focus: focus === p.name, overlay: robotTags }) });
+    // Drawn in front of the corridor's front partitions (y = 3.6) along its whole length, so the tall cart stays visible.
+    items.push({ d: p.at[0] + 0.6 + 3.65, svg: robotGlyph(p.at[0], p.at[1], z0, STATE[p.state].color, p.name, { cart: true, loaded: p.loaded, focus: focus === p.name, overlay: robotTags }) });
   }
   if (f.greeter) {
     const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#1e3a8a', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, alert: !!ACC.panicAt, link: 'accueil', focus: focus === f.greeter.name });
@@ -1554,9 +1585,9 @@ function batteryIcon(pct, charging) {
 const ROOM_SHORT = { 'Réception': 'Réc.', 'Petit-déjeuner': 'P.-déj.', 'Bagagerie': 'Bag.' };
 const placeTag = (lvl, room) => `<span class="tags"><span class="tag-lvl">${lvl}</span><span class="tag-room">${ROOM_SHORT[room] || room}</span></span>`;
 
-// Last cell: next step, then a button to the robot's sheet (reception view for the greeter, none for the cart yet).
+// Last cell: next step, then a "Détail" button to the robot's sheet (the reception view is the greeter's sheet; none for the cart yet).
 const nextCell = (text, open, cls = 'muted') => `<td class="${cls}"><div class="next"><span>${text}</span>${open
-  ? `<button class="btn sheet" data-open="${open}">${open === 'accueil' ? 'Vue Accueil' : 'Fiche'} <span aria-hidden="true">→</span></button>` : ''}</div></td>`;
+  ? `<button class="btn sheet" data-open="${open}">Détail <span aria-hidden="true">→</span></button>` : ''}</div></td>`;
 // Row attributes: floor + robot name, so a click selects the floor and points the robot out on the building.
 const rowAttrs = (f, name, trouble) => `data-id="${f.id}" data-name="${name}" class="${trouble ? 'trouble' : ''}${focus === name ? ' focus' : ''}" title="Voir ${name} sur le bâtiment"`;
 
@@ -1567,10 +1598,10 @@ function renderRows() {
       <td>${temiStateChip()}</td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
       ${nextCell(f.greeter.next, 'accueil')}</tr>`);
-    if (f.porter) { const p = f.porter; rows.push(`<tr ${rowAttrs(f, p.name)}><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${placeTag(f.label, 'Bagagerie')}</div></div></td>
+    if (f.porter) { const p = f.porter; rows.push(`<tr ${rowAttrs(f, p.name)}><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${placeTag(f.label, p.state === 'unload' ? '204' : 'Couloir')}</div></div></td>
       <td>${stateChip(STATE[p.state])}</td>
       <td><span class="muted">${p.trips} trajets bagages · Piaggio Kilo</span></td>
-      ${nextCell(p.next)}</tr>`); }
+      ${nextCell(STATE[p.state].next)}</tr>`); }
     const r = f.robot, st = STATE[r.state];
     rows.push(`<tr ${rowAttrs(f, r.name, r.state === 'blocked')}>
       <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${TILE_MENAGE}</span><div><span class="nm-row"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>${placeTag(f.label, robotRoom(f.id))}</div></div></td>
@@ -1653,10 +1684,31 @@ FLOORS.forEach(f => {
 });
 
 let last = performance.now(), sinceUi = 0;
+// Luggage cart loop on its floor: lift → door of 204 with the guest (loaded), pause while they unload,
+// then back to the lift alone (empty), pause, and again.
+const PORTER_SPEED = 0.7;
+const PORTER_STOPS = [
+  { at: [10.5, 3.05], wait: 3500, state: 'unload' },
+  { at: [4.6, 3.05], wait: 2500, state: 'lift' },
+];
+function movePorter(p, now, dt) {
+  if (p.waitUntil) {
+    if (now < p.waitUntil) return false;
+    p.waitUntil = 0; p.leg = (p.leg + 1) % PORTER_STOPS.length;
+    p.loaded = p.leg === 0; p.state = p.loaded ? 'deliver' : 'back';
+  }
+  const stop = PORTER_STOPS[p.leg], dx = stop.at[0] - p.at[0], dy = stop.at[1] - p.at[1], dist = Math.hypot(dx, dy), len = PORTER_SPEED * dt;
+  if (dist > len) { p.at = [p.at[0] + dx / dist * len, p.at[1] + dy / dist * len]; return true; }
+  p.at = [...stop.at]; p.state = stop.state; p.waitUntil = now + stop.wait;
+  if (p.leg === 0) p.trips++;
+  return true;
+}
+
 function step(now) {
   const dt = Math.min(0.1, (now - last) / 1000); last = now;
   let moved = false;
   FLOORS.forEach(f => {
+    if (f.porter && movePorter(f.porter, now, dt) && shown() === f.id) moved = true;
     const r = f.robot;
     // Demo loop: a finished robot shows "Terminé" for a moment, then starts a new round from the first apartment.
     if (r.state === 'done' && r.restartAt && now >= r.restartAt) {
