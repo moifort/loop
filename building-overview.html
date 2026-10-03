@@ -88,14 +88,26 @@
   .below.with-temi #rooms-card { grid-area: rooms; }
   @container (max-width: 800px) { .below.with-temi, .below.with-temi.open-rooms { height: auto; grid-template-rows: none; grid-template-areas: "temi" "todo" "rooms"; } }
   /* Whole building: compact Temi card on the left of the to-do list */
-  .below.temi-compact { grid-template-columns: minmax(300px, 360px) 1fr; grid-template-areas: "temi todo"; }
+  .below.temi-compact { height: 300px; grid-template-columns: minmax(300px, 360px) 1fr; grid-template-areas: "temi todo"; }
+  .below.temi-compact > .card { min-height: 0; }
+  .below.temi-compact #todo-card > .todos { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
   .below.temi-compact #temi-card { grid-area: temi; }
   .below.temi-compact #todo-card { grid-area: todo; }
-  @container (max-width: 800px) { .below.temi-compact { grid-template-areas: "temi" "todo"; } }
+  @container (max-width: 800px) { .below.temi-compact { height: auto; grid-template-columns: 1fr; grid-template-areas: "temi" "todo"; } }
   #temi-card.compact .temi { grid-template-columns: 1fr; gap: 0; }
-  #temi-card.compact .temi-pic { height: auto; aspect-ratio: 16 / 9; }
+
   #temi-card.compact .temi-actions { margin-top: 0; }
-  #temi-card.compact h3 .temi-name { font-size: 13px; }
+  /* Header the same height as the to-do card's: the battery must not grow the title line */
+  #temi-card.compact h3 .temi-name { font-size: 13px; min-height: 0; }
+  #temi-card.compact h3 .batt { margin: -3px 0; }
+  #temi-card.compact .card-h .chip { margin: -3px 0; }
+  /* Both cards share the row height; actions sit at the bottom */
+  .below.temi-compact { align-items: stretch; }
+  .below.temi-compact > .card { display: flex; flex-direction: column; }
+  /* The feed grows into the leftover height (cropped), actions stay at the bottom */
+  #temi-card.compact .temi { flex: 1; display: flex; flex-direction: column; align-items: stretch; min-height: 0; }
+  #temi-card.compact .temi-pic { flex: 1 1 auto; aspect-ratio: auto; min-height: 150px; }
+  #temi-card.compact #temi-info { flex: none; }
   .chev { display: none; color: var(--muted); transition: transform .15s; }
   .below.with-temi .chev { display: block; }
   .below.with-temi #todo-card .card-h, .below.with-temi #rooms-card .card-h { cursor: pointer; user-select: none; }
