@@ -204,15 +204,17 @@
   .temi-pic.has-video { background: #1c2029; }
   .temi-pic.has-video > svg { visibility: hidden; }
   .temi-pic .ov { top: 8px; left: 8px; font-size: 10px; }
-  .temi { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 4px 16px 4px; align-items: start; }
+  .temi { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 4px 16px 16px; align-items: start; }
   .temi-pic { height: 132px; border-radius: 10px; background: linear-gradient(180deg, #f6f3ff, #ece6ff); display: grid; place-items: center; }
   .temi b { font-weight: 600; display: block; }
   .temi small { color: var(--muted); }
   .temi-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; margin-top: 10px; }
   .temi-stats div small { display: block; font-size: 11px; }
   .temi-stats div b { font-size: 16px; font-variant-numeric: tabular-nums; }
-  .temi-go { display: block; padding: 10px 16px 14px; color: var(--blue); font-weight: 500; font-size: 12px; }
-  #temi-card:hover .temi-go { text-decoration: underline; }
+  /* Info column spans the feed's height: the "open" badge sits at its bottom-right, level with the feed's bottom edge */
+  #temi-info { align-self: stretch; display: flex; flex-direction: column; }
+  .temi-go { align-self: flex-end; margin-top: auto; display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 8px; background: #efeaff; color: #5b3fd6; font-size: 12px; line-height: 16px; font-weight: 550; white-space: nowrap; }
+  #temi-card:hover .temi-go { background: #e2d9ff; }
 
   .table-scroll { overflow-x: auto; }
   table { width: 100%; border-collapse: collapse; }
@@ -368,7 +370,6 @@
     <div class="card" id="temi-card" role="link" tabindex="0" title="Ouvrir la vue Accueil">
       <div class="card-h"><h3>Robot d'accueil</h3><div class="right" id="temi-state"></div></div>
       <div class="temi" id="temi"></div>
-      <span class="temi-go">Ouvrir la vue Accueil <span aria-hidden="true">→</span></span>
     </div>
   </div>
 
@@ -934,7 +935,8 @@ function renderTemiCard() {
         <div><small>Résolus seul</small><b>78 %</b></div>
         <div><small>Temps solo</small><b>${Math.floor(alone)} h ${String(Math.round(alone % 1 * 60)).padStart(2, '0')}</b></div>
         <div><small>Relais visio</small><b>${relays}</b></div>
-      </div></div>`;
+      </div></div>
+    <span class="temi-go">Ouvrir la vue Accueil <span aria-hidden="true">→</span></span>`;
 }
 document.getElementById('temi-card').onclick = () => showView('accueil');
 // Clicking a header opens that panel; clicking the open one hands over to the other.
