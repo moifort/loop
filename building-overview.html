@@ -1193,14 +1193,36 @@ function mountClip(name, parent, before = null) {
       else if (v.currentTime >= c.end - 0.6) v.classList.add('fading');
     });
     v.addEventListener('playing', () => v.parentElement && v.parentElement.classList.add('has-video'));
+    // A loop must never end: restart on 'ended' (if the loop point is missed) and retry after a network error.
+    v.addEventListener('ended', () => { v.currentTime = 0; v.play().catch(() => {}); });
+    v.addEventListener('error', () => setTimeout(() => reloadClip(v), 3000));
   }
-  if (!parent || v.error) return;
+  if (!parent) return;
   // Shared between the reception view and the Temi card: only move it when it lives elsewhere.
   if (v.parentElement === parent) { if (v.paused) v.play().catch(() => {}); return; }
   parent.insertBefore(v, before);
   if (v.readyState >= 2) parent.classList.add('has-video');
   v.play().catch(() => {});
 }
+function reloadClip(v) {
+  v.classList.remove('fading');
+  v.load();
+  v.play().catch(() => {});
+}
+// Watchdog for the demo: any clip on the page that is paused (moved between views, paused off-screen by the
+// browser, autoplay hiccup) is resumed; one that has not advanced for 6 s (stalled stream) is reloaded.
+setInterval(() => {
+  Object.values(clipEls).forEach(v => {
+    if (!v.isConnected) return;
+    if (v.paused) { v.play().catch(() => {}); return; }
+    if (v.currentTime === v.lastTime) { v.stuck = (v.stuck || 0) + 1; if (v.stuck >= 3) { v.stuck = 0; reloadClip(v); } }
+    else v.stuck = 0;
+    v.lastTime = v.currentTime;
+  });
+}, 2000);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) Object.values(clipEls).forEach(v => v.isConnected && v.play().catch(() => {}));
+});
 const CHECK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>';
 
 function renderLive() {
