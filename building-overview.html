@@ -93,12 +93,15 @@
   .below.with-temi #rooms-card { grid-area: rooms; }
   @container (max-width: 800px) { .below.with-temi, .below.with-temi.open-rooms { height: auto; grid-template-rows: none; grid-template-areas: "temi" "todo" "rooms"; } }
   /* Whole building: compact Temi card on the left of the to-do list */
-  .below.temi-compact { height: 300px; grid-template-columns: minmax(300px, 360px) 1fr; grid-template-areas: "temi todo"; }
+  /* Whole building: Temi on top, the luggage cart under it; the to-do list spans both, fixed height, scrolling inside */
+  .below.temi-compact { height: 520px; grid-template-columns: minmax(300px, 360px) 1fr; grid-template-rows: 1fr auto; grid-template-areas: "temi todo" "kilo todo"; }
+  .below.temi-compact #kilo-card { grid-area: kilo; }
+  .below:not(.temi-compact) #kilo-card { display: none; }
   .below.temi-compact > .card { min-height: 0; }
   .below.temi-compact #todo-card > .todos { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
   .below.temi-compact #temi-card { grid-area: temi; }
   .below.temi-compact #todo-card { grid-area: todo; }
-  @container (max-width: 800px) { .below.temi-compact { height: auto; grid-template-columns: 1fr; grid-template-areas: "temi" "todo"; } }
+  @container (max-width: 800px) { .below.temi-compact { height: auto; grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "temi" "kilo" "todo"; } }
   #temi-card.compact .temi { grid-template-columns: 1fr; gap: 0; }
 
   #temi-card.compact .temi-actions { margin-top: 0; }
@@ -271,6 +274,23 @@
   /* Two equal actions, bottom edge level with the feed */
   .temi-actions { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-top: 12px; }
   .temi-actions .btn { justify-content: center; }
+  /* Luggage cart card: where it is on its corridor, what it is doing, actions */
+  #kilo-card { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+  #kilo-card:hover { border-color: #cfc2f5; box-shadow: 0 0 0 3px #f1ecfd; }
+  #kilo-card h3 .temi-name { font-size: 13px; min-height: 0; }
+  #kilo-card h3 .batt, #kilo-card .card-h .chip { margin: -3px 0; }
+  .kilo { padding: 2px 16px 16px; }
+  .kilo-track { position: relative; height: 34px; margin: 4px 0 2px; }
+  .kilo-track .rail { position: absolute; left: 6px; right: 6px; top: 16px; height: 2px; border-radius: 2px; background: repeating-linear-gradient(90deg, #d9dde3 0 6px, transparent 6px 10px); }
+  .kilo-track .end { position: absolute; top: 12px; width: 10px; height: 10px; border-radius: 3px; background: #fff; border: 2px solid #c4c9d0; }
+  .kilo-track .end.l { left: 0; } .kilo-track .end.r { right: 0; border-color: var(--bagages); }
+  .kilo-track .cart { position: absolute; top: 5px; width: 24px; height: 24px; margin-left: -12px; border-radius: 7px; background: var(--bagages); display: grid; place-items: center; box-shadow: 0 0 0 3px #fff; transition: left 1.5s linear; }
+  .kilo-track .cart.empty { background: #fff; border: 2px solid var(--bagages); color: var(--bagages); }
+  .kilo-ends { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+  .kilo .btn:disabled { opacity: .5; cursor: default; }
+  .kilo-what { margin-top: 10px; line-height: 1.45; }
+  .kilo-what b { font-weight: 600; }
+  .kilo-what small { display: block; color: var(--muted); font-size: 12px; }
   /* Temi's live state chip, right of the card title, pulsing in its own colour */
   .temi-head { display: inline-flex; align-items: center; gap: 8px; }
   .temi-head .chip, #temi-head-right .chip { font-weight: 550; animation: chip-pulse 1.8s ease-out infinite; }
@@ -697,6 +717,11 @@
       <div class="card-h"><h3 id="temi-title">Robot d'accueil</h3><div class="right" id="temi-head-right"></div></div>
       <div class="temi" id="temi"></div>
     </div>
+    <!-- Luggage cart (Piaggio Kilo): live position on its corridor, current errand, actions -->
+    <div class="card" id="kilo-card" role="link" tabindex="0" title="Voir le chariot sur le bâtiment">
+      <div class="card-h"><h3 id="kilo-title"></h3><div class="right" id="kilo-head-right"></div></div>
+      <div class="kilo" id="kilo"></div>
+    </div>
   </div>
 
   <div class="card">
@@ -965,7 +990,8 @@ const FLOORS = [
   { id: 2, label: 'É2', name: 'App. 201–207', occupied: ['204'], area: 610, occ: 71, layout: apartmentLevel(2),
     robot: { name: 'CLN-2D84', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' },
     // Luggage cart: the guest walks it from the lift to the apartment (motor assist), it drives back alone.
-    porter: { name: 'KILO-3B8D', state: 'deliver', loaded: true, leg: 0, bat: 74, trips: 9, at: [4.6, 3.05] } },
+    porter: { name: 'KILO-3B8D', state: 'deliver', loaded: true, leg: 0, bat: 74, trips: 9, at: [4.6, 3.05],
+      guests: [{ name: 'M. Bernard', bags: 2, since: '14 h 52' }, { name: 'Mme Okafor', bags: 3, since: '15 h 10' }], guest: 0 } },
   { id: 1, label: 'É1', name: 'App. 101–107', occupied: ['103', '106'], area: 610, occ: 86, layout: apartmentLevel(1),
     robot: { name: 'CLN-7B19', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
   { id: 0, label: 'RDC', name: 'Réception', area: 420, occ: null, layout: LOBBY,
@@ -995,6 +1021,7 @@ const STATE = {
   unload:  { chip: 'bag',  label: 'Déchargement',   color: '#7c3aed', next: 'Le client vide le chariot' },
   back:    { chip: 'bag',  label: 'Retour seul',    color: '#7c3aed', next: 'Retour à l\'ascenseur' },
   lift:    { chip: 'bag',  label: 'À l\'ascenseur', color: '#7c3aed', next: 'Prochain client à la réception' },
+  parked:  { chip: 'idle', label: 'À la bagagerie', color: '#7c3aed', next: 'En attente d\'une mission' },
 };
 // Room states share one icon set (24×24 stroke paths) between map markers and list chips.
 const ICON = {
@@ -1303,7 +1330,7 @@ function openFloor(f, z0) {
   });
   const r = f.robot, st = STATE[r.state];
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', focus: focus === r.name, overlay: robotTags, top: topTags }) });
-  if (f.porter) {
+  if (f.porter && f.porter.state !== 'parked') {
     const p = f.porter;
     // Drawn in front of the corridor's front partitions (y = 3.6) along its whole length, so the tall cart stays visible.
     items.push({ d: p.at[0] + 0.6 + 3.65, svg: robotGlyph(p.at[0], p.at[1], z0, STATE[p.state].color, p.name, { cart: true, loaded: p.loaded, focus: focus === p.name, overlay: robotTags, top: topTags }) });
@@ -1601,6 +1628,46 @@ function batteryIcon(pct, charging) {
 const ROOM_SHORT = { 'Réception': 'Réc.', 'Petit-déjeuner': 'P.-déj.', 'Bagagerie': 'Bag.' };
 const placeTag = (lvl, room) => `<span class="tags"><span class="tag-lvl">${lvl}</span><span class="tag-room">${ROOM_SHORT[room] || room}</span></span>`;
 
+// Where the luggage cart is: corridor of its floor, at the apartment door while unloading, or parked downstairs.
+const porterPlace = f => f.porter.state === 'parked' ? placeTag('RDC', 'Bagagerie') : placeTag(f.label, f.porter.state === 'unload' ? '204' : 'Couloir');
+// What it is doing, with the guest it serves.
+function porterWhat(p) {
+  const g = p.guests[p.guest], n = p.guests[(p.guest + 1) % p.guests.length];
+  return {
+    deliver: `<b>Avec ${g.name}</b> · ${g.bags} valises vers l'app. 204<small>Check-in à ${g.since} · le client pousse, le moteur assiste</small>`,
+    unload:  `<b>${g.name} vide le chariot</b> devant l'app. 204<small>${g.bags} valises · repart seul dans quelques secondes</small>`,
+    back:    `<b>Revient seul</b> vers l'ascenseur, à vide<small>${p.recalled ? 'Retour à la bagagerie demandé' : `Prochain client : ${n.name}, check-in à ${n.since}`}</small>`,
+    lift:    `<b>Attend à l'ascenseur</b> de l'É2<small>Prochain client : ${n.name} · ${n.bags} valises</small>`,
+    parked:  `<b>Rangé à la bagagerie</b> au RDC<small>Prêt pour ${n.name}, check-in à ${n.since}</small>`,
+  }[p.state];
+}
+function renderKiloCard() {
+  const f = FLOORS.find(x => x.porter), p = f.porter, [x0, x1] = [PORTER_STOPS[1].at[0], PORTER_STOPS[0].at[0]];
+  const pos = Math.max(0, Math.min(1, (p.at[0] - x0) / (x1 - x0)));
+  setHTML('kilo-title', `<span class="temi-name"><b>${p.name}</b>${batteryIcon(p.bat)}</span>`);
+  setHTML('kilo-head-right', stateChip(STATE[p.state]));
+  const parked = p.state === 'parked';
+  const track = parked ? '' : `<div class="kilo-track"><span class="rail"></span><span class="end l"></span><span class="end r"></span>
+      <span class="cart ${p.loaded ? '' : 'empty'}" style="left:calc(12px + (100% - 24px) * ${pos.toFixed(3)})">${icon('luggage', 14, { color: p.loaded ? '#fff' : 'currentColor', sw: 2.2 })}</span></div>
+    <div class="kilo-ends"><span>Ascenseur É2</span><span>App. 204</span></div>`;
+  setHTML('kilo', `<div style="display:flex;align-items:center;gap:8px">${porterPlace(f)}<small class="muted">${p.trips} trajets aujourd'hui · Piaggio Kilo</small></div>
+    ${track}
+    <p class="kilo-what">${porterWhat(p)}</p>
+    <div class="temi-actions">
+      <button class="btn" data-kilo="reprog">${icon('clock', 15)}Reprogrammer</button>
+      <button class="btn" data-kilo="home"${parked || p.recalled ? ' disabled' : ''}>${icon('luggage', 15)}Retour bagagerie</button>
+    </div>`);
+}
+// Buttons run the action; anywhere else on the card points the cart out on its floor.
+document.getElementById('kilo-card').onclick = e => {
+  const act = e.target.closest('[data-kilo]')?.dataset.kilo;
+  if (act) return porterAction(act);
+  const f = FLOORS.find(x => x.porter);
+  if (f.porter.state === 'parked') return;
+  select(f.id, f.porter.name);
+  document.querySelector('#view-building .stage').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+
 // Last cell: next step, then a "Détail" button to the robot's sheet (the reception view is the greeter's sheet; none for the cart yet).
 const nextCell = (text, open, cls = 'muted') => `<td class="${cls}"><div class="next"><span>${text}</span>${open
   ? `<button class="btn sheet" data-open="${open}">Détail <span aria-hidden="true">→</span></button>` : ''}</div></td>`;
@@ -1615,7 +1682,7 @@ function renderRows() {
       <td>${temiStateChip()}</td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
       ${nextCell(f.greeter.next, 'accueil')}</tr>`);
-    if (f.porter) { const p = f.porter; special.push(`<tr ${rowAttrs(f, p.name)}><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${placeTag(f.label, p.state === 'unload' ? '204' : 'Couloir')}</div></div></td>
+    if (f.porter) { const p = f.porter; special.push(`<tr ${rowAttrs(f, p.name)}><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${porterPlace(f)}</div></div></td>
       <td>${stateChip(STATE[p.state])}</td>
       <td><span class="muted">${p.trips} trajets bagages · Piaggio Kilo</span></td>
       ${nextCell(STATE[p.state].next)}</tr>`); }
@@ -1660,7 +1727,7 @@ floorList.addEventListener('mouseover', e => {
   if (id !== preview) { preview = id; renderBuilding(); }
 });
 floorList.addEventListener('mouseleave', () => { preview = null; renderBuilding(); });
-function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderRows(); if (typeof renderMenage === 'function') { renderMenage(); renderRobotSheet(); } }
+function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderKiloCard(); renderRows(); if (typeof renderMenage === 'function') { renderMenage(); renderRobotSheet(); } }
 
 const tick = () => document.getElementById('clock').textContent =
   new Date().toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
@@ -1710,16 +1777,33 @@ const PORTER_STOPS = [
   { at: [4.6, 3.05], wait: 2500, state: 'lift' },
 ];
 function movePorter(p, now, dt) {
+  if (p.state === 'parked') return false;
   if (p.waitUntil) {
     if (now < p.waitUntil) return false;
     p.waitUntil = 0; p.leg = (p.leg + 1) % PORTER_STOPS.length;
     p.loaded = p.leg === 0; p.state = p.loaded ? 'deliver' : 'back';
+    // Each new run out of the lift is the next guest's
+    if (p.loaded) p.guest = (p.guest + 1) % p.guests.length;
   }
   const stop = PORTER_STOPS[p.leg], dx = stop.at[0] - p.at[0], dy = stop.at[1] - p.at[1], dist = Math.hypot(dx, dy), len = PORTER_SPEED * dt;
   if (dist > len) { p.at = [p.at[0] + dx / dist * len, p.at[1] + dy / dist * len]; return true; }
-  p.at = [...stop.at]; p.state = stop.state; p.waitUntil = now + stop.wait;
+  p.at = [...stop.at];
+  // Sent back to the luggage room: it goes down in the lift and waits there
+  if (p.recalled && p.leg === 1) { p.state = 'parked'; p.recalled = false; return true; }
+  p.state = stop.state; p.waitUntil = now + stop.wait;
   if (p.leg === 0) p.trips++;
   return true;
+}
+// Card actions. Back to the luggage room: drop the errand, drive empty to the lift, then park downstairs.
+// Reprogram: start the next guest's run from where the cart is (out of the luggage room if parked).
+function porterAction(act) {
+  const p = FLOORS.find(f => f.porter).porter;
+  if (act === 'home') Object.assign(p, { recalled: true, leg: 1, loaded: false, state: 'back', waitUntil: 0 });
+  if (act === 'reprog') {
+    if (p.state === 'parked') p.at = [...PORTER_STOPS[1].at];
+    Object.assign(p, { recalled: false, leg: 0, loaded: true, state: 'deliver', waitUntil: 0, guest: (p.guest + 1) % p.guests.length });
+  }
+  renderAll();
 }
 
 function step(now) {
