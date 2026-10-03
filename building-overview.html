@@ -193,7 +193,8 @@
   .chip.err { background: var(--red-soft); color: #b42318; }
   .chip.idle { background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
   .chip.acc { background: #e4e8f3; color: #1e3a8a; }
-  .chip.occ { background: #e3e8ff; color: #3451b2; }
+  /* Operator / in-progress chips use the app's primary blue */
+  .chip.occ { background: var(--blue-soft); color: var(--blue); }
   .chip.bag { background: #efe8fd; color: #6d28d9; }
   /* Occupied rooms: neutral grey, so they never read as the sapphire cleaning colour */
   .chip.guest { background: #eceef1; color: #4b5260; }
@@ -530,7 +531,7 @@
   #acc-guest-card:not([hidden]) { position: absolute; inset: 0; z-index: 1; display: flex; flex-direction: column; }
   .guest { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; }
   .guest-id { display: flex; align-items: center; gap: 12px; padding: 4px 16px 12px; }
-  .guest-id .av { width: 42px; height: 42px; border-radius: 50%; background: #e4e8f3; color: #1e3a8a; display: grid; place-items: center; font-weight: 600; flex: none; }
+  .guest-id .av { width: 42px; height: 42px; border-radius: 50%; background: var(--blue-soft); color: var(--blue); display: grid; place-items: center; font-weight: 600; flex: none; }
   .guest-id b { display: block; font-size: 15px; font-weight: 600; }
   .guest-id small { color: var(--muted); font-size: 12px; }
   .guest-ask { margin: 0 16px 10px; padding: 8px 10px; border-radius: 8px; background: #fff4e0; color: #7a4a00; font-size: 12px; line-height: 1.45; }
