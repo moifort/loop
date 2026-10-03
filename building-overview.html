@@ -372,6 +372,56 @@
   .men-log .lv, .plan-row .lv { display: inline-flex; justify-content: center; height: 20px; padding: 0 5px; border-radius: 3px; font-size: 11px; line-height: 20px; font-weight: 600; background: #3a4150; color: #fff; }
   .men-log .a b { color: var(--text); font-weight: 500; }
 
+  /* ---------- Robot sheet ---------- */
+  .rf-head { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .rf-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .rf-top .rb-ic { width: 52px; height: 52px; border-radius: 12px; }
+  .rf-id { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .rf-id .mr-name { font-size: 17px; gap: 8px; }
+  .rf-id .sub { color: var(--muted); font-size: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .rf-top .acts { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+  .rf-back { color: var(--blue); font-weight: 500; font-size: 12px; align-self: flex-start; }
+  .rf-back:hover { text-decoration: underline; }
+  .rf-head .kpis { padding: 0; }
+  /* Robot in trouble: the sheet header goes solid red too */
+  .rf-head.blocked { background: var(--red); border-color: var(--red); color: #fff; }
+  .rf-head.blocked .rb-ic { background: rgba(255,255,255,.22) !important; }
+  .rf-head.blocked .chip { background: #fff; color: #b42318; }
+  .rf-head.blocked .tag-lvl { background: rgba(0,0,0,.28); }
+  .rf-head.blocked .tag-room { background: #fff; color: #b42318; }
+  .rf-head.blocked .sub, .rf-head.blocked .rf-back, .rf-head.blocked .kpi small, .rf-head.blocked .kpi span { color: #fff; }
+  .rf-head.blocked .btn { background: transparent; border-color: rgba(255,255,255,.6); color: #fff; }
+  .rf-head.blocked .btn:hover { background: rgba(255,255,255,.15); }
+  .rf-head.blocked .btn.light { background: #fff; border-color: #fff; color: #b42318; }
+  .rf-map { padding: 4px 16px 0; }
+  .rf-map svg { width: 100%; max-width: 560px; height: auto; display: block; margin: 0 auto; }
+  .rf-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  @container (max-width: 900px) { .rf-two { grid-template-columns: 1fr; } }
+  .rf-rows { padding: 0 16px 12px; }
+  .rf-row { display: flex; align-items: baseline; gap: 10px; padding: 8px 0; border-top: 1px solid var(--border); }
+  .rf-row:first-child { border-top: none; }
+  .rf-row > span { color: var(--muted); flex: 1; }
+  .rf-row b { font-weight: 500; text-align: right; }
+  .rf-row small { display: block; color: var(--muted); font-size: 11px; font-weight: 400; }
+  .rf-cons { display: flex; flex-direction: column; gap: 12px; padding: 4px 16px 16px; }
+  .rf-cons .m small { color: var(--muted); font-size: 11px; }
+  .rf-book li { display: grid; grid-template-columns: 62px 1fr; gap: 12px; padding: 11px 16px; border-top: 1px solid var(--border); }
+  .rf-book li:first-child { border-top: none; }
+  .rf-book time { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; padding-top: 2px; }
+  .rf-book .t { display: flex; align-items: center; gap: 8px; font-weight: 600; flex-wrap: wrap; }
+  .rf-book .t .who { margin-left: auto; color: var(--muted); font-weight: 400; font-size: 12px; }
+  .rf-book p { color: var(--muted); margin-top: 3px; line-height: 1.45; }
+  .rf-bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; align-items: end; height: 120px; padding: 8px 16px 0; }
+  .rf-bars div { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; height: 100%; font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .rf-bars i { width: 100%; max-width: 34px; border-radius: 5px 5px 2px 2px; background: var(--menage); }
+  .rf-bars .today i { background: repeating-linear-gradient(135deg, var(--menage) 0 6px, #33bbb1 6px 12px); }
+  .rf-bars .stop { color: var(--red); font-weight: 600; }
+  .rf-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; padding: 4px 16px 10px; color: var(--muted); font-size: 11px; text-align: center; }
+  .rf-plan { padding: 6px 16px 0; }
+  .rf-plan .plan-track { height: 22px; }
+  .rf-plan .plan-axis { margin-left: 0; }
+  .rf-todo-acts { display: flex; gap: 14px; margin-top: 6px; }
+
   /* ---------- Reception robot position ---------- */
   .pos-map { padding: 2px 16px 0; }
   .pos-map svg { width: 100%; max-width: 340px; height: auto; display: block; margin: 0 auto; }
@@ -504,6 +554,7 @@
     <i data-icon="chevron-down" data-size="14"></i>
   </button>
   <span class="sep" data-crumb hidden>/</span><span data-crumb id="crumb-label" hidden>Accueil</span>
+  <span class="sep" data-crumb2 hidden>/</span><span data-crumb2 id="crumb-sub" hidden></span>
   <span class="right" id="clock"></span>
   <!-- Always-available panic button, in the top bar on every view -->
   <button class="panic-fab" id="panic-fab" title="Déclencher le bouton panique">
@@ -517,6 +568,8 @@
 <div class="acc-banner" id="acc-banner" hidden></div>
 <!-- Cleaning view: full-width banner for the most urgent robot alert -->
 <div class="acc-banner" id="men-banner" hidden></div>
+<!-- Robot sheet: banner for the robot's most urgent open problem -->
+<div class="acc-banner" id="rf-banner" hidden></div>
 <div class="wrap" id="view-building">
 
   <div class="stage">
@@ -645,6 +698,63 @@
     <div class="card">
       <div class="card-h"><h3>Journal des robots</h3><div class="right">aujourd'hui</div></div>
       <ul class="log men-log" id="men-log"></ul>
+    </div>
+  </div>
+
+</div>
+
+<!-- Robot sheet: one cleaning robot — where it is, its base, logbook, stats, consumables -->
+<div class="wrap" id="view-robot" hidden>
+
+  <div class="card rf-head" id="rf-head"></div>
+
+  <div class="acc-grid">
+    <div class="card">
+      <div class="card-h"><h3>Où il se trouve</h3><div class="right" id="rf-map-sub"></div></div>
+      <div class="rf-map"><svg id="rf-map" viewBox="-8 -8 316 176"></svg></div>
+      <div class="pos-meta" id="rf-where"></div>
+      <div class="legend">
+        <span><i class="sw" style="background:#d9f3f0"></i>Prêt</span>
+        <span><i class="sw" style="background:#bfeae4"></i>En cours</span>
+        <span><i class="sw" style="background:#fdeccb"></i>À nettoyer</span>
+        <span><i class="sw" style="background:#e3e8ff"></i>Occupé</span>
+        <span><i class="sw" style="background:#fbd5d6"></i>Bloqué</span>
+      </div>
+    </div>
+    <div class="side">
+      <div class="card">
+        <div class="card-h"><h3>À traiter sur ce robot</h3><div class="right" id="rf-todo-count"></div></div>
+        <ul class="todos" id="rf-todo"></ul>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3>Sa base</h3><div class="right" id="rf-base-state"></div></div>
+        <div class="rf-rows" id="rf-base"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rf-two">
+    <div class="card">
+      <div class="card-h"><h3>Carnet d'intervention</h3><div class="right" id="rf-book-count"></div></div>
+      <ul class="rf-book" id="rf-book" style="list-style:none"></ul>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Statistiques</h3><div class="right">7 derniers jours</div></div>
+      <div class="rf-bars" id="rf-bars"></div>
+      <div class="rf-days" id="rf-days"></div>
+      <div class="rf-rows" id="rf-stats"></div>
+    </div>
+  </div>
+
+  <div class="acc-grid">
+    <div class="card">
+      <div class="card-h"><h3>Sa journée</h3><div class="right">7 h – 23 h</div></div>
+      <div class="rf-plan" id="rf-plan"></div>
+      <ul class="log men-log" id="rf-log"></ul>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Consommables</h3><div class="right">usure ou remplissage</div></div>
+      <div class="rf-cons" id="rf-cons"></div>
     </div>
   </div>
 
@@ -807,6 +917,8 @@ function roomStates(f) {
   });
   return out;
 }
+// Every to-do is about the cleaning robot of its floor
+const robotOf = t => FLOORS.find(f => f.id === t.floor).robot.name;
 const openTodos = () => TODOS.map((t, i) => ({ ...t, i })).filter(t => !done.has(t.i));
 const alertsOf = id => openTodos().filter(t => t.floor === id);
 
@@ -1139,7 +1251,7 @@ function renderTodo() {
       <div>
         <div class="t">${tagsFor(t)}<span class="tt">${t.title}</span><span class="sev sev-${t.prio}">${PRIO_LABEL[t.prio]}</span></div>
         <p>${t.desc}</p>
-        ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage <span aria-hidden="true">→</span></button>` : ''}</div>`}
+        ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}<button data-robot="${robotOf(t)}">Fiche du robot <span aria-hidden="true">→</span></button>${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage <span aria-hidden="true">→</span></button>` : ''}</div>`}
       </div>
     </li>`).join('') : `<li class="all-good">
       <span class="ok-badge">${icon('check', 22, { color: '#fff', sw: 2.8 })}</span>
@@ -1151,6 +1263,7 @@ function renderTodo() {
   ul.innerHTML = html; ul.dataset.html = html;
   document.querySelectorAll('#todo .ck').forEach(b => b.onclick = () => { const i = +b.dataset.i; done.has(i) ? done.delete(i) : done.add(i); renderAll(); });
   document.querySelectorAll('#todo [data-go]').forEach(b => b.onclick = e => { e.stopPropagation(); select(+b.dataset.go); });
+  document.querySelectorAll('#todo [data-robot]').forEach(b => b.onclick = e => { e.stopPropagation(); showView('robot/' + b.dataset.robot); });
 }
 
 function renderRooms() {
@@ -1295,7 +1408,7 @@ function renderRows() {
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
       <td class="muted">${f.greeter.next}</td></tr>`);
     const r = f.robot, st = STATE[r.state];
-    rows.push(`<tr data-id="${f.id}">
+    rows.push(`<tr data-id="${f.id}" data-robot="${r.name}" title="Ouvrir la fiche de ${r.name}">
       <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${TILE_MENAGE}</span><div><span class="nm-row"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>${placeTag(f.label, robotRoom(f.id))}</div></div></td>
       <td><span class="chip ${st.chip}">${st.label}</span></td>
       <td><div class="pct"><div class="bar"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? 'var(--red)' : 'var(--menage)'}"></i></div>${r.pct} %</div></td>
@@ -1303,7 +1416,7 @@ function renderRows() {
   });
   document.getElementById('rows').innerHTML = rows.join('');
   document.getElementById('robots-count').textContent = selected === 'all' ? '7 robots · 1 par étage + accueil' : `${rows.length} robot${rows.length > 1 ? 's' : ''} sur cet étage`;
-  document.querySelectorAll('#rows tr').forEach(tr => tr.onclick = () => tr.dataset.view ? showView(tr.dataset.view) : select(+tr.dataset.id));
+  document.querySelectorAll('#rows tr').forEach(tr => tr.onclick = () => showView(tr.dataset.view || 'robot/' + tr.dataset.robot));
 }
 
 function select(id) { selected = id; openPanel = null; renderAll(); }
@@ -1327,7 +1440,7 @@ floorList.addEventListener('mouseover', e => {
   if (id !== preview) { preview = id; renderBuilding(); }
 });
 floorList.addEventListener('mouseleave', () => { preview = null; renderBuilding(); });
-function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderRows(); if (typeof renderMenage === 'function') renderMenage(); }
+function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderRows(); if (typeof renderMenage === 'function') { renderMenage(); renderRobotSheet(); } }
 
 const tick = () => document.getElementById('clock').textContent =
   new Date().toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
@@ -1399,6 +1512,7 @@ function step(now) {
   sinceUi += dt;
   if (sinceUi > 1.5) { sinceUi = 0; renderAll(); }
   else if (moved && shown() !== 'all') renderBuilding();
+  if (moved && !document.getElementById('view-robot').hidden) placeSheetRobot();
   requestAnimationFrame(step);
 }
 
@@ -1731,16 +1845,23 @@ setInterval(() => {
 setInterval(() => { if (!document.getElementById('view-accueil').hidden) renderCoverage(); }, 30000);
 
 // Views and their breadcrumb label (the building view has none)
-const VIEWS = { building: '', accueil: 'Accueil', menage: 'Ménage' };
+const VIEWS = { building: '', accueil: 'Accueil', menage: 'Ménage', robot: 'Ménage' };
+// v may carry an argument: 'robot/CLN-91C5' opens that robot's sheet
 function showView(v) {
+  let [view, arg] = String(v).split('/');
+  if (view === 'robot') { if (FLOORS.some(f => f.robot.name === arg)) sheetRobot = arg; else view = 'menage'; }
+  v = view;
   if (!(v in VIEWS)) v = 'building';
   Object.keys(VIEWS).forEach(k => document.getElementById('view-' + k).hidden = k !== v);
-  document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+  document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === (v === 'robot' ? 'menage' : v)));
   document.querySelectorAll('[data-crumb]').forEach(c => c.hidden = !VIEWS[v]);
   document.getElementById('crumb-label').textContent = VIEWS[v];
   if (v !== 'accueil') document.getElementById('acc-banner').hidden = true;
   if (v !== 'menage') document.getElementById('men-banner').hidden = true;
-  history.replaceState(null, '', v === 'building' ? location.pathname : '#' + v);
+  if (v !== 'robot') document.getElementById('rf-banner').hidden = true;
+  document.querySelectorAll('[data-crumb2]').forEach(c => c.hidden = v !== 'robot');
+  document.getElementById('crumb-sub').textContent = v === 'robot' ? sheetRobot : '';
+  history.replaceState(null, '', v === 'building' ? location.pathname : '#' + v + (v === 'robot' ? '/' + sheetRobot : ''));
   document.querySelector('main').scrollTop = 0;
   if (v === 'accueil') renderAccueil(); else renderAll();
 }
@@ -1834,11 +1955,11 @@ function renderMenage() {
   if (top) setHTML('men-banner', `${icon('brush-cleaning', 18)}
     <p><b>${top.title}.</b> ${top.desc}</p>
     <button class="btn light" data-done="${top.i}">${top.acts[0]}</button>
-    <button class="btn ghost" data-floor="${top.floor}">Voir l'étage <span aria-hidden="true">→</span></button>`);
+    <button class="btn ghost" data-robot="${robotOf(top)}">Fiche du robot <span aria-hidden="true">→</span></button>`);
 
   setHTML('men-robots', fs.map(f => {
     const r = f.robot, st = STATE[r.state], c = CONSUM[r.name];
-    return `<div class="mr ${r.state === 'blocked' ? 'blocked' : ''}" data-floor="${f.id}" title="Voir l'étage ${f.label}">
+    return `<div class="mr ${r.state === 'blocked' ? 'blocked' : ''}" data-robot="${r.name}" title="Ouvrir la fiche de ${r.name}">
       <div class="mr-h"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span>
         <span class="mr-name"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>
         <span class="chip ${st.chip}">${st.label}</span></div>
@@ -1851,7 +1972,7 @@ function renderMenage() {
   setHTML('men-alerts', open.length ? open.map(t => `
     <li class="td"><button class="ck" data-ck="${t.i}" title="Marquer comme traité"></button>
       <div><div class="t">${tagsFor(t)}<span class="tt">${t.short}</span><span class="sev sev-${t.prio}">${PRIO_LABEL[t.prio]}</span></div>
-        <div class="acts"><button data-done="${t.i}">${t.acts[0]}</button><button data-floor="${t.floor}">Voir l'étage <span aria-hidden="true">→</span></button></div></div></li>`).join('')
+        <div class="acts"><button data-done="${t.i}">${t.acts[0]}</button><button data-robot="${robotOf(t)}">Fiche du robot <span aria-hidden="true">→</span></button></div></div></li>`).join('')
     : `<li class="all-good"><span class="ok-badge">${icon('check', 22, { color: '#fff', sw: 2.8 })}</span><b>Tout est en ordre</b><span>Aucune alerte sur les robots de ménage.</span></li>`);
 
   setHTML('men-stock', STOCK.map((x, i) => {
@@ -1877,14 +1998,14 @@ function renderMenage() {
     const d = maintDone.has(i);
     return `<li class="td ${d ? 'done' : ''}"><button class="ck" data-mdone="${i}" title="Marquer comme fait">${d ? icon('check', 11, { color: '#fff', sw: 3.5 }) : ''}</button>
       <div><div class="t"><span class="tags"><span class="tag-lvl">${m.lvl}</span><span class="tag-room">${m.robot}</span></span><span class="tt">${m.title}</span><span class="sev sev-${m.prio}">${PRIO_LABEL[m.prio]}</span></div>
-        <p>${m.desc}</p>${d ? '' : `<div class="acts">${m.acts.map(a => `<button data-mdone="${i}">${a}</button>`).join('')}</div>`}</div></li>`;
+        <p>${m.desc}</p>${d ? '' : `<div class="acts">${m.acts.map(a => `<button data-mdone="${i}">${a}</button>`).join('')}${ROBOT_INFO[m.robot] ? `<button data-robot="${m.robot}">Fiche du robot <span aria-hidden="true">→</span></button>` : ''}</div>`}</div></li>`;
   }).join(''));
 
   setHTML('men-log', MEN_LOG.map(l => `<li><time>${fmtH(simH(l.at))}</time><span><span class="lv">${l.lvl}</span></span><div class="a">${l.html}</div></li>`).join(''));
 }
 
 function menageAction(e) {
-  const el = e.target.closest('[data-done],[data-ck],[data-floor],[data-mdone],[data-order]');
+  const el = e.target.closest('[data-done],[data-ck],[data-floor],[data-mdone],[data-order],[data-robot]');
   if (!el) return;
   e.stopPropagation();
   const d = el.dataset;
@@ -1893,15 +2014,224 @@ function menageAction(e) {
   if (d.mdone !== undefined) { const i = +d.mdone; maintDone.has(i) ? maintDone.delete(i) : maintDone.add(i); }
   if (d.order !== undefined) ordered.add(+d.order);
   if (d.floor !== undefined) { showView('building'); select(+d.floor); return; }
+  if (d.robot !== undefined) { showView('robot/' + d.robot); return; }
   renderMenage();
 }
 document.getElementById('view-menage').addEventListener('click', menageAction);
 document.getElementById('men-banner').addEventListener('click', menageAction);
 
+// =====================================================================
+// Robot sheet — one cleaning robot: live position on its floor plan, its base,
+// open problems, logbook, 7-day stats, day planning and consumables.
+// =====================================================================
+let sheetRobot = 'CLN-91C5';
+// Per-robot identity, base station, logbook and last 7 days (m² cleaned, human interventions), oldest first.
+const ROBOT_INFO = {
+  'CLN-0A3E': { model: 'Gausium Phantas S1', serial: 'PH-2402-0113', since: 'mars 2024', fw: '5.1.0', hours: 1912,
+    base: 'Réception, derrière le comptoir', station: { sac: 35, propre: 80, sale: 30 },
+    week: [410, 420, 405, 420, 398, 420, 420], stops: [0, 0, 1, 0, 0, 0, 0], done: 99, autonomy: '3 h 10', perApt: '—',
+    book: [
+      { d: '28 sept.', k: 'maint', who: 'Inès', txt: 'Lingette de lavage changée, réservoir détartré.' },
+      { d: '19 sept.', k: 'incident', who: 'Automatique', txt: 'Arrêt devant le tapis d\'entrée mouillé ; zone exclue les jours de pluie.' },
+      { d: '2 sept.', k: 'update', who: 'Automatique', txt: 'Mise à jour 5.1.0 installée la nuit, à la base.' },
+      { d: '12 juil.', k: 'review', who: 'Technicien Gausium', txt: 'Révision trimestrielle : roues, batterie (94 % de capacité), capteurs.' },
+    ] },
+  'CLN-7B19': { model: 'Gausium Phantas S1', serial: 'PH-2402-0127', since: 'mars 2024', fw: '5.1.0', hours: 1876,
+    base: 'Palier É1, local technique près de l\'ascenseur', station: { sac: 72, propre: 55, sale: 60 },
+    week: [470, 485, 460, 490, 470, 480, 300], stops: [1, 0, 0, 1, 0, 0, 0], done: 96, autonomy: '2 h 50', perApt: '13 min',
+    book: [
+      { d: 'Auj.', k: 'incident', who: 'Automatique', txt: 'Client croisé dans le couloir : contourné, tournée reprise sans aide.' },
+      { d: '24 sept.', k: 'maint', who: 'Inès', txt: 'Bac à poussière vidé à la main, joint nettoyé.' },
+      { d: '9 sept.', k: 'repair', who: 'Technicien Gausium', txt: 'Roue gauche remplacée (bruit au démarrage).' },
+      { d: '2 sept.', k: 'update', who: 'Automatique', txt: 'Mise à jour 5.1.0 installée la nuit, à la base.' },
+    ] },
+  'CLN-2D84': { model: 'Gausium Phantas S1', serial: 'PH-2402-0131', since: 'mars 2024', fw: '5.1.0', hours: 1840,
+    base: 'Partagée avec l\'É2, palier de l\'ascenseur', station: { sac: 40, propre: 70, sale: 35 },
+    week: [500, 510, 495, 505, 500, 512, 420], stops: [0, 0, 0, 0, 1, 0, 0], done: 98, autonomy: '3 h 00', perApt: '12 min',
+    book: [
+      { d: 'Auj.', k: 'maint', who: 'Automatique', txt: 'App. 206 terminé en 14 min (42 m²), meilleur temps de la semaine.' },
+      { d: '27 sept.', k: 'incident', who: 'Hery (visio)', txt: 'Ascenseur occupé 20 min : tournée décalée à la main depuis Loop.' },
+      { d: '2 sept.', k: 'update', who: 'Automatique', txt: 'Mise à jour 5.1.0 installée la nuit, à la base.' },
+      { d: '12 juil.', k: 'review', who: 'Technicien Gausium', txt: 'Révision trimestrielle. Prochaine le 12 octobre à 10 h.' },
+    ] },
+  'CLN-91C5': { model: 'Gausium Phantas S1', serial: 'PH-2311-0457', since: 'nov. 2023', fw: '5.0.4', hours: 2310,
+    base: 'Palier É3, local technique près de l\'ascenseur', station: { sac: 58, propre: 45, sale: 50 },
+    week: [470, 380, 495, 350, 480, 410, 520], stops: [1, 2, 0, 2, 1, 1, 1], done: 82, autonomy: '2 h 40', perApt: '15 min',
+    book: [
+      { d: 'Auj.', k: 'incident', who: 'Automatique', txt: 'Arrêt dans l\'app. 307 : valise au sol. Inès envoyée pour la déplacer.' },
+      { d: '1er oct.', k: 'incident', who: 'Inès', txt: 'Arrêt d\'urgence dans l\'app. 307 (chaussures). Débloqué en 6 min.' },
+      { d: '29 sept.', k: 'incident', who: 'Automatique', txt: 'Capteur de vide déclenché au seuil de la 307 ; reprise seule.' },
+      { d: '22 sept.', k: 'repair', who: 'Technicien Gausium', txt: 'Pare-chocs avant recalibré après un choc contre une porte.' },
+      { d: '12 juil.', k: 'review', who: 'Technicien Gausium', txt: 'Révision trimestrielle : capteurs de vide à surveiller.' },
+    ] },
+  'CLN-5E07': { model: 'Gausium Phantas S1', serial: 'PH-2311-0462', since: 'nov. 2023', fw: '5.0.4', hours: 2288,
+    base: 'Palier É4, local technique près de l\'ascenseur', station: { sac: 66, propre: 30, sale: 75 },
+    week: [470, 460, 455, 470, 440, 450, 330], stops: [0, 1, 0, 0, 0, 1, 0], done: 93, autonomy: '2 h 15', perApt: '14 min',
+    book: [
+      { d: 'Auj.', k: 'incident', who: 'Automatique', txt: 'Batterie sous 25 % en milieu de tournée ; recharge prévue à 15 %.' },
+      { d: '25 sept.', k: 'maint', who: 'Inès', txt: 'Filtre dépoussiéré à la main ; à remplacer au prochain passage.' },
+      { d: '10 sept.', k: 'repair', who: 'Technicien Gausium', txt: 'Batterie testée : 81 % de capacité, autonomie en baisse.' },
+      { d: '2 sept.', k: 'update', who: 'Automatique', txt: 'Mise à jour 5.0.4 installée la nuit, à la base.' },
+    ] },
+  'CLN-C6F2': { model: 'Gausium Phantas S1', serial: 'PH-2405-0208', since: 'mai 2024', fw: '5.0.4', hours: 1530,
+    base: 'Palier É5, sous le comble côté ascenseur', station: { sac: 30, propre: 85, sale: 20 },
+    week: [400, 410, 395, 405, 390, 400, 115], stops: [0, 0, 0, 1, 0, 0, 0], done: 97, autonomy: '3 h 05', perApt: '18 min',
+    book: [
+      { d: 'Auj.', k: 'maint', who: 'Automatique', txt: 'Brosse principale usée à 92 % ; une seule brosse en stock.' },
+      { d: '30 sept.', k: 'incident', who: 'Automatique', txt: 'Câble de lampe aspiré dans la suite 503, rejeté sans dégât.' },
+      { d: '2 sept.', k: 'update', who: 'Automatique', txt: 'Mise à jour 5.0.4 installée la nuit, à la base.' },
+      { d: '15 juil.', k: 'review', who: 'Technicien Gausium', txt: 'Révision trimestrielle sans remarque.' },
+    ] },
+};
+const BOOK_KIND = {
+  incident: { chip: 'err', label: 'Incident' }, repair: { chip: 'warn', label: 'Réparation' },
+  maint: { chip: 'run', label: 'Entretien' }, review: { chip: 'idle', label: 'Révision' }, update: { chip: 'occ', label: 'Mise à jour' },
+};
+// Wear speed (points per day) to estimate when a part needs changing; bins and tanks are emptied at the base.
+const CONS_RATE = { brosse: 0.9, filtre: 1.6 };
+const RF_PX = 25;
+const sheetFloor = () => FLOORS.find(f => f.robot.name === sheetRobot);
+
+function renderRobotSheet() {
+  if (document.getElementById('view-robot').hidden) return;
+  const f = sheetFloor(), r = f.robot, st = STATE[r.state], info = ROBOT_INFO[r.name], c = CONSUM[r.name];
+  const blocked = r.state === 'blocked', charging = r.state === 'charge' || r.state === 'done';
+  const todos = openTodos().filter(t => t.floor === f.id);
+  const maint = MAINT.map((m, i) => ({ ...m, i })).filter(m => m.robot === r.name && !maintDone.has(m.i));
+  const head = document.getElementById('rf-head');
+  head.classList.toggle('blocked', blocked);
+
+  // Banner: the robot's most urgent open problem
+  const top = ['high', 'med', 'low'].map(p => todos.find(t => t.prio === p)).find(Boolean);
+  const banner = document.getElementById('rf-banner');
+  banner.hidden = !top || top.prio === 'low';
+  banner.classList.toggle('danger', !!top && top.prio === 'high');
+  if (top) setHTML('rf-banner', `${icon('brush-cleaning', 18)}
+    <p><b>${top.title}.</b> ${top.desc}</p>
+    <button class="btn light" data-done="${top.i}">${top.acts[0]}</button>`);
+
+  const [x, y] = r.at, [bx, by] = r.base || BASE, toBase = Math.round(Math.hypot(x - bx, y - by) * 2);
+  const room = robotRoom(f.id), roomName = f.id === 0 ? room : 'app. ' + room;
+  setHTML('rf-head', `<button class="rf-back" data-back>← Robots de ménage</button>
+    <div class="rf-top"><span class="rb-ic" style="background:var(--menage)">${TILE_MENAGE}</span>
+      <div class="rf-id"><span class="mr-name"><b>${r.name}</b>${batteryIcon(r.bat, charging)}<span class="chip ${st.chip}">${st.label}</span></span>
+        <span class="sub">${placeTag(f.label, room)}<span>${info.model} · n° ${info.serial} · en service depuis ${info.since} · logiciel ${info.fw}</span></span></div>
+      <div class="acts">
+        ${r.state === 'run' ? `<button class="btn" data-recall>${icon('zap', 14)}Rappeler à la base</button>` : ''}
+        <button class="btn" data-floor="${f.id}">Voir l'étage <span aria-hidden="true">→</span></button>
+      </div></div>
+    <div class="kpis">${[
+      ['Ménage du jour', `${r.pct} %`, `${Math.round(f.area * r.pct / 100)} / ${f.area} m²`],
+      ['Batterie', `${r.bat} %`, charging ? 'en charge' : `autonomie moy. ${info.autonomy}`],
+      ['Heures de service', `${info.hours.toLocaleString('fr-FR')} h`, `depuis ${info.since}`],
+      ['Tournées terminées', `${info.done} %`, 'sans aide, 30 jours'],
+    ].map(([l, v, sub]) => `<div class="kpi"><small>${l}</small><b>${v}</b><span>${sub}</span></div>`).join('')}</div>`);
+
+  // Floor plan: rooms by cleaning state, base dock, remaining path; the robot dot moves every frame.
+  const states = roomStates(f);
+  let m = '';
+  f.layout.rooms.forEach(q => {
+    const s = ROOM_STATE[states[q.id]];
+    const fill = q.kind === 'core' ? '#eef0f3' : q.kind === 'corridor' ? '#fafbfc' : q.kind === 'lobby' ? '#f6f7f9' : s ? s.fill : '#f6f7f9';
+    m += `<rect x="${q.x1 * RF_PX}" y="${q.y1 * RF_PX}" width="${(q.x2 - q.x1) * RF_PX}" height="${(q.y2 - q.y1) * RF_PX}" fill="${fill}" stroke="#dfe2e7"/>`;
+    if (q.kind === 'apt' || q.kind === 'lobby') m += `<text x="${(q.x1 + q.x2) / 2 * RF_PX}" y="${q.y1 * RF_PX + 14}" text-anchor="middle" font-size="9" font-weight="600" fill="${s ? s.color : '#9aa1ab'}">${q.id.toUpperCase()}</text>`;
+    if (q.kind === 'core') m += `<text x="${(q.x1 + q.x2) / 2 * RF_PX}" y="${(q.y1 + q.y2) / 2 * RF_PX + 3}" text-anchor="middle" font-size="8" font-weight="600" fill="#b8bec6">ASC.</text>`;
+  });
+  if (r.sim && r.sim.path) m += `<polyline points="${r.sim.path.map(p => p.map(v => (v * RF_PX).toFixed(1)).join(',')).join(' ')}" fill="none" stroke="#00a99d" stroke-width="1.5" stroke-dasharray="3 4" opacity=".7"/>`;
+  m += `<g><title>Base de recharge</title><rect x="${bx * RF_PX - 9}" y="${by * RF_PX - 9}" width="18" height="18" rx="5" fill="#e7f6ee" stroke="#9fd8b9"/><g transform="translate(${bx * RF_PX - 6},${by * RF_PX - 6}) scale(.5)" fill="none" stroke="#22a861" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['zap']}</g></g>`;
+  const rc = blocked ? '#e5484d' : '#00a99d';
+  m += blocked
+    ? `<g id="rf-robot"><circle class="alarm-ring" style="${alarmPhase()}"/><circle class="robot-alarm" r="7" fill="${rc}" stroke="#fff" stroke-width="2.5" style="${alarmPhase()}"/></g>`
+    : `<g id="rf-robot">${r.state === 'run' ? `<circle class="pulse" r="6" fill="${rc}"/>` : ''}<circle r="7" fill="${rc}" stroke="#fff" stroke-width="2.5"/></g>`;
+  setHTML('rf-map', m);
+  placeSheetRobot();
+  setHTML('rf-map-sub', `${f.label} · ${f.name}`);
+  setHTML('rf-where', blocked ? `Arrêté dans l'<b>${roomName}</b>, il attend qu'on dégage le passage. Base à ${toBase} m.`
+    : charging ? `À sa base, <b>${info.base.toLowerCase()}</b>. ${r.next}.`
+    : `En ménage dans l'<b>${roomName}</b> · base à ${toBase} m. ${r.next}.`);
+
+  // Open problems: floor to-dos and maintenance for this robot
+  const n = todos.length + maint.length;
+  setHTML('rf-todo-count', n ? `${n} en cours` : '');
+  setHTML('rf-todo', n ? todos.map(t => `
+    <li class="td"><button class="ck" data-ck="${t.i}" title="Marquer comme traité"></button>
+      <div><div class="t"><span class="tt">${t.short}</span><span class="sev sev-${t.prio}">${PRIO_LABEL[t.prio]}</span></div>
+        <p>${t.desc}</p><div class="acts">${t.acts.map(a => `<button data-done="${t.i}">${a}</button>`).join('')}</div></div></li>`).join('')
+    + maint.map(x => `
+    <li class="td"><button class="ck" data-mdone="${x.i}" title="Marquer comme fait"></button>
+      <div><div class="t"><span class="tt">${x.title}</span><span class="sev sev-${x.prio}">${PRIO_LABEL[x.prio]}</span></div>
+        <p>${x.desc}</p><div class="acts">${x.acts.map(a => `<button data-mdone="${x.i}">${a}</button>`).join('')}</div></div></li>`).join('')
+    : `<li class="all-good"><span class="ok-badge">${icon('check', 22, { color: '#fff', sw: 2.8 })}</span><b>Tout est en ordre</b><span>Rien à faire sur ce robot.</span></li>`);
+
+  const sta = info.station;
+  setHTML('rf-base-state', charging ? '<span class="chip warn">Robot à quai</span>' : '<span class="chip ok">Libre</span>');
+  setHTML('rf-base', `
+    <div class="rf-row"><span>Emplacement</span><b>${info.base}</b></div>
+    <div class="rf-row"><span>Distance du robot</span><b>${charging ? 'à quai' : toBase + ' m'}</b></div>
+    <div class="rf-row"><span>Station</span><b>Auto-vidage et lavage<small>dernier vidage ${fmtH(simH(ago(30 + f.id * 37)))}</small></b></div>
+    <div style="display:flex;flex-direction:column;gap:8px;padding-top:8px">
+      ${metric('Sac de la station', sta.sac, consColor(sta.sac))}
+      ${metric('Eau propre (reste)', sta.propre, sta.propre < 35 ? '#f0a020' : '#00a99d')}
+      ${metric('Eau sale', sta.sale, consColor(sta.sale))}
+    </div>`);
+
+  setHTML('rf-book-count', `${info.book.length} entrées`);
+  setHTML('rf-book', info.book.map(b => `<li><time>${b.d}</time><div>
+    <div class="t"><span class="chip ${BOOK_KIND[b.k].chip}">${BOOK_KIND[b.k].label}</span><span class="who">${b.who}</span></div>
+    <p>${b.txt}</p></div></li>`).join(''));
+
+  // 7 days, today last (live)
+  const week = [...info.week.slice(0, 6), Math.round(f.area * r.pct / 100)], max = Math.max(...week, f.area);
+  const days = ['lun.', 'mar.', 'mer.', 'jeu.', 'ven.', 'sam.', 'dim.'], today = (new Date().getDay() + 6) % 7;
+  setHTML('rf-bars', week.map((v, i) => `<div class="${i === 6 ? 'today' : ''}" title="${v} m²${info.stops[i] ? ` · ${info.stops[i]} intervention${info.stops[i] > 1 ? 's' : ''}` : ''}">
+    ${info.stops[i] ? `<span class="stop">${info.stops[i]}×</span>` : ''}<span>${v}</span><i style="height:${Math.round(v / max * 78)}px"></i></div>`).join(''));
+  setHTML('rf-days', week.map((v, i) => `<span>${i === 6 ? 'auj.' : days[(today - 6 + i + 7) % 7]}</span>`).join(''));
+  const total = week.reduce((a, v) => a + v, 0), stops = info.stops.reduce((a, v) => a + v, 0);
+  setHTML('rf-stats', `
+    <div class="rf-row"><span>Surface nettoyée</span><b>${total.toLocaleString('fr-FR')} m²</b></div>
+    <div class="rf-row"><span>Interventions humaines</span><b class="${stops >= 5 ? 'down' : ''}">${stops}<small>${stops >= 5 ? 'au-dessus de la flotte (moy. 1,5)' : 'moyenne de la flotte : 1,5'}</small></b></div>
+    <div class="rf-row"><span>Temps moyen par appartement</span><b>${info.perApt}</b></div>
+    <div class="rf-row"><span>Autonomie moyenne</span><b>${info.autonomy}</b></div>
+    <div class="rf-row"><span>Temps libéré pour l'équipe</span><b>${(total / 140).toFixed(1).replace('.', ',')} h</b></div>`);
+
+  const span = DAY1 - DAY0, pct = h => ((Math.min(Math.max(h, DAY0), DAY1) - DAY0) / span * 100).toFixed(2) + '%';
+  let ticks = '';
+  for (let h = DAY0; h <= DAY1; h += 2) ticks += `<span style="left:${pct(h)}">${h} h</span>`;
+  const { segs, now } = planSegments(f);
+  setHTML('rf-plan', `<div class="plan-track">${segs.map(g => `<i class="${g.plan ? 'plan' : ''}" style="left:${pct(g.a)};width:${((g.b - g.a) / span * 100).toFixed(2)}%;background:${g.c}"></i>`).join('')}<span class="plan-now" style="left:${pct(now)}"></span></div><div class="ticks plan-axis">${ticks}</div>`);
+  const log = MEN_LOG.filter(l => l.html.includes(r.name));
+  setHTML('rf-log', log.length ? log.map(l => `<li><time>${fmtH(simH(l.at))}</time><span><span class="lv">${l.lvl}</span></span><div class="a">${l.html}</div></li>`).join('')
+    : '<li><time></time><span></span><div class="a">Rien de notable aujourd\'hui.</div></li>');
+
+  setHTML('rf-cons', Object.keys(CONS_LABEL).map(k => {
+    const v = c[k], rate = CONS_RATE[k];
+    const note = rate ? (v >= 85 ? 'à changer maintenant' : `à changer dans ≈ ${Math.round((90 - v) / rate)} j`) : (v >= 85 ? 'à vider maintenant' : 'vidé seul à la base');
+    return `<div>${metric(CONS_LABEL[k], v, consColor(v))}<small style="color:${v >= 85 ? 'var(--red)' : 'var(--muted)'};font-size:11px">${note}</small></div>`;
+  }).join(''));
+}
+function placeSheetRobot() {
+  const g = document.getElementById('rf-robot');
+  if (g) { const [x, y] = sheetFloor().robot.at; g.setAttribute('transform', `translate(${(x * RF_PX).toFixed(1)},${(y * RF_PX).toFixed(1)})`); }
+}
+function sheetAction(e) {
+  const el = e.target.closest('[data-done],[data-ck],[data-floor],[data-mdone],[data-recall],[data-back]');
+  if (!el) return;
+  const d = el.dataset, f = sheetFloor(), r = f.robot;
+  if (d.done !== undefined) done.add(+d.done);
+  if (d.ck !== undefined) done.add(+d.ck);
+  if (d.mdone !== undefined) maintDone.add(+d.mdone);
+  if (d.recall !== undefined && r.state === 'run') { r.sim = { path: [r.base || BASE], loop: false, idx: 0 }; r.next = 'Retour à la base demandé'; }
+  if (d.back !== undefined) { showView('menage'); return; }
+  if (d.floor !== undefined) { showView('building'); select(+d.floor); return; }
+  renderAll();
+}
+document.getElementById('view-robot').addEventListener('click', sheetAction);
+document.getElementById('rf-banner').addEventListener('click', sheetAction);
+
 // First render once everything above (reception state included) is initialised.
 renderAll();
 requestAnimationFrame(step);
-if (location.hash.slice(1) in VIEWS && location.hash.length > 1) showView(location.hash.slice(1));
+if (location.hash.slice(1).split('/')[0] in VIEWS && location.hash.length > 1) showView(location.hash.slice(1));
 window.addEventListener('hashchange', () => showView(location.hash.slice(1) || 'building'));
 </script>
 </body>
