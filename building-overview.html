@@ -140,6 +140,9 @@
   .bld svg { width: 532px; max-width: 100%; height: auto; }
   .bld svg .floor { cursor: pointer; }
   .bld svg .floor:hover { filter: brightness(1.03); }
+  .bld svg .map-link { cursor: pointer; }
+  .bld svg .map-link:hover rect, .bld svg .map-link:focus-visible rect { fill: #f6f3ff; stroke: #cfc4ff; }
+  .bld svg .map-link:focus { outline: none; }
   .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
 
   /* Status badge — Shopify Polaris Badge anatomy: 2px/8px padding, 8px radius, 12px/16px medium text,
@@ -657,11 +660,14 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   s += `<path d="M${cx - rx},${cy} L${cx - rx},${cy - h} A${rx},${ry} 0 0 1 ${cx + rx},${cy - h} L${cx + rx},${cy} A${rx},${ry} 0 0 1 ${cx - rx},${cy} Z" fill="${color}"/>`;
   s += `<ellipse cx="${cx}" cy="${cy - h}" rx="${rx}" ry="${ry}" fill="#fff" opacity=".35"/>`;
   if (opts.tall) s += `<rect x="${cx - 4}" y="${cy - h - 12}" width="8" height="10" rx="2" fill="${color}"/><rect x="${cx - 3}" y="${cy - h - 10}" width="6" height="4" rx="1" fill="#fff" opacity=".8"/>`;
-  const lw = label.length * 7 + (opts.alert ? 30 : 22);
+  // Linked labels (greeter → reception view) get an "open" arrow at the end and a pointer.
+  const lw = label.length * 7 + (opts.alert ? 30 : 22) + (opts.link ? 20 : 0);
+  const linkIcon = opts.link ? `<circle cx="${lw - 11}" cy="10" r="7" fill="#efeaff"/><path d="M${lw - 13.5} 12.5l5-5M${lw - 12.5} 7.5h4v4" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>` : '';
+  const linkAttrs = opts.link ? ` class="map-link" data-view="${opts.link}" role="link" tabindex="0"` : '';
   const badge = opts.alert
     ? `<circle cx="11" cy="10" r="7" fill="#e5484d"/><text x="11" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`
     : `<circle cx="10" cy="10" r="4" fill="${color}"/>`;
-  const tag = `<g transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : '#e4e6ea'}"/>${badge}<text x="${opts.alert ? 23 : 18}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text></g>`;
+  const tag = `<g${linkAttrs} transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><title>${opts.link ? 'Ouvrir la vue Accueil' : label}</title><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : '#e4e6ea'}"/>${badge}<text x="${opts.alert ? 23 : 18}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text>${linkIcon}</g>`;
   // Labels go to the overlay layer when one is given, so walls never hide them.
   if (opts.overlay) opts.overlay.push(tag); else s += tag;
   return s;
@@ -718,7 +724,7 @@ function openFloor(f, z0) {
   });
   const r = f.robot, st = STATE[r.state];
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', overlay: robotTags }) });
-  if (f.greeter) items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, '#7c5cff', f.greeter.name, { tall: true, pulse: true, overlay: robotTags }) });
+  if (f.greeter) items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, '#7c5cff', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, link: 'accueil' }) });
   items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
   s += roomLabels.join('') + robotTags.join('');
   return s;
@@ -1276,6 +1282,10 @@ function showView(v) {
   if (v === 'accueil') renderAccueil();
 }
 document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
+// Map labels that link to another view (the greeter's label opens the reception view). The SVG re-renders, so delegate.
+const iso = document.getElementById('iso');
+iso.addEventListener('click', e => { const l = e.target.closest('.map-link'); if (l) { e.stopPropagation(); showView(l.dataset.view); } }, true);
+iso.addEventListener('keydown', e => { const l = e.target.closest('.map-link'); if (l && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); showView(l.dataset.view); } });
 if (location.hash === '#accueil') showView('accueil');
 window.addEventListener('hashchange', () => showView(location.hash === '#accueil' ? 'accueil' : 'building'));
 </script>
