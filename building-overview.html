@@ -97,8 +97,6 @@
   .bld svg { width: 560px; height: auto; }
   .bld svg .floor { cursor: pointer; }
   .bld svg .floor:hover { filter: brightness(1.03); }
-  .bld-caption { display: flex; align-items: center; gap: 12px; justify-content: center; color: var(--muted); font-size: 12px; margin-top: 4px; flex-wrap: wrap; }
-  .bld-caption span { display: inline-flex; align-items: center; gap: 6px; }
   .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
 
   .chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; white-space: nowrap; }
@@ -187,7 +185,6 @@
 
     <div class="bld">
       <svg id="iso" viewBox="0 0 560 650"></svg>
-      <div class="bld-caption" id="caption"></div>
     </div>
 
   </div>
@@ -533,9 +530,6 @@ function renderBuilding() {
   }
   svg.innerHTML = s;
   svg.querySelectorAll('.floor').forEach(g => g.onclick = () => select(+g.dataset.id));
-  document.getElementById('caption').innerHTML = selected === 'all'
-    ? `<span><i class="sw" style="background:${GLASS_LIT}"></i>Fenêtre allumée = nettoyé</span><span><i class="sw" style="background:#00a99d"></i>Avancement sur la corniche</span><span><i class="sw" style="background:#e5484d"></i>Robot bloqué</span><span><i class="sw" style="background:#7c5cff"></i>Robot d'accueil</span>`
-    : Object.values(ROOM_STATE).map(v => `<span><i class="sw" style="background:${v.fill};border:1px solid #d5d9df"></i>${v.label}</span>`).join('');
 }
 
 // =====================================================================
