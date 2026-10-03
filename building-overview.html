@@ -52,15 +52,15 @@
   .card-h .right .btn { margin-left: 8px; }
 
   /* Stage: floor picker | flat building | context */
-  /* Floor list: 250–320px right next to the fixed 560px building; the pair is centred */
-  .stage { display: grid; grid-template-columns: minmax(250px, 320px) 560px; justify-content: center; gap: 12px; align-items: start; }
+  /* Floor list: 250–320px right next to the fixed 532px building; the pair is centred */
+  .stage { display: grid; grid-template-columns: minmax(250px, 320px) 532px; justify-content: center; gap: 12px; align-items: start; }
   .wrap { container-type: inline-size; }
   /* Not enough room for list + building side by side: stack them, building shrinks if needed */
-  @container (max-width: 830px) {
+  @container (max-width: 800px) {
     .stage { grid-template-columns: 1fr; }
     .stage .bld { justify-self: center; }
     .stage > .floors { max-width: none; }
-    .stage .bld { width: 100%; max-width: 560px; }
+    .stage .bld { width: 100%; max-width: 532px; }
     .stage .bld svg { width: 100%; }
     .below { grid-template-columns: 1fr !important; }
   }
@@ -115,8 +115,8 @@
   .issue .txt { overflow: hidden; text-overflow: ellipsis; }
 
   /* ---------- Building ---------- */
-  .bld { width: 560px; }
-  .bld svg { width: 560px; max-width: 100%; height: auto; }
+  .bld { width: 532px; }
+  .bld svg { width: 532px; max-width: 100%; height: auto; }
   .bld svg .floor { cursor: pointer; }
   .bld svg .floor:hover { filter: brightness(1.03); }
   .sw { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
@@ -207,7 +207,7 @@
     <div class="floors"><div id="all-row"></div><div id="floors" class="floors"></div></div>
 
     <div class="bld">
-      <svg id="iso" viewBox="0 0 560 650"></svg>
+      <svg id="iso" viewBox="30 24 532 632"></svg>
     </div>
 
   </div>
