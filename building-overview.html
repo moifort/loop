@@ -243,6 +243,10 @@
   .live { position: relative; margin: 0; border-radius: 0; overflow: hidden; background: #1c2029; aspect-ratio: 16 / 9; }
   .live > svg { width: 100%; height: 100%; }
   .live video.cam { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .live video, .pip video { transition: opacity .45s ease; }
+  .live video.fading, .pip video.fading { opacity: 0; }
+  /* Once real footage plays, the fallbacks underneath must not flash through during the fade */
+  .live.has-video > svg, .pip.has-video .av { visibility: hidden; }
   .ov { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 6px; background: rgba(15,18,25,.62); color: #fff; font-size: 11px; font-weight: 500; backdrop-filter: blur(6px); }
   .ov.o-tl { top: 10px; left: 10px; }
   .ov.o-bl { bottom: 10px; left: 10px; } .ov.o-br { bottom: 10px; right: 10px; }
@@ -953,7 +957,7 @@ tick(); setInterval(tick, 30000);
 // Real-time simulation: running robots follow corridor → door → zigzag
 // inside the current apartment, progress grows, blocked robots stay put.
 // =====================================================================
-const CORRIDOR_Y = 3.0, SPEED = 0.45, PROGRESS_PER_S = 0.12, BASE = [4, 3.0];
+const CORRIDOR_Y = 3.0, SPEED = 0.45, PROGRESS_PER_S = 0.12, BASE = [4, 3.0], RESTART_MS = 12000;
 const aptsOf = cleanable;
 function roomPath(room) {
   const north = room.y2 <= 2.4;
@@ -980,6 +984,7 @@ function planFor(f) {
 FLOORS.forEach(f => {
   const r = f.robot;
   r.progress = r.pct;
+  r.next0 = r.next;
   if (r.state === 'run') { const p = planFor(f); r.sim = { ...p, idx: 0 }; }
 });
 
@@ -989,6 +994,11 @@ function step(now) {
   let moved = false;
   FLOORS.forEach(f => {
     const r = f.robot;
+    // Demo loop: a finished robot shows "Terminé" for a moment, then starts a new round from the first apartment.
+    if (r.state === 'done' && r.restartAt && now >= r.restartAt) {
+      Object.assign(r, { state: 'run', progress: 0, pct: 0, next: r.next0, restartAt: null });
+      r.sim = { ...planFor(f), idx: 0 };
+    }
     if (r.state !== 'run' || !r.sim) return;
     // progress
     r.progress = Math.min(100, r.progress + PROGRESS_PER_S * dt);
@@ -1002,7 +1012,7 @@ function step(now) {
     if (r.sim.idx < r.sim.path.length) return;
     // loop finished, robot is back in the corridor: next room or base
     if (r.pct >= 100 && r.sim.loop) { r.sim = { path: [r.base || BASE], loop: false, idx: 0 }; return; }
-    if (!r.sim.loop) { r.state = 'done'; r.next = 'Terminé à ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); r.sim = null; return; }
+    if (!r.sim.loop) { r.state = 'done'; r.next = 'Terminé à ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }); r.sim = null; r.restartAt = now + RESTART_MS; return; }
     const p = planFor(f);
     r.sim = { ...p, idx: 0 };
   });
@@ -1104,10 +1114,16 @@ function mountClip(name, parent, before = null) {
   if (!v) {
     v = clipEls[name] = document.createElement('video');
     Object.assign(v, { src: c.src, muted: true, loop: true, playsInline: true, preload: 'auto', className: c.className });
-    v.addEventListener('timeupdate', () => { if (v.currentTime >= c.end) v.currentTime = 0; });
+    // Fade out just before the loop point and back in after the jump, so the cut never shows.
+    v.addEventListener('timeupdate', () => {
+      if (v.currentTime >= c.end) { v.currentTime = 0; v.classList.remove('fading'); }
+      else if (v.currentTime >= c.end - 0.6) v.classList.add('fading');
+    });
+    v.addEventListener('playing', () => v.parentElement && v.parentElement.classList.add('has-video'));
   }
   if (!parent || v.error) return;
   parent.insertBefore(v, before);
+  if (v.readyState >= 2) parent.classList.add('has-video');
   v.play().catch(() => {});
 }
 const CHECK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>';
@@ -1240,6 +1256,7 @@ function showView(v) {
 }
 document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
 if (location.hash === '#accueil') showView('accueil');
+window.addEventListener('hashchange', () => showView(location.hash === '#accueil' ? 'accueil' : 'building'));
 </script>
 </body>
 </html>
