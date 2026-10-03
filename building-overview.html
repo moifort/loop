@@ -524,12 +524,13 @@ function openFloor(f, z0) {
     const st = r.kind === 'apt' ? states[r.id] : null;
     roomLabels.push(`<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">${r.id}</text>`);
   });
-  // Rooms still to clean: small amber sparkle marker
+  // Rooms still to clean: amber broom marker
   f.layout.rooms.filter(q => states[q.id] === 'todo').forEach(q => {
     const [cx, cy] = P((q.x1 + q.x2) / 2 + 0.35, (q.y1 + q.y2) / 2 + 0.35, z0);
     items.push({ d: (q.x1 + q.x2) / 2 + (q.y1 + q.y2) / 2 + 0.7, svg:
       `<circle cx="${cx}" cy="${cy - 9}" r="8" fill="#f0a020" stroke="#fff" stroke-width="2"/>` +
-      `<path d="M${cx},${cy - 14} L${cx + 1.4},${cy - 10.4} L${cx + 5},${cy - 9} L${cx + 1.4},${cy - 7.6} L${cx},${cy - 4} L${cx - 1.4},${cy - 7.6} L${cx - 5},${cy - 9} L${cx - 1.4},${cy - 10.4} Z" fill="#fff"/>` });
+      `<line x1="${cx + 4}" y1="${cy - 15}" x2="${cx - 0.6}" y2="${cy - 9.6}" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>` +
+      `<path d="M${cx - 1.6},${cy - 10.8} L${cx + 0.6},${cy - 8.6} L${cx - 2.2},${cy - 4.2} L${cx - 6},${cy - 8} Z" fill="#fff"/>` });
   });
   // Guests in occupied apartments
   f.layout.rooms.filter(q => (f.occupied || []).includes(q.id)).forEach(q => {
@@ -676,6 +677,7 @@ function renderTodo() {
   document.querySelectorAll('#todo [data-go]').forEach(b => b.onclick = e => { e.stopPropagation(); select(+b.dataset.go); });
 }
 
+const BROOM = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 3 11.5 11.5"/><path d="M9.5 10.5 13.5 14.5 9 21 3 15Z"/><path d="M6 18l1.5-1.5"/></svg>';
 function renderRooms() {
   const card = document.getElementById('rooms-card');
   if (selected === 'all') { card.style.display = 'none'; return; }
@@ -688,7 +690,8 @@ function renderRooms() {
   document.getElementById('rooms-count').textContent = `${list.filter(r => states[r.id] === 'clean').length}/${list.length - occ} prêts${occ ? ` · ${occ} occupé${occ > 1 ? 's' : ''}` : ''}`;
   document.getElementById('rooms').innerHTML = list.map(r => {
     const s = ROOM_STATE[states[r.id]];
-    return `<div class="room"><span class="sw" style="background:${s.fill};border:1px solid #d5d9df"></span><span class="n">${f.id === 0 ? r.id : 'App. ' + r.id}</span><span class="s chip ${s.chip}">${s.label}</span></div>`;
+    const icon = states[r.id] === 'todo' ? BROOM : '';
+    return `<div class="room"><span class="sw" style="background:${s.fill};border:1px solid #d5d9df"></span><span class="n">${f.id === 0 ? r.id : 'App. ' + r.id}</span><span class="s chip ${s.chip}">${icon}${s.label}</span></div>`;
   }).join('');
 }
 
