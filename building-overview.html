@@ -174,6 +174,7 @@
   .td.done .t, .td.done p { text-decoration: line-through; color: var(--faint); }
   .td .t { font-weight: 600; display: flex; align-items: center; gap: 8px; }
   .td .t .tags { margin-right: 2px; }
+  .td .t .sev { margin-left: auto; }
   .td p { color: var(--muted); margin-top: 2px; line-height: 1.45; }
   .td .acts { display: flex; gap: 14px; margin-top: 6px; }
   .td .acts button { color: var(--blue); font-weight: 500; font-size: 12px; }
@@ -257,6 +258,18 @@
 
   @keyframes pulse { 0% { r: 6; opacity: .55; } 100% { r: 18; opacity: 0; } }
   .pulse { animation: pulse 1.6s ease-out infinite; }
+
+  /* ---------- Reception robot position ---------- */
+  .pos-map { padding: 2px 16px 0; }
+  .pos-map svg { width: 100%; height: auto; display: block; }
+  .pos-map .spot { cursor: pointer; }
+  .pos-map .spot:hover circle { fill: #cfe0ff; }
+  .pos-meta { padding: 8px 16px 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+  .pos-meta b { color: var(--text); font-weight: 500; }
+  .pos-actions { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 16px 16px; }
+  .pos-actions .btn { height: 28px; padding: 0 10px; font-size: 12px; gap: 5px; }
+  .pos-actions .btn.on { background: var(--blue-soft); border-color: #b3d1ff; color: var(--blue); }
+  .pos-actions .btn:disabled { opacity: .5; cursor: default; }
 
   /* ---------- Floating panic button ---------- */
   .panic-fab { position: fixed; top: 72px; right: 24px; z-index: 50; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px 0 13px; border-radius: 999px; background: var(--red); color: #fff; font-weight: 600; box-shadow: 0 6px 16px rgba(229,72,77,.35), 0 1px 3px rgba(16,24,40,.12); transition: transform .12s, background .12s; }
@@ -431,6 +444,12 @@
         <div class="card-h"><h3>Qui tient l'accueil</h3></div>
         <div class="who" id="acc-who"></div>
       </div>
+      <div class="card" id="acc-pos-card">
+        <div class="card-h"><h3>Position du robot</h3><div class="right" id="acc-pos-state"></div></div>
+        <div class="pos-map"><svg id="acc-pos-map" viewBox="-6 -16 312 186"></svg></div>
+        <div class="pos-meta" id="acc-pos-meta"></div>
+        <div class="pos-actions" id="acc-pos-actions"></div>
+      </div>
       <div class="card" id="acc-panic-card">
         <div class="card-h"><h3>Bouton panique</h3><div class="right" id="acc-panic-state"></div></div>
         <div class="panic" id="acc-panic"></div>
@@ -483,6 +502,7 @@ const LUCIDE = {
   'exclamation': '<path d="M12 7v6"/><path d="M12 17h.01"/>',
   'sparkles': '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>',
   'arrow-up-right': '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+  'zap': '<path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/>',
 };
 // One way to draw an icon everywhere: Lucide geometry, round caps, stroke follows the text colour unless given.
 const icon = (name, size = 16, { sw = 2, color = 'currentColor', cls = '' } = {}) =>
@@ -922,7 +942,7 @@ function renderTodo() {
     <li class="td ${done.has(t.i) ? 'done' : ''}">
       <button class="ck" data-i="${t.i}" title="Marquer comme traité">${done.has(t.i) ? icon('check', 11, { color: '#fff', sw: 3.5 }) : ''}</button>
       <div>
-        <div class="t">${tagsFor(t)}<span class="sev sev-${t.prio}">${PRIO_LABEL[t.prio]}</span>${t.title}</div>
+        <div class="t">${tagsFor(t)}<span class="tt">${t.title}</span><span class="sev sev-${t.prio}">${PRIO_LABEL[t.prio]}</span></div>
         <p>${t.desc}</p>
         ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage <span aria-hidden="true">→</span></button>` : ''}</div>`}
       </div>
@@ -974,6 +994,7 @@ const TEMI_SVG = `<svg width="66" height="122" viewBox="0 0 80 150">
 // What the greeter is doing right now, shared by its card and the robots table.
 function temiStateChip() {
   const [chip, label] = ACC.panicAt ? ['err', 'Alerte en cours']
+    : ACC.pos && ACC.pos.target ? ['occ', `Vers ${spot(ACC.pos.target).label.toLowerCase()}`]
     : ACC.mode === 'remote' ? ['occ', 'En visio avec Hery']
     : ACC.waiting ? ['warn', 'Client en attente']
     : ['acc', 'Accueille un client'];
@@ -1051,13 +1072,13 @@ function batteryIcon(pct, charging) {
 }
 
 // Same split badge as the to-do list: [floor | room the robot is in, live], shortened to fit under the name.
-const ROOM_SHORT = { 'Réception': 'Réc.' };
+const ROOM_SHORT = { 'Réception': 'Réc.', 'Petit-déjeuner': 'P.-déj.', 'Bagagerie': 'Bag.' };
 const placeTag = (lvl, room) => `<span class="tags"><span class="tag-lvl">${lvl}</span><span class="tag-room">${ROOM_SHORT[room] || room}</span></span>`;
 
 function renderRows() {
   const rows = [];
   [...scope()].sort((a, b) => a.id - b.id).forEach(f => {
-    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><span class="nm-row"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>${placeTag(f.label, 'Réception')}</div></div></td>
+    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><span class="nm-row"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>${placeTag(f.label, greeterRoom())}</div></div></td>
       <td>${temiStateChip()}</td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
       <td class="muted">${f.greeter.next}</td></tr>`);
@@ -1311,8 +1332,8 @@ function renderLive() {
       ${remote ? '<div class="pip"><span class="av">HR</span><small>Hery · Antananarivo</small></div>' : ''}
     </div>
     <div class="controls">
-      ${remote ? '<button class="btn primary" data-act="release">Rendre la main au robot</button><button class="btn">Couper le micro</button><button class="btn">Aller à la porte</button>'
-        : '<button class="btn primary" data-act="take">Prendre la main en visio</button><button class="btn">Parler dans le hall</button><button class="btn">Ramener à la base</button>'}
+      ${remote ? '<button class="btn primary" data-act="release">Rendre la main au robot</button><button class="btn">Couper le micro</button><button class="btn" data-act="go-entree">Aller à la porte</button>'
+        : '<button class="btn primary" data-act="take">Prendre la main en visio</button><button class="btn">Parler dans le hall</button><button class="btn" data-act="go-base">Ramener à la base</button>'}
       <span class="note">${remote ? 'Latence 180 ms · Antananarivo → Paris' : 'Hery est disponible pour un relais'}</span>
     </div>`;
   const live = document.querySelector('#acc-live .live');
@@ -1376,7 +1397,85 @@ function renderLog() {
     `<div class="m"><div class="lb"><span>${q}</span><b>${n}</b></div><div class="mb"><i style="width:${n / max * 100}%;background:var(--accueil)"></i></div></div>`).join('');
 }
 
-function renderAccueil() { renderLive(); renderWho(); renderPanic(); renderCoverage(); renderLog(); }
+// ---------- Reception robot position: mini plan of the ground floor, base and quick moves ----------
+// Plan units match the building map (1 unit ≈ 2 m); the front facade and entrance are at y = D.
+const SPOTS = [
+  { id: 'accueil',   label: 'Accueil',          where: "Comptoir d'accueil",       room: 'Réception',      at: [2.6, 4.2] },
+  { id: 'entree',    label: "Devant l'entrée",  where: "Devant l'entrée",          room: 'Réception',      at: [2.5, 5.3] },
+  { id: 'petitdej',  label: 'Petit-déjeuner',   where: 'Salle du petit-déjeuner',  room: 'Petit-déjeuner', at: [7, 1.7] },
+  { id: 'bagagerie', label: 'Bagagerie',        where: 'Bagagerie',                room: 'Bagagerie',      at: [10.5, 1.7] },
+  { id: 'base',      label: 'Base',             where: 'Base de recharge',         room: 'Réception',      at: [0.9, 0.9] },
+];
+const spot = id => SPOTS.find(x => x.id === id);
+ACC.pos = { spot: 'accueil', target: null };
+const greeterOf = () => FLOORS.find(f => f.greeter).greeter;
+const greeterRoom = () => spot(ACC.pos.target || ACC.pos.spot).room;
+const PX = 25;   // mini-plan scale: 12 × 6 units → 300 × 150
+
+function renderPosMap() {
+  let s = '';
+  LOBBY.rooms.filter(r => r.kind !== 'core').forEach(r => {
+    s += `<rect x="${r.x1 * PX}" y="${r.y1 * PX}" width="${(r.x2 - r.x1) * PX}" height="${(r.y2 - r.y1) * PX}" rx="3" fill="${r.kind === 'lobby' ? '#f2f0ff' : '#f6f7f9'}" stroke="#dfe2e7"/>`;
+    s += `<text x="${(r.x1 + r.x2) / 2 * PX}" y="${r.y1 * PX + 14}" text-anchor="middle" font-size="9" font-weight="600" fill="#9aa1ab">${r.id.toUpperCase()}</text>`;
+  });
+  // entrance gap on the facade
+  s += `<line x1="${1.6 * PX}" y1="${6 * PX}" x2="${3.4 * PX}" y2="${6 * PX}" stroke="#fff" stroke-width="4"/><text x="${2.5 * PX}" y="${6 * PX + 13}" text-anchor="middle" font-size="9" font-weight="600" fill="#9aa1ab">ENTRÉE</text>`;
+  // clickable spots (except the base, drawn as the dock)
+  SPOTS.forEach(p => {
+    const [x, y] = p.at.map(v => v * PX);
+    s += p.id === 'base'
+      ? `<g class="spot" data-go="${p.id}"><title>${p.where}</title><rect x="${x - 9}" y="${y - 9}" width="18" height="18" rx="5" fill="#e7f6ee" stroke="#9fd8b9"/><g transform="translate(${x - 6},${y - 6}) scale(.5)" fill="none" stroke="#22a861" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['zap']}</g></g>`
+      : `<g class="spot" data-go="${p.id}"><title>${p.where}</title><circle cx="${x}" cy="${y}" r="5" fill="#e6f0ff" stroke="#b3d1ff"/></g>`;
+  });
+  s += `<g id="pos-robot"><circle class="pulse" r="6" fill="#7c5cff"/><circle r="7" fill="#7c5cff" stroke="#fff" stroke-width="2.5"/></g>`;
+  const svg = document.getElementById('acc-pos-map');
+  svg.innerHTML = s;
+  placePosRobot();
+}
+function placePosRobot() {
+  const g = document.getElementById('pos-robot');
+  if (g) { const [x, y] = greeterOf().at; g.setAttribute('transform', `translate(${x * PX},${y * PX})`); }
+}
+function renderPos() {
+  const moving = !!ACC.pos.target, here = spot(ACC.pos.spot), base = spot('base');
+  const [x, y] = greeterOf().at, toBase = Math.round(Math.hypot(x - base.at[0], y - base.at[1]) * 2);
+  document.getElementById('acc-pos-state').innerHTML = moving ? '<span class="chip occ">En déplacement</span>'
+    : here.id === 'base' ? '<span class="chip ok">À sa base</span>' : '<span class="chip acc">En poste</span>';
+  document.getElementById('acc-pos-meta').innerHTML = moving
+    ? `En route vers <b>${spot(ACC.pos.target).where}</b>`
+    : `Position : <b>${here.where}</b>${here.id === 'base' ? ' · en charge' : ` · base à ${toBase} m, angle de la réception`}`;
+  document.getElementById('acc-pos-actions').innerHTML = SPOTS.map(p =>
+    `<button class="btn ${!moving && p.id === here.id ? 'on' : ''}" data-act="go-${p.id}" ${moving || p.id === here.id ? 'disabled' : ''}>${p.id === 'base' ? icon('zap', 13) : ''}${p.label}</button>`).join('');
+}
+
+// Smooth move along a simple route (through the reception / breakfast-room doorway when going beyond x = 5).
+function goTo(id) {
+  const g = greeterOf(), dest = spot(id);
+  if (!dest || ACC.pos.target || ACC.pos.spot === id) return;
+  const via = (dest.at[0] > 5) !== (g.at[0] > 5) ? [[4.4, 1.7], [5.6, 1.7]] : [];
+  const path = [...(g.at[0] > 5 ? via.reverse() : via), dest.at];
+  ACC.pos.target = id;
+  let last = performance.now();
+  const SPEED = 1.6;
+  const tick = now => {
+    const dt = Math.min(.1, (now - last) / 1000); last = now;
+    let step = SPEED * dt;
+    while (step > 0 && path.length) {
+      const [tx, ty] = path[0], dx = tx - g.at[0], dy = ty - g.at[1], d = Math.hypot(dx, dy);
+      if (d <= step) { g.at = [tx, ty]; path.shift(); step -= d; }
+      else { g.at = [g.at[0] + dx / d * step, g.at[1] + dy / d * step]; step = 0; }
+    }
+    placePosRobot();
+    if (!document.getElementById('view-building').hidden && shown() === 0) renderBuilding();
+    if (path.length) return requestAnimationFrame(tick);
+    ACC.pos = { spot: id, target: null };
+    renderPos(); renderTemiCard();
+  };
+  requestAnimationFrame(tick);
+  renderPos();
+}
+
+function renderAccueil() { renderLive(); renderWho(); renderPos(); renderPosMap(); renderPanic(); renderCoverage(); renderLog(); }
 
 function takeOver() {
   ACC.mode = 'remote'; ACC.takeoverAt = Date.now();
@@ -1390,11 +1489,13 @@ function release() {
 }
 // Shared by the reception view and the Temi card on the building view.
 function runAccAction(act, source = 'le comptoir') {
+  if (act.startsWith('go-')) return goTo(act.slice(3));
   if (act === 'take') takeOver();
   if (act === 'release') release();
   if (act === 'panic') {
     ACC.panicAt = Date.now();
     if (ACC.mode !== 'remote') takeOver();
+    goTo('accueil');   // the robot faces the counter
     LOG.unshift({ at: Date.now(), lang: '—', q: `Bouton panique déclenché depuis ${source}`, a: 'Visio ouverte avec Hery, enregistrement démarré.', out: 'alarm' });
   }
   if (act === 'calm') {
@@ -1407,7 +1508,9 @@ function runAccAction(act, source = 'le comptoir') {
 }
 document.getElementById('view-accueil').addEventListener('click', e => {
   const act = e.target.closest('[data-act]')?.dataset.act;
-  if (act) runAccAction(act);
+  if (act) return runAccAction(act);
+  const go = e.target.closest('#acc-pos-map .spot')?.dataset.go;
+  if (go) goTo(go);
 });
 
 // Live counters tick every second; the panic checklist advances on its own.
