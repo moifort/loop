@@ -11,7 +11,7 @@
     --blue: #006fff; --blue-soft: #e6f0ff;
     --green: #22a861; --green-soft: #e7f6ee; --amber: #f0a020; --amber-soft: #fff4e0;
     --red: #e5484d; --red-soft: #fdecec; --gray: #a0a7b0;
-    --accueil: #1e3a8a; --menage: #0ea5e9; --menage-soft: #e2f4fc; --occ: #3b82f6;
+    --accueil: #1e3a8a; --menage: #0ea5e9; --bagages: #7c3aed; --menage-soft: #e2f4fc; --occ: #3b82f6;
     --shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -191,6 +191,7 @@
   .chip.idle { background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
   .chip.acc { background: #e4e8f3; color: #1e3a8a; }
   .chip.occ { background: #e3e8ff; color: #3451b2; }
+  .chip.bag { background: #efe8fd; color: #6d28d9; }
   /* Occupied rooms: neutral grey, so they never read as the sapphire cleaning colour */
   .chip.guest { background: #eceef1; color: #4b5260; }
 
@@ -880,6 +881,7 @@ const LUCIDE = {
   'video-off': '<path d="M10.66 6H14a2 2 0 0 1 2 2v2.5l5.248-3.062A.5.5 0 0 1 22 7.87v8.196"/><path d="M16 16a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h2"/><path d="m2 2 20 20"/>',
   'signal': '<path d="M2 20h.01"/><path d="M7 20v-4"/><path d="M12 20v-8"/><path d="M17 20V8"/><path d="M22 4v16"/>',
   'arrow-up-right': '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+  'luggage': '<path d="M6 20a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2"/><path d="M8 18V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v14"/><path d="M10 20h4"/><circle cx="16" cy="20" r="2"/><circle cx="8" cy="20" r="2"/>',
   'zap': '<path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/>',
 };
 // One way to draw an icon everywhere: Lucide geometry, round caps, stroke follows the text colour unless given.
@@ -892,7 +894,7 @@ document.querySelectorAll('i[data-icon]').forEach(el => {
 
 // =====================================================================
 // Data — Quartier Libre Saint-Georges, RDC + 5 levels (mansard on top),
-// one cleaning robot per level and a greeter robot at the reception.
+// one cleaning robot per level, a greeter robot at the reception and a luggage cart (Piaggio Kilo).
 // Plan units: footprint is W x D (x to the right, y to the back).
 // =====================================================================
 const W = 12, D = 6;
@@ -955,7 +957,9 @@ const FLOORS = [
     robot: { name: 'CLN-7B19', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
   { id: 0, label: 'RDC', name: 'Réception', area: 420, occ: null, layout: LOBBY,
     robot: { name: 'CLN-0A3E', state: 'charge', pct: 100, bat: 64, at: [4.4, 5.4], base: [4.4, 5.4], next: 'Hall terminé · pleine dans 25 min' },
-    greeter: { name: 'TEMI-4F2A', state: 'live', visitors: 23, at: [2.6, 4.2], next: 'Recharge planifiée à 23 h' } },
+    greeter: { name: 'TEMI-4F2A', state: 'live', visitors: 23, at: [2.6, 4.2], next: 'Recharge planifiée à 23 h' },
+    // Luggage cart: the guest pushes it to the apartment (motor assist), it drives back to the luggage room alone.
+    porter: { name: 'KILO-3B8D', state: 'bag', bat: 74, trips: 9, at: [11.3, 2.7], next: 'Prochain check-in : app. 204 vers 15 h' } },
 ];
 
 // To-do list, linked to a floor (alerts per floor are derived from it).
@@ -976,6 +980,7 @@ const STATE = {
   blocked: { chip: 'err',  label: 'Bloqué',     color: '#e5484d' },
   idle:    { chip: 'idle', label: 'Planifié',   color: '#a0a7b0' },
   live:    { chip: 'acc',  label: 'En service', color: '#1e3a8a' },
+  bag:     { chip: 'bag',  label: 'À la bagagerie', color: '#7c3aed' },
 };
 // Room states share one icon set (24×24 stroke paths) between map markers and list chips.
 const ICON = {
@@ -1151,6 +1156,7 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   if (opts.pulse) s += `<circle class="pulse" cx="${cx}" cy="${cy - h / 2}" r="6" fill="${color}"/>`;
   s += `<path d="M${cx - rx},${cy} L${cx - rx},${cy - h} A${rx},${ry} 0 0 1 ${cx + rx},${cy - h} L${cx + rx},${cy} A${rx},${ry} 0 0 1 ${cx - rx},${cy} Z" fill="${color}"/>`;
   s += `<ellipse cx="${cx}" cy="${cy - h}" rx="${rx}" ry="${ry}" fill="#fff" opacity=".35"/>`;
+  if (opts.cart) s += `<rect x="${cx - 4}" y="${cy - h - 11}" width="8" height="10" rx="1.5" fill="${color}" stroke="#fff" stroke-width=".8"/><path d="M${cx - 1.8},${cy - h - 11} v-2 h3.6 v2" fill="none" stroke="${color}" stroke-width="1.2"/>`;
   if (opts.tall) s += `<rect x="${cx - 4}" y="${cy - h - 12}" width="8" height="10" rx="2" fill="${color}"/><rect x="${cx - 3}" y="${cy - h - 10}" width="6" height="4" rx="1" fill="#fff" opacity=".8"/>`;
   // Linked labels (greeter → reception view) get an "open" arrow at the end and a pointer.
   const lw = label.length * 7 + (opts.alert ? 30 : 22) + (opts.link ? 20 : 0);
@@ -1224,7 +1230,7 @@ function openFloor(f, z0) {
   f.layout.rooms.filter(r => r.kind !== 'corridor' && r.kind !== 'core').forEach(r => {
     // Move the room number to the back of the room when a robot stands in it, so its tag never covers it.
     const guest = r.kind === 'apt';
-    const inside = guest || [f.robot.at, f.greeter && f.greeter.at].some(a => a && a[0] > r.x1 && a[0] < r.x2 && a[1] > r.y1 && a[1] < r.y2);
+    const inside = guest || [f.robot.at, f.greeter && f.greeter.at, f.porter && f.porter.at].some(a => a && a[0] > r.x1 && a[0] < r.x2 && a[1] > r.y1 && a[1] < r.y2);
     const c = inside ? P(r.x1 + 0.9, r.y1 + 0.7, z0) : P((r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2, z0);
     const st = r.kind === 'apt' ? states[r.id] : null;
     roomLabels.push(`<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">${r.id}</text>`);
@@ -1239,6 +1245,10 @@ function openFloor(f, z0) {
   });
   const r = f.robot, st = STATE[r.state];
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', overlay: robotTags }) });
+  if (f.porter) {
+    const p = f.porter;
+    items.push({ d: p.at[0] + p.at[1] + 0.1, svg: robotGlyph(p.at[0], p.at[1], z0, STATE[p.state].color, p.name, { cart: true, overlay: robotTags }) });
+  }
   if (f.greeter) {
     const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#1e3a8a', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, alert: !!ACC.panicAt, link: 'accueil' });
     items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: ACC.panicAt ? alarmRobot(P(f.greeter.at[0], f.greeter.at[1], z0), glyph) : glyph });
@@ -1419,6 +1429,7 @@ const ICON_ACCUEIL = icon('bot', 15, { color: '#fff' });
 // Larger versions for the robots table, where the tile spans the name and the location badge
 const TILE_MENAGE = icon('brush-cleaning', 20, { color: '#fff' });
 const TILE_ACCUEIL = icon('bot', 20, { color: '#fff' });
+const TILE_BAGAGES = icon('luggage', 20, { color: '#fff' });
 // Temi with a branded shell: Quartier Libre gold band on the base.
 const TEMI_SVG = `<svg width="66" height="122" viewBox="0 0 80 150">
   <ellipse cx="40" cy="144" rx="27" ry="4" fill="rgba(31,35,40,.12)"/>
@@ -1538,6 +1549,10 @@ function renderRows() {
       <td>${temiStateChip()}</td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
       <td class="muted">${f.greeter.next}</td></tr>`);
+    if (f.porter) { const p = f.porter; rows.push(`<tr data-id="${f.id}" title="Chariot à bagages Piaggio Kilo"><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${placeTag(f.label, 'Bagagerie')}</div></div></td>
+      <td>${stateChip(STATE[p.state])}</td>
+      <td><span class="muted">${p.trips} trajets bagages · Piaggio Kilo</span></td>
+      <td class="muted">${p.next}</td></tr>`); }
     const r = f.robot, st = STATE[r.state];
     rows.push(`<tr data-id="${f.id}" data-robot="${r.name}" class="${r.state === 'blocked' ? 'trouble' : ''}" title="Ouvrir la fiche de ${r.name}">
       <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${TILE_MENAGE}</span><div><span class="nm-row"><b>${r.name}</b>${batteryIcon(r.bat, r.state === 'charge' || r.state === 'done')}</span>${placeTag(f.label, robotRoom(f.id))}</div></div></td>
@@ -1546,8 +1561,8 @@ function renderRows() {
       <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td></tr>`);
   });
   document.getElementById('rows').innerHTML = rows.join('');
-  document.getElementById('robots-count').textContent = selected === 'all' ? '7 robots · 1 par étage + accueil' : `${rows.length} robot${rows.length > 1 ? 's' : ''} sur cet étage`;
-  document.querySelectorAll('#rows tr').forEach(tr => tr.onclick = () => showView(tr.dataset.view || 'robot/' + tr.dataset.robot));
+  document.getElementById('robots-count').textContent = selected === 'all' ? '8 robots · 1 par étage + accueil + bagages' : `${rows.length} robot${rows.length > 1 ? 's' : ''} sur cet étage`;
+  document.querySelectorAll('#rows tr[data-view], #rows tr[data-robot]').forEach(tr => tr.onclick = () => showView(tr.dataset.view || 'robot/' + tr.dataset.robot));
 }
 
 function select(id) { selected = id; openPanel = null; renderAll(); }
