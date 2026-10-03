@@ -665,6 +665,7 @@
   <button class="nav-btn active" data-view="building" title="Bâtiment"><i data-icon="building-2" data-size="20" data-sw="1.75"></i></button>
   <div class="nav-sep" role="separator"></div>
   <button class="nav-btn" data-view="accueil" title="Temi · Accueil"><i data-icon="bot" data-size="20" data-sw="1.75"></i></button>
+  <button class="nav-btn" data-view="kilo" title="Kilo · Bagages"><i data-icon="luggage" data-size="20" data-sw="1.75"></i></button>
   <button class="nav-btn" data-view="menage" title="Robots de ménage"><i data-icon="brush-cleaning" data-size="20" data-sw="1.75"></i></button>
   <div class="nav-spacer"></div>
   <button class="nav-btn" title="Réglages"><i data-icon="settings" data-size="20" data-sw="1.75"></i></button>
@@ -1103,6 +1104,9 @@ let selected = 'all';
 // Hovering a row of the floor list previews that floor on the building only; the rest of the page keeps `selected`.
 let preview = null;
 const shown = () => preview ?? selected;
+// Robot pointed out on the building: the hovered robot card's while previewing, else the one picked in the table.
+let previewFocus = null;
+const shownFocus = () => preview !== null ? previewFocus : focus;
 const done = new Set();
 
 // Apartments a robot may clean: occupied ones (guest inside) are skipped.
@@ -1277,7 +1281,6 @@ function cartBody(x, y, z, color, loaded) {
 function plumbob(x, y, color) {
   const t = `${x},${y - 18}`, m = (dy) => `${x},${y - dy}`;
   return `<g class="plumbob" style="animation-delay:-${Math.round(performance.now() % 1600)}ms">
-    <ellipse cx="${x}" cy="${y + 4}" rx="4" ry="1.3" fill="rgba(0,0,0,.12)"/>
     <polygon points="${t} ${x - 5.5},${y - 9} ${m(0)}" fill="color-mix(in srgb, ${color} 70%, #fff)"/>
     <polygon points="${t} ${x + 5.5},${y - 9} ${m(0)}" fill="${color}"/></g>`;
 }
@@ -1386,14 +1389,14 @@ function openFloor(f, z0) {
       `<g transform="translate(${cx - 5},${cy - 16}) scale(.4167)" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">${ICON[st.icon]}</g>` });
   });
   const r = f.robot, st = STATE[r.state];
-  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', focus: focus === r.name, overlay: robotTags, top: topTags }) });
+  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', focus: shownFocus() === r.name, overlay: robotTags, top: topTags }) });
   if (f.porter && f.porter.state !== 'parked') {
     const p = f.porter;
     // Drawn in front of the corridor's front partitions (y = 3.6) along its whole length, so the tall cart stays visible.
-    items.push({ d: p.at[0] + 0.6 + 3.65, svg: robotGlyph(p.at[0], p.at[1], z0, STATE[p.state].color, p.name, { cart: true, loaded: p.loaded, focus: focus === p.name, overlay: robotTags, top: topTags }) });
+    items.push({ d: p.at[0] + 0.6 + 3.65, svg: robotGlyph(p.at[0], p.at[1], z0, STATE[p.state].color, p.name, { cart: true, loaded: p.loaded, focus: shownFocus() === p.name, overlay: robotTags, top: topTags }) });
   }
   if (f.greeter) {
-    const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#1e3a8a', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, top: topTags, alert: !!ACC.panicAt, link: 'accueil', focus: focus === f.greeter.name });
+    const glyph = robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, ACC.panicAt ? '#e5484d' : '#1e3a8a', f.greeter.name, { tall: true, pulse: true, overlay: robotTags, top: topTags, alert: !!ACC.panicAt, link: 'accueil', focus: shownFocus() === f.greeter.name });
     items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: ACC.panicAt ? alarmRobot(P(f.greeter.at[0], f.greeter.at[1], z0), glyph) : glyph });
   }
   items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
@@ -1796,6 +1799,13 @@ floorList.addEventListener('mouseover', e => {
   if (id !== preview) { preview = id; renderBuilding(); }
 });
 floorList.addEventListener('mouseleave', () => { preview = null; renderBuilding(); });
+// Hovering the Temi or Kilo card previews its floor on the building, plumbob above the robot.
+[['temi-card', () => { const f = FLOORS.find(x => x.greeter); return [f.id, f.greeter.name]; }],
+ ['kilo-card', () => { const f = FLOORS.find(x => x.porter); return f.porter.state === 'parked' ? null : [f.id, f.porter.name]; }]].forEach(([id, target]) => {
+  const card = document.getElementById(id);
+  card.addEventListener('mouseenter', () => { const t = target(); if (!t) return; [preview, previewFocus] = t; renderBuilding(); });
+  card.addEventListener('mouseleave', () => { preview = previewFocus = null; renderBuilding(); });
+});
 function renderAll() { floorPicker(); renderBuilding(); renderTodo(); renderRooms(); renderTemiCard(); renderKiloCard(); renderRows(); if (typeof renderMenage === 'function') { renderMenage(); renderRobotSheet(); renderKiloSheet(); } }
 
 const tick = () => document.getElementById('clock').textContent =
