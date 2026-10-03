@@ -217,6 +217,9 @@
   .temi { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 4px 16px 16px; align-items: start; }
   .temi-pic { height: 132px; border-radius: 10px; background: linear-gradient(180deg, #f6f3ff, #ece6ff); display: grid; place-items: center; }
   .temi b { font-weight: 600; display: block; }
+  /* Same battery glyph as the robots table, right of the name */
+  .temi-name { display: flex; align-items: center; gap: 8px; }
+  .temi-name .batt { line-height: 0; }
   .temi small { color: var(--muted); }
   .temi-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; margin-top: 10px; }
   .temi-stats div small { display: block; font-size: 11px; }
@@ -945,7 +948,7 @@ function renderTemiCard() {
   const pic = document.getElementById('temi-pic');
   if (!document.getElementById('view-building').hidden) mountClip('lobby', pic, pic.querySelector('.ov'));
   document.getElementById('temi-info').innerHTML = `
-    <div><b>${f.greeter.name}</b><small>Temi 3 · Réception · sur secteur</small>
+    <div><span class="temi-name"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span><small>Temi 3 · Réception · sur secteur</small>
       <div class="temi-stats">
         <div><small>Échanges</small><b>${f.greeter.visitors}</b></div>
         <div><small>Résolus seul</small><b>78 %</b></div>
