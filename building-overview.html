@@ -310,7 +310,7 @@ const FLOORS = [
 // To-do list, linked to a floor (alerts per floor are derived from it).
 const TODOS = [
   { floor: 3, prio: 'high', short: 'CLN-91C5 bloqué', title: 'CLN-91C5 est bloqué', desc: "Une valise est restée au sol au milieu de l'appartement, le robot ne peut pas la contourner. Il attend depuis 18 min.", acts: ['Envoyer un agent', 'Passer au suivant'] },
-  { floor: 4, prio: 'med', short: 'CLN-5E07 batterie 22 %', title: 'CLN-5E07 a une batterie faible (22 %)', desc: "Retour automatique à la base prévu vers 15 %. Les 3 derniers appartements de l'étage seront faits après la recharge (environ 40 min).", acts: ['Recharger maintenant', 'Voir le planning'] },
+  { floor: 4, prio: 'med', short: 'CLN-5E07 batterie 22 %', title: 'CLN-5E07 a une batterie faible (22 %)', desc: "Retour automatique à la base prévu vers 15 %. Les appartements 405 et 406 seront nettoyés après la recharge (environ 40 min).", acts: ['Recharger maintenant', 'Voir le planning'] },
   { floor: 5, prio: 'low', short: 'CLN-C6F2 brosse usée', title: 'CLN-C6F2 : brosse principale à remplacer', desc: "Usure estimée à 92 %. Le robot continue de nettoyer, mais la brosse doit être changée avant la prochaine tournée.", acts: ['Planifier l\'entretien', 'Commander une brosse'] },
 ];
 const PRIO = { high: '#e5484d', med: '#f0a020', low: '#a0a7b0' };
@@ -328,7 +328,7 @@ const ROOM_STATE = {
   clean:   { chip: 'ok',   label: 'Prêt',       fill: '#d9f3f0' },
   doing:   { chip: 'run',  label: 'En cours',   fill: '#bfeae4' },
   blocked: { chip: 'err',  label: 'Bloqué',     fill: '#fbd5d6' },
-  todo:    { chip: 'idle', label: 'À faire',    fill: '#ffffff' },
+  todo:    { chip: 'warn', label: 'À nettoyer', fill: '#fdeccb' },
 };
 
 // Selection drives the whole page: 'all' or a floor id.
@@ -518,11 +518,18 @@ function openFloor(f, z0) {
   const roomLabels = [], robotTags = [];
   f.layout.rooms.filter(r => r.kind !== 'corridor' && r.kind !== 'core').forEach(r => {
     // Move the room number to the back of the room when a robot stands in it, so its tag never covers it.
-    const guest = (f.occupied || []).includes(r.id);
+    const guest = (f.occupied || []).includes(r.id) || states[r.id] === 'todo';
     const inside = guest || [f.robot.at, f.greeter && f.greeter.at].some(a => a && a[0] > r.x1 && a[0] < r.x2 && a[1] > r.y1 && a[1] < r.y2);
     const c = inside ? P(r.x1 + 0.9, r.y1 + 0.7, z0) : P((r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2, z0);
     const st = r.kind === 'apt' ? states[r.id] : null;
     roomLabels.push(`<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">${r.id}</text>`);
+  });
+  // Rooms still to clean: small amber sparkle marker
+  f.layout.rooms.filter(q => states[q.id] === 'todo').forEach(q => {
+    const [cx, cy] = P((q.x1 + q.x2) / 2 + 0.35, (q.y1 + q.y2) / 2 + 0.35, z0);
+    items.push({ d: (q.x1 + q.x2) / 2 + (q.y1 + q.y2) / 2 + 0.7, svg:
+      `<circle cx="${cx}" cy="${cy - 9}" r="8" fill="#f0a020" stroke="#fff" stroke-width="2"/>` +
+      `<path d="M${cx},${cy - 14} L${cx + 1.4},${cy - 10.4} L${cx + 5},${cy - 9} L${cx + 1.4},${cy - 7.6} L${cx},${cy - 4} L${cx - 1.4},${cy - 7.6} L${cx - 5},${cy - 9} L${cx - 1.4},${cy - 10.4} Z" fill="#fff"/>` });
   });
   // Guests in occupied apartments
   f.layout.rooms.filter(q => (f.occupied || []).includes(q.id)).forEach(q => {
