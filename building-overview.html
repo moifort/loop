@@ -435,7 +435,9 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   const badge = opts.alert
     ? `<circle cx="11" cy="10" r="7" fill="#e5484d"/><text x="11" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`
     : `<circle cx="10" cy="10" r="4" fill="${color}"/>`;
-  s += `<g transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : '#e4e6ea'}"/>${badge}<text x="${opts.alert ? 23 : 18}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text></g>`;
+  const tag = `<g transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : '#e4e6ea'}"/>${badge}<text x="${opts.alert ? 23 : 18}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text></g>`;
+  // Labels go to the overlay layer when one is given, so walls never hide them.
+  if (opts.overlay) opts.overlay.push(tag); else s += tag;
   return s;
 }
 
@@ -471,16 +473,17 @@ function openFloor(f, z0) {
   f.layout.walls.forEach(([x1, y1, x2, y2]) => wall(x1, y1, x2, y2, WALL * 0.8, x1 === x2 ? '#efe9dc' : '#f7f4ee'));
   wall(0, D, W, D, LOW, STONE);
   wall(W, 0, W, D, LOW, STONE_SIDE);
+  const roomLabels = [], robotTags = [];
   f.layout.rooms.filter(r => r.kind !== 'corridor' && r.kind !== 'core').forEach(r => {
     const c = P((r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2, z0);
     const st = r.kind === 'apt' ? states[r.id] : null;
-    items.push({ d: (r.x1 + r.x2) / 2 + (r.y1 + r.y2) / 2 - 0.4, svg:
-      `<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}">${r.id}</text>` });
+    roomLabels.push(`<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">${r.id}</text>`);
   });
   const r = f.robot, st = STATE[r.state];
-  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked' }) });
-  if (f.greeter) items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, '#7c5cff', f.greeter.name, { tall: true, pulse: true }) });
+  items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { pulse: r.state === 'run', alert: r.state === 'blocked', overlay: robotTags }) });
+  if (f.greeter) items.push({ d: f.greeter.at[0] + f.greeter.at[1] + 0.1, svg: robotGlyph(f.greeter.at[0], f.greeter.at[1], z0, '#7c5cff', f.greeter.name, { tall: true, pulse: true, overlay: robotTags }) });
   items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
+  s += roomLabels.join('') + robotTags.join('');
   return s;
 }
 
