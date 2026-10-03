@@ -936,11 +936,12 @@ const BATTERY = [
 function batteryIcon(pct, charging) {
   const b = BATTERY.find(x => pct >= x.min);
   const label = charging ? `En charge · ${charging === true ? pct + ' %' : charging}` : `${b.label} · ${pct} %`;
-  const bolt = charging ? '<path d="M11.6 2.2 7.4 6.7h2.9l-.9 3.1 4.2-4.5h-2.9Z" fill="#fff"/>' : '';
-  return `<span class="batt" title="${label}"><svg width="24" height="12" viewBox="0 0 24 12">
-    <rect x="0" y="1" width="21" height="10" rx="3.2" fill="#e3e6ea"/>
-    <path d="M22 4.3v3.4a1.7 1.7 0 0 0 0-3.4Z" fill="#e3e6ea"/>
-    <rect x="0" y="1" width="${(21 * (charging ? Math.max(b.fill, .55) : b.fill)).toFixed(1)}" height="10" rx="3.2" fill="${charging ? '#22a861' : b.color}"/>${bolt}</svg></span>`;
+  // Bolt taller than the battery, dark with a white halo so it reads on both the fill and the track.
+  const bolt = charging ? '<path d="M12.6 0 5.2 9.4h4.6L8.4 16l7.4-9.4h-4.6Z" fill="#1f2328" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" paint-order="stroke"/>' : '';
+  return `<span class="batt" title="${label}"><svg width="24" height="16" viewBox="0 0 24 16">
+    <rect x="0" y="3" width="21" height="10" rx="3.2" fill="#e3e6ea"/>
+    <path d="M22 6.3v3.4a1.7 1.7 0 0 0 0-3.4Z" fill="#e3e6ea"/>
+    <rect x="0" y="3" width="${(21 * (charging ? Math.max(b.fill, .55) : b.fill)).toFixed(1)}" height="10" rx="3.2" fill="${charging ? '#22a861' : b.color}"/>${bolt}</svg></span>`;
 }
 
 // Same split badge as the to-do list: [floor | room the robot is in, live], shortened to fit under the name.
