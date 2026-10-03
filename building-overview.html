@@ -73,8 +73,10 @@
 
   /* First item of the floor list, stretched to full width above the building */
   #all-row { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
-  .fl.all .lv svg { display: block; }
-  .issues { display: flex; flex-direction: column; gap: 5px; margin: 8px 0 0 42px; }
+  /* No level column on the whole-building row: more room for issues */
+  .fl.all .r1 { grid-template-columns: 1fr auto; }
+  .fl.all .r2 { grid-template-columns: 1fr 56px; }
+  .issues { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
   .issue { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .issue:hover { text-decoration: underline; }
   .tags { display: inline-flex; gap: 4px; flex-wrap: wrap; }
@@ -556,10 +558,10 @@ function floorPicker() {
   // "Tout le bâtiment": same structure as a floor row (r1 = level · name · state, r2 = details)
   document.getElementById('all-row').innerHTML = `
     <div class="fl all ${selected === 'all' ? 'sel' : ''}" data-id="all" role="button" tabindex="0">
-      <div class="r1"><span class="lv"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg></span>
+      <div class="r1">
         <span class="nm">Tout le bâtiment</span>
         ${issues.length ? `<span class="chip ${blocked ? 'err' : 'warn'}">${issues.length} problème${issues.length > 1 ? 's' : ''}</span>` : '<span class="chip ok">Tout va bien</span>'}</div>
-      <div class="r2"><span></span>
+      <div class="r2">
         ${metric('Ménage', clean, '#00a99d')}
         ${alertMetric(issues)}
       </div>
