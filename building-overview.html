@@ -214,7 +214,7 @@
   /* Greeter robot card on the ground floor: opens the reception view */
   #temi-card { cursor: pointer; transition: border-color .15s, box-shadow .15s; }
   #temi-card:hover { border-color: #cfc4ff; box-shadow: 0 0 0 3px #f3f0ff; }
-  .below.with-temi .temi { grid-template-columns: minmax(0, 1.25fr) 1fr; }
+  .below.with-temi .temi { grid-template-columns: minmax(310px, 1.25fr) minmax(0, 1fr); }
   /* In the fixed-height row the feed fills the available height (cropped), it never dictates it */
   .below.with-temi .temi { align-items: stretch; }
   .below.with-temi .temi-pic { height: 100%; min-height: 0; aspect-ratio: auto; }
@@ -516,6 +516,7 @@ const LUCIDE = {
   'brush-cleaning': '<path d="m16 22-1-4"/><path d="M19 14a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2h-3a1 1 0 0 1-1-1V4a2 2 0 0 0-4 0v5a1 1 0 0 1-1 1H6a2 2 0 0 0-2 2v1a1 1 0 0 0 1 1"/><path d="M19 14H5l-1.973 6.767A1 1 0 0 0 4 22h16a1 1 0 0 0 .973-1.233z"/><path d="m8 22 1-4"/>',
   'user': '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
   'exclamation': '<path d="M12 7v6"/><path d="M12 17h.01"/>',
+  'joystick': '<path d="M21 17a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2Z"/><path d="M6 15v-2"/><path d="M12 15V9"/><circle cx="12" cy="6" r="3"/>',
   'layout-list': '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><path d="M14 4h7"/><path d="M14 9h7"/><path d="M14 15h7"/><path d="M14 20h7"/>',
   'arrow-up-right': '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
   'zap': '<path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/>',
@@ -1075,7 +1076,7 @@ function renderTemiCard() {
         <div><small>Relais visio</small><b>${relays}</b></div>
       </div></div>
     <div class="temi-actions">
-      <button class="btn primary" data-temi="take">Prendre la main</button>
+      <button class="btn primary" data-temi="take">${icon('joystick', 15)}Contrôler</button>
       <button class="btn panic" data-temi="panic">${icon('siren', 15)}Panique</button>
     </div>`;
 }
@@ -1345,18 +1346,23 @@ function mountClip(name, parent, before = null) {
 }
 function reloadClip(v) {
   v.classList.remove('fading');
+  // While it reloads, show the illustrated fallback rather than a black frame ('playing' brings the video back)
+  if (v.parentElement) v.parentElement.classList.remove('has-video');
   v.load();
   v.play().catch(() => {});
 }
 // Watchdog for the demo: any clip on the page that is paused (moved between views, paused off-screen by the
 // browser, autoplay hiccup) is resumed; one that has not advanced for 6 s (stalled stream) is reloaded.
 setInterval(() => {
+  if (document.hidden) return;   // hidden pane: playback is throttled, not stuck
   Object.values(clipEls).forEach(v => {
     if (!v.isConnected) return;
     if (v.paused) { v.play().catch(() => {}); return; }
-    if (v.currentTime === v.lastTime) { v.stuck = (v.stuck || 0) + 1; if (v.stuck >= 3) { v.stuck = 0; reloadClip(v); } }
-    else v.stuck = 0;
-    v.lastTime = v.currentTime;
+    if (v.currentTime !== v.lastTime) { v.stuck = 0; v.lastTime = v.currentTime; return; }
+    // Not advancing: a loaded clip only needs a nudge; reload only a stream that has been starved for ~8 s
+    if (v.readyState >= 3) { v.play().catch(() => {}); return; }
+    v.stuck = (v.stuck || 0) + 1;
+    if (v.stuck >= 4) { v.stuck = 0; reloadClip(v); }
   });
 }, 2000);
 document.addEventListener('visibilitychange', () => {
