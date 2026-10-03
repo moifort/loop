@@ -292,11 +292,11 @@
   .live.has-video > svg, .pip.has-video .av { visibility: hidden; }
   .ov { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 3px 8px; border-radius: 6px; background: rgba(15,18,25,.62); color: #fff; font-size: 11px; font-weight: 500; backdrop-filter: blur(6px); }
   .ov.o-tl { top: 10px; left: 10px; }
-  .ov.o-bl { bottom: 10px; left: 10px; } .ov.o-br { bottom: 10px; right: 10px; }
+  .ov.o-bl { bottom: 10px; left: 10px; } .ov.o-tr { top: 10px; right: 10px; }
   .ov .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
   .ov.alarm { background: rgba(229,72,77,.92); }
   .ov.alarm .rec { background: #fff; }
-  .pip { position: absolute; right: 10px; bottom: 42px; width: 168px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,.35); aspect-ratio: 4 / 3; border-radius: 8px; background: linear-gradient(160deg, #3a4566, #232a3d); border: 2px solid rgba(255,255,255,.85); display: grid; place-items: center; color: #fff; }
+  .pip { position: absolute; right: 10px; bottom: 10px; width: 168px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,.35); aspect-ratio: 4 / 3; border-radius: 8px; background: linear-gradient(160deg, #3a4566, #232a3d); border: 2px solid rgba(255,255,255,.85); display: grid; place-items: center; color: #fff; }
   .pip .av { width: 40px; height: 40px; border-radius: 50%; background: #b9825a; display: grid; place-items: center; font-weight: 600; }
   .pip small { position: absolute; left: 6px; bottom: 4px; font-size: 10px; padding: 1px 5px; border-radius: 4px; background: rgba(15,18,25,.6); }
   .pip video.face { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -350,21 +350,21 @@
 
 <nav class="nav">
   <div class="me" title="Michael — CEO">M</div>
-  <button class="nav-btn active" data-view="building" title="Bâtiment"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg></button>
-  <button class="nav-btn" data-view="accueil" title="Accueil"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17a8 8 0 0 1 16 0"/><path d="M2.5 17h19M12 9V7M10 7h4"/></svg></button>
-  <button class="nav-btn" title="Plans"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m12 3 9 5-9 5-9-5 9-5Z"/><path d="m3 13 9 5 9-5"/></svg></button>
-  <button class="nav-btn" title="Robots"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01"/></svg></button>
-  <button class="nav-btn" title="Alertes"><span class="badge"></span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg></button>
-  <button class="nav-btn" title="Rapports"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></button>
+  <button class="nav-btn active" data-view="building" title="Bâtiment"><i data-icon="building-2" data-size="20" data-sw="1.75"></i></button>
+  <button class="nav-btn" data-view="accueil" title="Accueil"><i data-icon="concierge-bell" data-size="20" data-sw="1.75"></i></button>
+  <button class="nav-btn" title="Plans"><i data-icon="layers" data-size="20" data-sw="1.75"></i></button>
+  <button class="nav-btn" title="Robots"><i data-icon="bot" data-size="20" data-sw="1.75"></i></button>
+  <button class="nav-btn" title="Alertes"><span class="badge"></span><i data-icon="bell" data-size="20" data-sw="1.75"></i></button>
+  <button class="nav-btn" title="Rapports"><i data-icon="chart-column" data-size="20" data-sw="1.75"></i></button>
   <div class="nav-spacer"></div>
-  <button class="nav-btn" title="Réglages"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/></svg></button>
+  <button class="nav-btn" title="Réglages"><i data-icon="settings" data-size="20" data-sw="1.75"></i></button>
 </nav>
 
 <header class="top">
   <span>Quartier Libre Collection</span>
   <span class="sep">/</span>
   <button>Saint-Georges · 14 rue Henry Monnier, Paris 9e
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+    <i data-icon="chevron-down" data-size="14"></i>
   </button>
   <span class="sep" data-crumb hidden>/</span><span data-crumb hidden>Accueil</span>
   <span class="right" id="clock"></span>
@@ -372,7 +372,7 @@
 
 <!-- Always-available panic button, fixed on the right edge on every view -->
 <button class="panic-fab" id="panic-fab" title="Déclencher le bouton panique">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18v-6a5 5 0 0 1 10 0v6"/><path d="M5 21h14M12 3v2M4.2 7.2l1.4 1.4M19.8 7.2l-1.4 1.4"/></svg>
+  <i data-icon="siren" data-size="18"></i>
   <span id="panic-fab-label">Panique</span>
 </button>
 
@@ -391,13 +391,13 @@
   <div class="below">
     <div class="card" id="todo-card">
       <div class="card-h"><h3>À traiter</h3>
-        <div class="right"><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>
+        <div class="right"><i data-icon="chevron-down" data-size="16" class="chev"></i>
         </div>
       </div>
       <ul class="todos" id="todo"></ul>
     </div>
     <div class="card" id="rooms-card">
-      <div class="card-h"><h3>Appartements</h3><div class="right"><span id="rooms-count"></span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg></div></div>
+      <div class="card-h"><h3>Appartements</h3><div class="right"><span id="rooms-count"></span><i data-icon="chevron-down" data-size="16" class="chev"></i></div></div>
       <div class="rooms" id="rooms"></div>
     </div>
     <div class="card" id="temi-card" role="link" tabindex="0" title="Ouvrir la vue Accueil">
@@ -465,6 +465,33 @@
 </main>
 
 <script>
+// Icons: Lucide (lucide.dev, ISC licence), path data copied from lucide-static so the mockup works offline.
+const LUCIDE = {
+  'building-2': '<path d="M10 12h4"/><path d="M10 8h4"/><path d="M14 21v-3a2 2 0 0 0-4 0v3"/><path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/>',
+  'concierge-bell': '<path d="M3 20a1 1 0 0 1-1-1v-1a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1a1 1 0 0 1-1 1Z"/><path d="M20 16a8 8 0 1 0-16 0"/><path d="M12 4v4"/><path d="M10 4h4"/>',
+  'layers': '<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12"/><path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17"/>',
+  'bot': '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
+  'bell': '<path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/>',
+  'chart-column': '<path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  'settings': '<path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/><circle cx="12" cy="12" r="3"/>',
+  'chevron-down': '<path d="m6 9 6 6 6-6"/>',
+  'siren': '<path d="M7 18v-6a5 5 0 1 1 10 0v6"/><path d="M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z"/><path d="M21 12h1"/><path d="M18.5 4.5 18 5"/><path d="M2 12h1"/><path d="M12 2v1"/><path d="m4.929 4.929.707.707"/><path d="M12 12v6"/>',
+  'check': '<path d="M20 6 9 17l-5-5"/>',
+  'loader-circle': '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>',
+  'brush-cleaning': '<path d="m16 22-1-4"/><path d="M19 14a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2h-3a1 1 0 0 1-1-1V4a2 2 0 0 0-4 0v5a1 1 0 0 1-1 1H6a2 2 0 0 0-2 2v1a1 1 0 0 0 1 1"/><path d="M19 14H5l-1.973 6.767A1 1 0 0 0 4 22h16a1 1 0 0 0 .973-1.233z"/><path d="m8 22 1-4"/>',
+  'user': '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  'exclamation': '<path d="M12 7v6"/><path d="M12 17h.01"/>',
+  'sparkles': '<path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"/><path d="M20 2v4"/><path d="M22 4h-4"/><circle cx="4" cy="20" r="2"/>',
+  'arrow-up-right': '<path d="M7 7h10v10"/><path d="M7 17 17 7"/>',
+};
+// One way to draw an icon everywhere: Lucide geometry, round caps, stroke follows the text colour unless given.
+const icon = (name, size = 16, { sw = 2, color = 'currentColor', cls = '' } = {}) =>
+  `<svg${cls ? ` class="${cls}"` : ''} width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${LUCIDE[name]}</svg>`;
+// Static markup uses <i data-icon="…"> placeholders, swapped for the real SVG once.
+document.querySelectorAll('i[data-icon]').forEach(el => {
+  el.outerHTML = icon(el.dataset.icon, +(el.dataset.size || 16), { sw: +(el.dataset.sw || 2), cls: el.className });
+});
+
 // =====================================================================
 // Data — Quartier Libre Saint-Georges, RDC + 5 levels (mansard on top),
 // one cleaning robot per level and a greeter robot at the reception.
@@ -552,14 +579,14 @@ const STATE = {
 };
 // Room states share one icon set (24×24 stroke paths) between map markers and list chips.
 const ICON = {
-  check:  '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  check:  LUCIDE['check'],
   // Spinner: the list and map re-render often, so the phase follows the clock to keep turning smoothly.
-  get spinner() { return `<g class="spin" style="animation-delay:-${Math.round(performance.now() % 900)}ms"><circle cx="12" cy="12" r="8" stroke-opacity=".3"/><path d="M12 4a8 8 0 0 1 8 8"/></g>`; },
-  broom:  '<path d="M20 3 11.5 11.5"/><path d="M9.5 10.5 13.5 14.5 9 21 3 15Z"/><path d="M6 18l1.5-1.5"/>',
-  guest:  '<circle cx="12" cy="8" r="4"/><path d="M4.5 21c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/>',
-  alert:  '<path d="M12 6v8"/><path d="M12 18.5v.5"/>',
+  get spinner() { return `<g class="spin" style="animation-delay:-${Math.round(performance.now() % 900)}ms">${LUCIDE['loader-circle']}</g>`; },
+  broom:  LUCIDE['brush-cleaning'],
+  guest:  LUCIDE['user'],
+  alert:  LUCIDE['exclamation'],
 };
-const iconSvg = (name, size = 12) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${ICON[name]}</svg>`;
+const iconSvg = (name, size = 12) => `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round">${ICON[name]}</svg>`;
 const ROOM_STATE = {
   occupied:{ chip: 'occ',  label: 'Occupé',     fill: '#e3e8ff', color: '#3451b2', icon: 'guest' },
   clean:   { chip: 'ok',   label: 'Prêt',       fill: '#d9f3f0', color: '#22a861', icon: 'check' },
@@ -707,7 +734,7 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   if (opts.tall) s += `<rect x="${cx - 4}" y="${cy - h - 12}" width="8" height="10" rx="2" fill="${color}"/><rect x="${cx - 3}" y="${cy - h - 10}" width="6" height="4" rx="1" fill="#fff" opacity=".8"/>`;
   // Linked labels (greeter → reception view) get an "open" arrow at the end and a pointer.
   const lw = label.length * 7 + (opts.alert ? 30 : 22) + (opts.link ? 20 : 0);
-  const linkIcon = opts.link ? `<path d="M${lw - 13.5} 12.5l5-5M${lw - 12.5} 7.5h4v4" fill="none" stroke="#006fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>` : '';
+  const linkIcon = opts.link ? `<g transform="translate(${lw - 17},4) scale(.5)" fill="none" stroke="#006fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['arrow-up-right']}</g>` : '';
   const linkAttrs = opts.link ? ` class="map-link" data-view="${opts.link}" role="link" tabindex="0"` : '';
   const badge = opts.alert
     ? `<circle cx="11" cy="10" r="7" fill="#e5484d"/><text x="11" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`
@@ -826,7 +853,7 @@ function alertMetric(list) {
   return `<div class="al ${list.length ? '' : 'none'}" title="${list.length} alerte${list.length > 1 ? 's' : ''}">${BELL(color)}<b>${list.length}</b></div>`;
 }
 
-const BELL = c => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg>`;
+const BELL = c => icon('bell', 14, { color: c, sw: 2.2 });
 
 function floorPicker() {
   const area = FLOORS.reduce((a, f) => a + f.area, 0);
@@ -893,14 +920,14 @@ function renderTodo() {
   const list = TODOS.map((t, i) => ({ ...t, i })).filter(t => selected === 'all' || t.floor === selected);
   const html = list.length ? list.map(t => `
     <li class="td ${done.has(t.i) ? 'done' : ''}">
-      <button class="ck" data-i="${t.i}" title="Marquer comme traité">${done.has(t.i) ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>' : ''}</button>
+      <button class="ck" data-i="${t.i}" title="Marquer comme traité">${done.has(t.i) ? icon('check', 11, { color: '#fff', sw: 3.5 }) : ''}</button>
       <div>
         <div class="t">${tagsFor(t)}<span class="sev sev-${t.prio}">${PRIO_LABEL[t.prio]}</span>${t.title}</div>
         <p>${t.desc}</p>
         ${done.has(t.i) ? '' : `<div class="acts">${t.acts.map(a => `<button>${a}</button>`).join('')}${selected === 'all' ? `<button data-go="${t.floor}">Voir l'étage <span aria-hidden="true">→</span></button>` : ''}</div>`}
       </div>
     </li>`).join('') : `<li class="all-good">
-      <span class="ok-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 12.5 4 4 8-9"/></svg></span>
+      <span class="ok-badge">${icon('check', 22, { color: '#fff', sw: 2.8 })}</span>
       <b>Tout est en ordre</b>
       <span>Aucune tâche en attente ${selected === 'all' ? 'dans le bâtiment' : 'sur cet étage'}.</span></li>`;
   // The list re-renders every 1.5 s: only touch the DOM when it changed, or the empty-state animation would restart.
@@ -928,8 +955,8 @@ function renderRooms() {
   }).join('');
 }
 
-const ICON_MENAGE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="13" r="7"/><path d="M12 6V3M9 13h6"/></svg>';
-const ICON_ACCUEIL = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="6" y="8" width="12" height="11" rx="3"/><path d="M12 4v4M10 13h.01M14 13h.01"/></svg>';
+const ICON_MENAGE = icon('sparkles', 15, { color: '#fff' });
+const ICON_ACCUEIL = icon('concierge-bell', 15, { color: '#fff' });
 // Temi with a branded shell: Quartier Libre gold band on the base.
 const TEMI_SVG = `<svg width="66" height="122" viewBox="0 0 80 150">
   <ellipse cx="40" cy="144" rx="27" ry="4" fill="rgba(31,35,40,.12)"/>
@@ -1268,7 +1295,7 @@ setInterval(() => {
 document.addEventListener('visibilitychange', () => {
   if (!document.hidden) Object.values(clipEls).forEach(v => v.isConnected && v.play().catch(() => {}));
 });
-const CHECK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>';
+const CHECK = icon('check', 11, { sw: 3.5 });
 
 function renderLive() {
   const remote = ACC.mode === 'remote', panic = !!ACC.panicAt;
@@ -1280,7 +1307,7 @@ function renderLive() {
     <div class="live">${VIDEO}
       <span class="ov o-tl"><span class="rec"></span>EN DIRECT</span>
       <span class="ov o-bl">${remote ? `Hery parle via le robot · ${since(ACC.takeoverAt)}` : 'Le robot répond seul · FR · EN · IT · ES'}</span>
-      ${panic ? '<span class="ov o-br alarm"><span class="rec"></span>Enregistrement audio et vidéo</span>' : '<span class="ov o-br">Enregistrement désactivé</span>'}
+      ${panic ? '<span class="ov o-tr alarm"><span class="rec"></span>Enregistrement audio et vidéo</span>' : ''}
       ${remote ? '<div class="pip"><span class="av">HR</span><small>Hery · Antananarivo</small></div>' : ''}
     </div>
     <div class="controls">
