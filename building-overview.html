@@ -1214,8 +1214,10 @@ function stoneFloor(f, z0, opts) {
   if (opts.progress && kiloHere(f)) {
     const k = FLOORS.find(x => x.porter).porter, c = P(k.state === 'parked' ? 10.5 : k.at[0], D, (z0 + z1) / 2 + 4);
     s += `<g class="map-link" data-view="kilo" role="link" tabindex="0"><title>${k.name} · ouvrir sa fiche</title>
-      <rect x="${c[0] - 10}" y="${c[1] - 10}" width="20" height="20" rx="6" fill="#7c3aed" stroke="#fff" stroke-width="2"/>
-      <g transform="translate(${c[0] - 6},${c[1] - 6}) scale(.5)" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['luggage']}</g></g>`;
+      <circle class="pulse" cx="${c[0]}" cy="${c[1]}" r="12" fill="#7c3aed" style="animation-delay:-${Math.round(performance.now() % 1600)}ms"/>
+      <rect x="${c[0] - 14}" y="${c[1] - 12}" width="28" height="28" rx="8" fill="rgba(0,0,0,.22)"/>
+      <rect x="${c[0] - 14}" y="${c[1] - 14}" width="28" height="28" rx="8" fill="#7c3aed" stroke="#fff" stroke-width="2.5"/>
+      <g transform="translate(${c[0] - 8.5},${c[1] - 8.5}) scale(.7083)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['luggage']}</g></g>`;
   }
   // Panic alarm: the greeter shows on the facade as a pulsing red marker (whole-building view), linking to the reception view
   if (opts.progress && f.greeter && ACC.panicAt) {
