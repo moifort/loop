@@ -924,7 +924,7 @@ let openPanel = null;
 document.getElementById('temi-card').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showView('accueil'); } };
 
 
-// iOS-style battery under the robot name: thin neutral outline, one continuous fill in three levels.
+// iOS-style battery under the robot name: plain shape, no outline, one continuous fill in three levels.
 // Fill is dark as on iOS, red when almost empty, green when plugged in. Exact value on hover.
 const BATTERY = [
   { min: 70, fill: 1,   label: 'Batterie pleine' },
@@ -934,9 +934,9 @@ const BATTERY = [
 function batteryIcon(pct, plugged) {
   const b = BATTERY.find(x => pct >= x.min), color = plugged ? '#22a861' : b.color || '#1f2328';
   return `<span class="batt" title="${b.label} · ${plugged || pct + ' %'}"><svg width="24" height="12" viewBox="0 0 24 12">
-    <rect x=".5" y=".5" width="20.5" height="11" rx="3.4" fill="none" stroke="rgba(31,35,40,.35)"/>
-    <path d="M22.3 4.2v3.6a1.9 1.9 0 0 0 0-3.6Z" fill="rgba(31,35,40,.4)"/>
-    <rect x="2" y="2" width="${(17.5 * b.fill).toFixed(1)}" height="8" rx="2" fill="${color}"/></svg></span>`;
+    <rect x="0" y="1" width="21" height="10" rx="3.2" fill="#e3e6ea"/>
+    <path d="M22 4.3v3.4a1.7 1.7 0 0 0 0-3.4Z" fill="#e3e6ea"/>
+    <rect x="0" y="1" width="${(21 * b.fill).toFixed(1)}" height="10" rx="3.2" fill="${color}"/></svg></span>`;
 }
 
 function renderRows() {
