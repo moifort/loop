@@ -247,9 +247,10 @@
   .ov .rec { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
   .ov.alarm { background: rgba(229,72,77,.92); }
   .ov.alarm .rec { background: #fff; }
-  .pip { position: absolute; right: 10px; bottom: 42px; width: 132px; aspect-ratio: 4 / 3; border-radius: 8px; background: linear-gradient(160deg, #3a4566, #232a3d); border: 2px solid rgba(255,255,255,.85); display: grid; place-items: center; color: #fff; }
+  .pip { position: absolute; right: 10px; bottom: 42px; width: 168px; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,.35); aspect-ratio: 4 / 3; border-radius: 8px; background: linear-gradient(160deg, #3a4566, #232a3d); border: 2px solid rgba(255,255,255,.85); display: grid; place-items: center; color: #fff; }
   .pip .av { width: 40px; height: 40px; border-radius: 50%; background: #b9825a; display: grid; place-items: center; font-weight: 600; }
-  .pip small { position: absolute; left: 6px; bottom: 4px; font-size: 10px; }
+  .pip small { position: absolute; left: 6px; bottom: 4px; font-size: 10px; padding: 1px 5px; border-radius: 4px; background: rgba(15,18,25,.6); }
+  .pip video.face { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 12px 16px 16px; }
   .controls .note { margin-left: auto; color: var(--muted); font-size: 12px; }
   .who { padding: 0 16px 8px; }
@@ -474,7 +475,7 @@ const FLOORS = [
     robot: { name: 'CLN-2D84', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' } },
   { id: 1, label: 'É1', name: 'App. 101–107', occupied: ['103', '106'], area: 610, occ: 86, layout: apartmentLevel(1),
     robot: { name: 'CLN-7B19', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
-  { id: 0, label: 'RDC', name: 'Réception', hint: '& petit-déj.', area: 420, occ: null, layout: LOBBY,
+  { id: 0, label: 'RDC', name: 'Réception', area: 420, occ: null, layout: LOBBY,
     robot: { name: 'CLN-0A3E', state: 'run', pct: 70, bat: 92, at: [4.4, 5.4], base: [4.4, 5.4], next: 'Hall terminé vers 12 h 30' },
     greeter: { name: 'TEMI-4F2A', state: 'live', visitors: 23, at: [2.6, 4.2], next: 'Recharge planifiée à 23 h' } },
 ];
@@ -1087,21 +1088,26 @@ const VIDEO = (() => {
   s += '<rect x="398" y="262" width="36" height="58" rx="5" fill="#c0503f"/><path d="M408 262 v-14 h16 v14" fill="none" stroke="#2a2f3b" stroke-width="3"/><circle cx="404" cy="322" r="3" fill="#2a2f3b"/><circle cx="428" cy="322" r="3" fill="#2a2f3b"/>';
   return s + '<rect width="640" height="360" fill="url(#vig)"/></svg>';
 })();
-// Real lobby footage from the robot's height: a guest walks in, finds nobody at the desk and rings the bell.
-// Pexels video 5373058 (free licence); looped before a receptionist enters the frame at ~22 s.
-// Offline, the illustrated lobby underneath stays visible.
-const LOBBY_CLIP = { src: 'https://videos.pexels.com/video-files/5373058/5373058-sd_960_506_25fps.mp4', end: 21 };
-let lobbyVideo = null;
-function mountLobbyVideo(live) {
-  if (!lobbyVideo) {
-    lobbyVideo = document.createElement('video');
-    Object.assign(lobbyVideo, { src: LOBBY_CLIP.src, muted: true, loop: true, playsInline: true, preload: 'auto', className: 'cam' });
-    lobbyVideo.addEventListener('timeupdate', () => { if (lobbyVideo.currentTime >= LOBBY_CLIP.end) lobbyVideo.currentTime = 0; });
+// Real footage, streamed from Pexels (free licence). Offline, the illustrated lobby and the initials stay visible.
+// Lobby (5378935): fixed camera at robot height, a couple walks in through the arches; looped before they sit down.
+// Operator (7706641): webcam framing with headset, shown picture-in-picture while Hery speaks through the robot.
+const CLIPS = {
+  lobby:    { src: 'https://videos.pexels.com/video-files/5378935/5378935-sd_960_506_25fps.mp4', end: 8.5, className: 'cam' },
+  operator: { src: 'https://videos.pexels.com/video-files/7706641/7706641-sd_960_506_25fps.mp4', end: 12, className: 'face' },
+};
+const clipEls = {};
+// Re-rendering moves the same element back in, so playback carries on instead of restarting.
+function mountClip(name, parent, before = null) {
+  const c = CLIPS[name];
+  let v = clipEls[name];
+  if (!v) {
+    v = clipEls[name] = document.createElement('video');
+    Object.assign(v, { src: c.src, muted: true, loop: true, playsInline: true, preload: 'auto', className: c.className });
+    v.addEventListener('timeupdate', () => { if (v.currentTime >= c.end) v.currentTime = 0; });
   }
-  if (lobbyVideo.error) return;
-  // Re-rendering moves the same element, so playback carries on instead of restarting.
-  live.insertBefore(lobbyVideo, live.children[1]);
-  lobbyVideo.play().catch(() => {});
+  if (!parent || v.error) return;
+  parent.insertBefore(v, before);
+  v.play().catch(() => {});
 }
 const CHECK = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"><path d="m5 12 5 5 9-10"/></svg>';
 
@@ -1111,7 +1117,7 @@ function renderLive() {
     : remote ? '<span class="chip occ">Piloté à distance</span>' : '<span class="chip acc">En autonomie</span>';
   const handoff = ACC.waiting && !remote ? `<div class="handoff">
       <span class="sev sev-med">En attente</span>
-      <p><b>Une cliente attend un humain depuis ${since(ACC.waiting)}.</b> Elle demande une facture au nom de sa société ; Inès n'est pas au comptoir.</p>
+      <p><b>Un client attend un humain depuis ${since(ACC.waiting)}.</b> Il demande une facture au nom de sa société ; Inès n'est pas au comptoir.</p>
       <button class="btn primary" data-act="take">Prendre la main</button></div>` : '';
   document.getElementById('acc-live').innerHTML = `${handoff}
     <div class="live">${VIDEO}
@@ -1126,7 +1132,10 @@ function renderLive() {
         : '<button class="btn primary" data-act="take">Prendre la main en visio</button><button class="btn">Parler dans le hall</button><button class="btn">Ramener à la base</button>'}
       <span class="note">${remote ? 'Latence 180 ms · Antananarivo → Paris' : 'Hery est disponible pour un relais'}</span>
     </div>`;
-  mountLobbyVideo(document.querySelector('#acc-live .live'));
+  const live = document.querySelector('#acc-live .live');
+  mountClip('lobby', live, live.children[1]);
+  const pip = live.querySelector('.pip');
+  if (pip) mountClip('operator', pip, pip.querySelector('small'));
   document.getElementById('acc-live-card').classList.toggle('alarm', panic);
 }
 
