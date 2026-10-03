@@ -48,9 +48,14 @@
   .btn { padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); font-weight: 500; display: inline-flex; gap: 6px; align-items: center; }
   .btn:hover { background: var(--panel-2); }
   .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+  .btn.sm { padding: 4px 9px; font-size: 12px; }
+  .card-h .right .btn { margin-left: 8px; }
 
   /* Stage: floor picker | flat building | context */
-  .stage { display: grid; grid-template-columns: 280px 560px minmax(300px, 1fr); gap: 20px; align-items: start; }
+  .stage { display: grid; grid-template-columns: 280px 560px; gap: 20px; align-items: start; }
+  /* To-do list (and apartments when a floor is selected) sit under the building */
+  .below { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: start; }
+  .below:has(#rooms-card:not([style*="none"])) { grid-template-columns: 1fr 340px; }
 
   /* ---------- Floor picker ---------- */
   .floors { display: flex; flex-direction: column; gap: 4px; }
@@ -105,7 +110,6 @@
   .chip.acc { background: #efeaff; color: #5b3fd6; }
 
   /* ---------- Context column ---------- */
-  .col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
   .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); min-width: 0; }
   .card-h { display: flex; align-items: center; gap: 8px; padding: 14px 16px 6px; }
   .card-h h3 { font-size: 13px; font-weight: 600; }
@@ -186,19 +190,23 @@
       <div class="bld-caption" id="caption"></div>
     </div>
 
-    <div class="col">
-      <div class="card">
-        <div class="card-h"><h3>À traiter</h3><div class="right" id="todo-count"></div></div>
-        <ul class="todos" id="todo"></ul>
+  </div>
+
+  <div class="below">
+    <div class="card">
+      <div class="card-h"><h3>À traiter</h3>
+        <div class="right"><span id="todo-count"></span>
+          <button class="btn primary sm">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+            Demander un ménage
+          </button>
+        </div>
       </div>
-      <div class="card" id="rooms-card">
-        <div class="card-h"><h3>Appartements</h3><div class="right" id="rooms-count"></div></div>
-        <div class="rooms" id="rooms"></div>
-      </div>
-      <button class="btn primary" style="align-self:flex-start">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
-        Demander un ménage
-      </button>
+      <ul class="todos" id="todo"></ul>
+    </div>
+    <div class="card" id="rooms-card">
+      <div class="card-h"><h3>Appartements</h3><div class="right" id="rooms-count"></div></div>
+      <div class="rooms" id="rooms"></div>
     </div>
   </div>
 
