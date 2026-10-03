@@ -303,8 +303,20 @@
     box-shadow: inset 0 0 90px 10px rgba(229,72,77,.5), inset 0 0 240px 40px rgba(229,72,77,.2);
     animation: alarm-halo 1.4s ease-in-out infinite; }
   @keyframes alarm-halo { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
-  body.alarm #temi-card { border-color: #f1a7a9; background: #fff7f7; box-shadow: 0 0 0 3px var(--red-soft); }
-  body.alarm #temi-card .card-h h3 { color: #b42318; }
+  /* Card in trouble: solid red, contents inverted to white (same as a blocked cleaning robot) */
+  body.alarm #temi-card { border-color: var(--red); background: var(--red); color: #fff; box-shadow: 0 0 0 3px var(--red-soft); }
+  body.alarm #temi-card:hover { border-color: #c53337; }
+  body.alarm #temi-card .card-h h3, body.alarm #temi-card small, body.alarm #temi-card .temi-stats small, body.alarm #temi-card .temi-go { color: #fff; }
+  body.alarm #temi-card .chip { background: #fff; color: #b42318; }
+  body.alarm #temi-card .btn.panic { background: #fff; border-color: #fff; color: #b42318; }
+  body.alarm #temi-card .btn.panic:hover { background: #fdecec; }
+  .fl.trouble, #floors .fl.trouble:hover:not(.sel), .fl.trouble.sel { background: var(--red); border-color: var(--red); color: #fff; border-radius: 12px; }
+  .fl.trouble .nm small, .fl.trouble .m .lb, .fl.trouble .m .lb b { color: #fff; }
+  .fl.trouble .lv { background: rgba(0,0,0,.28); }
+  .fl.trouble .chip { background: #fff; color: #b42318; }
+  .fl.trouble .mb { background: rgba(255,255,255,.3); }
+  .fl.trouble .mb i { background: #fff !important; }
+  .fl.trouble .al { color: #fff; } .fl.trouble .al svg, .fl.trouble .al svg * { stroke: #fff; }
   .robot-alarm { animation: robot-blink 1s ease-in-out infinite; }
   @keyframes robot-blink { 50% { opacity: .4; } }
   .alarm-ring { fill: none; stroke: #e5484d; stroke-width: 3; animation: alarm-ring 1s ease-out infinite; }
@@ -1081,7 +1093,8 @@ function floorPicker() {
   let h = '';
   FLOORS.forEach(f => {
     const r = f.robot, st = STATE[r.state];
-    h += `<button class="fl ${selected === f.id ? 'sel' : ''}" data-id="${f.id}">
+    const trouble = r.state === 'blocked' || (f.greeter && ACC.panicAt);
+    h += `<button class="fl ${selected === f.id ? 'sel' : ''} ${trouble ? 'trouble' : ''}" data-id="${f.id}">
       <div class="r1"><span class="lv">${f.label}</span>
         <span class="nm">${f.name}${f.hint ? `<small>${f.hint}</small>` : ''}</span>
         ${f.greeter && ACC.panicAt ? '<span class="chip err">Alerte</span>' : `<span class="chip ${st.chip}">${st.label}</span>`}</div>
