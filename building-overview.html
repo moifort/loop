@@ -52,13 +52,13 @@
   .card-h .right .btn { margin-left: 8px; }
 
   /* Stage: floor picker | flat building | context */
-  /* Floor list: 140–320px; building: fixed 560px, pinned to the right */
-  .stage { display: grid; grid-template-columns: minmax(140px, 320px) minmax(560px, 1fr); gap: 20px; align-items: start; }
-  .stage .bld { justify-self: center; }
+  /* Floor list: 250–320px right next to the fixed 560px building; the pair is centred */
+  .stage { display: grid; grid-template-columns: minmax(250px, 320px) 560px; justify-content: center; gap: 12px; align-items: start; }
   .wrap { container-type: inline-size; }
   /* Not enough room for list + building side by side: stack them, building shrinks if needed */
-  @container (max-width: 740px) {
+  @container (max-width: 830px) {
     .stage { grid-template-columns: 1fr; }
+    .stage .bld { justify-self: center; }
     .stage > .floors { max-width: none; }
     .stage .bld { width: 100%; max-width: 560px; }
     .stage .bld svg { width: 100%; }
