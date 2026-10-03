@@ -45,11 +45,6 @@
   .wrap { max-width: 1520px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
 
 
-  .btn { padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--panel); font-weight: 500; display: inline-flex; gap: 6px; align-items: center; }
-  .btn:hover { background: var(--panel-2); }
-  .btn.primary { background: var(--blue); border-color: var(--blue); color: #fff; }
-  .btn.sm { padding: 4px 9px; font-size: 12px; }
-  .card-h .right .btn { margin-left: 8px; }
 
   /* Stage: floor picker | flat building | context */
   /* Floor list: 250–320px right next to the fixed 532px building; the pair is centred */
@@ -108,7 +103,7 @@
   .issue:hover { text-decoration: underline; }
   /* Floor + room(s) read as one two-tone badge: [É3 | 307] */
   .tags { display: inline-flex; flex-wrap: nowrap; border-radius: 6px; overflow: hidden; vertical-align: middle; line-height: 1; }
-  .tag { display: inline-flex; align-items: center; justify-content: center; height: 22px; min-width: 30px; padding: 0 9px; font-size: 11.5px; font-weight: 600; letter-spacing: .02em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .tag { display: inline-flex; align-items: center; justify-content: center; height: 22px; padding: 0 6px; font-size: 11.5px; font-weight: 600; letter-spacing: .02em; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .tag.lvl { background: #1f2328; color: #fff; }
   .tag.room { background: #eceef1; color: #1f2328; }
   .tag.room + .tag.room { border-left: 1px solid #fff; }
@@ -218,10 +213,6 @@
     <div class="card">
       <div class="card-h"><h3>À traiter</h3>
         <div class="right"><span id="todo-count"></span>
-          <button class="btn primary sm">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
-            Demander un ménage
-          </button>
         </div>
       </div>
       <ul class="todos" id="todo"></ul>
@@ -317,9 +308,9 @@ const FLOORS = [
 
 // To-do list, linked to a floor (alerts per floor are derived from it).
 const TODOS = [
-  { floor: 3, rooms: ['307'], prio: 'high', short: 'CLN-91C5 bloqué', title: 'CLN-91C5 est bloqué dans le 307', desc: "Une valise est restée au sol au milieu de l'appartement, le robot ne peut pas la contourner. Il attend depuis 18 min.", acts: ['Envoyer un agent', 'Passer au suivant'] },
-  { floor: 4, rooms: ['405', '406', '407'], prio: 'med', short: 'CLN-5E07 batterie 22 %', title: 'CLN-5E07 a une batterie faible (22 %)', desc: "Retour automatique à la base prévu vers 15 %. Les 3 derniers appartements de l'étage seront faits après la recharge (environ 40 min).", acts: ['Recharger maintenant', 'Voir le planning'] },
-  { floor: 5, rooms: [], prio: 'low', short: 'CLN-C6F2 brosse usée', title: 'CLN-C6F2 : brosse principale à remplacer', desc: "Usure estimée à 92 %. Le robot continue de nettoyer, mais la brosse doit être changée avant la prochaine tournée.", acts: ['Planifier l\'entretien', 'Commander une brosse'] },
+  { floor: 3, prio: 'high', short: 'CLN-91C5 bloqué', title: 'CLN-91C5 est bloqué dans le 307', desc: "Une valise est restée au sol au milieu de l'appartement, le robot ne peut pas la contourner. Il attend depuis 18 min.", acts: ['Envoyer un agent', 'Passer au suivant'] },
+  { floor: 4, prio: 'med', short: 'CLN-5E07 batterie 22 %', title: 'CLN-5E07 a une batterie faible (22 %)', desc: "Retour automatique à la base prévu vers 15 %. Les 3 derniers appartements de l'étage seront faits après la recharge (environ 40 min).", acts: ['Recharger maintenant', 'Voir le planning'] },
+  { floor: 5, prio: 'low', short: 'CLN-C6F2 brosse usée', title: 'CLN-C6F2 : brosse principale à remplacer', desc: "Usure estimée à 92 %. Le robot continue de nettoyer, mais la brosse doit être changée avant la prochaine tournée.", acts: ['Planifier l\'entretien', 'Commander une brosse'] },
 ];
 const PRIO = { high: '#e5484d', med: '#f0a020', low: '#a0a7b0' };
 
@@ -546,8 +537,6 @@ function renderBuilding() {
   const ordered = [...FLOORS].sort((a, b) => a.id - b.id);
   if (selected === 'all') {
     ordered.forEach(f => s += closedFloor(f, f.id * H, { progress: true }));
-    const g = FLOORS.find(f => f.greeter).greeter;
-    s += robotGlyph(2.3, D + 1.0, 0, '#7c5cff', `${g.name} · accueil`, { tall: true, pulse: true });
   } else {
     const sel = FLOORS.find(f => f.id === selected);
     ordered.filter(f => f.id < selected).forEach(f => s += closedFloor(f, f.id * H, { progress: false }));
@@ -598,7 +587,7 @@ function floorPicker() {
         ${alertMetric(issues)}
       </div>
       ${issues.length ? `<div class="issues">${issues.map(t => `
-        <span class="issue" data-go="${t.floor}">${BELL(PRIO[t.prio])}<span class="txt">${t.short}</span>${tagsFor(t, true)}</span>`).join('')}</div>` : ''}
+        <span class="issue" data-go="${t.floor}">${BELL(PRIO[t.prio])}<span class="txt">${t.short}</span>${tagsFor(t)}</span>`).join('')}</div>` : ''}
     </div>`;
   const all = document.querySelector('#all-row .fl');
   all.onclick = () => select('all');
@@ -628,8 +617,16 @@ function floorPicker() {
 const scope = () => selected === 'all' ? FLOORS : FLOORS.filter(f => f.id === selected);
 // Floor + apartment tags shown on every notification.
 // Compact (whole-building row): floor only. Full (to-do list): floor + every apartment.
-const tagsFor = (t, compact = false) => {
-  const list = compact ? [] : (t.rooms || []);
+// Room where the alert's robot currently stands (live), or "Couloir" between rooms.
+function robotRoom(floorId) {
+  const f = FLOORS.find(x => x.id === floorId), [x, y] = f.robot.at;
+  const r = f.layout.rooms.find(r => r.kind !== 'core' && x > r.x1 && x < r.x2 && y > r.y1 && y < r.y2);
+  if (!r || r.kind === 'corridor') return 'Couloir';
+  return r.id;
+}
+// Same badge everywhere: [floor | room where the robot is].
+const tagsFor = t => {
+  const list = [robotRoom(t.floor)];
   return `<span class="tags"><span class="tag lvl" data-go="${t.floor}">${FLOORS.find(f => f.id === t.floor).label}</span>${list.map(r => `<span class="tag room" data-go="${t.floor}">${r}</span>`).join('')}</span>`;
 };
 
