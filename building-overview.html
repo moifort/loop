@@ -11,7 +11,6 @@
     --blue: #006fff; --blue-soft: #e6f0ff;
     --green: #22a861; --green-soft: #e7f6ee; --amber: #f0a020; --amber-soft: #fff4e0;
     --red: #e5484d; --red-soft: #fdecec; --gray: #a0a7b0;
-    --icon: #3a4150;   /* dark grey for icons, same as the level badges */
     --accueil: #7c5cff; --menage: #00a99d; --menage-soft: #d9f3f0; --occ: #3b82f6;
     --shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
   }
@@ -28,7 +27,7 @@
   .nav { grid-row: 1 / 3; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 8px 0; gap: 4px; }
   /* Michael's avatar: drop assets/michael.jpg and set it as background-image */
   .me { width: 38px; height: 38px; border-radius: 50%; margin: 2px 0 14px; background: linear-gradient(135deg, #2b3a67, #5b6fa8) center / cover; color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 14px; box-shadow: 0 0 0 2px var(--panel), 0 0 0 3px var(--border); }
-  .nav-btn { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; color: var(--icon); position: relative; }
+  .nav-btn { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; color: var(--muted); position: relative; }
   .nav-btn:hover { background: var(--panel-2); color: var(--text); }
   .nav-btn.active { background: var(--blue-soft); color: var(--blue); }
   .nav-btn .badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--red); border: 2px solid var(--panel); }
