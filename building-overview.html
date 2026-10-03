@@ -1592,13 +1592,14 @@ const nextCell = (text, open, cls = 'muted') => `<td class="${cls}"><div class="
 const rowAttrs = (f, name, trouble) => `data-id="${f.id}" data-name="${name}" class="${trouble ? 'trouble' : ''}${focus === name ? ' focus' : ''}" title="Voir ${name} sur le bâtiment"`;
 
 function renderRows() {
-  const rows = [];
+  // Greeter first, then the luggage cart, then the cleaning robots floor by floor.
+  const rows = [], special = [];
   [...scope()].sort((a, b) => a.id - b.id).forEach(f => {
-    if (f.greeter) rows.push(`<tr ${rowAttrs(f, f.greeter.name, !!ACC.panicAt)}><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${TILE_ACCUEIL}</span><div><span class="nm-row"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>${placeTag(f.label, greeterRoom())}</div></div></td>
+    if (f.greeter) special.unshift(`<tr ${rowAttrs(f, f.greeter.name, !!ACC.panicAt)}><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${TILE_ACCUEIL}</span><div><span class="nm-row"><b>${f.greeter.name}</b>${batteryIcon(100, 'sur secteur')}</span>${placeTag(f.label, greeterRoom())}</div></div></td>
       <td>${temiStateChip()}</td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
       ${nextCell(f.greeter.next, 'accueil')}</tr>`);
-    if (f.porter) { const p = f.porter; rows.push(`<tr ${rowAttrs(f, p.name)}><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${placeTag(f.label, p.state === 'unload' ? '204' : 'Couloir')}</div></div></td>
+    if (f.porter) { const p = f.porter; special.push(`<tr ${rowAttrs(f, p.name)}><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${placeTag(f.label, p.state === 'unload' ? '204' : 'Couloir')}</div></div></td>
       <td>${stateChip(STATE[p.state])}</td>
       <td><span class="muted">${p.trips} trajets bagages · Piaggio Kilo</span></td>
       ${nextCell(STATE[p.state].next)}</tr>`); }
@@ -1609,6 +1610,7 @@ function renderRows() {
       <td><div class="pct"><div class="bar"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? 'var(--red)' : 'var(--menage)'}"></i></div>${r.pct} %</div></td>
       ${nextCell(r.next, 'robot/' + r.name, r.state === 'blocked' ? 'down' : 'muted')}</tr>`);
   });
+  rows.unshift(...special);
   document.getElementById('rows').innerHTML = rows.join('');
   document.getElementById('robots-count').textContent = selected === 'all' ? '8 robots · 1 par étage + accueil + bagages' : `${rows.length} robot${rows.length > 1 ? 's' : ''} sur cet étage`;
   document.querySelectorAll('#rows tr').forEach(tr => tr.onclick = e => {
