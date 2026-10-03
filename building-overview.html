@@ -214,6 +214,7 @@
   .rb-ic { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; color: #fff; flex: none; }
   .rb b { font-weight: 500; display: block; }
   .rb small { color: var(--muted); }
+  .rb .batt { display: block; margin-top: 3px; line-height: 0; width: max-content; }
   .bar { height: 6px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 99px; overflow: hidden; width: 120px; }
   .bar i { display: block; height: 100%; border-radius: 99px; }
   .pct { display: flex; align-items: center; gap: 8px; }
@@ -364,7 +365,7 @@
       <div class="right" id="robots-count"></div>
     </div>
     <div class="table-scroll"><table>
-      <thead><tr><th>Robot</th><th>Étage</th><th>État</th><th>Avancement du jour</th><th>Batterie</th><th>Prochaine étape</th></tr></thead>
+      <thead><tr><th>Robot</th><th>Étage</th><th>État</th><th>Avancement du jour</th><th>Prochaine étape</th></tr></thead>
       <tbody id="rows"></tbody>
     </table></div>
   </div>
@@ -922,23 +923,32 @@ let openPanel = null;
   }));
 document.getElementById('temi-card').onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showView('accueil'); } };
 
-const batColor = b => b < 25 ? 'var(--red)' : b < 50 ? 'var(--amber)' : 'var(--green)';
+
+// Battery as a three-level icon under the robot name; exact value on hover.
+const BATTERY = [
+  { min: 70, bars: 3, color: '#22a861', label: 'Batterie pleine' },
+  { min: 30, bars: 2, color: '#f0a020', label: 'Batterie moyenne' },
+  { min: 0,  bars: 1, color: '#e5484d', label: 'Batterie presque vide' },
+];
+function batteryIcon(pct, note) {
+  const b = BATTERY.find(x => pct >= x.min);
+  const bars = [0, 1, 2].map(i => `<rect x="${2.5 + i * 5}" y="2.5" width="4" height="7" rx=".8" fill="${i < b.bars ? b.color : '#e3e6ea'}"/>`).join('');
+  return `<span class="batt" title="${b.label} · ${note || pct + ' %'}"><svg width="22" height="12" viewBox="0 0 22 12"><rect x=".75" y=".75" width="18" height="10.5" rx="2.2" fill="none" stroke="${b.color}" stroke-width="1.5"/><rect x="19.6" y="3.8" width="1.9" height="4.4" rx=".8" fill="${b.color}"/>${bars}</svg></span>`;
+}
 
 function renderRows() {
   const rows = [];
   [...scope()].sort((a, b) => a.id - b.id).forEach(f => {
-    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><b>${f.greeter.name}</b><small>Accueil</small></div></div></td>
+    if (f.greeter) rows.push(`<tr data-id="${f.id}" data-view="accueil" title="Ouvrir la vue Accueil"><td><div class="rb"><span class="rb-ic" style="background:var(--accueil)">${ICON_ACCUEIL}</span><div><b>${f.greeter.name}</b>${batteryIcon(100, 'Sur secteur')}</div></div></td>
       <td>${f.label} <span class="muted">· Réception</span></td><td><span class="chip acc">En service</span></td>
       <td><span class="muted">${f.greeter.visitors} clients accueillis</span></td>
-      <td><span class="bat"><span class="dot" style="background:var(--green)"></span>Sur secteur</span></td>
       <td class="muted">${f.greeter.next}</td></tr>`);
     const r = f.robot, st = STATE[r.state];
     rows.push(`<tr data-id="${f.id}">
-      <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span><div><b>${r.name}</b><small>Ménage</small></div></div></td>
+      <td><div class="rb"><span class="rb-ic" style="background:var(--menage)">${ICON_MENAGE}</span><div><b>${r.name}</b>${batteryIcon(r.bat)}</div></div></td>
       <td>${f.label} <span class="muted">· ${f.name}</span></td>
       <td><span class="chip ${st.chip}">${st.label}</span></td>
       <td><div class="pct"><div class="bar"><i style="width:${r.pct}%;background:${r.state === 'blocked' ? 'var(--red)' : 'var(--menage)'}"></i></div>${r.pct} %</div></td>
-      <td><span class="bat"><span class="dot" style="background:${batColor(r.bat)}"></span>${r.bat} %</span></td>
       <td class="${r.state === 'blocked' ? 'down' : 'muted'}">${r.next}</td></tr>`);
   });
   document.getElementById('rows').innerHTML = rows.join('');
