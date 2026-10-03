@@ -47,8 +47,8 @@
 
 
   /* Stage: floor picker | flat building | context */
-  /* Floor list: 250–320px right next to the fixed 532px building; the pair is centred */
-  .stage { display: grid; grid-template-columns: minmax(250px, 320px) 532px; justify-content: center; gap: 12px; align-items: start; }
+  /* Floor list: 250–320px right next to the fixed 532px building; the pair hugs the left edge, aligned with the cards below */
+  .stage { display: grid; grid-template-columns: minmax(250px, 320px) 532px; justify-content: start; gap: 12px; align-items: start; }
   .wrap { container-type: inline-size; }
   /* Not enough room for list + building side by side: stack them, building shrinks if needed */
   @container (max-width: 800px) {
