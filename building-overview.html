@@ -193,6 +193,7 @@
   .chip.err { background: var(--red-soft); color: #b42318; }
   .chip.idle { background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
   .chip.acc { background: #e4e8f3; color: #1e3a8a; }
+  #view-accueil .chip.acc { background: var(--blue-soft); color: var(--blue); }
   /* Operator / in-progress chips use the app's primary blue */
   .chip.occ { background: var(--blue-soft); color: var(--blue); }
   .chip.bag { background: #efe8fd; color: #6d28d9; }
@@ -793,8 +794,8 @@
     <div class="cov-wrap" id="acc-cov"></div>
     <div class="legend">
       <span><i class="sw" style="background:#22a861"></i>Réceptionniste au poste</span>
-      <span><i class="sw" style="background:#1e3a8a"></i>Robot seul</span>
-      <span><i class="sw" style="background:#006fff"></i>Pris en main depuis Madagascar</span>
+      <span><i class="sw" style="background:#006fff"></i>Robot seul</span>
+      <span><i class="sw" style="background:#1e3a8a"></i>Pris en main depuis Madagascar</span>
       <span><i class="sw" style="background:#22a861;opacity:.3"></i>Prévu</span>
     </div>
   </div>
@@ -2033,7 +2034,8 @@ const TOPQ = [['Wi-Fi', 6], ['Bagagerie', 5], ['Heure de check-out', 4], ['Taxi,
 // Planned day at the desk; the live part is rebuilt from ACC.
 const COV_PLAN = [[7, 8, 'robot'], [8, 10.5, 'desk'], [10.5, 10.6, 'remote'], [10.6, 10.8, 'robot'], [10.8, 13, 'desk'],
   [13, 13.4, 'robot'], [13.4, 13.5, 'remote'], [13.5, 13.8, 'robot'], [13.8, 19, 'desk'], [19, 23, 'robot']];
-const COV_COLOR = { desk: '#22a861', robot: '#1e3a8a', remote: '#006fff' };
+// Reception page runs on the app's primary blue: the robot alone in primary, operator takeovers in midnight blue
+const COV_COLOR = { desk: '#22a861', robot: '#006fff', remote: '#1e3a8a' };
 const DAY0 = 7, DAY1 = 23;
 function coverage() {
   const now = simH(Date.now()), away = simH(ACC.awayAt), segs = [];
@@ -2177,7 +2179,7 @@ function renderLog() {
     <div><div class="q">${l.q}</div><div class="a">${l.a}</div></div>${OUT[l.out](l)}</li>`).join('');
   const max = Math.max(...TOPQ.map(q => q[1]));
   document.getElementById('acc-top').innerHTML = TOPQ.map(([q, n]) =>
-    `<div class="m"><div class="lb"><span>${q}</span><b>${n}</b></div><div class="mb"><i style="width:${n / max * 100}%;background:var(--accueil)"></i></div></div>`).join('');
+    `<div class="m"><div class="lb"><span>${q}</span><b>${n}</b></div><div class="mb"><i style="width:${n / max * 100}%;background:var(--blue)"></i></div></div>`).join('');
 }
 
 // ---------- Reception robot position: mini plan of the ground floor, base and quick moves ----------
@@ -2210,7 +2212,7 @@ function renderPosMap() {
       ? `<g class="spot" data-go="${p.id}"><title>${p.where}</title><rect x="${x - 9}" y="${y - 9}" width="18" height="18" rx="5" fill="#e7f6ee" stroke="#9fd8b9"/><g transform="translate(${x - 6},${y - 6}) scale(.5)" fill="none" stroke="#22a861" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['zap']}</g></g>`
       : `<g class="spot" data-go="${p.id}"><title>${p.where}</title><circle cx="${x}" cy="${y}" r="5" fill="#e6f0ff" stroke="#b3d1ff"/></g>`;
   });
-  const rc = ACC.panicAt ? '#e5484d' : '#1e3a8a';
+  const rc = ACC.panicAt ? '#e5484d' : '#006fff';
   s += ACC.panicAt
     ? `<g id="pos-robot"><circle class="alarm-ring" style="${alarmPhase()}"/><circle class="robot-alarm" r="7" fill="${rc}" stroke="#fff" stroke-width="2.5" style="${alarmPhase()}"/></g>`
     : `<g id="pos-robot"><circle class="pulse" r="6" fill="${rc}"/><circle r="7" fill="${rc}" stroke="#fff" stroke-width="2.5"/></g>`;
