@@ -61,21 +61,21 @@
   .fl .lv { font-weight: 600; color: var(--muted); font-size: 12px; }
   .fl .nm { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .fl .nm small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 4px; }
-  .fl .r2 { display: grid; grid-template-columns: 34px 1fr 56px; gap: 10px; align-items: center; margin-top: 7px; }
+  .fl .r2 { display: grid; grid-template-columns: 34px 1fr 40px; gap: 10px; align-items: end; margin-top: 7px; }
   .m { display: flex; flex-direction: column; gap: 3px; }
   .m .lb { display: flex; justify-content: space-between; color: var(--muted); font-size: 11px; }
   .m .lb b { color: var(--text); font-weight: 500; }
   .mb { height: 4px; border-radius: 9px; background: #e9ecef; overflow: hidden; }
   .mb i { display: block; height: 100%; border-radius: 9px; }
-  .al { display: flex; flex-direction: column; gap: 3px; }
-  .al .pips { display: flex; gap: 3px; height: 4px; }
-  .al .pips i { flex: 1; border-radius: 9px; background: #e9ecef; }
+  .al { display: flex; align-items: center; justify-content: flex-end; gap: 4px; font-size: 12px; }
+  .al b { font-weight: 600; min-width: 8px; }
+  .al.none b { color: var(--faint); font-weight: 500; }
 
   /* First item of the floor list, stretched to full width above the building */
   #all-row { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
   /* No level column on the whole-building row: more room for issues */
   .fl.all .r1 { grid-template-columns: 1fr auto; }
-  .fl.all .r2 { grid-template-columns: 1fr 56px; }
+  .fl.all .r2 { grid-template-columns: 1fr 40px; }
   .issues { display: flex; flex-direction: column; gap: 5px; margin-top: 8px; }
   .issue { display: flex; align-items: center; gap: 6px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .issue:hover { text-decoration: underline; }
@@ -543,9 +543,11 @@ function rings(vals, size = 58) {
   return s + '</svg>';
 }
 const metric = (label, v, color) => `<div class="m"><div class="lb">${label}<b>${v === null ? '—' : v + ' %'}</b></div><div class="mb"><i style="width:${v || 0}%;background:${color}"></i></div></div>`;
+// Bell + counter, coloured by the most severe open alert.
 function alertMetric(list) {
-  const pips = [0, 1, 2].map(k => `<i style="${list[k] ? `background:${PRIO[list[k].prio]}` : ''}"></i>`).join('');
-  return `<div class="al m"><div class="lb">Alertes<b>${list.length}</b></div><div class="pips">${pips}</div></div>`;
+  const worst = ['high', 'med', 'low'].find(p => list.some(t => t.prio === p));
+  const color = worst ? PRIO[worst] : '#c4c9d0';
+  return `<div class="al ${list.length ? '' : 'none'}" title="${list.length} alerte${list.length > 1 ? 's' : ''}">${BELL(color)}<b>${list.length}</b></div>`;
 }
 
 const BELL = c => `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="2.2"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10 21h4"/></svg>`;
