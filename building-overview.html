@@ -589,8 +589,10 @@
   .kpi-ring small { margin-bottom: 0; font-size: 11px; letter-spacing: .01em; }
   .kpi-ring b { display: block; font-size: 19px; line-height: 1.2; }
   .kpi-ring span { display: block; margin-left: 0; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ring { position: relative; display: grid; place-items: center; flex: none; }
-  .ring svg { position: absolute; inset: 0; }
+  .kpi-ring .ring { position: relative; display: grid; place-items: center; flex: none; }
+  /* Only the track goes absolute; the icon stays in the grid, centred in the ring */
+  .kpi-ring .ring > svg:first-child { position: absolute; inset: 0; }
+  .kpi-ring .ring > svg:last-child { position: static; }
   /* Coverage timeline: who held the reception, hour by hour */
   .cov-wrap { position: relative; margin: 0 16px; }
   .cov { position: relative; height: 26px; border-radius: 6px; background: var(--panel-2); border: 1px solid var(--border); overflow: hidden; }
