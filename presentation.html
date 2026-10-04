@@ -182,7 +182,7 @@
   .ov .open a { color: var(--loop); font-weight: 600; text-decoration: none; }
 
   /* ============ 4 · Reception ============ */
-  .acc { display: grid; grid-template-columns: 1fr 400px; height: 600px; }
+  .acc { display: grid; grid-template-columns: 1fr 440px; height: 600px; }
   .chat { padding: 24px 26px; display: flex; flex-direction: column; gap: 14px; border-right: 1px solid var(--line); overflow: hidden; }
   .msg { display: grid; grid-template-columns: 44px 1fr; gap: 12px; }
   .msg .lang { width: 44px; height: 30px; border-radius: 8px; background: #eef0f3; font-size: 14px; font-weight: 800; display: grid; place-items: center; color: var(--ink-2); }
@@ -197,13 +197,14 @@
   .live .badge { position: absolute; top: 18px; left: 18px; z-index: 3; display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,.55); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: .06em; padding: 6px 12px; border-radius: 8px; }
   .live .badge i { width: 9px; height: 9px; border-radius: 50%; background: var(--red); animation: blink 1.2s infinite; }
   .live .hall { position: absolute; inset: 0; }
-  .live .call { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: radial-gradient(circle at 50% 40%, #273a7a, #0f1220 75%); color: #fff; opacity: 0; transition: opacity .6s; }
-  .live .call.on { opacity: 1; }
-  .live .av { width: 132px; height: 132px; border-radius: 50%; background: linear-gradient(135deg, #f0a020, #e5484d); display: grid; place-items: center; font-size: 54px; font-weight: 700; position: relative; }
+  /* Hery picture-in-picture over the robot's camera, as in the mockup: avatar while it rings, webcam once connected */
+  .live .call { position: absolute; right: 16px; bottom: 92px; z-index: 3; width: 210px; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; border: 2px solid rgba(255,255,255,.85); box-shadow: 0 8px 24px rgba(0,0,0,.45); background: linear-gradient(160deg, #3a4566, #232a3d); display: grid; place-items: center; color: #fff; opacity: 0; transform: translateY(12px) scale(.94); transition: opacity .45s var(--ease), transform .45s var(--ease); }
+  .live .call.on { opacity: 1; transform: none; }
+  .live .av { width: 60px; height: 60px; border-radius: 50%; background: #b9825a; display: grid; place-items: center; font-size: 26px; font-weight: 700; position: relative; }
   .live .av::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 3px solid rgba(255,255,255,.6); animation: ping 1.6s ease-out infinite; }
-  .live .call.connected .av::after { animation: none; opacity: 0; }
-  .live .call h5 { font-size: 24px; }
-  .live .call p { font-size: 17px; color: #aab1c7; font-variant-numeric: tabular-nums; }
+  .live .call.connected .av { visibility: hidden; }
+  .live .call:not(.connected) video.op { opacity: 0; }
+  .live .call .who { position: absolute; left: 8px; bottom: 7px; z-index: 2; font-size: 13px; font-weight: 600; padding: 2px 8px; border-radius: 5px; background: rgba(15,18,25,.65); font-variant-numeric: tabular-nums; }
   .live .ctrls { position: absolute; bottom: 22px; left: 0; right: 0; display: flex; justify-content: center; gap: 14px; z-index: 3; }
   .live .ctrls span { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,.14); color: #fff; }
   .live .ctrls span.end { background: var(--red); }
@@ -216,27 +217,11 @@
   .tl span { height: 100%; transform-origin: left; transform: scaleX(0); transition: transform .9s var(--ease); }
   .tl span.on { transform: none; }
 
-  /* ============ 5 · Panic ============ */
-  .pan { position: relative; display: grid; grid-template-columns: 1fr 380px; height: 600px; transition: background .4s; }
-  .pan .scene { position: relative; border-right: 1px solid var(--line); }
-  .pan .side { padding: 22px; display: flex; flex-direction: column; gap: 12px; }
-  .pan .side h5 { font-size: 16px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
-  .sos { display: grid; grid-template-columns: 74px 1fr; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--line); border-radius: 14px; font-size: 17px; transition: background .3s, border-color .3s; }
-  .sos b.num { font-size: 26px; font-weight: 800; text-align: center; }
-  .sos small { display: block; color: var(--muted); font-size: 14px; }
-  .sos.calling { background: var(--red-soft); border-color: var(--red); }
-  .sos.calling small { color: #b42318; font-weight: 600; }
-  .alarm-bar { height: 64px; background: #f7f8fa; color: var(--muted); border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 14px; padding: 0 24px; font-size: 20px; font-weight: 700; transition: background .35s, color .35s; }
-  .alarm-bar.on { background: var(--red); color: #fff; border-color: var(--red); }
-  .alarm-bar.ok { background: var(--green); }
-  .alarm-bar .r { margin-left: auto; font-weight: 500; font-size: 17px; opacity: .9; }
-  .win.alarm { border-color: var(--red); box-shadow: 0 0 0 4px rgba(229,72,77,.25), 0 30px 80px -20px rgba(229,72,77,.35); }
-  .panic-btn { position: absolute; right: 20px; bottom: 20px; z-index: 5; display: flex; align-items: center; gap: 10px; height: 56px; padding: 0 22px; border-radius: 999px; background: var(--red); color: #fff; font-size: 19px; font-weight: 700; box-shadow: 0 6px 16px rgba(229,72,77,.4); }
-  .panic-btn svg { width: 22px; height: 22px; }
-  .acts { position: absolute; left: 22px; bottom: 22px; right: 250px; display: flex; flex-direction: column; gap: 10px; z-index: 4; }
-  .act { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,.96); border-radius: 12px; padding: 12px 16px; font-size: 18px; font-weight: 600; box-shadow: 0 6px 18px rgba(18,19,26,.14); }
-  .act i { width: 12px; height: 12px; border-radius: 50%; background: var(--red); flex: none; animation: blink 1s infinite; }
-  .act.g i { background: var(--green); animation: none; }
+  /* ============ 5 · Panic: the live mockup, driven by the scene ============ */
+  .app-shot { position: relative; height: 774px; }
+  .app-shot .win { position: absolute; inset: 0; }
+  /* Rendered at 1180 px wide (the mockup is responsive) so it reads at slide scale: 1016 / 1180 */
+  iframe.app { position: absolute; left: 0; top: 56px; width: 1180px; height: 834px; border: 0; transform: scale(.861); transform-origin: 0 0; background: var(--bg); pointer-events: none; }
 
   /* ============ 6 · Night watch (dark slide) ============ */
   .vig { padding: 22px 24px 24px; display: flex; flex-direction: column; gap: 12px; position: relative; }
@@ -429,6 +414,11 @@
   .bring .big .bi { background: rgba(255,255,255,.18); color: #fff; }
 
   /* ---------- Deck controls ---------- */
+  /* Real footage (Pexels, free licence) looping over an illustrated fallback that stays visible offline */
+  video.vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .45s ease; }
+  video.vid.ready { opacity: 1; }
+  video.vid.ready.fading { opacity: 0; }
+  video.vid.night { filter: grayscale(1) contrast(1.25) brightness(1.1) sepia(.35) hue-rotate(70deg); }
   .ctrl { position: fixed; left: 0; right: 0; bottom: 0; height: 4px; background: rgba(255,255,255,.08); z-index: 50; }
   .ctrl i { display: block; height: 100%; background: var(--loop); transition: width .4s var(--ease); }
   .hint { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 50; font: 500 13px -apple-system, sans-serif; color: #fff; background: rgba(18,19,26,.75); padding: 6px 12px; border-radius: 8px; animation: hint-out .6s ease 4s forwards; pointer-events: none; }
@@ -590,7 +580,7 @@
           <div class="greg-note pop" data-at="10400"><span class="gi"><svg width="22" height="22"><use href="#i-sparkles"/></svg></span><div><small>Greg → Loop · 164 ms</small>Réservation de Mme Lefèvre retrouvée dans Mews : facture au nom de Lefèvre Conseil SARL.</div></div>
         </div>
         <div class="live">
-          <div class="badge"><i></i>EN DIRECT</div>
+          <div class="badge"><i></i>EN DIRECT · CAMÉRA DE TEMI</div>
           <svg class="hall" viewBox="0 0 400 600" preserveAspectRatio="xMidYMid slice">
             <defs><linearGradient id="hallg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b3328"/><stop offset=".62" stop-color="#7a6a55"/><stop offset=".62" stop-color="#2a241d"/><stop offset="1" stop-color="#16130f"/></linearGradient></defs>
             <rect width="400" height="600" fill="url(#hallg)"/>
@@ -600,7 +590,10 @@
             <path d="M176 470 Q178 300 230 292 Q284 300 286 470 Z" fill="#1b1712"/>
             <rect x="0" y="470" width="400" height="130" fill="#0f0d0a" opacity=".7"/>
           </svg>
-          <div class="call" id="acc-call"><div class="av">H</div><h5>Hery</h5><p id="acc-call-t">Appel vers Antananarivo…</p></div>
+          <!-- Lobby (5378935): fixed camera at robot height, a couple walks in through the arches; looped before they sit down -->
+          <video class="vid" muted playsinline data-src="https://videos.pexels.com/video-files/5378935/5378935-sd_960_506_25fps.mp4" data-end="8.5"></video>
+          <!-- Operator (7706641): webcam framing with headset, Hery speaking through the robot -->
+          <div class="call" id="acc-call"><video class="vid op" muted playsinline data-src="https://videos.pexels.com/video-files/7706641/7706641-sd_960_506_25fps.mp4" data-end="12"></video><div class="av">H</div><span class="who" id="acc-call-t">Appel vers Antananarivo…</span></div>
           <div class="ctrls"><span><svg><use href="#i-mic"/></svg></span><span><svg><use href="#i-video"/></svg></span><span class="end"><svg><use href="#i-phone"/></svg></span></div>
         </div>
       </div>
@@ -628,42 +621,10 @@
         <li>Les numéros d'urgence s'appellent en un geste, et l'adresse de l'hôtel est donnée automatiquement.</li>
       </ul>
     </div>
-    <div class="win rise" id="pan-win" style="--d:.2s">
-      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>Accueil <span class="crumb">/ TEMI-4F2A · réception</span></div>
-      <div class="alarm-bar" id="pan-bar"><svg width="24" height="24"><use href="#i-siren"/></svg><span id="pan-bar-t">Accueil calme</span><span class="r" id="pan-bar-r">Temi en poste au comptoir</span></div>
-      <div class="pan">
-        <div class="scene">
-          <svg viewBox="0 0 700 640" style="position:absolute;inset:0;width:100%;height:100%" preserveAspectRatio="xMidYMid slice">
-            <rect width="700" height="640" fill="#f7f8fa"/>
-            <rect x="40" y="70" width="620" height="420" rx="18" fill="#fff" stroke="#d6dae2" stroke-width="2"/>
-            <rect x="80" y="110" width="220" height="70" rx="12" fill="#eef0f3" stroke="#c6cbd4" stroke-width="2"/>
-            <text x="190" y="152" text-anchor="middle" font-size="19" font-weight="600" fill="#6b7080">Comptoir</text>
-            <rect x="290" y="470" width="140" height="22" rx="4" fill="#d6dae2"/>
-            <text x="360" y="525" text-anchor="middle" font-size="18" font-weight="600" fill="#6b7080">Entrée</text>
-            <text x="600" y="110" text-anchor="end" font-size="18" font-weight="600" fill="#b8bec6">RÉCEPTION</text>
-            <circle cx="190" cy="215" r="13" fill="#22a861"/><text x="212" y="221" font-size="16" fill="#6b7080">Inès</text>
-            <g id="pan-intruder" opacity="0"><circle cx="470" cy="300" r="15" fill="#3a4150"/><text x="492" y="306" font-size="16" fill="#6b7080">Client agité</text></g>
-            <g id="pan-temi" style="transition:transform 1.2s cubic-bezier(.22,.8,.24,1)">
-              <circle id="pan-ring" cx="330" cy="230" r="34" fill="none" stroke="#1e3a8a" stroke-width="3" opacity=".25"/>
-              <circle cx="330" cy="230" r="22" fill="#1e3a8a"/>
-              <text x="330" y="276" text-anchor="middle" font-size="16" font-weight="700" fill="#1e3a8a" id="pan-tl">TEMI</text>
-            </g>
-          </svg>
-          <div class="acts">
-            <div class="act pop" data-at="3300"><i></i>Enregistrement du son et de l'image démarré</div>
-            <div class="act pop" data-at="4000"><i></i>Hery (Madagascar) en visio sur l'écran du robot</div>
-            <div class="act pop" data-at="4700"><i></i>Annonce : « Cet échange est enregistré. »</div>
-          </div>
-          <div class="panic-btn"><svg><use href="#i-siren"/></svg>Panique</div>
-        </div>
-        <div class="side">
-          <h5>Numéros d'urgence</h5>
-          <div class="sos" id="sos-17"><b class="num">17</b><div>Police secours<small id="sos-17-s">Agression, intrusion</small></div></div>
-          <div class="sos"><b class="num">15</b><div>SAMU<small>Urgence médicale</small></div></div>
-          <div class="sos"><b class="num">18</b><div>Pompiers<small>Incendie, fumée</small></div></div>
-          <div class="sos"><b class="num" style="font-size:18px">Michael</b><div>Astreinte direction<small>Astreinte de l'hôtel</small></div></div>
-          <div class="chip n" style="margin-top:auto;height:auto;padding:10px 14px;white-space:normal;line-height:1.35;font-size:15px"><svg class="ic" style="width:18px;height:18px;flex:none"><use href="#i-lock"/></svg>Greg ne peut ni déclencher ni lever l'alerte : c'est toujours une décision humaine.</div>
-        </div>
+    <div class="app-shot rise" style="--d:.2s">
+      <div class="win">
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Saint-Georges / Accueil / TEMI-4F2A</span></div>
+        <iframe class="app" data-src="building-overview.html#accueil" title="Maquette Loop · Accueil" tabindex="-1"></iframe>
       </div>
       <svg class="cursor" id="pan-cur"><use href="#i-cursor"/></svg>
     </div>
@@ -702,7 +663,8 @@
         <div class="floor"><span class="lv">É1</span><span class="corr"></span><span class="cam" style="left:70%"></span><span class="rb patrol" style="--t:11s;animation-delay:-2s"></span></div>
         <div class="floor"><span class="lv">RDC</span><span class="corr"></span><span class="cam" style="left:45%"></span><span class="cam" style="left:85%"></span><span class="rb temi"></span></div>
         <div class="rounds"><span class="done"><b>23:30</b>Ronde complète</span><span class="done"><b>01:00</b>Ronde complète</span><span class="next"><b>03:00</b>Ronde suivante</span><span><b>06:45</b>Fin de garde</span></div>
-        <div class="v-cam" id="vig-cam"><span class="lb">CLN-C6F2 · CAMÉRA EMBARQUÉE · É5</span><div class="scan"></div>
+        <div class="v-cam" id="vig-cam"><span class="lb">CLN-C6F2 · CAMÉRA EMBARQUÉE · É5</span><div class="scan" style="z-index:1"></div>
+          <video class="vid night" muted playsinline data-src="https://videos.pexels.com/video-files/15201563/15201563-sd_640_360_24fps.mp4"></video>
           <svg viewBox="0 0 360 230" style="position:absolute;inset:0"><path d="M0 230 L130 120 L230 120 L360 230" fill="none" stroke="#3f6b48" stroke-width="2"/><path d="M130 120 V40 M230 120 V40" stroke="#3f6b48" stroke-width="2"/><circle cx="205" cy="96" r="10" fill="#9fd9ad" opacity=".8"/><path d="M190 150 Q192 108 205 106 Q218 108 220 150 Z" fill="#9fd9ad" opacity=".8"/></svg>
         </div>
       </div>
@@ -947,9 +909,31 @@ fit();
 
 slides.forEach((s, i) => s.querySelector('.s-foot .n').textContent = `${String(i + 1).padStart(2, '0')} / ${slides.length}`);
 
+// Looping clips: fade out just before the loop point and back in after the jump so the cut never shows,
+// restart if the loop point is missed, retry after a network error. Same behaviour as the mockup.
+function setupClip(v) {
+  if (v.src) return;
+  Object.assign(v, { muted: true, loop: true, playsInline: true, preload: 'auto', src: v.dataset.src });
+  const end = +v.dataset.end || 0;
+  v.addEventListener('timeupdate', () => {
+    const e = end || v.duration;
+    if (!e) return;
+    if (v.currentTime >= e - 0.05) { v.currentTime = 0; v.classList.remove('fading'); }
+    else if (v.currentTime >= e - 0.6) v.classList.add('fading');
+    else v.classList.remove('fading');
+  });
+  v.addEventListener('playing', () => v.classList.add('ready'));
+  v.addEventListener('ended', () => { v.currentTime = 0; v.play().catch(() => {}); });
+  v.addEventListener('error', () => { v.classList.remove('ready'); setTimeout(() => { v.load(); v.play().catch(() => {}); }, 3000); });
+}
+const clipsOf = (s) => s ? [...s.querySelectorAll('video.vid')] : [];
+// Watchdog: a clip of the current slide that the browser paused (autoplay hiccup, background tab) is resumed
+setInterval(() => { if (!document.hidden) clipsOf(slides[cur]).forEach(v => v.paused && v.play().catch(() => {})); }, 2000);
+
 function go(i) {
   i = Math.max(0, Math.min(slides.length - 1, i));
   slides[cur].classList.remove('active');
+  clipsOf(slides[cur]).forEach(v => v.pause());
   stopScene();
   cur = i;
   const s = slides[cur];
@@ -958,6 +942,9 @@ function go(i) {
   s.classList.add('active');
   document.getElementById('progress').style.width = `${(cur + 1) / slides.length * 100}%`;
   history.replaceState(null, '', '#' + (cur + 1));
+  clipsOf(s).forEach(v => { setupClip(v); v.play().catch(() => {}); });
+  clipsOf(slides[cur + 1]).forEach(setupClip);   // warm up the next slide's footage and mockup
+  slides[cur + 1]?.querySelectorAll('iframe[data-src]').forEach(loadFrame);
   playScene(s);
 }
 
@@ -1022,6 +1009,16 @@ function pointAt(cursor, el, dx = 0, dy = 0) {
   cursor.style.left = ((r.left + r.width / 2 - p.left) / k + dx) + 'px';
   cursor.style.top = ((r.top + r.height / 2 - p.top) / k + dy) + 'px';
 }
+// Same-origin mockup frames: loaded on first visit, scripted through their own functions
+function loadFrame(f) { if (!f.src) f.src = f.dataset.src; }
+function appWin(s) { const w = s.querySelector('iframe.app')?.contentWindow; return w && w.runAccAction ? w : null; }
+// Points the cursor at an element inside a scaled iframe
+function pointInFrame(cursor, f, el) {
+  const p = cursor.parentElement.getBoundingClientRect(), fr = f.getBoundingClientRect(), r = el.getBoundingClientRect();
+  const k = p.width / cursor.parentElement.offsetWidth, z = fr.width / f.offsetWidth;
+  cursor.style.left = ((fr.left + (r.left + r.width / 2) * z - p.left) / k) + 'px';
+  cursor.style.top = ((fr.top + (r.top + r.height / 2) * z - p.top) / k) + 'px';
+}
 function click(cursor) { cursor.classList.remove('click'); cursor.offsetWidth; cursor.classList.add('click'); }
 
 const SCENES = {
@@ -1049,43 +1046,36 @@ const SCENES = {
       at(8400, () => {
         $('acc-call').classList.add('connected'); ok.className = 'chip b'; ok.innerHTML = '<span class="dot"></span>Pris en main · Hery';
         $('acc-wait').style.display = 'none'; $('acc-hery').style.display = ''; requestAnimationFrame(() => $('acc-hery').classList.add('on'));
-        let t = 0; const tick = () => { $('acc-call-t').textContent = 'Visio · 0:' + String(t).padStart(2, '0') + ' · Antananarivo'; t++; if (t < 7) at(1000, tick); };
+        let t = 0; const tick = () => { $('acc-call-t').textContent = 'Hery · visio 0:' + String(t).padStart(2, '0'); t++; if (t < 7) at(1000, tick); };
         tick();
       });
     },
   },
 
+  // The real reception view: the cursor presses the mockup's own panic button, calls 17, then lifts the alert
   panic: {
-    dur: 13500,
-    reset() {
-      $('pan-win').classList.remove('alarm'); $('pan-bar').className = 'alarm-bar';
-      $('pan-bar-t').textContent = 'Accueil calme'; $('pan-bar-r').textContent = 'Temi en poste au comptoir';
-      $('pan-temi').style.transform = ''; $('pan-ring').setAttribute('stroke', '#1e3a8a'); $('pan-ring').style.animation = '';
-      $('pan-intruder').setAttribute('opacity', '0'); $('pan-tl').setAttribute('fill', '#1e3a8a');
-      $('sos-17').classList.remove('calling'); $('sos-17-s').textContent = 'Agression, intrusion';
-      document.querySelectorAll('#pan-win .act').forEach(a => a.classList.remove('g'));
-      const c = $('pan-cur'); c.className = 'cursor'; c.style.transition = 'none'; c.style.left = '560px'; c.style.top = '420px'; c.offsetWidth; c.style.transition = '';
+    dur: 15500,
+    once(s) { loadFrame(s.querySelector('iframe.app')); },
+    reset(s) {
+      const w = appWin(s);
+      if (w) {
+        const acc = w.eval('ACC');
+        if (acc.call) w.runAccAction('hangup');
+        if (acc.panicAt) w.runAccAction('calm');
+        w.showView('accueil');
+      }
+      const c = $('pan-cur'); c.className = 'cursor'; c.style.transition = 'none'; c.style.left = '560px'; c.style.top = '520px'; c.offsetWidth; c.style.transition = '';
     },
-    run() {
-      const c = $('pan-cur'), btn = document.querySelector('#pan-win .panic-btn');
-      at(600, () => $('pan-intruder').setAttribute('opacity', '1'));
-      at(1200, () => { c.classList.add('on'); pointAt(c, btn); });
-      at(2400, () => {
-        click(c);
-        $('pan-win').classList.add('alarm'); $('pan-bar').classList.add('on');
-        $('pan-bar-t').textContent = 'Alerte panique · réception'; $('pan-bar-r').textContent = 'déclenchée depuis le comptoir';
-        $('pan-temi').style.transform = 'translate(90px, 50px)';
-        $('pan-ring').setAttribute('stroke', '#e5484d'); $('pan-ring').style.animation = 'blink 1s infinite'; $('pan-tl').setAttribute('fill', '#e5484d');
-      });
-      at(5600, () => pointAt(c, $('sos-17')));
-      at(6600, () => { click(c); $('sos-17').classList.add('calling'); $('sos-17-s').textContent = 'Appel en cours · adresse de l\'hôtel donnée'; });
-      at(7400, () => c.classList.remove('on'));
-      at(10200, () => {
-        $('pan-bar').classList.add('ok'); $('pan-bar-t').textContent = 'Alerte levée par Hery après 4 min'; $('pan-bar-r').textContent = 'Hery reste en visio';
-        $('pan-win').classList.remove('alarm'); $('sos-17').classList.remove('calling'); $('sos-17-s').textContent = 'Appel terminé · 2 min 10';
-        $('pan-ring').style.animation = ''; $('pan-ring').setAttribute('stroke', '#22a861'); $('pan-intruder').setAttribute('opacity', '.25');
-        document.querySelectorAll('#pan-win .act').forEach(a => a.classList.add('g'));
-      });
+    run(s) {
+      const c = $('pan-cur'), f = s.querySelector('iframe.app');
+      const press = (sel, ms) => {
+        at(ms, () => { const el = appWin(s)?.document.querySelector(sel); if (el) { c.classList.add('on'); pointInFrame(c, f, el); } });
+        at(ms + 1100, () => { const el = appWin(s)?.document.querySelector(sel); if (el) { click(c); el.click(); } });
+      };
+      press('#panic-fab', 900);
+      press('[data-act="call-0"]', 4600);
+      press('[data-act="calm"]', 10000);
+      at(11800, () => c.classList.remove('on'));
     },
   },
 
