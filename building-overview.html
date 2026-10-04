@@ -754,15 +754,7 @@
   .vig-plan .lvl.sel .band { stroke: var(--blue); stroke-width: 2; }
   .vig-pulse { transform-box: fill-box; transform-origin: center; animation: vig-pulse 1.3s ease-out infinite; }
   @keyframes vig-pulse { from { transform: scale(.6); opacity: .9; } to { transform: scale(2.4); opacity: 0; } }
-  /* Closed zones and mission */
-  .vig-zones { list-style: none; padding-bottom: 4px; }
-  .vig-zones li { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; padding: 9px 16px; border-top: 1px solid var(--border); }
-  .vig-zones li:first-child { border-top: none; }
-  .vig-zones li.all { background: var(--panel-2); }
-  .vig-zones b { font-weight: 500; display: block; }
-  .vig-zones small { color: var(--muted); font-size: 12px; display: block; }
-  .vig-zones li.closed small { color: #c2410c; }
-  #view-vigie.night .vig-zones li.closed small { color: #f5b94a; }
+  /* Mission */
   .vig-mis { padding: 4px 16px 14px; display: flex; flex-direction: column; gap: 10px; }
   .vig-mis .acts { display: flex; gap: 8px; flex-wrap: wrap; }
   .vig-mis .hint { color: var(--muted); font-size: 12px; line-height: 1.45; }
@@ -1314,10 +1306,6 @@
       <div class="card">
         <div class="card-h"><h3>Mission</h3><div class="right" id="vig-mis-state"></div></div>
         <div class="vig-mis" id="vig-mis"></div>
-      </div>
-      <div class="card">
-        <div class="card-h"><h3>Zones fermées</h3><div class="right" id="vig-zones-count"></div></div>
-        <ul class="vig-zones" id="vig-zones"></ul>
       </div>
     </div>
   </div>
@@ -4268,6 +4256,7 @@ function renderVigie() {
         <span class="sub">${guard ? 'Personne dans l\'immeuble : tout mouvement déclenche une alerte' : night ? 'Mode nuit de 23 h à 7 h · réception tenue à distance par Hery (Madagascar)' : 'Caméras et zones fermées seulement · les robots font le ménage'}</span></div>
       <div class="acts vig-mode">
         <span class="vig-clock">${vClock()}</span>
+        ${running ? `<button class="btn" data-v="stop">${icon('x', 14)}Interrompre</button>` : `<button class="btn primary" data-v="ronde">${icon('route', 14)}Lancer une ronde</button>`}
         <div class="seg">${[['jour', 'sun', 'Jour'], ['nuit', 'moon', 'Nuit'], ['garde', 'hard-hat', 'Garde travaux']].map(([k, ic, l]) => `<button data-vmode="${k}" class="${VIG.mode === k ? 'on' : ''}">${icon(ic, 13)}${l}</button>`).join('')}</div>
       </div>
     </div>
@@ -4306,19 +4295,10 @@ function renderVigie() {
           <div><b>${n}</b><small>${vLvl(id)}${VIG.closed[id] ? ' · zone fermée' : ''}${id === 4 ? ' · remplace CAM-É4' : ''}</small></div>
           ${done ? '<span class="chip ok">Fait</span>' : `<span class="chip acc">${temi ? 'Ronde' : 'Explore'}</span>`}</li>`; }).join('')}</ul>
       ${m.found.length ? `<ul class="vig-find">${m.found.map(id => VIG_FIND[id]).map(f => `<li>${icon(f.lvl === 'warn' ? 'triangle-alert' : 'check', 13, { color: f.lvl === 'warn' ? '#f0a020' : '#22a861', sw: 2.6 })}<span>${f.txt}</span></li>`).join('')}</ul>` : ''}
-      <div class="acts">${running ? `<button class="btn" data-v="stop">${icon('x', 14)}Interrompre</button>` : `<button class="btn primary" data-v="ronde">${icon('route', 14)}Nouvelle ronde</button><button class="btn" data-v="clear">Fermer</button>`}</div>`
+      ${running ? '' : '<div class="acts"><button class="btn" data-v="clear">Fermer</button></div>'}`
     : `<p class="hint">Les robots quittent leur base, parcourent les couloirs caméra allumée et rentrent seuls. Temi couvre le hall et la porte de service.</p>
-      <div class="acts"><button class="btn primary" data-v="ronde">${icon('route', 14)}Lancer une ronde complète</button>
-        ${VIG.sel !== null ? `<button class="btn" data-v="explore">${icon('eye', 14)}Explorer l'${vLvl(VIG.sel)}</button>` : ''}</div>
+      ${VIG.sel !== null ? `<div class="acts"><button class="btn primary" data-v="explore">${icon('eye', 14)}Explorer l'${vLvl(VIG.sel)}</button></div>` : ''}
       ${VIG.sel === null ? '<p class="hint">Cliquez un étage sur le plan pour y envoyer son robot en exploration.</p>' : `<p class="hint">${vTeam(VIG.sel).join(' et ')} ${vTeam(VIG.sel).length > 1 ? 'partent' : 'part'} explorer l'${vLvl(VIG.sel)}${VIG.mode === 'jour' ? ' ; le ménage reprend juste après' : ''}.</p>`}`);
-
-  // Closed zones
-  setHTML('vig-zones-count', guard ? 'tout le bâtiment' : `${closedIds.length} fermée${closedIds.length > 1 ? 's' : ''}`);
-  setHTML('vig-zones', `<li class="all"><span class="rb-ic" style="width:28px;height:28px;border-radius:8px;background:#f0a020">${icon('hard-hat', 15)}</span><div><b>Tout le bâtiment</b><small>${guard ? 'Fermé pour travaux · garde renforcée' : 'Fermer pour travaux'}</small></div>
-      <button class="sw-t ${guard ? 'on' : ''}" data-vguard aria-pressed="${guard}"></button></li>` +
-    vAll().map(id => { const c = VIG.closed[id], f = vFloor(id);
-      return `<li class="${c ? 'closed' : ''}"><span class="tag-lvl" style="border-radius:3px;justify-self:start">${vLvl(id)}</span><div><b>${f.name}</b><small>${c ? c : 'Ouvert'}</small></div>
-        <button class="sw-t ${c ? 'on' : ''}" data-vzone="${id}" ${guard ? 'disabled' : ''} aria-pressed="${!!c}"></button></li>`; }).join(''));
 
   // Camera wall: fixed cameras + the robots' own cameras
   const motion = alertOpen && VIG.alert.state === 'open';
@@ -4402,7 +4382,7 @@ function renderVigPlan() {
 // Missions move on their own; the plan and the cards follow
 setInterval(() => { if (!document.getElementById('view-vigie').hidden) renderVigie(); else vTick(); }, 250);
 document.getElementById('view-vigie').addEventListener('click', e => {
-  const el = e.target.closest('[data-vmode],[data-v],[data-vzone],[data-vguard],[data-vfloor]');
+  const el = e.target.closest('[data-vmode],[data-v],[data-vfloor]');
   if (!el) return;
   const d = el.dataset;
   if (d.vmode) {
@@ -4410,11 +4390,6 @@ document.getElementById('view-vigie').addEventListener('click', e => {
     if (d.vmode !== 'garde' && VIG.mode === 'garde') VIG.closed = VIG.saved || {};
     VIG.mode = d.vmode;
     VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: d.vmode === 'jour' ? 'sun' : d.vmode === 'nuit' ? 'moon' : 'hard-hat', html: `<b>${d.vmode === 'jour' ? 'Mode jour' : d.vmode === 'nuit' ? 'Mode nuit activé' : 'Garde travaux activée'}</b>`, sub: 'Par Michael depuis Loop' });
-  }
-  else if (d.vguard !== undefined) return el.closest('#view-vigie').querySelector(`[data-vmode="${VIG.mode === 'garde' ? 'nuit' : 'garde'}"]`).click();
-  else if (d.vzone !== undefined) {
-    const id = +d.vzone;
-    if (VIG.closed[id]) delete VIG.closed[id]; else VIG.closed[id] = 'Fermé à la demande';
   }
   else if (d.vfloor !== undefined) VIG.sel = VIG.sel === +d.vfloor ? null : +d.vfloor;
   else if (d.v === 'ronde') vStartMission('ronde', vAll());
