@@ -4341,6 +4341,23 @@ document.getElementById('view-vigie').addEventListener('click', e => {
   renderVigie();
 });
 
+// Wheel hand-off for every inner scroller (lists, journals, panels): the one under the
+// pointer scrolls first; once it hits its end, the rest of the same gesture moves the page
+// instead of stalling (browsers latch a gesture to the first scroller it touched).
+const canScrollY = el => { const o = getComputedStyle(el).overflowY; return (o === 'auto' || o === 'scroll') && el.scrollHeight > el.clientHeight + 1; };
+const roomY = (el, dy) => dy > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 1 : el.scrollTop > 0;
+document.addEventListener('wheel', e => {
+  if (e.ctrlKey || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+  const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+  let el = e.target instanceof Element ? e.target : e.target.parentElement, inner = null;
+  for (; el && el !== document.body; el = el.parentElement) {
+    if (el.classList.contains('lib-ov')) return;          // a modal never scrolls the page behind it
+    if (!canScrollY(el)) continue;
+    if (!inner) { inner = el; if (roomY(el, dy)) return; continue; } // the list still has room: native scroll
+    if (roomY(el, dy)) { e.preventDefault(); el.scrollTop += dy; return; } // hand off to the next scroller up
+  }
+}, { passive: false });
+
 // First render once everything above (reception state included) is initialised.
 renderAll();
 renderGregNav();
