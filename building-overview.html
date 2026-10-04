@@ -1874,7 +1874,7 @@ function openFloor(f, z0, opts = {}) {
   });
   // Under the walls: the camera fields of view, drawn on the floor
   if (vig) s += vigFloorPlate(f, z0);
-  const items = vig ? vigFloorItems(f, z0) : [];
+  const camTags = [], items = vig ? vigFloorItems(f, z0, camTags) : [];
   // Each wall is cut into <= 0.5 unit pieces: sorting long walls by their midpoint
   // draws a long back wall over a short partition in front of it.
   const wall = (x1, y1, x2, y2, h, shade) => {
@@ -1922,7 +1922,7 @@ function openFloor(f, z0, opts = {}) {
       items.push({ d: a.x + a.y + 0.1, svg: robotGlyph(a.x, a.y, z0, color, name, { ...o, link, pulse: mine, overlay: robotTags, top: topTags }) });
     });
     items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
-    return s + roomLabels.join('') + robotTags.join('') + topTags.join('');
+    return s + roomLabels.join('') + camTags.join('') + robotTags.join('') + topTags.join('');
   }
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { link: 'robot/' + r.name, pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', focus: shownFocus() === r.name, overlay: robotTags, top: topTags }) });
   if (f.porter && !inLift(f.porter)) {
@@ -4276,22 +4276,21 @@ function vigFloorPlate(f, z0) {
   return s;
 }
 // Camera markers (disc + icon, like the apartment markers of the building view) and the live alert, depth-sorted with the walls
-function vigFloorItems(f, z0) {
+function vigFloorItems(f, z0, tags) {
   const items = [];
   const disc = (x, y, color, ic, title, cls = '') => { const [cx, cy] = P(x, y, z0);
     return `<g${cls}>${title ? `<title>${title}</title>` : ''}<circle cx="${cx}" cy="${cy - 11}" r="10" fill="${color}" stroke="#fff" stroke-width="2"/>` +
       `<g transform="translate(${cx - 6},${cy - 17}) scale(.5)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE[ic]}</g></g>`; };
   CAMS.filter(c => c.floor === f.id).forEach(c => {
     const motion = c.id === VIG.alert?.cam && vAlertOpen(f.id);
-    // In front of the wall the camera hangs on
-    // Marker + ID pill; hovering either shows the camera's live feed (see vigCamPop)
+    // Marker + ID pill, on the label layer so no wall ever covers them; hovering either shows the live feed (see vigCamPop)
     const color = c.off || motion ? '#e5484d' : '#22a861', [cx, cy] = P(c.x, c.y, z0), w = labelW(c.id) + 14;
     const pill = `<g transform="translate(${cx + 13},${cy - 20})"><rect width="${w}" height="18" rx="9" fill="#fff" stroke="${color}" stroke-width="1.5"/><text x="7" y="13" font-size="11" font-weight="600" fill="${c.off || motion ? '#b42318' : '#1f2328'}">${c.id}</text></g>`;
-    items.push({ d: c.x + c.y + 0.8, svg: `<g class="cam-mk" data-cam="${c.id}">${disc(c.x, c.y, color, c.off ? 'video-off' : 'cctv', '')}${pill}</g>` });
+    tags.push(`<g class="cam-mk" data-cam="${c.id}">${disc(c.x, c.y, color, c.off ? 'video-off' : 'cctv', '')}${pill}</g>`);
   });
   if (vAlertOpen(f.id)) {
     const [cx, cy] = P(10, 1.2, z0);
-    items.push({ d: 11.2, svg: `<g><title>Mouvement détecté · suite 503 inoccupée</title><circle class="vig-pulse" cx="${cx}" cy="${cy - 11}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy - 11}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy - 6.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>` });
+    tags.push(`<g><title>Mouvement détecté · suite 503 inoccupée</title><circle class="vig-pulse" cx="${cx}" cy="${cy - 11}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy - 11}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy - 6.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>`);
   }
   return items;
 }
@@ -4454,13 +4453,18 @@ function renderVigie() {
   const live = t => t.temi || t.floor === 4 || vOnMission(t.floor);
   // Robot camera footage: walking down a corridor on patrol or while cleaning (day), a still corridor at its base (night)
   const robotFeed = t => t.floor === 4 && !vOnMission(4) ? ['relay', RELAY_FEED] : vOnMission(t.floor) || !night ? ['walk', ROBOT_FEEDS[t.floor % 2]] : ['base', BASE_FEEDS[t.floor % 3]];
-  const tiles = (VIG.sel === null ? all.filter(t => !t.robot || live(t)) : all.filter(t => t.floor === VIG.sel))
+  // Whole building: only what deserves a look (the camera on alert, the robot checking it, the two entrances);
+  // every camera of a floor once that floor is picked
+  const alertFloor = VIG.alert && VIG.alert.state !== 'dismissed' ? VIG.alert.floor : null;
+  const headline = t => (motion && t.id === VIG.alert.cam) || t.id === 'CAM-HALL' || t.id === 'CAM-SERV'
+    || (t.robot && !t.temi && t.floor === alertFloor && (vOnMission(alertFloor) || (m && m.found.includes(alertFloor))));
+  const tiles = (VIG.sel === null ? all.filter(headline) : all.filter(t => t.floor === VIG.sel))
     .map((t, n) => ({ ...t, n, rank: (motion && t.id === VIG.alert.cam ? -100 : 0) - t.floor * 2 + (t.robot ? 1 : 0) }))
     .sort((a, b) => a.rank - b.rank || a.n - b.n);
   const liveCount = tiles.filter(t => !(CAMS.find(c => c.id === t.id) || {}).off && (!t.robot || live(t))).length;
-  setHTML('vig-cams-title', VIG.sel === null ? 'Caméras' : `Caméras · ${vLvl(VIG.sel)}`);
-  setHTML('vig-cams-sub', VIG.sel === null ? `${camsOn} fixes en ligne · ${running ? 'caméras des robots en ronde actives' : 'caméras des robots à leur base'}`
-    : `${liveCount} flux sur ${tiles.length} · <button class="link" data-vfloor="all">Toutes les caméras</button>`);
+  setHTML('vig-cams-title', VIG.sel === null ? 'Caméras à la une' : `Caméras · ${vLvl(VIG.sel)}`);
+  setHTML('vig-cams-sub', VIG.sel === null ? `Entrées et alertes · ${camsOn}/${CAMS.length} en ligne · choisissez un étage pour voir toutes ses caméras`
+    : `${liveCount} flux sur ${tiles.length} · <button class="link" data-vfloor="all">Tout le bâtiment</button>`);
   setHTML('vig-cams', tiles.map(t => {
     const c = CAMS.find(x => x.id === t.id) || {}, off = c.off;
     const onMission = t.robot && vOnMission(t.floor);
