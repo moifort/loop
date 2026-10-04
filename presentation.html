@@ -56,6 +56,7 @@
   .feat { position: absolute; inset: 0; z-index: 0; display: grid; grid-template-columns: var(--txt, 800px) 1fr; align-items: center; }
   .feat::before { content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; right: 0; left: var(--txt, 800px); background: var(--tint, var(--loop-50)); }
   .feat > :last-child { margin: 0 64px; }
+  .feat > .txt:last-child { margin: 0; max-width: 1340px; }
   .feat .txt { display: flex; flex-direction: column; gap: 28px; padding: 0 56px 0 96px; }
   .feat h1 { font-size: 58px; }
   [data-scene="accueil"], [data-scene="panic"], [data-scene="step1"] { --tint: #eef1fa; --c: var(--navy); }
@@ -260,7 +261,6 @@
   .float-chip { position: absolute; z-index: 4; }
 
   /* ============ 8 · Cleaning ============ */
-  .men { display: grid; grid-template-columns: 330px 1fr; gap: 28px; align-items: center; }
   .pct { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
   /* ============ 9 · Greg chain ============ */
@@ -298,6 +298,8 @@
   .ch2:nth-child(1) { --tint: #eef3ff; }
   .ch2:nth-child(2) { --tint: #f3f4f7; }
   .ch2 .cl { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .ch2 .cl .btag { display: inline-flex; align-items: center; gap: 6px; }
+  .ch2 .cl .btag svg { width: 15px; height: 15px; }
   .ch2 .cl b { font-size: 30px; letter-spacing: -.03em; line-height: 1.1; }
   .ca { align-self: center; text-align: center; font-size: 26px; color: var(--faint); }
   .cn { display: flex; gap: 14px; align-items: flex-start; opacity: .3; transition: opacity .45s var(--ease); }
@@ -403,7 +405,7 @@
   .keep .kh small { font-size: 17px; color: var(--muted); }
   .keep .price { margin-left: auto; font-size: 20px; font-weight: 800; white-space: nowrap; }
   .keep .specs { font-size: 18px; color: var(--muted); }
-  .keep h6, .alts h6, .inout h6, .v1-log h6 { font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+  .keep h6, .alts h6, .inout h6 { font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
   .seen { list-style: none; display: flex; flex-direction: column; gap: 8px; }
   .seen li { position: relative; padding-left: 30px; font-size: 20px; line-height: 1.4; color: var(--ink-2); }
   .seen li::before { position: absolute; left: 0; top: 0; font-weight: 800; }
@@ -455,20 +457,6 @@
   .inout { display: grid; grid-template-columns: 1fr 220px; gap: 24px; }
   .inout .does li { font-size: 20px; }
   .inout .out p { font-size: 19px; color: var(--muted); line-height: 1.4; margin-top: 6px; }
-  .v1 { display: grid; grid-template-columns: 1fr 300px; grid-template-rows: auto 1fr; height: 640px; }
-  .v1-live { position: relative; background: #1c2029; grid-row: 1 / 3; }
-  .v1-live .badge { position: absolute; top: 16px; left: 16px; z-index: 3; display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,.55); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: .06em; padding: 6px 12px; border-radius: 8px; }
-  .v1-live .badge i { width: 9px; height: 9px; border-radius: 50%; background: var(--red); animation: blink 1.2s infinite; }
-  .v1-btns { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-bottom: 1px solid var(--line); }
-  .v1b { display: flex; align-items: center; justify-content: center; gap: 10px; height: 60px; border-radius: 14px; border: 2px solid var(--line); font-size: 20px; font-weight: 700; color: var(--ink-2); transition: all .3s var(--ease); }
-  .v1b.on { background: var(--loop); border-color: var(--loop); color: #fff; transform: scale(1.03); box-shadow: 0 8px 20px -6px rgba(31,91,255,.6); }
-  .v1b.red { color: var(--red); border-color: var(--red-soft); }
-  .v1b.red.on { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 8px 20px -6px rgba(229,72,77,.6); }
-  .v1-log { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
-  .v1l { font-size: 16px; line-height: 1.4; padding: 10px 12px; border-radius: 10px; background: var(--bg); }
-  .v1l b { margin-right: 6px; }
-  .v1l .t { display: block; font-size: 13px; color: var(--faint); font-weight: 700; font-variant-numeric: tabular-nums; }
-  .v1l.red { background: var(--red-soft); }
 
   /* ---------- Deck controls ---------- */
   /* Real footage (Pexels, free licence) looping over an illustrated fallback that stays visible offline */
@@ -529,7 +517,6 @@
   .duo-shot .app-shot { height: 700px; margin-right: 130px; }
   .duo-shot .iph { position: absolute; z-index: 6; right: -36px; top: -76px; width: 190px; padding: 6px; border-radius: 34px; }
   .duo-shot .iph img { border-radius: 28px; }
-  .men .app-shot { height: 700px; }
 </style>
 </head>
 <body>
@@ -899,7 +886,7 @@
 <!-- ======================= 8 · Cleaning ======================= -->
 <section class="slide" data-scene="menage">
   <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">P3 · Ménage</div></div>
-  <div class="feat" style="--txt:720px">
+  <div class="feat">
     <div class="txt">
       <span class="eyebrow rise" style="align-self:flex-start"><span class="p">P3</span>Ménage</span>
       <h1 class="rise" style="--d:.1s">Elle fait le lit,<br><em>le robot fait les sols.</em></h1>
@@ -914,14 +901,14 @@
         <div class="kpi"><b>3 h 40</b><span>gagnées pour l'équipe</span></div>
       </div>
     </div>
-    <div class="men rise" style="--d:.2s">
-      <div class="iph"><img id="men-shot" src="assets/ios/deck/menage-0.jpg" alt="App compagnon · Mes appartements"></div>
+    <div class="duo-shot rise" style="--d:.2s">
       <div class="app-shot">
         <div class="win">
           <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Robots / CLN-2D84</span></div>
-          <iframe class="app" data-w="1000" data-src="building-overview.html#robot/CLN-2D84" title="Maquette Loop · fiche du robot CLN-2D84" tabindex="-1"></iframe>
+          <iframe class="app" data-src="building-overview.html#robot/CLN-2D84" title="Maquette Loop · fiche du robot CLN-2D84" tabindex="-1"></iframe>
         </div>
       </div>
+      <div class="iph"><img id="men-shot" src="assets/ios/deck/menage-0.jpg" alt="App compagnon · Mes appartements"></div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -939,8 +926,8 @@
       <p class="lead rise" style="--d:.2s">Avec Greg, ou directement avec vos outils : la serrure connectée, le logiciel de réservation. Loop se branche sur les deux.</p>
     </div>
     <div class="chains">
-      <div class="ch2 rise" style="--d:.3s"><div class="cl"><span class="btag" style="background:var(--loop)">Avec Greg</span><b>Un client part</b></div><div class="cn" data-at="500" style="--c:var(--navy)"><span class="ni"><svg><use href="#i-bot"/></svg></span><div><h4>Temi voit partir Mme Haddad</h4><p>2 valises, reconnue à 94 %.</p></div></div><span class="ca">→</span><div class="cn" data-at="1200" style="--c:var(--ink)"><span class="ni"><svg><use href="#i-sparkles"/></svg></span><div><h4>Greg vérifie</h4><p>Mews : facture soldée. Salto : code révoqué.</p></div></div><span class="ca">→</span><div class="cn" data-at="1900" style="--c:var(--loop)"><span class="ni"><svg viewBox="0 0 512 512" style="width:34px;height:34px"><use href="#loop-mark"/></svg></span><div><h4>Loop planifie le ménage</h4><p>App. 203, avant l'arrivée de 16 h.</p></div></div><span class="ca">→</span><div class="cn" data-at="2600" style="--c:var(--sky)"><span class="ni"><svg><use href="#i-brush"/></svg></span><div><h4>CLN-2D84 s'en charge</h4><p>Inès est prévenue sur WhatsApp.</p></div></div></div>
-      <div class="ch2 rise" style="--d:.4s"><div class="cl"><span class="btag" style="background:var(--ink-2)">Sans Greg</span><b>Inès arrive pour le ménage</b></div><div class="cn" data-at="3800" style="--c:#e4002b"><span class="ni"><svg><use href="#i-lock"/></svg></span><div><h4>Inès badge au 203</h4><p>Serrure Salto, 13:42.</p></div></div><span class="ca">→</span><div class="cn" data-at="4500" style="--c:var(--loop)"><span class="ni"><svg viewBox="0 0 512 512" style="width:34px;height:34px"><use href="#loop-mark"/></svg></span><div><h4>Loop reçoit le badge</h4><p>Directement, sans passer par Greg.</p></div></div><span class="ca">→</span><div class="cn" data-at="5200" style="--c:#2b2b2b"><span class="ni"><b>M</b></span><div><h4>L'appartement est libre</h4><p>Mews : client parti, arrivée à 16 h.</p></div></div><span class="ca">→</span><div class="cn" data-at="5900" style="--c:var(--sky)"><span class="ni"><svg><use href="#i-brush"/></svg></span><div><h4>Le robot se lance</h4><p>Pendant qu'Inès fait le lit.</p></div></div></div>
+      <div class="ch2 rise" style="--d:.3s"><div class="cl"><span class="btag" style="background:var(--loop)"><svg><use href="#i-sparkles"/></svg>Avec GregAI</span><b>Un client part</b></div><div class="cn" data-at="500" style="--c:var(--navy)"><span class="ni"><svg><use href="#i-bot"/></svg></span><div><h4>Temi voit partir Mme Haddad</h4><p>2 valises, reconnue à 94 %.</p></div></div><span class="ca">→</span><div class="cn" data-at="1200" style="--c:var(--ink)"><span class="ni"><svg><use href="#i-sparkles"/></svg></span><div><h4>Greg vérifie</h4><p>Mews : facture soldée. Salto : code révoqué.</p></div></div><span class="ca">→</span><div class="cn" data-at="1900" style="--c:var(--loop)"><span class="ni"><svg viewBox="0 0 512 512" style="width:34px;height:34px"><use href="#loop-mark"/></svg></span><div><h4>Loop planifie le ménage</h4><p>App. 203, avant l'arrivée de 16 h.</p></div></div><span class="ca">→</span><div class="cn" data-at="2600" style="--c:var(--sky)"><span class="ni"><svg><use href="#i-brush"/></svg></span><div><h4>CLN-2D84 s'en charge</h4><p>Inès est prévenue sur WhatsApp.</p></div></div></div>
+      <div class="ch2 rise" style="--d:.4s"><div class="cl"><span class="btag" style="background:var(--ink-2)">Sans GregAI</span><b>Inès arrive pour le ménage</b></div><div class="cn" data-at="3800" style="--c:#e4002b"><span class="ni"><svg><use href="#i-lock"/></svg></span><div><h4>Inès badge au 203</h4><p>Serrure Salto, 13:42.</p></div></div><span class="ca">→</span><div class="cn" data-at="4500" style="--c:var(--loop)"><span class="ni"><svg viewBox="0 0 512 512" style="width:34px;height:34px"><use href="#loop-mark"/></svg></span><div><h4>Loop reçoit le badge</h4><p>Directement, sans passer par Greg.</p></div></div><span class="ca">→</span><div class="cn" data-at="5200" style="--c:#2b2b2b"><span class="ni"><b>M</b></span><div><h4>L'appartement est libre</h4><p>Mews : client parti, arrivée à 16 h.</p></div></div><span class="ca">→</span><div class="cn" data-at="5900" style="--c:var(--sky)"><span class="ni"><svg><use href="#i-brush"/></svg></span><div><h4>Le robot se lance</h4><p>Pendant qu'Inès fait le lit.</p></div></div></div>
     </div>
     <div class="bottom">
       <div class="conns rise" style="--d:.5s">
@@ -1082,7 +1069,7 @@
 
 <section class="slide" data-scene="step1">
   <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Option 2 · étape 1</div></div>
-  <div class="feat">
+  <div class="feat" style="--txt:100%">
     <div class="txt">
       <span class="eyebrow rise"><span class="p">Étape 1</span>Accueil</span>
       <h1 class="rise" style="--d:.1s">Temi,<br><em>version de base.</em></h1>
@@ -1090,26 +1077,6 @@
       <div class="inout rise" style="--d:.3s">
         <div><h6>Dedans</h6><ul class="does"><li>Check-in : Temi accueille et donne le code.</li><li>Check-out : Temi note le départ.</li><li>Bouton panique.</li></ul></div>
         <div class="out"><h6>Pas encore</h6><p>Vue 3D, chariot, ménage, Greg.</p><h6 style="margin-top:14px">Ensuite</h6><p>Téléopération simple depuis Madagascar.</p></div>
-      </div>
-    </div>
-    <div class="win rise" style="--d:.2s">
-      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>Loop <span class="crumb">/ Accueil · version 1</span><span class="r"><span class="chip g"><span class="dot"></span>TEMI-4F2A en poste</span></span></div>
-      <div class="v1">
-        <div class="v1-live">
-          <div class="badge"><i></i>EN DIRECT · CAMÉRA DE TEMI</div>
-          <video class="vid" muted playsinline data-src="https://videos.pexels.com/video-files/5378935/5378935-sd_960_506_25fps.mp4" data-end="8.5"></video>
-        </div>
-        <div class="v1-btns">
-          <span class="v1b" data-at="600" data-off="3400">Check-in</span>
-          <span class="v1b" data-at="3800" data-off="6600">Check-out</span>
-          <span class="v1b red" data-at="7000" data-off="10400"><svg width="20" height="20"><use href="#i-siren"/></svg>Panique</span>
-        </div>
-        <div class="v1-log">
-          <h6>Journal</h6>
-          <div class="v1l pop" data-at="1000"><span class="t">13:02</span><b>Check-in</b> M. Bernard, app. 204 · code envoyé par SMS</div>
-          <div class="v1l pop" data-at="4200"><span class="t">13:19</span><b>Check-out</b> Mme Haddad, app. 203 · départ noté</div>
-          <div class="v1l pop red" data-at="7400"><span class="t">13:40</span><b>Panique</b> Hery en visio, enregistrement lancé</div>
-        </div>
       </div>
     </div>
   </div>
@@ -1311,7 +1278,7 @@ const SCENES = {
     },
   },
 
-  // The mockup's Vigie screen: the cursor sends the nearest robot to check the motion alert
+  // The mockup's Vigie screen: the cursor looks at the camera feed, then sends the nearest robot to check the motion alert
   vigie: {
     once(s) { loadFrame(s.querySelector('iframe.app')); },
     reset(s) {
@@ -1322,9 +1289,21 @@ const SCENES = {
     run(s) {
       const c = $('vig-cur'), f = s.querySelector('iframe.app');
       const btn = () => [...(f.contentDocument?.querySelectorAll('button') || [])].find(b => /Envoyer CLN-C6F2/.test(b.textContent));
-      at(2200, () => { const b = btn(); if (b) { c.classList.add('on'); pointInFrame(c, f, b); } });
-      at(3300, () => { const b = btn(); if (b) { click(c); b.click(); } });
-      at(4200, () => c.classList.remove('on'));
+      // The plan re-renders several times a second: look the camera marker up again at each step
+      const cam = () => f.contentDocument?.querySelector('#vig-iso .cam-mk[data-cam="CAM-É5"]');
+      // First the cursor hovers the camera that raised the alert: its live feed opens above the marker.
+      // The mockup has just been reloaded, so wait for the marker before playing the rest.
+      const hover = (tries = 0) => {
+        const m = cam();
+        if (!m) { if (tries < 20) at(300, () => hover(tries + 1)); return; }
+        c.classList.add('on'); pointInFrame(c, f, m.querySelector('circle'));
+        at(1100, () => { const k = cam(); if (k) f.contentWindow.vigCamPop(k); });
+        at(4600, () => f.contentWindow?.vigCamPop?.(null));
+        at(4800, () => { const b = btn(); if (b) pointInFrame(c, f, b); });
+        at(5900, () => { const b = btn(); if (b) { click(c); b.click(); } });
+        at(6800, () => c.classList.remove('on'));
+      };
+      at(1500, () => hover());
     },
   },
 
@@ -1389,7 +1368,7 @@ const SCENES = {
   soft: {},
   pick: {},
   roadmap: {},
-  step1: { dur: 11500 },
+  step1: {},
 };
 
 go(Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1)));
