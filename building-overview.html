@@ -174,7 +174,8 @@
 
   /* First item of the floor list, stretched to full width above the building */
   #all-row { margin-bottom: 8px; }
-  #all-row .fl:not(.sel) { background: var(--panel); border-color: var(--border); box-shadow: 0 1px 2px rgba(31,35,40,.06); }
+  #all-row .fl:not(.sel), #vig-floors .fl.all:not(.sel) { background: var(--panel); border-color: var(--border); box-shadow: 0 1px 2px rgba(31,35,40,.06); }
+  #vig-floors .fl.all { margin-bottom: 8px; }
   /* Floors live in one card so each row is anchored, separated by hairlines */
   #floors { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; gap: 0; overflow: hidden; }
   /* Rows span the full card width: pressed state is a flat full-bleed band, no rounded corners */
