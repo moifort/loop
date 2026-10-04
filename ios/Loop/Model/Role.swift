@@ -29,8 +29,8 @@ enum Role: String, CaseIterable, Identifiable {
 
     var person: String {
         switch self {
-        case .reception: "Inès Moreau"
-        case .housekeeping: "Léa Martin"
+        case .reception: "Sarah Petit"
+        case .housekeeping: "Inès Moreau"
         case .technician: "Karim Benali"
         case .it: "Thomas Leroy"
         case .manager: "Michael Durand"

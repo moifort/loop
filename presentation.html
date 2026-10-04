@@ -292,24 +292,6 @@
 
   /* ============ 8 · Cleaning ============ */
   .men { display: grid; grid-template-columns: 330px 1fr; gap: 28px; align-items: center; }
-  .phone { width: 330px; height: 640px; border-radius: 48px; background: #12131a; padding: 14px; box-shadow: 0 30px 70px -20px rgba(18,19,26,.45); position: relative; }
-  .phone .scr { position: relative; height: 100%; border-radius: 36px; background: var(--bg); overflow: hidden; padding: 46px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
-  .phone .notch { position: absolute; top: 12px; left: 50%; width: 100px; height: 26px; margin-left: -50px; background: #12131a; border-radius: 14px; z-index: 2; }
-  .phone h6 { font-size: 22px; font-weight: 800; letter-spacing: -.02em; }
-  .phone .who { font-size: 15px; color: var(--muted); margin-top: -8px; }
-  .apt { background: #fff; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 1px solid var(--line); transition: border-color .3s, box-shadow .3s; }
-  .apt .h { display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 700; }
-  .apt .h .chip { margin-left: auto; height: 26px; font-size: 13px; padding: 0 10px; }
-  .apt small { font-size: 14px; color: var(--muted); }
-  .apt .go { height: 46px; border-radius: 12px; background: var(--loop); color: #fff; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .15s; }
-  .apt .go.dim { background: #e3e6ec; color: var(--muted); }
-  .apt .go.press { transform: scale(.95); }
-  .apt .bar { height: 8px; border-radius: 9px; background: #eef0f3; overflow: hidden; }
-  .apt .bar i { display: block; height: 100%; width: 0; background: var(--sky); border-radius: 9px; }
-  .apt.live { border-color: var(--sky); box-shadow: 0 0 0 3px var(--sky-soft); }
-  .toast { position: absolute; left: 12px; right: 12px; bottom: 16px; background: var(--ink); color: #fff; border-radius: 16px; padding: 14px 16px; font-size: 15px; line-height: 1.4; display: flex; gap: 10px; opacity: 0; transform: translateY(20px); transition: opacity .4s, transform .4s var(--ease); z-index: 3; }
-  .toast.on { opacity: 1; transform: none; }
-  .toast i { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--red); display: grid; place-items: center; font-style: normal; font-weight: 800; }
   .aptplan { position: relative; }
   .aptplan .win-body { position: relative; padding: 20px 24px; }
   .flat { position: relative; width: 600px; height: 420px; margin: 0 auto; }
@@ -982,26 +964,7 @@
       </div>
     </div>
     <div class="men rise" style="--d:.2s">
-      <div class="phone">
-        <div class="notch"></div>
-        <div class="scr">
-          <h6>Mes appartements</h6>
-          <div class="who">Inès · É2 · mardi</div>
-          <div class="apt" id="apt-203">
-            <div class="h">App. 203 <span class="chip a" id="apt-203-chip">Départ 11:00</span></div>
-            <small id="apt-203-sub">Prochaine arrivée à 16 h</small>
-            <div class="bar"><i id="apt-203-bar"></i></div>
-            <div class="go" id="apt-203-go"><svg width="20" height="20"><use href="#i-brush"/></svg><span id="apt-203-go-t">Lancer le robot</span></div>
-          </div>
-          <div class="apt" id="apt-306">
-            <div class="h">App. 306 <span class="chip s">Occupé</span></div>
-            <small>M. Okafor jusqu'au 5 oct.</small>
-            <div class="go dim" id="apt-306-go"><svg width="20" height="20"><use href="#i-brush"/></svg>Lancer le robot</div>
-          </div>
-          <div class="toast" id="men-toast"><i>!</i><div><b>Pas de robot</b><br>Inès passe au 306, mais il est occupé : le robot reste à sa base.</div></div>
-        </div>
-        <svg class="cursor" id="men-cur"><use href="#i-cursor"/></svg>
-      </div>
+      <div class="iph"><img id="men-shot" src="assets/ios/deck/menage-0.jpg" alt="App compagnon · Mes appartements"></div>
       <div class="win aptplan">
         <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>App. 203 <span class="crumb">/ CLN-2D84</span><span class="r"><span class="pct" id="men-pct">0 %</span><span class="chip n" id="men-state">À la base</span></span></div>
         <div class="win-body">
@@ -1483,6 +1446,8 @@ const SCENES = {
   menage: {
     dur: 14500,
     once() {
+      // Real companion-app screenshots, one per step of the story: preload them so the swaps never flash
+      [0, 1, 2, 3, 4].forEach(n => { new Image().src = `assets/ios/deck/menage-${n}.jpg`; });
       // Boustrophedon pass over the free floor, under the bed, then back to the base
       const pts = [[552, 374], [360, 374]];
       for (let y = 374, dir = -1; y >= 52; y -= 34, dir *= -1) pts.push(dir < 0 ? [130, y] : [360, y], dir < 0 ? [130, y - 34 < 52 ? y : y - 34] : [360, y - 34 < 52 ? y : y - 34]);
@@ -1496,40 +1461,28 @@ const SCENES = {
       const t = $('men-trail'), r = $('men-robot');
       t.style.transition = 'none'; t.style.strokeDasharray = this.len; t.style.strokeDashoffset = this.len;
       r.style.transition = 'none'; r.style.offsetDistance = '0%'; r.offsetWidth;
-      $('apt-203').classList.remove('live'); $('apt-203-bar').style.transition = 'none'; $('apt-203-bar').style.width = '0';
-      $('apt-203-chip').className = 'chip a'; $('apt-203-chip').textContent = 'Départ 11:00';
-      $('apt-203-sub').textContent = 'Prochaine arrivée à 16 h';
-      $('apt-203-go').style.display = ''; $('apt-203-go').classList.add('dim'); $('apt-203-go-t').textContent = 'Démarre à l\'arrivée d\'Inès';
-      $('men-toast').classList.remove('on'); $('men-pct').textContent = '0 %';
+      $('men-shot').src = 'assets/ios/deck/menage-0.jpg'; $('men-pct').textContent = '0 %';
       $('men-state').className = 'chip n'; $('men-state').textContent = 'À la base';
-      const c = $('men-cur'); c.className = 'cursor'; c.style.transition = 'none'; c.style.left = '250px'; c.style.top = '560px'; c.offsetWidth; c.style.transition = '';
     },
     run() {
       const DUR = 7000;
       // Inès badges in with Salto: Loop sees her enter the apartment and starts the robot, no button
-      at(900, () => {
-        $('apt-203-chip').className = 'chip b'; $('apt-203-chip').textContent = 'Inès est là';
-        $('apt-203-sub').textContent = '13:42 · Inès entre (badge Salto)';
-      });
+      at(900, () => { $('men-shot').src = 'assets/ios/deck/menage-1.jpg'; });
       at(1700, () => {
-        $('apt-203-go').classList.remove('dim'); $('apt-203-go-t').textContent = 'Robot lancé tout seul';
-        $('apt-203').classList.add('live'); $('apt-203-chip').className = 'chip s'; $('apt-203-chip').textContent = 'En ménage';
+        $('men-shot').src = 'assets/ios/deck/menage-2.jpg';
         $('men-state').className = 'chip s'; $('men-state').textContent = 'En ménage';
         const t = $('men-trail'), r = $('men-robot');
         t.style.transition = `stroke-dashoffset ${DUR}ms linear`; t.style.strokeDashoffset = 0;
         r.style.transition = `offset-distance ${DUR}ms linear`; r.style.offsetDistance = '100%';
-        $('apt-203-bar').style.transition = `width ${DUR}ms linear`; $('apt-203-bar').style.width = '100%';
         const t0 = performance.now();
         const tick = () => { const k = Math.min(1, (performance.now() - t0) / DUR); $('men-pct').textContent = Math.round(k * 100) + ' %'; if (k < 1) at(100, tick); };
         tick();
       });
       at(1700 + DUR, () => {
-        $('apt-203-chip').className = 'chip g'; $('apt-203-chip').textContent = 'Prêt';
-        $('apt-203-sub').textContent = 'Prêt à 13:58 · Greg prévenu';
-        $('apt-203-go').style.display = 'none';
+        $('men-shot').src = 'assets/ios/deck/menage-3.jpg';
         $('men-state').className = 'chip g'; $('men-state').textContent = 'Terminé · retour base';
       });
-      at(10000, () => $('men-toast').classList.add('on'));
+      at(10000, () => { $('men-shot').src = 'assets/ios/deck/menage-4.jpg'; });
     },
   },
 

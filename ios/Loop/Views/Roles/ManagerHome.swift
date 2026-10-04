@@ -60,9 +60,9 @@ struct ManagerHome: View {
             }
 
             Section("Équipe en poste") {
-                person("Inès Moreau", "Accueil et sécurité", "IM", .accueil, "Au comptoir")
+                person("Sarah Petit", "Accueil et sécurité", "SP", .accueil, "Au comptoir")
                 person("Hery Rakoto", "Réception de nuit · Madagascar", "HR", .bagages, "À distance")
-                person("Léa Martin", "Entretien", "LM", .menage, "É3 · app. 307")
+                person("Inès Moreau", "Entretien", "IM", .menage, "É2 · app. 203")
                 person("Karim Benali", "Technicien", "KB", .amberLoop, "Local technique")
             }
         }
