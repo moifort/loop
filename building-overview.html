@@ -839,10 +839,6 @@
   .conn-item small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .conn-logo { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 14px; flex: none; }
   .rf-top .conn-logo { width: 52px; height: 52px; border-radius: 14px; font-size: 22px; }
-  .sdot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--gray); }
-  .sdot.ok { background: var(--green); } .sdot.warn { background: var(--amber); } .sdot.paused { background: var(--gray); } .sdot.setup { background: var(--blue); }
-  .sdot.down { background: var(--red); animation: conn-blink 1s steps(2, start) infinite; }
-  .cst .l-ok { color: #137a44; } .cst .l-warn { color: #9a5b00; } .cst .l-down { color: #b42318; } .cst .l-paused { color: var(--muted); } .cst .l-setup { color: var(--blue); }
   .conn-foot { border-top: 1px solid var(--border); padding: 12px 16px; }
   .conn-add { width: 100%; justify-content: center; border-style: dashed; color: var(--blue); }
   .conn-add:hover { background: var(--blue-soft); border-color: #b3d1ff; }
@@ -3831,8 +3827,9 @@ function gregTick() {
 }
 setInterval(gregTick, 6000);
 
-// Simulated outages: now and then Greg stops answering for 15–25 s; Loop retries every 5 s,
-// keeps its events in a queue and replays them in order once the link is back.
+// Link loss: Greg stops answering for 15–25 s; Loop retries every 5 s, keeps its events in a queue and replays
+// them in order once the link is back. Never triggered on its own in the mockup: the degraded mode shows when
+// GregAi (or another connector) is paused.
 function gregDown() {
   Object.assign(GREG, { state: 'down', downAt: Date.now(), tries: 1, nextTry: Date.now() + 5000, upAt: Date.now() + 15000 + Math.random() * 10000 });
   GEVENTS.unshift({ ...gev(0, 'act', 'link.lost', '<b>Greg ne répond plus.</b> Loop passe en mode dégradé : les robots continuent seuls, les événements sont gardés en file.', { timeout_ms: 5000, retry_every_s: 5 }), at: Date.now(), status: 'ok' });
@@ -3848,9 +3845,6 @@ function gregUp() {
   GEVENTS.unshift({ ...gev(0, 'act', 'link.restored', `<b>Reconnecté à Greg</b> après ${secs} s : ${queued.length} événement${queued.length > 1 ? 's' : ''} rejoué${queued.length > 1 ? 's' : ''} dans l'ordre.`, { down_s: secs, replayed: queued.length }), at: Date.now() });
   renderGreg();
 }
-(function gregScheduleOutage(first) {
-  setTimeout(() => { if (GREG.state === 'ok') gregDown(); gregScheduleOutage(false); }, first ? 40000 : 90000 + Math.random() * 90000);
-})(true);
 setInterval(() => {
   if (GREG.state !== 'down') return;
   if (Date.now() >= GREG.upAt) return gregUp();
@@ -3908,6 +3902,8 @@ document.getElementById('view-greg').addEventListener('click', e => {
 // rich pane; every other connector shows its key options and its latest events.
 // =====================================================================
 const CST = { ok: 'Connecté', warn: 'Dégradé', down: 'Déconnecté', paused: 'En pause', setup: 'À configurer' };
+// Connector state as a pill, the same in the list and in the connector's header
+const connChip = st => `<span class="chip ${st === 'ok' ? 'ok' : st === 'warn' ? 'warn' : st === 'down' ? 'err' : st === 'setup' ? 'occ' : 'idle'}">${st === 'ok' ? '<span class="greg-dot" style="margin:0 4px 0 1px"></span>' : ''}${CST[st]}</span>`;
 const SITES = [['SG', 'Saint-Georges'], ['OP', 'Opéra'], ['MA', 'Marais'], ['MD', 'Madeleine'], ['CA', 'Caumartin']];
 const ALL = SITES.map(s => s[0]);
 const siteName = k => SITES.find(s => s[0] === k)?.[1] || k;
@@ -4026,7 +4022,7 @@ function renderConnList() {
   setHTML('conn-items', CONNS.map(c => {
     const st = connState(c);
     return `<li><button class="conn-item ${CONN.sel === c.id ? 'sel' : ''}" data-csel="${c.id}">${connLogo(c, 'sm')}
-      <span style="min-width:0"><span class="cn"><b>${c.name}</b><span class="cst"><i class="sdot ${st}"></i><span class="l-${st}">${CST[st]}</span></span></span>
+      <span style="min-width:0"><span class="cn"><b>${c.name}</b><span class="cst">${connChip(st)}</span></span>
         <small>${c.cat} · ${sitesLabel(c.sites)}</small></span></button></li>`;
   }).join(''));
 }
@@ -4035,7 +4031,7 @@ function renderConn() {
   const c = connSel(), st = c.state, setup = st === 'setup', paused = st === 'paused';
   const day = c.events.filter(e => Date.now() - e.at < 864e5), errs = day.filter(e => e.status !== 'ok').length;
   setHTML('cx-head', `<div class="rf-top">${connLogo(c)}
-      <div class="rf-id"><span class="mr-name"><b>${c.name}</b><span class="chip ${st === 'ok' ? 'ok' : st === 'warn' ? 'warn' : st === 'down' ? 'err' : st === 'setup' ? 'occ' : 'idle'}">${st === 'ok' ? '<span class="greg-dot" style="margin:0 4px 0 1px"></span>' : ''}${CST[st]}</span></span>
+      <div class="rf-id"><span class="mr-name"><b>${c.name}</b>${connChip(st)}</span>
         <span class="sub">${c.cat} · ${c.sub}</span></div>
       <div class="acts">${setup ? '' : `<button class="btn" data-cx="sync">${icon('refresh-cw', 14)}Synchroniser</button>
         ${paused ? `<button class="btn primary" data-cx="resume">${icon('play', 14)}Reprendre</button>` : `<button class="btn" data-cx="pause">${icon('pause', 14)}Mettre en pause</button>`}`}
