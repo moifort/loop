@@ -791,10 +791,12 @@
   #vig-cams-sub .link { color: var(--blue); font-weight: 500; margin-left: 4px; }
   #vig-cams-sub .link:hover { text-decoration: underline; }
   #view-vigie .bld svg .floor:hover { filter: brightness(1.06); }
-  .cam-off { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: #12161e; color: #fff; text-align: center; }
-  .cam-t .cam-off svg { width: 30px; height: 30px; filter: none; opacity: .75; margin-bottom: 4px; }
-  .cam-off b { font-size: 13px; font-weight: 600; }
-  .cam-off small { font-size: 11px; color: #a3abb8; font-variant-numeric: tabular-nums; }
+  .cam-off { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: radial-gradient(circle at 50% 45%, #3a1418, #170b0e 75%); color: #fff; text-align: center; }
+  /* Offline feed is a problem: red frame, like a motion alert */
+  .cam-t:has(.cam-off) { box-shadow: 0 0 0 2px var(--red); }
+  .cam-t .cam-off svg { width: 30px; height: 30px; filter: none; color: #ff6b70; margin-bottom: 4px; }
+  .cam-off b { font-size: 13px; font-weight: 600; color: #ff8a8e; }
+  .cam-off small { font-size: 11px; color: #e3b5b8; font-variant-numeric: tabular-nums; }
   .cams-empty { padding: 4px 16px 16px; color: var(--muted); }
   .vig-two { display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
   @container (max-width: 800px) { .vig-two { grid-template-columns: 1fr; } }
