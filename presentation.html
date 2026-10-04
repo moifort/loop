@@ -389,29 +389,99 @@
   .rail-row h5 { font-size: 20px; }
   .rail-row p { font-size: 16px; color: var(--muted); margin-top: 2px; }
 
-  /* ============ 11 · Pilot ============ */
-  .pil { position: absolute; inset: 150px 96px 104px; display: flex; flex-direction: column; gap: 44px; }
-  .road { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; padding-top: 34px; }
-  .road .line { position: absolute; left: 12px; right: 12px; top: 45px; height: 4px; background: var(--line); border-radius: 9px; overflow: hidden; }
-  .road .line i { display: block; height: 100%; background: var(--loop); transform-origin: left; transform: scaleX(0); }
-  .slide.active .road .line i { animation: grow-x 2.4s var(--ease) .5s forwards; }
-  @keyframes grow-x { to { transform: scaleX(1); } }
-  .ms { display: flex; flex-direction: column; gap: 14px; }
-  .ms .d { width: 26px; height: 26px; border-radius: 50%; background: #fff; border: 5px solid var(--loop); z-index: 1; }
-  .ms.hl .d { background: var(--loop); box-shadow: 0 0 0 8px var(--loop-50); }
-  .ms .when { font-size: 18px; font-weight: 800; color: var(--loop); text-transform: uppercase; letter-spacing: .05em; }
-  .ms h4 { font-size: 28px; letter-spacing: -.02em; }
-  .ms p { font-size: 19px; color: var(--muted); line-height: 1.45; }
-  .ms.hl { background: var(--loop-50); border-radius: 22px; padding: 0 22px 22px; margin: -34px -22px 0; padding-top: 34px; }
-  .bring { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .bring > div { border-radius: 22px; background: var(--bg); padding: 26px 28px; display: flex; flex-direction: column; gap: 10px; }
-  .bring .bi { width: 52px; height: 52px; border-radius: 15px; background: #fff; display: grid; place-items: center; color: var(--loop); }
-  .bring .bi svg { width: 26px; height: 26px; }
-  .bring h5 { font-size: 24px; }
-  .bring p { font-size: 19px; color: var(--muted); line-height: 1.45; }
-  .bring .big { background: var(--loop); color: #fff; }
-  .bring .big p { color: #dce6ff; }
-  .bring .big .bi { background: rgba(255,255,255,.18); color: #fff; }
+  /* ============ Section dividers ============ */
+  .divider { background: var(--loop); color: #fff; }
+  .divider .brand svg { border-radius: 10px; box-shadow: 0 0 0 2px rgba(255,255,255,.7); }
+  .divider .s-head .client, .divider .s-foot { color: rgba(255,255,255,.7); }
+  .divider .big { position: absolute; left: 90px; top: 170px; font-size: 300px; font-weight: 800; letter-spacing: -.05em; line-height: 1; color: rgba(255,255,255,.22); }
+  .divider h1 { position: absolute; left: 96px; top: 520px; font-size: 120px; color: #fff; }
+  .divider p { position: absolute; left: 100px; top: 690px; font-size: 32px; color: #dce6ff; }
+
+  /* ============ Part 1 · Robots ============ */
+  .rsum { position: absolute; inset: 150px 96px 104px; display: flex; flex-direction: column; gap: 40px; }
+  .rcards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .rcard { border-radius: 24px; border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; background: #fff; }
+  .rcard .rt { display: flex; align-items: center; gap: 12px; padding: 18px 24px; color: #fff; font-size: 18px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .rcard .rt svg { width: 26px; height: 26px; }
+  .rcard .rbody { padding: 24px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .rcard .rbody b { font-size: 32px; letter-spacing: -.02em; }
+  .rcard .rbody small { font-size: 17px; color: var(--muted); }
+  .rcard .price { align-self: flex-start; margin: 8px 0 4px; font-size: 18px; font-weight: 700; background: var(--bg); border-radius: 8px; padding: 6px 12px; }
+  .rcard .rbody p { font-size: 20px; line-height: 1.45; color: var(--ink-2); flex: 1; }
+  .rcard .chip { align-self: flex-start; margin-top: 12px; }
+  .rfoot { font-size: 21px; color: var(--muted); background: var(--bg); border-radius: 18px; padding: 18px 24px; }
+  .rfoot b { color: var(--ink); }
+
+  /* Transition: a robot is nothing without software */
+  .soft { position: absolute; inset: 150px 96px 104px; display: flex; flex-direction: column; gap: 30px; }
+  .soft h1 { font-size: 64px; color: #fff; }
+  .soft .lead { max-width: 1300px; }
+  .sbar { display: flex; width: 1100px; height: 64px; border-radius: 16px; overflow: hidden; font-size: 21px; font-weight: 700; }
+  .sbar span { display: grid; place-items: center; }
+  .sbar .r { width: 20%; background: #3a3d4a; color: #c8cee0; }
+  .sbar .i { width: 80%; background: var(--loop); color: #fff; transform-origin: left; }
+  .slide.active .sbar .i { animation: grow 1.4s var(--ease) .6s both; }
+  .vs { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+  .vsh, .vsr { display: grid; grid-template-columns: 260px 1fr 1.6fr; gap: 24px; align-items: center; }
+  .vsh span { font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8a91a8; }
+  .vsh span:last-child { color: #8fb0ff; }
+  .vsr { padding: 18px 24px; border-radius: 16px; background: rgba(255,255,255,.05); font-size: 21px; }
+  .vsr b { color: #fff; }
+  .vsr span { color: #8a91a8; }
+  .vsr span:last-child { color: #fff; }
+
+  .pick { position: absolute; inset: 128px 96px 104px; display: grid; grid-template-columns: 680px 1fr; gap: 64px; align-items: center; }
+  .pick .txt { display: flex; flex-direction: column; gap: 24px; }
+  .pick h1 { font-size: 58px; }
+  .keep { position: relative; border-radius: 24px; border: 2px solid var(--green); box-shadow: 0 0 0 5px var(--green-soft); padding: 26px 28px; display: flex; flex-direction: column; gap: 10px; }
+  .keep .kh { display: flex; align-items: flex-start; gap: 16px; }
+  .keep .kh b { display: block; font-size: 30px; letter-spacing: -.02em; }
+  .keep .kh small { font-size: 17px; color: var(--muted); }
+  .keep .price { margin-left: auto; font-size: 20px; font-weight: 800; white-space: nowrap; }
+  .keep .specs { font-size: 18px; color: var(--muted); }
+  .keep h6, .alts h6, .inout h6, .v1-log h6 { font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+  .seen { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .seen li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; font-size: 20px; line-height: 1.4; }
+  .seen li::before { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; font-weight: 800; margin-top: 2px; }
+  .seen li.ok::before { content: '✓'; background: var(--green-soft); color: var(--green); }
+  .seen li.ko::before { content: '!'; background: var(--amber-soft); color: #9a5b00; }
+  .keep .stamp { position: absolute; top: -18px; right: 24px; height: 36px; font-size: 17px; box-shadow: 0 4px 12px rgba(34,168,97,.25); }
+  .alts { display: flex; flex-direction: column; gap: 12px; }
+  .alt { display: grid; grid-template-columns: 36px 300px 1fr; gap: 16px; align-items: center; padding: 16px 20px; border-radius: 16px; background: var(--bg); }
+  .alt .x { width: 32px; height: 32px; border-radius: 50%; background: var(--red-soft); color: var(--red); display: grid; place-items: center; font-weight: 800; }
+  .alt b { display: block; font-size: 20px; }
+  .alt small { font-size: 16px; color: var(--muted); }
+  .alt p { font-size: 19px; line-height: 1.4; color: var(--ink-2); }
+  .alts .note { margin-top: 10px; font-size: 21px; font-weight: 600; color: var(--loop); }
+
+  /* ============ Part 3 · Roadmap ============ */
+  .road2 { position: absolute; inset: 150px 96px 104px; display: flex; flex-direction: column; gap: 36px; }
+  .stairs { flex: 1; display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; align-items: end; }
+  .stp { position: relative; border-radius: 18px; background: var(--bg); padding: 18px 16px 20px; display: flex; flex-direction: column; gap: 8px; margin-bottom: calc(var(--i) * 46px); border-top: 5px solid var(--loop); }
+  .stp .sn { font-size: 40px; font-weight: 800; color: var(--loop); letter-spacing: -.03em; line-height: 1; }
+  .stp .st { position: absolute; top: 18px; right: 14px; color: #fff; font-size: 13px; font-weight: 800; border-radius: 999px; padding: 3px 9px; }
+  .stp h4 { font-size: 20px; letter-spacing: -.01em; line-height: 1.2; }
+  .stp p { font-size: 16px; line-height: 1.4; color: var(--muted); }
+  .rule { display: flex; align-items: center; gap: 16px; background: var(--ink); color: #fff; border-radius: 20px; padding: 22px 28px; font-size: 23px; }
+  .rule svg { width: 30px; height: 30px; color: #8fb0ff; flex: none; }
+
+  .inout { display: grid; grid-template-columns: 1fr 220px; gap: 24px; }
+  .inout .does li { font-size: 20px; }
+  .inout .out p { font-size: 19px; color: var(--muted); line-height: 1.4; margin-top: 6px; }
+  .v1 { display: grid; grid-template-columns: 1fr 300px; grid-template-rows: auto 1fr; height: 640px; }
+  .v1-live { position: relative; background: #1c2029; grid-row: 1 / 3; }
+  .v1-live .badge { position: absolute; top: 16px; left: 16px; z-index: 3; display: flex; gap: 8px; align-items: center; background: rgba(0,0,0,.55); color: #fff; font-size: 14px; font-weight: 700; letter-spacing: .06em; padding: 6px 12px; border-radius: 8px; }
+  .v1-live .badge i { width: 9px; height: 9px; border-radius: 50%; background: var(--red); animation: blink 1.2s infinite; }
+  .v1-btns { display: flex; flex-direction: column; gap: 12px; padding: 20px; border-bottom: 1px solid var(--line); }
+  .v1b { display: flex; align-items: center; justify-content: center; gap: 10px; height: 60px; border-radius: 14px; border: 2px solid var(--line); font-size: 20px; font-weight: 700; color: var(--ink-2); transition: all .3s var(--ease); }
+  .v1b.on { background: var(--loop); border-color: var(--loop); color: #fff; transform: scale(1.03); box-shadow: 0 8px 20px -6px rgba(31,91,255,.6); }
+  .v1b.red { color: var(--red); border-color: var(--red-soft); }
+  .v1b.red.on { background: var(--red); border-color: var(--red); color: #fff; box-shadow: 0 8px 20px -6px rgba(229,72,77,.6); }
+  .v1-log { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .v1l { font-size: 16px; line-height: 1.4; padding: 10px 12px; border-radius: 10px; background: var(--bg); }
+  .v1l b { margin-right: 6px; }
+  .v1l .t { display: block; font-size: 13px; color: var(--faint); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .v1l.red { background: var(--red-soft); }
 
   /* ---------- Deck controls ---------- */
   /* Real footage (Pexels, free licence) looping over an illustrated fallback that stays visible offline */
@@ -521,6 +591,152 @@
       <p>Le robot, c'est 20 % du sujet. Le brancher sur vos outils et vos équipes, c'est 80 %. <b>C'est notre métier.</b></p>
     </div>
   </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= Part 1 · Robots (choices after supplier demos) ======================= -->
+<section class="slide divider" data-scene="divider">
+  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 1</div></div>
+  <span class="big rise">1</span>
+  <h1 class="rise" style="--d:.15s">Les robots</h1>
+  <p class="rise" style="--d:.3s">Ce qu'on a vu chez les fournisseurs, et ce qu'on retient.</p>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide" data-scene="robots">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 1 · Les robots</div></div>
+  <div class="rsum">
+    <h1 class="rise">Les robots retenus,<br><em>après les démos.</em></h1>
+    <div class="rcards">
+      <div class="rcard rise" style="--d:.2s"><div class="rt" style="background:var(--navy)"><svg><use href="#i-bot"/></svg>P1 · Accueil</div><div class="rbody"><b>Temi 3</b><small>Génération Robots · Bordeaux</small><span class="price">8 175 € HT</span><p>Prise de main à distance native. SDK ouvert pour brancher Greg.</p><span class="chip g pop" data-at="900"><span class="dot"></span>Retenu</span></div></div>
+      <div class="rcard rise" style="--d:.3s"><div class="rt" style="background:var(--violet)"><svg><use href="#i-luggage"/></svg>P2 · Bagages</div><div class="rbody"><b>Piaggio Kilo</b><small>Piaggio Fast Forward · États-Unis</small><span class="price">Sur devis</span><p>Suit le client à l'aller, refait seul le trajet retour.</p><span class="chip g pop" data-at="1200"><span class="dot"></span>Retenu</span></div></div>
+      <div class="rcard rise" style="--d:.4s"><div class="rt" style="background:var(--sky)"><svg><use href="#i-brush"/></svg>P3 · Ménage</div><div class="rbody"><b>Roborock Saros</b><small>Gamme grand public</small><span class="price">Partagé entre appartements</span><p>Le plus complet à piloter depuis notre logiciel, pièce par pièce.</p><span class="chip g pop" data-at="1500"><span class="dot"></span>Retenu</span></div></div>
+      <div class="rcard rise" style="--d:.5s"><div class="rt" style="background:#2a2f63"><svg><use href="#i-shield"/></svg>P1 · Sécurité</div><div class="rbody"><b>Pas de robot en plus</b><small>Temi + les robots de ménage</small><span class="price">0 €</span><p>Le robot de patrouille RB-WATCHER est écarté : 45 000 €, look industriel.</p><span class="chip g pop" data-at="1800"><span class="dot"></span>Retenu</span></div></div>
+    </div>
+    <p class="rfoot rise" style="--d:.7s"><b>Peinture :</b> pas de robot dans la plateforme. Une journée d'essai du robot PACO (≈ 2 000 €) sur un couloir, à part.</p>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide dark" data-scene="soft">
+  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 1 · Pourquoi ces robots</div></div>
+  <div class="soft">
+    <h1 class="rise">Un robot sans logiciel,<br><em>ça ne sert pas à grand-chose.</em></h1>
+    <div class="sbar rise" style="--d:.2s"><span class="r">Robot · 20 %</span><span class="i">Logiciel · 80 %</span></div>
+    <p class="lead rise" style="--d:.3s">80 % de ce qu'un robot apporte vient du logiciel. Notre premier critère de choix : des robots ouverts, qu'on peut piloter avec notre logiciel.</p>
+    <div class="vs">
+      <div class="vsh rise" style="--d:.4s"><span></span><span>Seul</span><span>Avec Loop</span></div>
+      <div class="vsr pop" data-at="900"><b>Temi</b><span>Répond aux questions.</span><span>Voit un client partir, prévient Greg, le ménage est lancé.</span></div>
+      <div class="vsr pop" data-at="1500"><b>Kilo</b><span>Suit une personne.</span><span>Part au check-in, appelle l'ascenseur, revient seul.</span></div>
+      <div class="vsr pop" data-at="2100"><b>Robot de ménage</b><span>Nettoie quand on appuie.</span><span>Lance le 203 dès le départ du client, jamais si c'est occupé.</span></div>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide" data-scene="pick">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">P1 · Accueil · choix du robot</div></div>
+  <div class="pick">
+    <div class="txt">
+      <span class="eyebrow rise"><span class="p">P1</span>Accueil</span>
+      <h1 class="rise" style="--d:.1s">Accueil :<br><em>Temi 3.</em></h1>
+      <div class="keep rise" style="--d:.2s">
+        <div class="kh"><div><b>Temi 3</b><small>Génération Robots · Bordeaux</small></div><span class="price">8 175 € HT</span></div>
+        <p class="specs">1 m · 12 kg · écran tactile 13,3 pouces · environ 8 h d'autonomie</p>
+        <h6>Vu en démo</h6>
+        <ul class="seen">
+          <li class="ok">Prise de main à distance native, depuis une appli.</li>
+          <li class="ok">SDK Android ouvert : on branche notre logiciel et Greg.</li>
+          <li class="ok">Format discret, il ne fait pas gadget.</li>
+          <li class="ko">Ne prend pas l'ascenseur : il reste au rez-de-chaussée.</li>
+          <li class="ko">Pas de vision de nuit.</li>
+        </ul>
+        <span class="chip g stamp pop" data-at="3600"><span class="dot"></span>Retenu</span>
+      </div>
+    </div>
+    <div class="alts">
+      <h6 class="rise" style="--d:.2s">Aussi vus en démo, écartés</h6>
+        <div class="alt pop" data-at="600"><span class="x">✕</span><div><b>GreetingBot Nova</b><small>≈ 27 000 € en location</small></div><p>56 kg, et son logiciel fait concurrence au nôtre.</p></div>
+        <div class="alt pop" data-at="1050"><span class="x">✕</span><div><b>GreetingBot Mini</b><small>5 512 € HT</small></div><p>55 cm : trop petit pour le hall.</p></div>
+        <div class="alt pop" data-at="1500"><span class="x">✕</span><div><b>PadBot P3</b><small>Sur devis</small></div><p>Même format que Temi, mais pas de revendeur en France.</p></div>
+        <div class="alt pop" data-at="1950"><span class="x">✕</span><div><b>Awabot Pro</b><small>Sur devis</small></div><p>Téléprésence seulement, pas d'autonomie.</p></div>
+        <div class="alt pop" data-at="2400"><span class="x">✕</span><div><b>Furhat</b><small>30 000 €</small></div><p>Un comptoir qui parle, sans mobilité.</p></div>
+        <div class="alt pop" data-at="2850"><span class="x">✕</span><div><b>Humanoïdes (Unitree G1, ARI)</b><small>22 500 € et plus</small></div><p>Pas prêts : encore téléopérés, et chers.</p></div>
+      <p class="note rise" style="--d:.4s">Le meilleur équilibre entre le prix, l'image et un logiciel ouvert.</p>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide" data-scene="pick">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">P2 · Bagages · choix du robot</div></div>
+  <div class="pick">
+    <div class="txt">
+      <span class="eyebrow rise"><span class="p">P2</span>Bagages</span>
+      <h1 class="rise" style="--d:.1s">Bagages :<br><em>Piaggio Kilo.</em></h1>
+      <div class="keep rise" style="--d:.2s">
+        <div class="kh"><div><b>Piaggio Kilo</b><small>Piaggio Fast Forward · États-Unis</small></div><span class="price">Sur devis</span></div>
+        <p class="specs">Plateau 4 roues · 130 kg de charge · suit la personne devant ou derrière</p>
+        <h6>Vu en démo</h6>
+        <ul class="seen">
+          <li class="ok">Suit le client à basse vitesse, sans le doubler.</li>
+          <li class="ok">Refait seul le trajet retour vers la bagagerie.</li>
+          <li class="ok">Déjà utilisé dans des hôtels aux États-Unis, pour les bagages et le linge.</li>
+          <li class="ko">Pas encore distribué en Europe.</li>
+          <li class="ko">L'ascenseur passe par notre logiciel.</li>
+        </ul>
+        <span class="chip g stamp pop" data-at="2700"><span class="dot"></span>Retenu</span>
+      </div>
+    </div>
+    <div class="alts">
+      <h6 class="rise" style="--d:.2s">Aussi vus en démo, écartés</h6>
+        <div class="alt pop" data-at="600"><span class="x">✕</span><div><b>Pudu T300</b><small>Sur devis</small></div><p>Base de 300 kg à habiller en chariot : look logistique.</p></div>
+        <div class="alt pop" data-at="1050"><span class="x">✕</span><div><b>Pudu FlashBot</b><small>Sur devis</small></div><p>30 kg maximum : pas fait pour des valises.</p></div>
+        <div class="alt pop" data-at="1500"><span class="x">✕</span><div><b>EffiBOT, TwinswHeel</b><small>Sur devis</small></div><p>Pensés pour les entrepôts, à habiller et à sécuriser.</p></div>
+        <div class="alt pop" data-at="1950"><span class="x">✕</span><div><b>Robi (CarPostal)</b><small>Projet pilote</small></div><p>Bonne référence en Suisse, mais pas à vendre.</p></div>
+      <p class="note rise" style="--d:.4s">Aucun robot porte-bagages d'hôtel n'est prêt en France. Le Kilo est le plus proche du besoin.</p>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide" data-scene="pick">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">P3 · Ménage · choix du robot</div></div>
+  <div class="pick">
+    <div class="txt">
+      <span class="eyebrow rise"><span class="p">P3</span>Ménage</span>
+      <h1 class="rise" style="--d:.1s">Ménage :<br><em>Roborock Saros.</em></h1>
+      <div class="keep rise" style="--d:.2s">
+        <div class="kh"><div><b>Roborock Saros</b><small>Gamme grand public</small></div><span class="price">Partagé</span></div>
+        <p class="specs">Aspire et lave · nettoyage pièce par pièce · plusieurs cartes</p>
+        <h6>Vu en démo</h6>
+        <ul class="seen">
+          <li class="ok">Le plus complet à piloter depuis notre logiciel.</li>
+          <li class="ok">On choisit les pièces : « lance le 203 » fonctionne.</li>
+          <li class="ok">Les commandes passent en local.</li>
+          <li class="ko">Sans le cloud Roborock, il coupe son accès local.</li>
+          <li class="ko">Les cartes se créent dans l'appli Roborock.</li>
+        </ul>
+        <span class="chip g stamp pop" data-at="2700"><span class="dot"></span>Retenu</span>
+      </div>
+    </div>
+    <div class="alts">
+      <h6 class="rise" style="--d:.2s">Aussi vus en démo, écartés</h6>
+        <div class="alt pop" data-at="600"><span class="x">✕</span><div><b>Dreame</b><small>Grand public</small></div><p>Le plus local, mais les nouveaux modèles arrivent en retard.</p></div>
+        <div class="alt pop" data-at="1050"><span class="x">✕</span><div><b>DJI Romo</b><small>Grand public</small></div><p>Tout passe par le cloud DJI. Faille de sécurité en février 2026.</p></div>
+        <div class="alt pop" data-at="1500"><span class="x">✕</span><div><b>Ecovacs DEEBOT PRO</b><small>Sur devis</small></div><p>Gère l'ascenseur : à suivre pour plus tard.</p></div>
+        <div class="alt pop" data-at="1950"><span class="x">✕</span><div><b>Pudu CC1</b><small>≈ 700 €/mois</small></div><p>Trop gros pour un appartement, bien pour les parties communes.</p></div>
+      <p class="note rise" style="--d:.4s">Notre logiciel parle à toutes les marques : on peut changer de robot sans tout refaire.</p>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide divider" data-scene="divider">
+  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2</div></div>
+  <span class="big rise">2</span>
+  <h1 class="rise" style="--d:.15s">La plateforme</h1>
+  <p class="rise" style="--d:.3s">Un seul écran pour piloter les robots, branché sur vos outils.</p>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
@@ -868,22 +1084,65 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<!-- ======================= 11 · Pilot ======================= -->
-<section class="slide" data-scene="pilote">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Pilote clé en main</div></div>
-  <div class="pil">
-    <h1 class="rise">Un pilote à Saint-Georges,<br><em>puis les autres immeubles.</em></h1>
-    <div class="road">
-      <div class="line"><i></i></div>
-      <div class="ms rise" style="--d:.5s"><span class="d"></span><span class="when">Octobre 2026</span><h4>Cadrage</h4><p>Visite sur place, entretiens avec vos équipes, choix des robots.</p></div>
-      <div class="ms hl rise" style="--d:1.1s"><span class="d"></span><span class="when">Nov. – déc. 2026</span><h4>Pilote à Saint-Georges</h4><p>Temi, le chariot et les robots de ménage, branchés sur Greg, Mews et Salto.</p></div>
-      <div class="ms rise" style="--d:1.7s"><span class="d"></span><span class="when">Janvier 2027</span><h4>Bilan</h4><p>On mesure : accueil couvert, bagages montés, heures gagnées sur le ménage.</p></div>
-      <div class="ms rise" style="--d:2.3s"><span class="d"></span><span class="when">T1 2027</span><h4>Extension</h4><p>Opéra, Marais, Madeleine… Mêmes connecteurs, un immeuble de plus dans Loop.</p></div>
+<!-- ======================= Part 3 · Roadmap: small iterations by client priority ======================= -->
+<section class="slide divider" data-scene="divider">
+  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3</div></div>
+  <span class="big rise">3</span>
+  <h1 class="rise" style="--d:.15s">La roadmap</h1>
+  <p class="rise" style="--d:.3s">Des petites étapes, dans l'ordre des priorités de Michael.</p>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide" data-scene="roadmap">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · La roadmap</div></div>
+  <div class="road2">
+    <h1 class="rise">Des petites étapes,<br><em>dans l'ordre de vos priorités.</em></h1>
+    <div class="stairs">
+      <div class="stp pop" data-at="300" style="--i:0"><span class="sn">0</span><h4>Écouter</h4><p>Interviews à Saint-Georges : réception, ménage, maintenance, Madagascar.</p></div>
+      <div class="stp pop" data-at="650" style="--i:1"><span class="sn">1</span><span class="st" style="background:var(--navy)">P1</span><h4>Temi, version de base</h4><p>Plateforme minimale, sans 3D : check-in, check-out, bouton panique.</p></div>
+      <div class="stp pop" data-at="1000" style="--i:2"><span class="sn">2</span><span class="st" style="background:var(--navy)">P1</span><h4>Téléopération</h4><p>Hery prend la main depuis Madagascar, en version simple.</p></div>
+      <div class="stp pop" data-at="1350" style="--i:3"><span class="sn">3</span><span class="st" style="background:var(--violet)">P2</span><h4>Chariot, seul</h4><p>Un Kilo testé sans plateforme, avec l'équipe.</p></div>
+      <div class="stp pop" data-at="1700" style="--i:4"><span class="sn">4</span><span class="st" style="background:var(--violet)">P2</span><h4>Chariot + accueil</h4><p>Branché sur l'accueil, petit à petit.</p></div>
+      <div class="stp pop" data-at="2050" style="--i:5"><span class="sn">5</span><span class="st" style="background:var(--navy)">P1</span><h4>Sécurité</h4><p>Avec Temi seulement : rondes du rez-de-chaussée la nuit.</p></div>
+      <div class="stp pop" data-at="2400" style="--i:6"><span class="sn">6</span><span class="st" style="background:var(--sky)">P3</span><h4>Ménage</h4><p>Un robot, un appartement, les sols. Puis plusieurs.</p></div>
+      <div class="stp pop" data-at="2750" style="--i:7"><span class="sn">7</span><h4>Tout l'immeuble</h4><p>Vue 3D, Greg, puis les autres immeubles.</p></div>
     </div>
-    <div class="bring">
-      <div class="rise" style="--d:2.6s"><span class="bi"><svg><use href="#i-bot"/></svg></span><h5>Les robots</h5><p>Choisis, habillés à vos couleurs, installés et maintenus. Un seul interlocuteur.</p></div>
-      <div class="big rise" style="--d:2.75s"><span class="bi"><svg><use href="#i-plug"/></svg></span><h5>La plateforme Loop</h5><p>Tableau de bord, connecteurs, garde-fous. Les 80 % qui comptent.</p></div>
-      <div class="rise" style="--d:2.9s"><span class="bi"><svg><use href="#i-chart"/></svg></span><h5>Les résultats</h5><p>Suivis chaque semaine, comparés à aujourd'hui.</p></div>
+    <div class="rule rise" style="--d:.4s"><svg><use href="#i-check"/></svg>On ne passe à l'étape suivante que si la précédente marche. Ça prend du temps, mais chaque étape sert déjà.</div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide" data-scene="step1">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Étape 1</div></div>
+  <div class="feat">
+    <div class="txt">
+      <span class="eyebrow rise"><span class="p">Étape 1</span>Accueil</span>
+      <h1 class="rise" style="--d:.1s">Temi,<br><em>version de base.</em></h1>
+      <div class="need rise" style="--d:.2s"><small>Avant de coder</small><p>Interviews à Saint-Georges : réceptionniste, agents d'entretien, maintenance, équipe de Madagascar. On part de leur journée, pas de la techno.</p></div>
+      <div class="inout rise" style="--d:.3s">
+        <div><h6>Dedans</h6><ul class="does"><li>Check-in : Temi accueille et donne le code.</li><li>Check-out : Temi note le départ.</li><li>Bouton panique.</li></ul></div>
+        <div class="out"><h6>Pas encore</h6><p>Vue 3D, chariot, ménage, Greg.</p><h6 style="margin-top:14px">Ensuite</h6><p>Téléopération simple depuis Madagascar.</p></div>
+      </div>
+    </div>
+    <div class="win rise" style="--d:.2s">
+      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>Loop <span class="crumb">/ Accueil · version 1</span><span class="r"><span class="chip g"><span class="dot"></span>TEMI-4F2A en poste</span></span></div>
+      <div class="v1">
+        <div class="v1-live">
+          <div class="badge"><i></i>EN DIRECT · CAMÉRA DE TEMI</div>
+          <video class="vid" muted playsinline data-src="https://videos.pexels.com/video-files/5378935/5378935-sd_960_506_25fps.mp4" data-end="8.5"></video>
+        </div>
+        <div class="v1-btns">
+          <span class="v1b" data-at="600" data-off="3400">Check-in</span>
+          <span class="v1b" data-at="3800" data-off="6600">Check-out</span>
+          <span class="v1b red" data-at="7000" data-off="10400"><svg width="20" height="20"><use href="#i-siren"/></svg>Panique</span>
+        </div>
+        <div class="v1-log">
+          <h6>Journal</h6>
+          <div class="v1l pop" data-at="1000"><span class="t">13:02</span><b>Check-in</b> M. Bernard, app. 204 · code envoyé par SMS</div>
+          <div class="v1l pop" data-at="4200"><span class="t">13:19</span><b>Check-out</b> Mme Haddad, app. 203 · départ noté</div>
+          <div class="v1l pop red" data-at="7400"><span class="t">13:40</span><b>Panique</b> Hery en visio, enregistrement lancé</div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -1224,7 +1483,12 @@ const SCENES = {
     },
   },
 
-  pilote: {},
+  divider: {},
+  robots: {},
+  soft: {},
+  pick: {},
+  roadmap: {},
+  step1: { dur: 11500 },
 };
 
 go(Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1)));
