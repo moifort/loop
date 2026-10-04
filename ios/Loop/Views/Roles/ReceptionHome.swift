@@ -3,7 +3,8 @@ import SwiftUI
 /// Reception agent, with the security features: live alert, greeter robot, cameras, luggage cart, panic button
 struct ReceptionHome: View {
     @State private var alert: AlertState = .open
-    @State private var remote = false
+    /// `-remote YES` opens the screen already taken over, with the guest's card (screenshots)
+    @State private var remote = UserDefaults.standard.bool(forKey: "remote")
     @State private var confirmPanic = false
     @State private var panic = false
     @State private var camera: Camera?
@@ -13,6 +14,7 @@ struct ReceptionHome: View {
     var body: some View {
         List {
             if alert != .resolved { alertSection }
+            if remote { guestSection }
 
             Section("Robot d'accueil") {
                 VStack(alignment: .leading, spacing: 12) {
@@ -106,6 +108,52 @@ struct ReceptionHome: View {
             Button("Déclencher", role: .destructive) { withAnimation { panic = true } }
         }
         .sensoryFeedback(.warning, trigger: panic)
+    }
+
+    /// The guest at the counter, found by Greg in Mews while you speak through Temi (same card as the web platform)
+    private var guestSection: some View {
+        Section {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 12) {
+                    Text("CL").font(.subheadline.weight(.bold)).foregroundStyle(.white)
+                        .frame(width: 40, height: 40).background(Color.accueil.gradient, in: .circle)
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text("Mme Claire Lefèvre").font(.headline)
+                        Text("Atelier Nord SAS · cliente depuis 2024").font(.caption).foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Pill(text: "En visio", level: .info, symbol: "video.fill")
+                }
+                (Text("Demande en cours : ").bold() + Text("facture au nom de sa société pour son séjour en cours."))
+                    .font(.subheadline)
+                    .padding(10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(Color.amberLoop.opacity(0.14), in: .rect(cornerRadius: 10))
+                guestRow("Réservation", "App. 305 · 3 nuits", "du 2 au 5 oct. · arrivée 15 h 20")
+                guestRow("Société", "Atelier Nord SAS", "SIRET 812 345 678 00021")
+                guestRow("Contact", "c.lefevre@ateliernord.fr", "+33 6 12 34 56 78 · français")
+                guestRow("Séjours", "4ᵉ séjour", "dernier en juin 2026, app. 402")
+                HStack {
+                    Button("Envoyer la facture", systemImage: "checkmark") {}.buttonStyle(.glassProminent)
+                    Button("Réservation", systemImage: "arrow.right") {}.buttonStyle(.glass)
+                }
+                .font(.subheadline.weight(.semibold))
+            }
+            .padding(.vertical, 4)
+        } header: {
+            Text("Fiche client · retrouvée par Greg dans Mews")
+        }
+    }
+
+    private func guestRow(_ label: String, _ value: String, _ detail: String) -> some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(label).font(.subheadline).foregroundStyle(.secondary)
+            Spacer()
+            VStack(alignment: .trailing, spacing: 1) {
+                Text(value).font(.subheadline.weight(.semibold))
+                Text(detail).font(.caption).foregroundStyle(.secondary)
+            }
+        }
     }
 
     private var alertSection: some View {

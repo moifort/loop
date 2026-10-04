@@ -11,6 +11,8 @@ final class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate, Se
         center.setNotificationCategories(Set(Role.allCases.map { role in
             UNNotificationCategory(identifier: role.rawValue, actions: Self.actions(for: role), intentIdentifiers: [])
         }))
+        // `-captures YES`: no permission prompt over the screenshots
+        guard !UserDefaults.standard.bool(forKey: "captures") else { return }
         center.requestAuthorization(options: [.alert, .badge, .sound]) { _, _ in }
     }
 

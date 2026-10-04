@@ -406,12 +406,16 @@
 
   /* ============ Part 3 · Roadmap ============ */
   .road2 { position: absolute; inset: 150px 96px 104px; display: flex; flex-direction: column; gap: 36px; }
-  .stairs { flex: 1; display: grid; grid-template-columns: repeat(8, 1fr); gap: 14px; align-items: end; }
-  .stp { position: relative; border-radius: 18px; background: var(--bg); padding: 18px 16px 20px; display: flex; flex-direction: column; gap: 8px; margin-bottom: calc(var(--i) * 46px); border-top: 5px solid var(--loop); }
-  .stp .sn { font-size: 40px; font-weight: 800; color: var(--loop); letter-spacing: -.03em; line-height: 1; }
-  .stp .st { position: absolute; top: 18px; right: 14px; color: #fff; font-size: 13px; font-weight: 800; border-radius: 999px; padding: 3px 9px; }
-  .stp h4 { font-size: 20px; letter-spacing: -.01em; line-height: 1.2; }
-  .stp p { font-size: 16px; line-height: 1.4; color: var(--muted); }
+  /* Roadmap as a timeline: a numbered dot per step joined to the next by a line, the step below it */
+  .stairs { flex: 1; display: grid; grid-template-columns: repeat(8, 1fr); align-content: center; align-items: start; }
+  .stp { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-right: 28px; }
+  .stp::before { content: ''; position: absolute; left: 68px; right: 0; top: 32px; height: 4px; border-radius: 2px; background: var(--loop-100); }
+  .stp:last-child::before { display: none; }
+  .stp .sn { position: relative; z-index: 1; width: 68px; height: 68px; border-radius: 50%; background: var(--loop); color: #fff; display: grid; place-items: center; font-size: 30px; font-weight: 800; margin-bottom: 16px; }
+  .stp:first-child .sn, .stp:last-child .sn { background: #fff; color: var(--loop); border: 4px solid var(--loop); }
+  .stp .st { color: #fff; font-size: 14px; font-weight: 800; letter-spacing: .04em; border-radius: 999px; padding: 3px 11px; }
+  .stp h4 { font-size: 28px; letter-spacing: -.02em; line-height: 1.15; }
+  .stp p { font-size: 20px; line-height: 1.45; color: var(--muted); }
   .rule { display: flex; align-items: center; gap: 16px; background: var(--ink); color: #fff; border-radius: 20px; padding: 22px 28px; font-size: 23px; }
   .rule svg { width: 30px; height: 30px; color: #8fb0ff; flex: none; }
 
@@ -463,14 +467,10 @@
   .rcol { position: relative; background: var(--tint); border-right: 1px solid rgba(18,19,26,.06); overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 96px 40px 0; }
   .rcol b { font-size: 40px; letter-spacing: -.03em; line-height: 1.05; }
   .rcol small { font-size: 18px; color: var(--muted); line-height: 1.4; }
-  .rcol .scr { position: absolute; left: 50%; bottom: -140px; width: 344px; aspect-ratio: 1320 / 2868; margin-left: -172px; border-radius: 46px; border: 9px solid #12131a; background: #12131a; box-shadow: 0 40px 80px -30px rgba(18,19,26,.45); overflow: hidden; }
+  .rcol .scr { position: absolute; left: 50%; bottom: 56px; width: 290px; aspect-ratio: 1320 / 2868; margin-left: -145px; border-radius: 46px; border: 9px solid #12131a; background: #12131a; box-shadow: 0 40px 80px -30px rgba(18,19,26,.45); overflow: hidden; }
   .rcol .scr img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 37px; }
   .slide.active .rcol .scr { animation: scr-up 1s var(--ease) both; animation-delay: calc(var(--d, 0s) + .15s); }
   @keyframes scr-up { from { opacity: 0; transform: translateY(80px); } }
-  /* One strip per role: the real iOS banner on the left, bleeding to the edges */
-  .nstrip { grid-template-columns: 620px 520px 1fr 170px; }
-  .nshot { align-self: stretch; background-size: 620px auto; background-position: center 0; background-repeat: no-repeat; }
-  .slide.active .nshot { animation: robot-in .9s var(--ease) both; animation-delay: calc(var(--d, 0s) + .15s); }
 
   /* ============ Robot choice (P1–P3): same language as the robots slide, tinted hero band and hairline rows ============ */
   .pk { position: absolute; inset: 0; display: grid; grid-template-columns: 720px 1fr; }
@@ -785,7 +785,7 @@
           <iframe class="app" data-w="1000" data-src="building-overview.html#accueil" title="Maquette Loop · Accueil" tabindex="-1"></iframe>
         </div>
       </div>
-      <div class="iph"><img src="assets/ios/deck/reception.jpg" alt="App compagnon · Accueil et sécurité"></div>
+      <div class="iph"><img id="acc-shot" src="assets/ios/deck/reception.jpg" alt="App compagnon · Accueil et sécurité"></div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -972,18 +972,6 @@
     <div class="rcol rise" style="--d:0.25s;--tint:#fff4e0"><span class="btag" style="background:#c47a00">Technicien</span><b>Karim</b><small>Pannes, interventions, pièces en stock.</small><div class="scr"><img src="assets/ios/deck/technician.jpg" alt="Écran Technicien"></div></div>
     <div class="rcol rise" style="--d:0.35s;--tint:#f3effd"><span class="btag" style="background:var(--violet)">IT</span><b>Thomas</b><small>Greg, les connecteurs, le mode dégradé.</small><div class="scr"><img src="assets/ios/deck/it.jpg" alt="Écran IT"></div></div>
     <div class="rcol rise" style="--d:0.45s;--tint:#eef3ff"><span class="btag" style="background:var(--loop)">Manager</span><b>Michael</b><small>Les chiffres de l'immeuble, les validations, l'équipe.</small><div class="scr"><img src="assets/ios/deck/manager.jpg" alt="Écran Manager"></div></div>
-  </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
-</section>
-
-<!-- ======================= Companion app · the right alert to the right person ======================= -->
-<section class="slide full" data-scene="companion">
-  <div class="strips">
-    <div class="strip nstrip rise" style="--d:0.05s;--tint:#eef1fa"><div class="nshot" style="background-image:url(assets/ios/deck/banner-reception.jpg)"></div><div class="sid"><span class="btag" style="background:var(--navy)">Accueil</span><b>Bouton panique au RDC</b><small>Notification iOS, même téléphone verrouillé</small></div><p>TEMI-4F2A : un client demande de l'aide au comptoir. Hery est en visio.</p><span class="chip r"><span class="dot"></span>Urgent</span></div>
-    <div class="strip nstrip rise" style="--d:0.15s;--tint:#e9f6fd"><div class="nshot" style="background-image:url(assets/ios/deck/banner-housekeeping.jpg)"></div><div class="sid"><span class="btag" style="background:var(--sky)">Entretien</span><b>Départ de la suite 502</b><small>Notification iOS, même téléphone verrouillé</small></div><p>M. Garcia a rendu sa clé : le ménage peut commencer.</p><span class="chip b"><span class="dot"></span>À faire</span></div>
-    <div class="strip nstrip rise" style="--d:0.25s;--tint:#fff4e0"><div class="nshot" style="background-image:url(assets/ios/deck/banner-technician.jpg)"></div><div class="sid"><span class="btag" style="background:#c47a00">Technicien</span><b>Ascenseur bloqué au 3ᵉ</b><small>Notification iOS, même téléphone verrouillé</small></div><p>Otis signale une porte qui ne se ferme pas. Personne à l'intérieur.</p><span class="chip r"><span class="dot"></span>Urgent</span></div>
-    <div class="strip nstrip rise" style="--d:0.35s;--tint:#f3effd"><div class="nshot" style="background-image:url(assets/ios/deck/banner-it.jpg)"></div><div class="sid"><span class="btag" style="background:var(--violet)">IT</span><b>Greg ne répond plus</b><small>Notification iOS, même téléphone verrouillé</small></div><p>Loop passe en mode dégradé : les événements sont gardés en file.</p><span class="chip a"><span class="dot"></span>Mode dégradé</span></div>
-    <div class="strip nstrip rise" style="--d:0.45s;--tint:#eef3ff"><div class="nshot" style="background-image:url(assets/ios/deck/banner-manager.jpg)"></div><div class="sid"><span class="btag" style="background:var(--loop)">Manager</span><b>Avis client 5 étoiles</b><small>Notification iOS, même téléphone verrouillé</small></div><p>« Le robot m'a porté mes valises jusqu'à la chambre. »</p><span class="chip g"><span class="dot"></span>Bonne nouvelle</span></div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
@@ -1256,10 +1244,13 @@ const SCENES = {
 
   accueil: {
     dur: 12000,
-    once(s) { loadFrame(s.querySelector('iframe.app')); },
-    reset(s) { const w = appWin(s); if (w) { if (w.eval('ACC.mode') === 'remote') w.runAccAction('release'); w.showView('accueil'); } },
-    // A guest asks for a human; Hery takes over from Madagascar on the real reception view
-    run(s) { at(4500, () => appWin(s)?.runAccAction('take')); },
+    once(s) { loadFrame(s.querySelector('iframe.app')); new Image().src = 'assets/ios/deck/reception-remote.jpg'; },
+    reset(s) {
+      const w = appWin(s); if (w) { if (w.eval('ACC.mode') === 'remote') w.runAccAction('release'); w.showView('accueil'); }
+      $('acc-shot').src = 'assets/ios/deck/reception.jpg';
+    },
+    // A guest asks for a human; Hery takes over from Madagascar: the mockup and the iPhone both show her card
+    run(s) { at(4500, () => { appWin(s)?.runAccAction('take'); $('acc-shot').src = 'assets/ios/deck/reception-remote.jpg'; }); },
   },
 
   // The real reception view: the cursor presses the mockup's own panic button, calls 17, then lifts the alert
