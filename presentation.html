@@ -135,7 +135,7 @@
 
   /* ============ 2 · Needs ============ */
   .needs { position: absolute; inset: 150px 96px 104px; display: flex; flex-direction: column; gap: 40px; }
-  .prio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .prio { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
   .pcard { border-radius: 26px; border: 1px solid var(--line); padding: 32px; display: flex; flex-direction: column; gap: 16px; background: #fff; position: relative; }
   .pcard .top { display: flex; align-items: center; gap: 16px; }
   .pcard .pic { width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; color: #fff; }
@@ -143,13 +143,20 @@
   .pcard .rank { margin-left: auto; font-size: 18px; font-weight: 800; color: var(--muted); border: 2px solid var(--line); border-radius: 999px; padding: 4px 14px; }
   .pcard.p1 { border-color: var(--loop); box-shadow: 0 0 0 3px var(--loop-50); }
   .pcard.p1 .rank { color: #fff; background: var(--loop); border-color: var(--loop); }
-  .pcard h3 { font-size: 32px; letter-spacing: -.02em; }
-  .pcard p { font-size: 21px; line-height: 1.45; color: var(--ink-2); }
+  .pcard h3 { font-size: 28px; letter-spacing: -.02em; }
+  .pcard p { font-size: 19px; line-height: 1.45; color: var(--ink-2); flex: 1; }
   .pcard q { font-size: 19px; line-height: 1.45; color: var(--muted); quotes: none; }
-  .facts { display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px; }
+  .facts { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
   .fact { background: var(--bg); border-radius: 20px; padding: 22px 24px; display: flex; flex-direction: column; gap: 6px; }
   .fact b { font-size: 40px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .fact > span { font-size: 18px; color: var(--muted); line-height: 1.35; }
+  .takeaways { position: absolute; inset: 150px 96px 104px; display: flex; flex-direction: column; gap: 40px; }
+  .tk3 { display: grid; grid-template-columns: 1fr 1.25fr 1.15fr; gap: 24px; }
+  .tk { border-radius: 24px; background: var(--bg); padding: 28px 30px; display: flex; flex-direction: column; gap: 18px; }
+  .tk h6 { font-size: 16px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--loop); }
+  .tk.warn { background: var(--amber-soft); }
+  .tk.warn h6 { color: #9a5b00; }
+  .tk .does li, .tk .seen li { font-size: 21px; }
   .punch { display: flex; align-items: center; gap: 28px; background: var(--ink); color: #fff; border-radius: 26px; padding: 28px 36px; }
   .punch .bar { flex: none; width: 420px; height: 52px; border-radius: 14px; overflow: hidden; display: flex; font-size: 19px; font-weight: 700; }
   .punch .bar span { display: grid; place-items: center; }
@@ -532,6 +539,7 @@
     <symbol id="i-video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/><rect x="2" y="6" width="14" height="12" rx="2"/></symbol>
     <symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.1 13.9a14 14 0 0 0 3.732 2.668 1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 2.66 3.716"/></symbol>
     <symbol id="i-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
+    <symbol id="i-roller" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="6" x="2" y="2" rx="2"/><path d="M10 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect width="4" height="6" x="8" y="16" rx="1"/></symbol>
     <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M4 2 L4 20 L9 15.5 L12.5 22.5 L15.5 21 L12 14 L19 14 Z" fill="#12131a" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></symbol>
   </defs>
 </svg>
@@ -566,7 +574,7 @@
 
 <!-- ======================= 2 · What we heard ======================= -->
 <section class="slide" data-scene="needs">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Ce que vous nous avez dit · rendez-vous du 23 septembre</div></div>
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Ce qu'on a compris · rendez-vous du 23 septembre</div></div>
   <div class="needs">
     <h1 class="rise">Peu de personnel sur place,<br><em>le même niveau de service.</em></h1>
     <div class="prio">
@@ -588,13 +596,57 @@
         <p>+30 % de productivité avec le duo humain et robot, sur une équipe interne.</p>
         <q>Point d'attention : un outil pour l'équipe, pas un remplaçant.</q>
       </div>
+      <div class="pcard rise" style="--d:.6s">
+        <div class="top"><span class="pic" style="background:#c2410c"><svg><use href="#i-roller"/></svg></span><span class="rank">P3</span></div>
+        <h3>Peinture</h3>
+        <p>Ce qui coûte, c'est le temps. Si un robot divise le coût par 3, vous repeignez 3 fois plus souvent.</p>
+        <q>Point d'attention : appartements meublés et occupés.</q>
+      </div>
     </div>
     <div class="facts">
-      <div class="fact rise" style="--d:.7s"><b><span data-count="130">0</span></b><span>appartements, 5 immeubles</span></div>
-      <div class="fact rise" style="--d:.78s"><b><span data-count="92">0</span>&nbsp;%</b><span>d'occupation moyenne</span></div>
-      <div class="fact rise" style="--d:.86s"><b><span data-count="1">0</span></b><span>personne sur site (ERP)</span></div>
-      <div class="fact rise" style="--d:.94s"><b>24/24</b><span>équipe à Madagascar</span></div>
-      <div class="fact rise" style="--d:1.02s"><b>Greg</b><span>votre IA d'opérations</span></div>
+      <div class="fact rise" style="--d:.7s"><b><span data-count="130">0</span></b><span>appartements, 5 immeubles (+4 en projet)</span></div>
+      <div class="fact rise" style="--d:.76s"><b><span data-count="92">0</span>&nbsp;%</b><span>d'occupation moyenne</span></div>
+      <div class="fact rise" style="--d:.82s"><b><span data-count="1">0</span></b><span>personne sur site (ERP)</span></div>
+      <div class="fact rise" style="--d:.88s"><b>24/24</b><span>équipe à Madagascar</span></div>
+      <div class="fact rise" style="--d:.94s"><b>1 M€</b><span>de ménage sous-traité par an</span></div>
+      <div class="fact rise" style="--d:1s"><b>Greg</b><span>votre IA d'opérations</span></div>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide" data-scene="needs">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Ce qu'on retient · rendez-vous du 23 septembre</div></div>
+  <div class="takeaways">
+    <h1 class="rise">Ce qu'on retient<br><em>du rendez-vous.</em></h1>
+    <div class="tk3">
+      <div class="tk rise" style="--d:.2s">
+        <h6>Ce que vous attendez de nous</h6>
+        <ul class="does">
+          <li>Un pilote clé en main, présenté sous forme de proposition.</li>
+          <li>Dans l'ordre : accueil, chariot, puis ménage ou peinture.</li>
+          <li>Un benchmark : robots d'accueil, chariots, robots de peinture.</li>
+        </ul>
+      </div>
+      <div class="tk rise" style="--d:.35s">
+        <h6>Ce qu'on a compris</h6>
+        <ul class="does">
+          <li>Pas de « tout robot » : un partenariat entre l'humain et le robot.</li>
+          <li>Tester vite, quitte à prendre de l'avance.</li>
+          <li>Un robot à l'image du lieu, avec une coque de marque.</li>
+          <li>Votre idée : détecter les check-out.</li>
+          <li>Les humanoïdes : intéressants, mais pas encore prêts.</li>
+        </ul>
+      </div>
+      <div class="tk warn rise" style="--d:.5s">
+        <h6>Points à surveiller</h6>
+        <ul class="seen">
+          <li class="ko">RGPD : les flux vidéo vers Madagascar, hors UE.</li>
+          <li class="ko">Ménage : le temps gagné profite au sous-traitant tant que le contrat n'est pas renégocié.</li>
+          <li class="ko">Chariot : le risque de percuter un enfant.</li>
+          <li class="ko">Peinture : en appartement occupé, la préparation coûte plus que la peinture.</li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
