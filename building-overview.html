@@ -791,6 +791,10 @@
   #vig-cams-sub .link { color: var(--blue); font-weight: 500; margin-left: 4px; }
   #vig-cams-sub .link:hover { text-decoration: underline; }
   #view-vigie .bld svg .floor:hover { filter: brightness(1.06); }
+  .cam-off { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; background: #12161e; color: #fff; text-align: center; }
+  .cam-t .cam-off svg { width: 30px; height: 30px; filter: none; opacity: .75; margin-bottom: 4px; }
+  .cam-off b { font-size: 13px; font-weight: 600; }
+  .cam-off small { font-size: 11px; color: #a3abb8; font-variant-numeric: tabular-nums; }
   .cams-empty { padding: 4px 16px 16px; color: var(--muted); }
   .vig-two { display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
   @container (max-width: 800px) { .vig-two { grid-template-columns: 1fr; } }
@@ -4162,7 +4166,7 @@ const vClock = () => {
 const PEXELS = id => `https://videos.pexels.com/video-files/${id}.mp4`;
 const CAMS = [
   { id: 'CAM-É5', floor: 5, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É5', feed: PEXELS('10577855/10577855-sd_960_540_30fps') },
-  { id: 'CAM-É4', floor: 4, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É4', off: true },
+  { id: 'CAM-É4', floor: 4, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É4', off: true, offAt: '00:05' },
   { id: 'CAM-É3', floor: 3, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É3', feed: PEXELS('6390310/6390310-sd_960_540_25fps') },
   { id: 'CAM-É2', floor: 2, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É2', feed: PEXELS('3192916/3192916-sd_960_540_24fps') },
   { id: 'CAM-É1', floor: 1, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É1', feed: PEXELS('8946572/8946572-sd_960_540_24fps') },
@@ -4358,6 +4362,12 @@ function renderVigFloors() {
   setHTML('vig-floors', h);
 }
 
+// Offline feed: crossed-out camera and how long the stream has been down (from the time it dropped, on the Vigie clock)
+function vCamOffline(c) {
+  const [h, mn] = c.offAt.split(':').map(Number), [nh, nm] = vClock().split(':').map(Number);
+  const min = ((nh * 60 + nm) - (h * 60 + mn) + 1440) % 1440, dur = min < 60 ? `${min} min` : `${Math.floor(min / 60)} h ${String(min % 60).padStart(2, '0')}`;
+  return `<div class="cam-off">${icon('video-off', 30, { sw: 1.8 })}<b>Flux interrompu</b><small>depuis ${dur} · coupé à ${c.offAt}</small></div>`;
+}
 function vCamScene(kind, o = {}) {
   const ir = o.night;
   const C = ir ? { bg: '#0a120e', ceil: '#3b4b42', wall: '#2c3a33', wall2: '#25322c', floor: '#1b2420', door: '#151d19', light: '#a8c4b4', far: '#1f2a25' }
@@ -4475,7 +4485,7 @@ function renderVigie() {
     const chip = off ? '<span class="chip err">Hors ligne</span>' : isMotion ? '<span class="chip err">Mouvement</span>' : found ? '<span class="chip warn">Photo prise</span>'
       : onMission ? '<span class="chip acc">En ronde</span>' : robotIdle ? `<span class="chip idle" style="color:#fff">${night ? 'À sa base' : 'En ménage'}</span>` : '<span class="chip ok">En ligne</span>';
     return `<div class="cam-t ${isMotion ? 'motion' : ''} ${onMission ? 'mine' : ''} ${off ? 'off' : ''}" data-cam="${t.id}" ${t.id === 'CAM-É5' ? 'id="vig-cam-e5"' : ''}>
-      ${vCamScene(t.kind, { night, low: t.low, robot: t.robot })}${vCamOverlay({ motion: isMotion, found })}
+      ${off ? vCamOffline(c) : vCamScene(t.kind, { night, low: t.low, robot: t.robot }) + vCamOverlay({ motion: isMotion, found })}
       <span class="lb">${t.id}<small>${t.name || c.name}</small></span>
       ${off ? '' : `<span class="rec"><i></i>${vClock()}</span>`}
       <span class="ft">${chip}</span></div>`;
@@ -4529,7 +4539,7 @@ function vigCamPop(mk) {
   if (!mk) { pop.hidden = true; return; }
   const c = CAMS.find(x => x.id === mk.dataset.cam), night = VIG.mode !== 'jour', motion = c.id === VIG.alert?.cam && !!vAlertOpen(c.floor);
   const chip = c.off ? '<span class="chip err">Hors ligne</span>' : motion ? '<span class="chip err">Mouvement</span>' : '<span class="chip ok">En direct</span>';
-  pop.innerHTML = `<div class="cam-t ${c.off ? 'off' : ''} ${motion ? 'motion' : ''}">${vCamScene(c.kind, { night })}${vCamOverlay({ motion })}
+  pop.innerHTML = `<div class="cam-t ${c.off ? 'off' : ''} ${motion ? 'motion' : ''}">${c.off ? vCamOffline(c) : vCamScene(c.kind, { night }) + vCamOverlay({ motion })}
     <span class="lb">${c.id}<small>${c.name} · ${vLvl(c.floor)}</small></span>${c.off ? '' : `<span class="rec"><i></i>${vClock()}</span>`}<span class="ft">${chip}</span></div>`;
   const b = mk.querySelector('circle').getBoundingClientRect(), o = pop.parentElement.getBoundingClientRect();
   pop.style.left = `${Math.max(140, Math.min(o.width - 140, b.left + b.width / 2 - o.left))}px`;
