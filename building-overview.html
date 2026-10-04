@@ -779,6 +779,8 @@
   .cam-t .rec i { width: 7px; height: 7px; border-radius: 50%; background: #e5484d; animation: conn-blink 1s steps(2, start) infinite; }
   .cam-t .ft { position: absolute; left: 8px; bottom: 7px; right: 8px; display: flex; gap: 6px; align-items: center; }
   .cam-t .ft .chip { font-size: 11px; padding: 1px 7px; }
+  /* Neutral state over footage: dark glass, so it reads on any picture */
+  #view-vigie .cam-t .ft .chip.idle { background: rgba(0,0,0,.6); border-color: transparent; color: #fff; }
   .cam-t.motion { box-shadow: 0 0 0 2px var(--red); }
   .cam-t.mine { box-shadow: 0 0 0 2px #8b5cf6; }
   .cam-t.off svg { filter: grayscale(1) brightness(.35); }
@@ -4485,7 +4487,7 @@ function renderVigie() {
     const isMotion = motion && t.id === VIG.alert.cam;
     const found = t.id === vFloor(5).robot.name && m && m.found.includes(5);
     const chip = off ? '<span class="chip err">Hors ligne</span>' : isMotion ? '<span class="chip err">Mouvement</span>' : found ? '<span class="chip warn">Photo prise</span>'
-      : onMission ? '<span class="chip acc">En ronde</span>' : robotIdle ? `<span class="chip idle" style="color:#fff">${night ? 'À sa base' : 'En ménage'}</span>` : '<span class="chip ok">En ligne</span>';
+      : onMission ? '<span class="chip acc">En ronde</span>' : robotIdle ? (night ? '<span class="chip idle">À sa base</span>' : '<span class="chip run">En ménage</span>') : '<span class="chip ok">En ligne</span>';
     return `<div class="cam-t ${isMotion ? 'motion' : ''} ${onMission ? 'mine' : ''} ${off ? 'off' : ''}" data-cam="${t.id}" ${t.id === 'CAM-É5' ? 'id="vig-cam-e5"' : ''}>
       ${off ? vCamOffline(c) : vCamScene(t.kind, { night, low: t.low, robot: t.robot }) + vCamOverlay({ motion: isMotion, found })}
       <span class="lb">${t.id}<small>${t.name || c.name}</small></span>
