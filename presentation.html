@@ -533,6 +533,28 @@
   .hint { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 50; font: 500 13px -apple-system, sans-serif; color: #fff; background: rgba(18,19,26,.75); padding: 6px 12px; border-radius: 8px; animation: hint-out .6s ease 4s forwards; pointer-events: none; }
   @keyframes hint-out { to { opacity: 0; } }
   @media (prefers-reduced-motion: reduce) { .rb.patrol { animation: none; left: 50%; } }
+
+  /* ============ Companion app: real iOS screens, one per role, and the notifications ============ */
+  .iph { flex: none; width: 290px; aspect-ratio: 1320 / 2868; padding: 10px; border-radius: 48px; background: #12131a; box-shadow: 0 30px 70px -24px rgba(18,19,26,.5); }
+  .iph img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 38px; }
+  .cmp { position: absolute; inset: 140px 96px 96px; display: flex; flex-direction: column; gap: 28px; }
+  .cmp .iph { width: 232px; padding: 8px; border-radius: 40px; }
+  .cmp .iph img { border-radius: 32px; }
+  .cmp .top { display: flex; align-items: flex-end; gap: 80px; }
+  .cmp .top > div { display: flex; flex-direction: column; gap: 22px; }
+  .cmp .top .lead { max-width: 640px; }
+  .roles { display: flex; justify-content: space-between; align-items: flex-start; }
+  .roles figure { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .roles figcaption { text-align: center; }
+  .roles figcaption b { display: block; font-size: 22px; letter-spacing: -.01em; }
+  .roles figcaption span { font-size: 17px; color: var(--muted); }
+  .ntf { position: absolute; inset: 150px 96px 110px; display: grid; grid-template-columns: 1fr auto; gap: 72px; align-items: center; }
+  .ntf .txt { display: flex; flex-direction: column; gap: 26px; }
+  .ntf ul { list-style: none; display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+  .ntf li { display: grid; grid-template-columns: 150px 1fr; gap: 16px; align-items: baseline; font-size: 21px; }
+  .ntf li .r { font-size: 15px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--c); }
+  .ntf .phones { display: flex; gap: 28px; align-items: flex-start; }
+  .ntf .phones .iph:nth-child(2) { margin-top: 70px; }
 </style>
 </head>
 <body>
@@ -1065,6 +1087,53 @@
         <div class="rail-row rise" style="--d:.53s"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Déclencher ou lever la panique</h5><p>Toujours une décision humaine</p></div></div>
         <div class="rail-row rise" style="--d:.6s"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Filmer dans un appartement</h5><p>Les caméras des robots restent dans les couloirs et les parties communes</p></div></div>
       </div>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= Companion app · one screen per role ======================= -->
+<section class="slide" data-scene="companion">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">App iPhone · les équipes sur place</div></div>
+  <div class="cmp">
+    <div class="top">
+      <div>
+        <span class="eyebrow rise">L'app compagnon</span>
+        <h1 class="rise" style="--d:.1s">Chaque métier a son écran,<br><em>dans sa poche.</em></h1>
+      </div>
+      <p class="lead rise" style="--d:.2s">La même plateforme, vue depuis l'iPhone de chacun : ce qu'il doit faire maintenant, et rien de plus.</p>
+    </div>
+    <div class="roles">
+      <figure class="rise" style="--d:.3s"><div class="iph"><img src="assets/ios/deck/reception.jpg" alt="Écran Accueil"></div><figcaption><b>Accueil et sécurité</b><span>Alertes, Temi, caméras, panique</span></figcaption></figure>
+      <figure class="rise" style="--d:.38s"><div class="iph"><img src="assets/ios/deck/housekeeping.jpg" alt="Écran Entretien"></div><figcaption><b>Entretien</b><span>Robot bloqué, tâches, étages</span></figcaption></figure>
+      <figure class="rise" style="--d:.46s"><div class="iph"><img src="assets/ios/deck/technician.jpg" alt="Écran Technique"></div><figcaption><b>Technicien</b><span>Pannes, interventions, pièces</span></figcaption></figure>
+      <figure class="rise" style="--d:.54s"><div class="iph"><img src="assets/ios/deck/it.jpg" alt="Écran IT"></div><figcaption><b>IT</b><span>Greg, connecteurs, incidents</span></figcaption></figure>
+      <figure class="rise" style="--d:.62s"><div class="iph"><img src="assets/ios/deck/manager.jpg" alt="Écran Direction"></div><figcaption><b>Manager</b><span>Chiffres, validations, équipe</span></figcaption></figure>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= Companion app · notifications ======================= -->
+<section class="slide" data-scene="companion">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">App iPhone · notifications</div></div>
+  <div class="ntf">
+    <div class="txt">
+      <span class="eyebrow rise">Notifications</span>
+      <h1 class="rise" style="--d:.1s">L'alerte arrive<br><em>au bon métier.</em></h1>
+      <p class="lead rise" style="--d:.2s">Chacun reçoit seulement ce qui le concerne, même téléphone verrouillé. Un appui ouvre le bon écran.</p>
+      <ul>
+        <li class="rise" style="--d:.3s;--c:var(--navy)"><span class="r">Accueil</span>Bouton panique au RDC, Hery en visio</li>
+        <li class="rise" style="--d:.36s;--c:var(--sky)"><span class="r">Entretien</span>Départ de la 502, le ménage peut commencer</li>
+        <li class="rise" style="--d:.42s;--c:var(--amber)"><span class="r">Technicien</span>Ascenseur bloqué au 3ᵉ</li>
+        <li class="rise" style="--d:.48s;--c:var(--violet)"><span class="r">IT</span>Greg ne répond plus, mode dégradé</li>
+        <li class="rise" style="--d:.54s;--c:var(--loop)"><span class="r">Manager</span>Avis client 5 étoiles</li>
+      </ul>
+    </div>
+    <div class="phones">
+      <div class="iph rise" style="--d:.35s"><img src="assets/ios/deck/banner-reception.jpg" alt="Notification bouton panique"></div>
+      <div class="iph rise" style="--d:.45s"><img src="assets/ios/deck/banner-technician.jpg" alt="Notification ascenseur bloqué"></div>
+      <div class="iph rise" style="--d:.55s"><img src="assets/ios/deck/notifications.jpg" alt="Centre de notifications de l'Accueil"></div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
