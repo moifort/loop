@@ -107,7 +107,7 @@
   .below.with-temi { --row-h: 300px; height: var(--row-h); grid-template-columns: 1fr 1fr; grid-template-rows: 1fr auto; grid-template-areas: "temi todo" "temi rooms"; }
   .below.with-temi.open-rooms { grid-template-rows: auto 1fr; }
   .below.with-temi > .card { align-self: stretch; display: flex; flex-direction: column; min-height: 0; }
-  .below.with-temi #todo-card > .todos, .below.with-temi #rooms-card > .rooms { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .below.with-temi #todo-card > .todos, .below.with-temi #rooms-card > .rooms { flex: 1; min-height: 0; overflow-y: auto; }
   .below.with-temi #todo-card .all-good { min-height: 100%; justify-content: center; padding-top: 0; }
   .below.with-temi #temi { flex: 1; min-height: 0; }
   .below.with-temi #temi-card { grid-area: temi; }
@@ -120,7 +120,7 @@
   .below.temi-compact #kilo-card { grid-area: kilo; }
   .below:not(.temi-compact) #kilo-card { display: none; }
   .below.temi-compact > .card { min-height: 0; }
-  .below.temi-compact #todo-card > .todos { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .below.temi-compact #todo-card > .todos { flex: 1; min-height: 0; overflow-y: auto; }
   .below.temi-compact #temi-card { grid-area: temi; }
   .below.temi-compact #todo-card { grid-area: todo; }
   @container (max-width: 800px) { .below.temi-compact { height: auto; grid-template-columns: 1fr; grid-template-rows: none; grid-template-areas: "temi" "kilo" "todo"; } }
@@ -928,7 +928,7 @@
   .seg button { padding: 3px 9px; border-radius: 6px; font-size: 12px; color: var(--muted); font-weight: 500; }
   .seg button.on { background: var(--panel); color: var(--text); box-shadow: 0 1px 2px rgba(16,24,40,.08); }
   .seg button em { font-style: normal; color: var(--faint); margin-left: 3px; font-variant-numeric: tabular-nums; }
-  .gev-list { list-style: none; max-height: 640px; overflow-y: auto; overscroll-behavior: contain; }
+  .gev-list { list-style: none; max-height: 640px; overflow-y: auto; }
   .gev { display: grid; grid-template-columns: 44px 104px 1fr auto; gap: 10px; align-items: start; padding: 10px 16px; border-top: 1px solid var(--border); cursor: pointer; }
   .gev:first-child { border-top: none; }
   .gev:hover { background: var(--panel-2); }
