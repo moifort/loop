@@ -524,11 +524,11 @@
   .pk-alt p { font-size: 18px; line-height: 1.4; color: var(--ink-2); }
   .pk-note { font-size: 22px; font-weight: 600; color: var(--ink); }
 
-  /* Mockup page with the companion app beside it */
-  .duo-shot { display: grid; grid-template-columns: 1fr 250px; gap: 36px; align-items: center; }
-  .duo-shot .app-shot { height: 700px; }
-  .duo-shot .iph { width: 250px; padding: 8px; border-radius: 42px; }
-  .duo-shot .iph img { border-radius: 34px; }
+  /* Mockup page with the companion app as a small phone over its top right corner */
+  .duo-shot { position: relative; }
+  .duo-shot .app-shot { height: 700px; margin-right: 130px; }
+  .duo-shot .iph { position: absolute; z-index: 6; right: -36px; top: -76px; width: 190px; padding: 6px; border-radius: 34px; }
+  .duo-shot .iph img { border-radius: 28px; }
   .men .app-shot { height: 700px; }
 </style>
 </head>
@@ -808,7 +808,7 @@
       <div class="app-shot">
         <div class="win">
           <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Accueil / TEMI-4F2A</span></div>
-          <iframe class="app" data-w="1000" data-src="building-overview.html#accueil" title="Maquette Loop · Accueil" tabindex="-1"></iframe>
+          <iframe class="app" data-src="building-overview.html#accueil" title="Maquette Loop · Accueil" tabindex="-1"></iframe>
         </div>
       </div>
       <div class="iph"><img id="acc-shot" src="assets/ios/deck/reception.jpg" alt="App compagnon · Accueil et sécurité"></div>
