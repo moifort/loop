@@ -718,7 +718,7 @@
 
 
   /* ---------- Vigie / sécurité ---------- */
-  /* Night and guard modes: the whole view goes dark, cards keep their structure through the variables */
+  /* Night mode: the whole view goes dark, cards keep their structure through the variables */
   #view-vigie.night { --panel: #141b29; --panel-2: #1a2334; --border: #263247; --text: #e6e9ef; --muted: #8d97ab; --faint: #4b566c; --blue-soft: #16294a; color: var(--text); }
   body.vig-night main { background: #0b101a; }
   body.vig-night .acc-banner { margin-bottom: 20px; }
@@ -1306,7 +1306,7 @@
 
 </div>
 
-<!-- Vigie view: night watch and guard of closed floors, built on the greeter, the cleaning robots and the building's cameras -->
+<!-- Vigie view: building watch, day and night, built on the greeter, the cleaning robots and the building's cameras -->
 <div class="wrap" id="view-vigie" hidden>
 
   <!-- Live alert first: it is what the night operator must act on -->
@@ -1328,7 +1328,6 @@
       <div class="legend">
         <span><i class="sw" style="background:#22a861;opacity:.5"></i>Champ des caméras</span>
         <span><i class="sw" style="background:#8b5cf6"></i>Robot en mission</span>
-        <span><i class="sw" style="background:repeating-linear-gradient(-45deg,#f0a020 0 3px,transparent 3px 6px)"></i>Zone fermée</span>
       </div>
     </div>
   </div>
@@ -1346,7 +1345,7 @@
     <div class="card">
       <div class="card-h"><h3>Rondes programmées</h3><div class="right" id="vig-sched-sub"></div></div>
       <ul class="vig-sched" id="vig-sched"></ul>
-      <p class="vig-note"><i data-icon="lock" data-size="14"></i>Les caméras des robots ne filment que les couloirs, les parties communes et les zones fermées. Jamais dans un appartement occupé.</p>
+      <p class="vig-note"><i data-icon="lock" data-size="14"></i>Les caméras des robots ne filment que les couloirs, les parties communes et les suites libres. Jamais dans un appartement occupé.</p>
     </div>
   </div>
 
@@ -1884,7 +1883,7 @@ function helpBubble(x, y) {
 }
 
 // Open storey: cutaway with extruded rooms and robot position.
-// The Vigie view reuses it (opts.vig): neutral rooms, camera fields of view, robots on patrol, closed zone.
+// The Vigie view reuses it (opts.vig): neutral rooms, camera fields of view, robots on patrol.
 function openFloor(f, z0, opts = {}) {
   const vig = !!opts.vig, states = roomStates(f);
   const WALL = 30, LOW = 7;
@@ -1896,7 +1895,7 @@ function openFloor(f, z0, opts = {}) {
     if (r.kind === 'core') fill = '#e4e7eb';
     s += poly([P(r.x1, r.y1, z0), P(r.x2, r.y1, z0), P(r.x2, r.y2, z0), P(r.x1, r.y2, z0)], `fill="${fill}" stroke="#e1e5ea" stroke-width=".6"`);
   });
-  // Under the walls: closed-zone hatching and the camera fields of view, drawn on the floor
+  // Under the walls: the camera fields of view, drawn on the floor
   if (vig) s += vigFloorPlate(f, z0);
   const items = vig ? vigFloorItems(f, z0) : [];
   // Each wall is cut into <= 0.5 unit pieces: sorting long walls by their midpoint
@@ -3961,12 +3960,12 @@ const CONNS = [
     opts: [
       { k: 'sites', t: 'Serveurs vidéo', d: '1 serveur local par immeuble équipé' },
       { k: 'sw', t: 'Mouvements vers la Vigie', d: 'Les détections arrivent dans Loop en temps réel', on: true },
-      { k: 'sw', t: 'Zones fermées seulement, la nuit', d: 'Pas d\'alerte pour les étages ouverts de 23 h à 7 h', on: true },
+      { k: 'sw', t: 'Suites libres surveillées, la nuit', d: 'Un mouvement devant une suite inoccupée lève une alerte de 23 h à 7 h', on: true },
       { k: 'sw', t: 'Un robot relaie une caméra en panne', d: 'Le robot de l\'étage fait le couloir à sa place', on: true },
       { k: 'val', t: 'Conservation', v: '30 jours, en France', d: 'Réglé dans XProtect' },
       { k: 'sw', t: 'Partager les flux avec GregAi', d: 'RGPD : opérateurs humains seulement', on: false, lock: true },
     ],
-    events: [[3, 'in', 'motion.detected', 'Mouvement au 5ᵉ (zone fermée), <b>CAM-É5</b>.'], [2.6, 'act', 'vigie.dispatch', '<b>CLN-C6F2</b> envoyé vérifier l\'É5.'],
+    events: [[3, 'in', 'motion.detected', 'Mouvement au 5ᵉ devant la suite 503 libre, <b>CAM-É5</b>.'], [2.6, 'act', 'vigie.dispatch', '<b>CLN-C6F2</b> envoyé vérifier l\'É5.'],
       [24, 'in', 'motion.detected', 'Mouvement dans le hall, <b>CAM-HALL</b>.', 'OP'], [60 * 11, 'in', 'camera.offline', '<b>CAM-É4</b> ne répond plus.', 'SG', 'err'], [60 * 11 - 1, 'act', 'vigie.relay', '<b>CLN-5E07</b> couvre le couloir de l\'É4.']],
     live: [['in', 'motion.detected', 'Mouvement dans le hall, <b>CAM-HALL</b> (client).', 'MD']] },
   { id: 'otis', name: 'Otis Integrated Dispatch', cat: 'Ascenseur', mono: 'O', color: '#0b3d91', state: 'ok', short: 'Otis', sub: 'Les robots appellent l\'ascenseur', sites: ['SG', 'OP'], since: ago(60 * 24 * 9),
@@ -3984,7 +3983,7 @@ const CONNS = [
     setupNote: 'Installée au 9ᵉ mais jamais activée. Une fois connectée, la vigie voit les détecteurs de présence de chaque étage et Loop peut éteindre la lumière derrière les robots.',
     opts: [
       { k: 'val', t: 'Protocole', v: 'BACnet/IP', d: 'Automate dans le local technique' },
-      { k: 'sw', t: 'Détecteurs de présence vers la Vigie', d: 'Un mouvement dans une zone fermée lève une alerte', on: true },
+      { k: 'sw', t: 'Détecteurs de présence vers la Vigie', d: 'Un mouvement dans une suite libre lève une alerte', on: true },
       { k: 'sw', t: 'Éteindre la lumière derrière les robots', d: 'Couloirs seulement', on: true },
       { k: 'sw', t: 'Changer les consignes de chauffage', d: 'Réservé à la maintenance', on: false, lock: true },
     ], events: [], live: [] },
@@ -4164,14 +4163,12 @@ setInterval(() => {
 setInterval(() => { if (!document.getElementById('conn-other').hidden && !document.getElementById('view-greg').hidden) document.querySelectorAll('#conn-other [data-since]').forEach(s => s.textContent = dur(Date.now() - +s.dataset.since)); }, 1000);
 
 // =====================================================================
-// Vigie — night watch and guard of closed floors. No extra hardware: the greeter
+// Vigie — building watch, day and night. No extra hardware: the greeter
 // robot, the cleaning robots (their cameras and lidar) and the building's cameras.
 // =====================================================================
 const VIG = {
-  mode: 'jour',              // 'jour' | 'nuit' | 'garde' (whole building closed for works); the mockup opens in day mode
+  mode: 'jour',              // 'jour' | 'nuit'; the mockup opens in day mode
   t0: Date.now(), base: 2 * 60 + 14, // night replay starts at 02:14
-  closed: { 5: 'Travaux de peinture jusqu\'au 10 oct.' },
-  saved: null,               // closed floors before the guard mode
   sel: null,                 // floor picked on the plan
   mission: null,             // { kind, floors, start, dur, found: [], done }
   alert: { floor: 5, cam: 'CAM-É5', at: '02:11', state: 'open' },
@@ -4204,7 +4201,7 @@ const RELAY_FEED = PEXELS('36188116/15347467_640_360_25fps');
 const BASE_FEEDS = [RELAY_FEED, PEXELS('3192916/3192916-sd_960_540_24fps'), PEXELS('5784035/5784035-sd_960_540_30fps')];
 // Scripted findings of a mission, per floor (fraction of the mission when they come up)
 const VIG_FIND = {
-  5: { at: .48, lvl: 'warn', txt: 'CLN-C6F2 · É5 : le mouvement venait d\'un rideau. Fenêtre de l\'app. 503 restée ouverte par les peintres. Photo prise.', fix: true },
+  5: { at: .48, lvl: 'warn', txt: 'CLN-C6F2 · É5 : le mouvement venait d\'un rideau. Fenêtre de la suite 503 restée ouverte après le ménage. Photo prise.', fix: true },
   4: { at: .4, lvl: 'ok', txt: 'CLN-5E07 · É4 : couloir parcouru à la place de CAM-É4 (hors ligne). Rien à signaler.' },
   3: { at: .62, lvl: 'ok', txt: 'CLN-91C5 · É3 : couloir et cage d\'escalier dégagés.' },
   2: { at: .55, lvl: 'ok', txt: 'CLN-2D84 · É2 : rien à signaler.' },
@@ -4212,7 +4209,7 @@ const VIG_FIND = {
   0: { at: .72, lvl: 'ok', txt: 'TEMI-4F2A · RDC : porte de service fermée à clé, hall vide.' },
 };
 const VIG_LOG = [
-  { t: '02:11', k: 'err', ic: 'cctv', html: '<b>Mouvement au 5ᵉ</b>, zone fermée pour travaux', sub: 'CAM-É5 couloir · en attente de vérification' },
+  { t: '02:11', k: 'err', ic: 'cctv', html: '<b>Mouvement au 5ᵉ</b>, devant la suite 503 inoccupée', sub: 'CAM-É5 couloir · en attente de vérification' },
   { t: '01:24', k: 'ok', ic: 'route', html: '<b>Ronde de 01:00 terminée</b> : 6 étages, 0 anomalie', sub: 'Temi + 6 robots de ménage · 21 min' },
   { t: '00:47', k: 'warn', ic: 'door-open', html: '<b>Porte de service ouverte 3 min</b>', sub: 'Temi est allé voir : un client de l\'app. 204 sortait fumer. Alerte levée par Hery.' },
   { t: '00:05', k: 'warn', ic: 'cctv', html: '<b>CAM-É4 hors ligne</b>', sub: 'CLN-5E07 couvre le couloir de l\'É4 jusqu\'à la réparation' },
@@ -4242,7 +4239,7 @@ function vTick() {
       VIG_LOG.unshift({ t: vClock(), k: f.lvl, ic: id === 0 ? 'bot' : 'brush-cleaning', html: f.txt.replace(/^([^:]+:)/, '<b>$1</b>'), sub: '' });
       if (f.fix && VIG.alert && VIG.alert.floor === id && VIG.alert.state === 'open') {
         VIG.alert.state = 'resolved';
-        VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: 'sparkles', html: '<b>Ticket envoyé à GregAi</b> pour l\'équipe travaux : fermer la fenêtre de l\'app. 503', sub: 'Fausse alerte, aucune intrusion' });
+        VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: 'sparkles', html: '<b>Ticket envoyé à GregAi</b> pour l\'équipe ménage : fermer la fenêtre de la suite 503', sub: 'Fausse alerte, aucune intrusion' });
       }
     }
   });
@@ -4266,7 +4263,7 @@ function vRobotAt(id, which = 0) {
   const [x, y] = VIG.mode === 'jour' ? f.robot.at : f.robot.base || [4, 3];
   return { x, y, dir: 0 };
 }
-const vAlertOpen = id => VIG.alert && VIG.alert.floor === id && VIG.alert.state === 'open' && VIG.closed[id];
+const vAlertOpen = id => !!VIG.alert && VIG.alert.floor === id && VIG.alert.state === 'open';
 
 // Field of view on the plan: a fan from the camera, clipped to the room it looks into (Sutherland–Hodgman)
 function vFan(x, y, dir, fov, range, f) {
@@ -4284,10 +4281,10 @@ function vFan(x, y, dir, fov, range, f) {
   });
   return pts;
 }
-// Floor of an open storey in the Vigie view: hatching when the zone is closed, then the camera fields of view
+// Floor of an open storey in the Vigie view: the camera fields of view
 function vigFloorPlate(f, z0) {
   const z = z0 + 0.5, plate = (pts, attrs) => poly(pts.map(([x, y]) => P(x, y, z)), attrs);
-  let s = VIG.closed[f.id] ? plate([[0, 0], [W, 0], [W, D], [0, D]], 'fill="url(#vhatch3d)"') : '';
+  let s = '';
   CAMS.filter(c => c.floor === f.id).forEach(c => {
     const fan = vFan(c.x, c.y, c.dir, c.fov, c.range, f), motion = c.id === VIG.alert?.cam && vAlertOpen(f.id);
     s += c.off ? plate(fan, 'fill="none" stroke="#e5484d" stroke-width="1.2" stroke-dasharray="4 4" opacity=".7"')
@@ -4317,16 +4314,15 @@ function vigFloorItems(f, z0) {
   });
   if (vAlertOpen(f.id)) {
     const [cx, cy] = P(10, 1.2, z0);
-    items.push({ d: 11.2, svg: `<g><title>Mouvement détecté · app. 503</title><circle class="vig-pulse" cx="${cx}" cy="${cy - 11}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy - 11}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy - 6.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>` });
+    items.push({ d: 11.2, svg: `<g><title>Mouvement détecté · suite 503 inoccupée</title><circle class="vig-pulse" cx="${cx}" cy="${cy - 11}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy - 11}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy - 6.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>` });
   }
   return items;
 }
-// Closed storey in the Vigie view: hatching on the facade when the zone is closed, offline camera, live alert,
+// Closed storey in the Vigie view: offline camera, live alert,
 // robots on patrol as violet dots at their position along the floor
 function vigFacade(f, z0) {
   const z1 = z0 + H - 6, zm = (z0 + z1) / 2;
   let s = `<g class="floor" data-id="${f.id}">`;
-  if (VIG.closed[f.id]) s += poly(quad(0, D, W, D, z0, z1), 'fill="url(#vhatch3d)"') + poly(quad(W, 0, W, D, z0, z1), 'fill="url(#vhatch3d)"');
   CAMS.filter(c => c.floor === f.id && c.off).forEach(c => {
     const [cx, cy] = P(c.x + .6, D, zm);
     s += `<g><title>${c.id} hors ligne</title><circle cx="${cx}" cy="${cy}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2"/><g transform="translate(${cx - 6},${cy - 6}) scale(.5)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['video-off']}</g></g>`;
@@ -4337,7 +4333,7 @@ function vigFacade(f, z0) {
   });
   if (vAlertOpen(f.id)) {
     const [cx, cy] = P(10, D, zm);
-    s += `<g><title>Mouvement au ${f.id}ᵉ · zone fermée</title><circle class="vig-pulse" cx="${cx}" cy="${cy}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy + 4.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>`;
+    s += `<g><title>Mouvement au ${f.id}ᵉ · suite 503 inoccupée</title><circle class="vig-pulse" cx="${cx}" cy="${cy}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy + 4.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>`;
   }
   return s + '</g>';
 }
@@ -4345,7 +4341,7 @@ function vigFacade(f, z0) {
 // Same building as the main view: whole building closed, or the picked floor opened with the ones above as a ghost
 function renderVigBuilding() {
   const svg = document.getElementById('vig-iso'), view = VIG.sel, ordered = [...FLOORS].sort((a, b) => a.id - b.id);
-  let s = '<defs><pattern id="vhatch3d" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="9" fill="#f0a020" opacity=".4"/></pattern></defs>' + streetSvg();
+  let s = streetSvg();
   if (view === null) ordered.forEach(f => s += closedFloor(f, f.id * H, { progress: false }) + vigFacade(f, f.id * H));
   else {
     const sel = vFloor(view);
@@ -4372,7 +4368,7 @@ function renderVigFloors() {
   vAll().forEach(id => {
     const f = vFloor(id), cams = CAMS.filter(c => c.floor === id), alert = vAlertOpen(id), mine = vOnMission(id), sel = VIG.sel === id;
     const chip = alert ? '<span class="chip err">Mouvement</span>' : mine ? `<span class="chip acc">${icon('loader-circle', 12, { cls: 'spin' })}En ronde</span>`
-      : VIG.closed[id] ? '<span class="chip warn">Fermé</span>' : cams.some(c => c.off) ? '<span class="chip warn">Caméra HS</span>' : '<span class="chip ok">Calme</span>';
+      : cams.some(c => c.off) ? '<span class="chip warn">Caméra HS</span>' : '<span class="chip ok">Calme</span>';
     const acts = !sel ? '' : alert && !mine ? `<button class="btn primary" data-v="check">${icon('brush-cleaning', 14)}Envoyer ${f.robot.name} vérifier</button>`
       : mine ? '' : `<button class="btn" data-v="explore">${icon('eye', 14)}Envoyer ${vTeam(id).join(' et ')} explorer</button>`;
     h += `<div class="fl ${sel ? 'sel' : ''} ${alert ? 'trouble' : ''}" data-vfloor="${id}" role="button" tabindex="0">
@@ -4426,41 +4422,40 @@ function renderVigie() {
   vTick();
   const view = document.getElementById('view-vigie');
   if (view.hidden) return;
-  const night = VIG.mode !== 'jour', guard = VIG.mode === 'garde';
+  const night = VIG.mode !== 'jour';
   view.classList.toggle('night', night);
   document.body.classList.toggle('vig-night', night);
   const m = VIG.mission, running = m && !m.done, p = vProg();
-  const closedIds = vAll().filter(id => VIG.closed[id]);
   const camsOn = CAMS.filter(c => !c.off).length;
-  const alertOpen = VIG.alert && VIG.alert.state === 'open' && VIG.closed[VIG.alert.floor];
+  const alertOpen = VIG.alert && VIG.alert.state === 'open';
 
   setHTML('vig-head', `<div class="rf-top">
       <span class="vig-av">${icon(night ? 'moon' : 'shield', 26, { sw: 1.8 })}</span>
-      <div class="rf-id"><span class="mr-name"><b>Vigie</b>${guard ? '<span class="chip warn">Bâtiment fermé · travaux</span>' : night ? '<span class="chip acc">Nuit · garde active</span>' : '<span class="chip ok">Jour</span>'}</span>
-        <span class="sub">${guard ? 'Personne dans l\'immeuble : tout mouvement déclenche une alerte' : night ? 'Mode nuit de 23 h à 7 h · réception tenue à distance par Hery (Madagascar)' : 'Caméras et zones fermées seulement · les robots font le ménage'}</span></div>
+      <div class="rf-id"><span class="mr-name"><b>Vigie</b>${night ? '<span class="chip acc">Nuit · garde active</span>' : '<span class="chip ok">Jour</span>'}</span>
+        <span class="sub">${night ? 'Mode nuit de 23 h à 7 h · réception tenue à distance par Hery (Madagascar)' : 'Caméras en direct · les robots font le ménage'}</span></div>
       <div class="acts vig-mode">
         <span class="vig-clock">${vClock()}</span>
         ${running ? `<button class="btn" data-v="stop">${icon('x', 14)}Interrompre</button>` : `<button class="btn primary" data-v="ronde">${icon('route', 14)}Lancer une ronde</button>`}
-        <div class="seg">${[['jour', 'sun', 'Jour'], ['nuit', 'moon', 'Nuit'], ['garde', 'hard-hat', 'Garde travaux']].map(([k, ic, l]) => `<button data-vmode="${k}" class="${VIG.mode === k ? 'on' : ''}">${icon(ic, 13)}${l}</button>`).join('')}</div>
+        <div class="seg">${[['jour', 'sun', 'Jour'], ['nuit', 'moon', 'Nuit']].map(([k, ic, l]) => `<button data-vmode="${k}" class="${VIG.mode === k ? 'on' : ''}">${icon(ic, 13)}${l}</button>`).join('')}</div>
       </div>
     </div>
     <div class="kpis">${[
       ['Caméras en ligne', `${camsOn}/${CAMS.length}`, 'CAM-É4 relayée par CLN-5E07', camsOn / CAMS.length, '#22a861', 'cctv'],
       ['Robots en vigie', night ? '7/7' : running ? `${m.floors.flatMap(vTeam).length}/7` : '1/7', night ? 'Temi + 6 robots de ménage' : 'Temi, les autres font le ménage', night ? 1 : running ? m.floors.flatMap(vTeam).length / 7 : 1 / 7, '#8b5cf6', 'bot'],
-      ['Zones fermées', `${closedIds.length}`, guard ? 'tout le bâtiment' : closedIds.map(vLvl).join(', ') || 'aucune', closedIds.length / 6, '#f0a020', 'lock'],
+      ['Rondes cette nuit', '2/5', 'Prochaine à 03:00', 2 / 5, '#f0a020', 'route'],
       ['Alertes cette nuit', '3', `${alertOpen ? '1 en cours · ' : ''}${alertOpen ? 2 : 3} levées`, alertOpen ? 2 / 3 : 1, alertOpen ? '#e5484d' : '#1e3a8a', 'siren'],
     ].map(([l, v, sub, k, col, ic]) => `<div class="kpi kpi-ring">${ring(k, col, ic)}<div><small>${l}</small><b>${v}</b><span>${sub}</span></div></div>`).join('')}</div>`);
 
-  // Live alert: movement on a closed floor
+  // Live alert: movement in front of an unoccupied suite
   const al = document.getElementById('vig-alert');
-  const showAl = VIG.alert && VIG.closed[VIG.alert.floor] && VIG.alert.state !== 'dismissed';
+  const showAl = VIG.alert && VIG.alert.state !== 'dismissed';
   al.hidden = !showAl;
   al.classList.toggle('ok', !!showAl && VIG.alert.state === 'resolved');
   if (showAl) {
     const a = VIG.alert, r = vFloor(a.floor).robot.name;
     setHTML('vig-alert', a.state === 'resolved'
-      ? `${icon('check', 20, { sw: 2.6 })}<p><b>Fausse alerte levée.</b> ${r} est allé voir : un rideau de l'app. 503 bougeait, la fenêtre était restée ouverte. Ticket transmis à GregAi pour l'équipe travaux.</p><button class="btn" data-v="dismiss">OK</button>`
-      : `${icon('siren', 20)}<p><b>Mouvement au ${a.floor}ᵉ, zone fermée pour travaux.</b> ${a.cam} couloir · ${a.at}. Personne n'est censé s'y trouver.</p>
+      ? `${icon('check', 20, { sw: 2.6 })}<p><b>Fausse alerte levée.</b> ${r} est allé voir : un rideau de la suite 503 bougeait, la fenêtre était restée ouverte. Ticket transmis à GregAi pour l'équipe ménage.</p><button class="btn" data-v="dismiss">OK</button>`
+      : `${icon('siren', 20)}<p><b>Mouvement au ${a.floor}ᵉ, devant la suite 503.</b> ${a.cam} couloir · ${a.at}. La suite est inoccupée, personne n'est censé s'y trouver.</p>
          ${running && m.floors.includes(a.floor) ? `<span class="chip" style="background:#fff;color:#b42318">${icon('loader-circle', 14, { cls: 'spin' })}${r} en route</span>` : `<button class="btn" data-v="check">${icon('brush-cleaning', 15)}Envoyer ${r} vérifier</button>`}
          <button class="btn ghost" data-v="cam">Voir la caméra</button><button class="btn ghost" data-v="dismiss">Lever l'alerte</button>`);
   }
@@ -4477,7 +4472,7 @@ function renderVigie() {
       <ul class="vig-team">${team.map(([id, n]) => {
         const temi = n.startsWith('TEMI'), done = m.found.includes(id) || m.done;
         return `<li><span class="rb-ic" style="background:${temi ? 'var(--accueil)' : 'var(--menage)'}">${icon(temi ? 'bot' : 'brush-cleaning', 15)}</span>
-          <div><b>${n}</b><small>${vLvl(id)}${VIG.closed[id] ? ' · zone fermée' : ''}${id === 4 ? ' · remplace CAM-É4' : ''}</small></div>
+          <div><b>${n}</b><small>${vLvl(id)}${id === 4 ? ' · remplace CAM-É4' : ''}</small></div>
           ${done ? '<span class="chip ok">Fait</span>' : `<span class="chip acc">${temi ? 'Ronde' : 'Explore'}</span>`}</li>`; }).join('')}</ul>
       ${m.found.length ? `<ul class="vig-find">${m.found.map(id => VIG_FIND[id]).map(f => `<li>${icon(f.lvl === 'warn' ? 'triangle-alert' : 'check', 13, { color: f.lvl === 'warn' ? '#f0a020' : '#22a861', sw: 2.6 })}<span>${f.txt}</span></li>`).join('')}</ul>` : ''}
       ${running ? '' : '<div class="acts"><button class="btn" data-v="clear">Fermer</button></div>'}`
@@ -4510,7 +4505,7 @@ function renderVigie() {
     const isMotion = motion && t.id === VIG.alert.cam;
     const found = t.id === vFloor(5).robot.name && m && m.found.includes(5);
     const chip = off ? '<span class="chip err">Hors ligne</span>' : isMotion ? '<span class="chip err">Mouvement</span>' : found ? '<span class="chip warn">Photo prise</span>'
-      : onMission ? '<span class="chip acc">En ronde</span>' : robotIdle ? `<span class="chip idle" style="color:#fff">${night ? 'À sa base' : 'En ménage'}</span>` : VIG.closed[t.floor] ? '<span class="chip warn">Zone fermée</span>' : '<span class="chip ok">En ligne</span>';
+      : onMission ? '<span class="chip acc">En ronde</span>' : robotIdle ? `<span class="chip idle" style="color:#fff">${night ? 'À sa base' : 'En ménage'}</span>` : '<span class="chip ok">En ligne</span>';
     return `<div class="cam-t ${isMotion ? 'motion' : ''} ${onMission ? 'mine' : ''} ${off ? 'off' : ''}" data-cam="${t.id}" ${t.id === 'CAM-É5' ? 'id="vig-cam-e5"' : ''}>
       ${vCamScene(t.kind, { night, low: t.low, robot: t.robot })}${vCamOverlay({ motion: isMotion, found })}
       <span class="lb">${t.id}<small>${t.name || c.name}</small></span>
@@ -4540,7 +4535,7 @@ function renderVigie() {
 
   const now = vClock();
   setHTML('vig-sched-sub', night ? '23 h – 7 h' : 'cette nuit');
-  setHTML('vig-sched', [['23:30', 'Ronde complète'], ['01:00', 'Ronde complète'], ['03:00', 'Ronde complète'], ['05:00', 'Ronde + zones fermées'], ['06:45', 'Fin de garde, retour au ménage']].map(([t, l]) => {
+  setHTML('vig-sched', [['23:30', 'Ronde complète'], ['01:00', 'Ronde complète'], ['03:00', 'Ronde complète'], ['05:00', 'Ronde complète'], ['06:45', 'Fin de garde, retour au ménage']].map(([t, l]) => {
     const past = night && (t > '12:00' || t <= now);
     const next = night && !past && !(t > '12:00') && t > now && t === ['01:00', '03:00', '05:00', '06:45'].find(x => x > now);
     return `<li><time>${t}</time><span>${l}</span>${past ? '<span class="chip ok">Faite</span>' : next ? '<span class="chip acc">Suivante</span>' : '<span class="chip idle">Prévue</span>'}</li>`;
@@ -4565,7 +4560,7 @@ function vigCamPop(mk) {
   Object.entries(clipEls).forEach(([k, v]) => { if (k.startsWith('vigpop:') && k !== 'vigpop:' + (mk && mk.dataset.cam)) { v.pause(); v.remove(); } });
   if (!mk) { pop.hidden = true; return; }
   const c = CAMS.find(x => x.id === mk.dataset.cam), night = VIG.mode !== 'jour', motion = c.id === VIG.alert?.cam && !!vAlertOpen(c.floor);
-  const chip = c.off ? '<span class="chip err">Hors ligne</span>' : motion ? '<span class="chip err">Mouvement</span>' : VIG.closed[c.floor] ? '<span class="chip warn">Zone fermée</span>' : '<span class="chip ok">En direct</span>';
+  const chip = c.off ? '<span class="chip err">Hors ligne</span>' : motion ? '<span class="chip err">Mouvement</span>' : '<span class="chip ok">En direct</span>';
   pop.innerHTML = `<div class="cam-t ${c.off ? 'off' : ''} ${motion ? 'motion' : ''}">${vCamScene(c.kind, { night })}${vCamOverlay({ motion })}
     <span class="lb">${c.id}<small>${c.name} · ${vLvl(c.floor)}</small></span>${c.off ? '' : `<span class="rec"><i></i>${vClock()}</span>`}<span class="ft">${chip}</span></div>`;
   const b = mk.querySelector('circle').getBoundingClientRect(), o = pop.parentElement.getBoundingClientRect();
@@ -4590,10 +4585,8 @@ document.getElementById('view-vigie').addEventListener('click', e => {
   if (!el) return;
   const d = el.dataset;
   if (d.vmode) {
-    if (d.vmode === 'garde' && VIG.mode !== 'garde') { VIG.saved = { ...VIG.closed }; vAll().forEach(id => VIG.closed[id] = 'Bâtiment fermé pour travaux'); }
-    if (d.vmode !== 'garde' && VIG.mode === 'garde') VIG.closed = VIG.saved || {};
     VIG.mode = d.vmode;
-    VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: d.vmode === 'jour' ? 'sun' : d.vmode === 'nuit' ? 'moon' : 'hard-hat', html: `<b>${d.vmode === 'jour' ? 'Mode jour' : d.vmode === 'nuit' ? 'Mode nuit activé' : 'Garde travaux activée'}</b>`, sub: 'Par Michael depuis Loop' });
+    VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: d.vmode === 'jour' ? 'sun' : 'moon', html: `<b>${d.vmode === 'jour' ? 'Mode jour' : 'Mode nuit activé'}</b>`, sub: 'Par Michael depuis Loop' });
   }
   else if (d.vfloor !== undefined) VIG.sel = d.vfloor === 'all' ? null : +d.vfloor;
   else if (d.v === 'ronde') vStartMission('ronde', vAll());
