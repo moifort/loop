@@ -174,15 +174,15 @@
 
   /* First item of the floor list, stretched to full width above the building */
   #all-row { margin-bottom: 8px; }
-  #all-row .fl:not(.sel), #vig-floors .fl.all:not(.sel) { background: var(--panel); border-color: var(--border); box-shadow: 0 1px 2px rgba(31,35,40,.06); }
-  #vig-floors .fl.all { margin-bottom: 8px; }
+  #all-row .fl:not(.sel), #vig-all .fl:not(.sel) { background: var(--panel); border-color: var(--border); box-shadow: 0 1px 2px rgba(31,35,40,.06); }
+  #vig-all { margin-bottom: 8px; }
   /* Floors live in one card so each row is anchored, separated by hairlines */
-  #floors { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; gap: 0; overflow: hidden; }
+  #floors, #vig-floors { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; gap: 0; overflow: hidden; }
   /* Rows span the full card width: pressed state is a flat full-bleed band, no rounded corners */
-  #floors .fl { position: relative; border-radius: 0; border-width: 0; padding: 11px 13px 16px; }
-  #floors .fl:hover:not(.sel) { background: var(--panel-2); border-color: transparent; }
-  #floors .fl + .fl::before { content: ''; position: absolute; left: 12px; right: 12px; top: -1px; height: 1px; background: var(--border); }
-  #floors .fl.sel::before, #floors .fl.sel + .fl::before { display: none; }
+  #floors .fl, #vig-floors .fl { position: relative; border-radius: 0; border-width: 0; padding: 11px 13px 16px; }
+  #floors .fl:hover:not(.sel), #vig-floors .fl:hover:not(.sel) { background: var(--panel-2); border-color: transparent; }
+  #floors .fl + .fl::before, #vig-floors .fl + .fl::before { content: ''; position: absolute; left: 12px; right: 12px; top: -1px; height: 1px; background: var(--border); }
+  #floors .fl.sel::before, #floors .fl.sel + .fl::before, #vig-floors .fl.sel::before, #vig-floors .fl.sel + .fl::before { display: none; }
   /* No level column on the whole-building row: more room for issues */
   .fl.all .r1 { grid-template-columns: 1fr auto; }
   .fl.all .r2 { grid-template-columns: 1fr; }
@@ -410,8 +410,8 @@
   body.alarm #temi-card .btn.panic { background: #fff; border-color: #fff; color: #b42318; }
   body.alarm #temi-card .btn.panic:hover { background: #fdecec; }
   .fl.trouble, #floors .fl.trouble:hover:not(.sel), .fl.trouble.sel { background: var(--red); border-color: var(--red); color: #fff; }
-  #floors .fl.trouble, #floors .fl.trouble::before, #floors .fl.trouble + .fl::before { border-radius: 0; }
-  #floors .fl.trouble::before, #floors .fl.trouble + .fl::before { display: none; }
+  #floors .fl.trouble, #floors .fl.trouble::before, #floors .fl.trouble + .fl::before, #vig-floors .fl.trouble { border-radius: 0; }
+  #floors .fl.trouble::before, #floors .fl.trouble + .fl::before, #vig-floors .fl.trouble::before, #vig-floors .fl.trouble + .fl::before { display: none; }
   .fl.trouble .nm small, .fl.trouble .m .lb, .fl.trouble .m .lb b { color: #fff; }
   .fl.trouble .lv { background: rgba(0,0,0,.28); }
   .fl.trouble .chip { background: #fff; color: #b42318; }
@@ -749,7 +749,6 @@
   @keyframes vig-alert { 50% { box-shadow: 0 0 0 7px rgba(229,72,77,.18); } }
   /* Section plan */
   .vig-stage > .floors { gap: 16px; }
-  .vig-stage .bld .legend { justify-content: center; }
   .vig-stage .bld { position: relative; }
   #vig-iso .cam-mk { cursor: zoom-in; }
   /* Live feed of the hovered camera, above its marker */
@@ -768,16 +767,6 @@
   .vig-pulse { transform-box: fill-box; transform-origin: center; animation: vig-pulse 1.3s ease-out infinite; }
   @keyframes vig-pulse { from { transform: scale(.6); opacity: .9; } to { transform: scale(2.4); opacity: 0; } }
   /* Mission */
-  .vig-mis { padding: 4px 16px 14px; display: flex; flex-direction: column; gap: 10px; }
-  .vig-mis .acts { display: flex; gap: 8px; flex-wrap: wrap; }
-  .vig-mis .hint { color: var(--muted); font-size: 12px; line-height: 1.45; }
-  .vig-team { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .vig-team li { display: grid; grid-template-columns: 28px 1fr auto; gap: 8px; align-items: center; }
-  .vig-team .rb-ic { width: 28px; height: 28px; border-radius: 8px; }
-  .vig-team small { display: block; color: var(--muted); font-size: 11px; }
-  .vig-find { list-style: none; display: flex; flex-direction: column; gap: 6px; border-top: 1px solid var(--border); padding-top: 10px; }
-  .vig-find li { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; line-height: 1.45; }
-  .vig-find li svg { flex: none; margin-top: 2px; }
   /* Camera wall */
   .cams { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 4px 16px 16px; }
   @container (max-width: 1000px) { .cams { grid-template-columns: repeat(2, 1fr); } }
@@ -1312,19 +1301,11 @@
   <!-- Same stage as the building view: floor list on the left (filters the plan and the feeds), 3D building on the right -->
   <div class="stage vig-stage">
     <div class="floors">
-      <div id="vig-floors" class="floors"></div>
-      <div class="card">
-        <div class="card-h"><h3>Mission</h3><div class="right" id="vig-mis-state"></div></div>
-        <div class="vig-mis" id="vig-mis"></div>
-      </div>
+      <div><div id="vig-all"></div><div id="vig-floors" class="floors"></div></div>
     </div>
     <div class="bld">
       <svg id="vig-iso" viewBox="30 24 532 632"></svg>
       <div class="cam-pop" id="vig-pop" hidden></div>
-      <div class="legend">
-        <span><i class="sw" style="background:#22a861;opacity:.5"></i>Champ des caméras</span>
-        <span><i class="sw" style="background:#8b5cf6"></i>Robot en mission</span>
-      </div>
     </div>
   </div>
 
@@ -4358,9 +4339,11 @@ function renderVigFloors() {
     ...off.map(c => `<span class="issue" data-vfloor="${c.floor}">${BELL('#f0a020')}<span class="txt">${c.id} hors ligne</span><span class="tags"><span class="tag-lvl">${vLvl(c.floor)}</span></span></span>`),
   ].filter(Boolean);
   let h = `<div class="fl all ${VIG.sel === null ? 'sel' : ''}" data-vfloor="all" role="button" tabindex="0">
-      <div class="r1"><span class="nm">Tout le bâtiment</span>${open !== undefined ? '<span class="chip err">Alerte en cours</span>' : running ? '<span class="chip acc">Ronde en cours</span>' : '<span class="chip ok">Tout est calme</span>'}</div>
+      <div class="r1"><span class="nm">Tout le bâtiment</span>${open !== undefined ? '<span class="chip err">Alerte en cours</span>' : running ? `<span class="chip acc">${icon('loader-circle', 12, { cls: 'spin' })}${VIG.mission.kind === 'ronde' ? 'Ronde' : 'Exploration'} · ${Math.round(vProg() * 100)} %</span>` : '<span class="chip ok">Tout est calme</span>'}</div>
       <div class="vig-meta"><span>${icon('cctv', 13)}${camsOn}/${CAMS.length} caméras</span><span>${icon('bot', 13)}7 robots</span></div>
       ${issues.length ? `<div class="issues">${issues.join('')}</div>` : ''}</div>`;
+  setHTML('vig-all', h);
+  h = '';
   vAll().forEach(id => {
     const f = vFloor(id), cams = CAMS.filter(c => c.floor === id), alert = vAlertOpen(id), mine = vOnMission(id), sel = VIG.sel === id;
     const chip = alert ? '<span class="chip err">Mouvement</span>' : mine ? `<span class="chip acc">${icon('loader-circle', 12, { cls: 'spin' })}En ronde</span>`
@@ -4458,22 +4441,6 @@ function renderVigie() {
 
   renderVigFloors();
   renderVigBuilding();
-
-  // Mission card
-  setHTML('vig-mis-state', running ? `<span class="chip acc">${icon('loader-circle', 14, { cls: 'spin' })}${Math.round(p * 100)} %</span>` : m ? '<span class="chip ok">Terminée</span>' : '<span class="chip idle">Aucune</span>');
-  const team = m ? m.floors.flatMap(id => vTeam(id).map(n => [id, n])) : [];
-  setHTML('vig-mis', m ? `
-      <div><b>${m.kind === 'ronde' ? 'Ronde complète' : `Exploration de l'${vLvl(m.floors[0])}`}</b>
-        <div class="mb" style="margin-top:6px"><i style="width:${(p * 100).toFixed(1)}%;background:#8b5cf6"></i></div></div>
-      <ul class="vig-team">${team.map(([id, n]) => {
-        const temi = n.startsWith('TEMI'), done = m.found.includes(id) || m.done;
-        return `<li><span class="rb-ic" style="background:${temi ? 'var(--accueil)' : 'var(--menage)'}">${icon(temi ? 'bot' : 'brush-cleaning', 15)}</span>
-          <div><b>${n}</b><small>${vLvl(id)}${id === 4 ? ' · remplace CAM-É4' : ''}</small></div>
-          ${done ? '<span class="chip ok">Fait</span>' : `<span class="chip acc">${temi ? 'Ronde' : 'Explore'}</span>`}</li>`; }).join('')}</ul>
-      ${m.found.length ? `<ul class="vig-find">${m.found.map(id => VIG_FIND[id]).map(f => `<li>${icon(f.lvl === 'warn' ? 'triangle-alert' : 'check', 13, { color: f.lvl === 'warn' ? '#f0a020' : '#22a861', sw: 2.6 })}<span>${f.txt}</span></li>`).join('')}</ul>` : ''}
-      ${running ? '' : '<div class="acts"><button class="btn" data-v="clear">Fermer</button></div>'}`
-    : `<p class="hint">Les robots quittent leur base, parcourent les couloirs caméra allumée et rentrent seuls. Temi couvre le hall et la porte de service.</p>
-      <p class="hint">${VIG.sel === null ? 'Choisissez un étage dans la liste ou sur le plan pour y envoyer son robot en exploration.' : `Le bouton de l'${vLvl(VIG.sel)} envoie ${vTeam(VIG.sel).join(' et ')} explorer${VIG.mode === 'jour' ? ' ; le ménage reprend juste après' : ''}.`}</p>`);
 
   // Camera wall: fixed cameras + the robots' own cameras, filtered by the floor picked in the list or on the plan
   const motion = alertOpen && VIG.alert.state === 'open';
@@ -4589,7 +4556,6 @@ document.getElementById('view-vigie').addEventListener('click', e => {
   else if (d.v === 'explore') vStartMission('explore', [VIG.sel]);
   else if (d.v === 'check') { VIG.sel = VIG.alert.floor; vStartMission('explore', [VIG.alert.floor]); }
   else if (d.v === 'stop') { VIG.mission.done = true; VIG_LOG.unshift({ t: vClock(), k: 'warn', ic: 'x', html: '<b>Mission interrompue</b>', sub: 'Robots rappelés à leur base' }); }
-  else if (d.v === 'clear') VIG.mission = null;
   else if (d.v === 'dismiss') VIG.alert.state = 'dismissed';
   else if (d.v === 'cam') { document.getElementById('vig-cam-e5')?.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   renderVigie();
