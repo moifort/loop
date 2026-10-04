@@ -312,9 +312,10 @@
   .conn.more { color: var(--muted); font-weight: 500; }
   /* ============ 10 · Reliability ============ */
   .rel { position: absolute; inset: 0; display: grid; grid-template-columns: 1.35fr 1fr; }
-  .rel .col { display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: 0 72px 0 96px; }
+  /* Both columns start at the same height so their titles line up */
+  .rel .col { display: flex; flex-direction: column; gap: 22px; padding: 138px 72px 0 96px; }
   .rel .col:first-child { background: #eef3ff; }
-  .rel .col:last-child { padding: 0 96px 0 72px; }
+  .rel .col:last-child { padding: 138px 96px 0 72px; }
   .rel h2 { font-size: 44px; letter-spacing: -.035em; line-height: 1.08; }
   .rel .lead { font-size: 22px; }
   .dg .win-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; min-height: 430px; }
