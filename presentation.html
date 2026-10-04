@@ -440,7 +440,7 @@
   .full .s-foot { display: none; }
   .strips { position: absolute; inset: 0; display: grid; grid-template-rows: repeat(5, 1fr); }
   .strip { display: grid; grid-template-columns: 520px 440px 1fr 230px 150px; align-items: center; gap: 40px; padding-right: 96px; background: var(--tint); border-bottom: 1px solid rgba(18,19,26,.06); overflow: hidden; }
-  .simg { height: 216px; display: flex; align-items: flex-end; justify-content: center; gap: 0; padding: 14px 40px 0; }
+  .simg { height: 214px; display: flex; align-items: flex-end; justify-content: center; gap: 0; padding: 14px 40px 12px; }
   .simg img { height: 100%; min-width: 0; max-width: 100%; object-fit: contain; object-position: bottom; mix-blend-mode: multiply; }
   .simg.duo img { max-width: 50%; }
   .simg.duo img + img { height: 55%; }
@@ -953,12 +953,11 @@
         <div class="kstep" id="ks3"><span class="n">3</span><div><span class="t">13:36</span><h5>Retour seul à la bagagerie</h5><p>Prêt pour le client suivant.</p></div></div>
       </div>
     </div>
-    <div class="app-shot rise" style="--d:.2s">
+    <div class="app-shot rise" style="--d:.2s;height:620px;align-self:center">
       <div class="win">
-        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Saint-Georges</span></div>
-        <iframe class="app" data-src="building-overview.html" title="Maquette Loop" tabindex="-1"></iframe>
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Saint-Georges / KILO-3B8D</span></div>
+        <iframe class="app" data-w="470" data-src="building-overview.html?embed=kilo" title="Maquette Loop · chariot à bagages" tabindex="-1"></iframe>
       </div>
-      
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -1555,8 +1554,9 @@ const SCENES = {
         at(ms, () => { const el = q(sel); if (el) { c.classList.add('on'); pointInFrame(c, f, el); } });
         at(ms + 1000, () => { const el = q(sel); if (el) { click(c); el.click(); } });
       };
-      press('#view-greg [data-g="pause"]', 800);
-      press('#deg-btn', 3200);
+      // GregAi is already paused when the scene starts: the cursor only opens the degraded mode, then resumes
+      at(300, () => q('#view-greg [data-g="pause"]')?.click());
+      press('#deg-btn', 1800);
       press('#greg-down [data-g="resume"]', 9000);
       at(10600, () => c.classList.remove('on'));
     },

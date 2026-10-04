@@ -993,6 +993,15 @@
   .sw-t.on::after { transform: translateX(14px); }
   .sw-t:disabled { opacity: .55; cursor: not-allowed; }
   @container (max-width: 800px) { .chain { grid-template-columns: 1fr 1fr; gap: 16px 0; } .chain-step::after { display: none; } .greg-conn { grid-template-columns: 1fr 1fr; gap: 10px 0; } .gev { grid-template-columns: 44px 1fr auto; } .gev .dir { display: none; } }
+
+  /* Embedded in the deck (?embed=kilo): only the luggage cart card, live */
+  body.embed-kilo { display: block; background: var(--bg); }
+  body.embed-kilo > :not(main) { display: none !important; }
+  body.embed-kilo main { padding: 16px; overflow: hidden; }
+  body.embed-kilo #view-building > :not(.below) { display: none; }
+  body.embed-kilo .below { display: block !important; height: auto !important; }
+  body.embed-kilo .below > :not(#kilo-card) { display: none !important; }
+  body.embed-kilo #kilo-card { display: flex !important; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -1423,6 +1432,8 @@
 </main>
 
 <script>
+// Deck embeds show a single card: ?embed=kilo
+if (new URLSearchParams(location.search).get('embed') === 'kilo') document.body.classList.add('embed-kilo');
 // Icons: Lucide (lucide.dev, ISC licence), path data copied from lucide-static so the mockup works offline.
 const LUCIDE = {
   'clock': '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
