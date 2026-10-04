@@ -56,10 +56,9 @@
   .feat { position: absolute; inset: 0; z-index: 0; display: grid; grid-template-columns: var(--txt, 800px) 1fr; align-items: center; }
   .feat::before { content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; right: 0; left: var(--txt, 800px); background: var(--tint, var(--loop-50)); }
   .feat > :last-child { margin: 0 64px; }
-  .feat > .txt:last-child { margin: 0; max-width: 1340px; }
   .feat .txt { display: flex; flex-direction: column; gap: 28px; padding: 0 56px 0 96px; }
   .feat h1 { font-size: 58px; }
-  [data-scene="accueil"], [data-scene="panic"], [data-scene="step1"] { --tint: #eef1fa; --c: var(--navy); }
+  [data-scene="accueil"], [data-scene="panic"] { --tint: #eef1fa; --c: var(--navy); }
   [data-scene="vigie"] { --tint: #151a33; --c: #3d4699; }
   [data-scene="kilo"] { --tint: #f3effd; --c: var(--violet); }
   [data-scene="menage"] { --tint: #e9f6fd; --c: var(--sky); }
@@ -405,7 +404,7 @@
   .keep .kh small { font-size: 17px; color: var(--muted); }
   .keep .price { margin-left: auto; font-size: 20px; font-weight: 800; white-space: nowrap; }
   .keep .specs { font-size: 18px; color: var(--muted); }
-  .keep h6, .alts h6, .inout h6 { font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
+  .keep h6, .alts h6 { font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 6px; }
   .seen { list-style: none; display: flex; flex-direction: column; gap: 8px; }
   .seen li { position: relative; padding-left: 30px; font-size: 20px; line-height: 1.4; color: var(--ink-2); }
   .seen li::before { position: absolute; left: 0; top: 0; font-weight: 800; }
@@ -454,9 +453,6 @@
   .opt .seen li { font-size: 23px; padding: 14px 0 14px 34px; border-top: 1px solid rgba(18,19,26,.1); }
   .opt .seen li::before { top: 14px; }
 
-  .inout { display: grid; grid-template-columns: 1fr 220px; gap: 24px; }
-  .inout .does li { font-size: 20px; }
-  .inout .out p { font-size: 19px; color: var(--muted); line-height: 1.4; margin-top: 6px; }
 
   /* ---------- Deck controls ---------- */
   /* Real footage (Pexels, free licence) looping over an illustrated fallback that stays visible offline */
@@ -1067,22 +1063,6 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<section class="slide" data-scene="step1">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Option 2 · étape 1</div></div>
-  <div class="feat" style="--txt:100%">
-    <div class="txt">
-      <span class="eyebrow rise"><span class="p">Étape 1</span>Accueil</span>
-      <h1 class="rise" style="--d:.1s">Temi,<br><em>version de base.</em></h1>
-      <div class="need rise" style="--d:.2s"><small>Avant de coder</small><p>Interviews à Saint-Georges : réceptionniste, agents d'entretien, maintenance, équipe de Madagascar. On part de leur journée, pas de la techno.</p></div>
-      <div class="inout rise" style="--d:.3s">
-        <div><h6>Dedans</h6><ul class="does"><li>Check-in : Temi accueille et donne le code.</li><li>Check-out : Temi note le départ.</li><li>Bouton panique.</li></ul></div>
-        <div class="out"><h6>Pas encore</h6><p>Vue 3D, chariot, ménage, Greg.</p><h6 style="margin-top:14px">Ensuite</h6><p>Téléopération simple depuis Madagascar.</p></div>
-      </div>
-    </div>
-  </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
-</section>
-
 </div>
 
 <div class="ctrl"><i id="progress"></i></div>
@@ -1368,7 +1348,6 @@ const SCENES = {
   soft: {},
   pick: {},
   roadmap: {},
-  step1: {},
 };
 
 go(Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1)));
