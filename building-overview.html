@@ -2942,6 +2942,7 @@ function showView(v) {
   // Connectors are set up for the whole group: no building in the breadcrumb, full-height layout
   document.body.classList.toggle('conn-view', v === 'greg');
   document.querySelectorAll('.top [data-site]').forEach(el => el.hidden = v === 'greg');
+  renderGregNav(); // the degraded-mode strip offers a way to the connectors from every other view
   if (v === 'accueil') renderAccueil(); else if (v === 'greg') renderConnectors(); else if (v === 'vigie') renderVigie(); else renderAll();
 }
 document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
@@ -3594,17 +3595,48 @@ function gPayload(e) {
 
 // Outage spans in sim hours, the ongoing one included
 const gregOutSpans = () => GREG.outs.map(o => [o.a, o.b]).concat(GREG.downAt ? [[simH(GREG.downAt), simH(Date.now())]] : []);
+// What stops working while a connector is paused, shown in the degraded-mode strip
+const CONN_IMPACT = {
+  mews: 'Les arrivées et départs ne remontent plus : pas de ménage lancé au départ, pas de Kilo à l\'arrivée.',
+  salto: 'Plus de badges pour les robots ni de codes générés pendant une visio.',
+  whatsapp: 'L\'équipe sur place ne reçoit plus les alertes.',
+  cams: 'La Vigie ne reçoit plus les mouvements détectés par les caméras.',
+  otis: 'Les robots ne peuvent plus appeler l\'ascenseur.',
+};
+// Degraded mode: GregAi lost or paused, or any other connector paused. The strip runs on every view.
 function renderGregNav() {
-  document.getElementById('greg-nav-dot').dataset.state = GREG.state;
-  const down = GREG.state === 'down', el = document.getElementById('greg-down');
-  document.body.classList.toggle('greg-lost', down);
-  el.hidden = !down;
-  if (!down) return;
-  const q = GEVENTS.filter(e => e.status === 'queued').length, next = Math.max(1, Math.ceil((GREG.nextTry - Date.now()) / 1000));
-  setHTML('greg-down', `${icon('plug', 18)}
-    <p><b>GregAi déconnecté · mode dégradé.</b> Les robots continuent seuls, les commandes de Greg sont suspendues, ${q} événement${q > 1 ? 's' : ''} en file. Nouvel essai dans ${next} s (tentative ${GREG.tries}).</p>
-    <button class="btn" data-g="reconnect">${icon('refresh-cw', 14)}Réessayer maintenant</button>
-    ${document.getElementById('view-greg').hidden ? '<button class="btn ghost" data-g="open">Voir GregAi <span aria-hidden="true">→</span></button>' : ''}`);
+  const others = typeof CONNS === 'undefined' ? [] : CONNS.filter(c => c.id !== 'greg' && c.state === 'paused');
+  const gs = GREG.state, degraded = gs !== 'ok' || others.length > 0;
+  document.getElementById('greg-nav-dot').dataset.state = gs === 'down' ? 'down' : degraded ? 'paused' : 'ok';
+  const el = document.getElementById('greg-down');
+  document.body.classList.toggle('greg-lost', degraded);
+  el.hidden = !degraded;
+  if (!degraded) return;
+  const q = GEVENTS.filter(e => e.status === 'queued').length, qs = `${q} événement${q > 1 ? 's' : ''} en file`;
+  const open = document.getElementById('view-greg').hidden ? '<button class="btn ghost" data-g="open">Voir les connecteurs <span aria-hidden="true">→</span></button>' : '';
+  const more = n => n > 0 ? ` · ${n} autre${n > 1 ? 's' : ''} connecteur${n > 1 ? 's' : ''} en pause` : '';
+  if (gs === 'down') {
+    const next = Math.max(1, Math.ceil((GREG.nextTry - Date.now()) / 1000));
+    setHTML('greg-down', `${icon('plug', 18)}
+    <p><b>GregAi déconnecté · mode dégradé.</b> Les robots continuent seuls, les commandes de Greg sont suspendues, ${qs}. Nouvel essai dans ${next} s (tentative ${GREG.tries})${more(others.length)}.</p>
+    <button class="btn" data-g="reconnect">${icon('refresh-cw', 14)}Réessayer maintenant</button>${open}`);
+  } else if (gs === 'paused') {
+    setHTML('greg-down', `${icon('pause', 18)}
+    <p><b>GregAi en pause · mode dégradé.</b> Synchro arrêtée par Michael depuis ${since(GREG.pausedAt)}. Les robots continuent seuls, les commandes de Greg sont suspendues, ${qs}${more(others.length)}.</p>
+    <button class="btn" data-g="resume">${icon('play', 14)}Reprendre et rejouer ${q}</button>${open}`);
+  } else {
+    const c = others[0];
+    setHTML('greg-down', `${icon('pause', 18)}
+    <p><b>${c.name} en pause · mode dégradé.</b> ${CONN_IMPACT[c.id] || `Les données de ${c.name} ne sont plus à jour dans Loop.`}${more(others.length - 1)}</p>
+    <button class="btn" data-cresume="${c.id}">${icon('play', 14)}Reprendre ${c.name}</button>${open}`);
+  }
+}
+// Resume a paused GregAi: queued events are replayed in order, oldest first
+function gregResume() {
+  if (GREG.state !== 'paused') return;
+  GREG.pauses.push([simH(GREG.pausedAt), simH(Date.now())]);
+  GREG.state = 'ok'; GREG.pausedAt = null;
+  GEVENTS.filter(x => x.status === 'queued').reverse().forEach(x => { x.status = 'replayed'; GREG.sent++; });
 }
 
 function renderGreg() {
@@ -3762,9 +3794,20 @@ setInterval(() => {
   if (Date.now() >= GREG.nextTry) { GREG.tries++; GREG.nextTry = Date.now() + 5000; }
   renderGreg();
 }, 1000);
+// The strip's "since" counter ticks on every view
+setInterval(() => document.querySelectorAll('#greg-down [data-since]').forEach(s => s.textContent = dur(Date.now() - +s.dataset.since)), 1000);
 document.getElementById('greg-down').addEventListener('click', e => {
-  const g = e.target.closest('[data-g]')?.dataset.g;
-  if (g === 'reconnect') gregUp(); else if (g === 'open') showView('greg');
+  const g = e.target.closest('[data-g]')?.dataset.g, cr = e.target.closest('[data-cresume]')?.dataset.cresume;
+  if (g === 'reconnect') gregUp();
+  else if (g === 'resume') { gregResume(); renderGreg(); }
+  else if (g === 'open') showView('greg');
+  else if (cr) {
+    const c = CONNS.find(x => x.id === cr);
+    c.state = c.id === 'cams' ? 'warn' : 'ok';
+    c.events.unshift({ ...cev(0, 'act', 'connector.resumed', `Synchro avec ${c.name} reprise, rattrapage terminé.`, c.sites[0]), at: Date.now() });
+    renderGregNav();
+    if (!document.getElementById('view-greg').hidden) renderConnectors();
+  }
 });
 setInterval(() => { if (!document.getElementById('view-greg').hidden) document.querySelectorAll('#view-greg [data-since]').forEach(s => s.textContent = dur(Date.now() - +s.dataset.since)); }, 1000);
 
@@ -3775,12 +3818,7 @@ document.getElementById('view-greg').addEventListener('click', e => {
   const d = el.dataset;
   if (d.g === 'reconnect') gregUp();
   else if (d.g === 'pause') { GREG.state = 'paused'; GREG.pausedAt = Date.now(); }
-  else if (d.g === 'resume') {
-    GREG.pauses.push([simH(GREG.pausedAt), simH(Date.now())]);
-    GREG.state = 'ok'; GREG.pausedAt = null;
-    // Replay in order, oldest first
-    GEVENTS.filter(x => x.status === 'queued').reverse().forEach(x => { x.status = 'replayed'; GREG.sent++; });
-  }
+  else if (d.g === 'resume') gregResume();
   else if (d.g === 'ping') {
     const b = el; b.disabled = true; b.innerHTML = `${icon('loader-circle', 14, { cls: 'spin' })}Test en cours…`;
     setTimeout(() => { GREG.ms = Math.round(110 + Math.random() * 40); b.dataset.html = ''; renderGreg(); const nb = document.querySelector('#greg-head [data-g="ping"]'); if (nb) nb.innerHTML = `${icon('check', 14, { color: '#22a861', sw: 2.6 })}Greg répond en ${GREG.ms} ms`; document.getElementById('greg-head').dataset.html = ''; }, 900);
@@ -3910,6 +3948,7 @@ function renderConnectors() {
   document.getElementById('conn-greg').hidden = other;
   document.getElementById('conn-other').hidden = !other;
   setHTML('crumb-sub', connSel().name);
+  renderGregNav();
   renderConnList();
   if (other) renderConn(); else renderGreg();
 }
