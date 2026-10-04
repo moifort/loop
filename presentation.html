@@ -413,7 +413,6 @@
   .divider p { position: absolute; left: 100px; top: 690px; font-size: 32px; color: #dce6ff; }
 
   /* ============ Part 1 · Robots ============ */
-  .rsum { position: absolute; inset: 140px 96px 96px; display: flex; flex-direction: column; gap: 28px; }
 
   /* Transition: a robot is nothing without software */
   .soft { position: absolute; inset: 150px 96px 104px; display: flex; flex-direction: column; gap: 30px; }
@@ -433,23 +432,29 @@
   .vsr span { color: #8a91a8; }
   .vsr span:last-child { color: #fff; }
 
-  .bands { display: flex; flex-direction: column; gap: 12px; }
-  .band { display: grid; grid-template-columns: 210px 400px 1fr 200px 130px; gap: 28px; align-items: center; height: 128px; grid-template-rows: 128px; border-radius: 20px; background: #fff; border: 1px solid var(--line); overflow: hidden; padding-right: 24px; }
-  .bimg { height: 128px; min-width: 0; background: #f3f4f7; display: flex; align-items: center; justify-content: center; gap: 4px; padding: 10px; }
-  .bimg img { height: 100%; min-width: 0; max-width: 100%; object-fit: contain; mix-blend-mode: multiply; }
-  .bimg.duo img { max-width: 50%; }
-  .bimg.photo { padding: 0; }
-  .bimg.photo img { width: 100%; height: 100%; max-width: none; object-fit: cover; mix-blend-mode: normal; }
-  .bid { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
   .btag { color: #fff; font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 3px 10px; }
-  .bid b { font-size: 28px; letter-spacing: -.02em; }
-  .bid small { font-size: 16px; color: var(--muted); }
-  .band p { font-size: 19px; line-height: 1.4; color: var(--ink-2); }
-  .bprice { font-size: 20px; font-weight: 800; text-align: right; }
-  .band .chip { justify-self: end; }
   .kimg { width: 110px; height: 110px; flex: none; border-radius: 16px; background: #f3f4f7; display: grid; place-items: center; padding: 8px; }
   .kimg img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
   .keep .kh { align-items: center; }
+  /* Robots retained: five full-bleed strips, the robot large on the left */
+  .full .s-foot { display: none; }
+  .strips { position: absolute; inset: 0; display: grid; grid-template-rows: repeat(5, 1fr); }
+  .strip { display: grid; grid-template-columns: 520px 440px 1fr 230px 150px; align-items: center; gap: 40px; padding-right: 96px; background: var(--tint); border-bottom: 1px solid rgba(18,19,26,.06); overflow: hidden; }
+  .simg { height: 216px; display: flex; align-items: flex-end; justify-content: center; gap: 0; padding: 14px 40px 0; }
+  .simg img { height: 100%; min-width: 0; max-width: 100%; object-fit: contain; object-position: bottom; mix-blend-mode: multiply; }
+  .simg.duo img { max-width: 50%; }
+  .simg.duo img + img { height: 55%; }
+  .simg.photo { padding: 0; }
+  .simg.photo img { width: 100%; max-width: none; object-fit: cover; object-position: center; mix-blend-mode: normal; }
+  .slide.active .simg img { animation: robot-in .9s var(--ease) both; animation-delay: calc(var(--d, 0s) + .15s); }
+  @keyframes robot-in { from { opacity: 0; transform: translateX(-40px) scale(.96); } }
+  .sid { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+  .btag { color: #fff; font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 4px 12px; }
+  .sid b { font-size: 44px; letter-spacing: -.03em; line-height: 1.05; }
+  .sid small { font-size: 18px; color: var(--muted); }
+  .strip p { font-size: 23px; line-height: 1.4; color: var(--ink-2); }
+  .sprice { font-size: 24px; font-weight: 800; text-align: right; }
+  .strip .chip { justify-self: end; height: 36px; font-size: 17px; }
   .pick { position: absolute; inset: 128px 96px 104px; display: grid; grid-template-columns: 680px 1fr; gap: 64px; align-items: center; }
   .pick .txt { display: flex; flex-direction: column; gap: 24px; }
   .pick h1 { font-size: 58px; }
@@ -637,17 +642,13 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<section class="slide" data-scene="robots">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 1 · Les robots</div></div>
-  <div class="rsum">
-    <h1 class="rise">Les robots retenus, <em>après les démos.</em></h1>
-    <div class="bands">
-      <div class="band rise" style="--d:0.15s"><div class="bimg"><img src="https://www.generationrobots.com/20650-large_default/temi-3-service-robot.jpg" alt=""></div><div class="bid"><span class="btag" style="background:var(--navy)">P1 · Accueil</span><b>Temi 3</b><small>Génération Robots · Bordeaux</small></div><p>Répond aux clients au comptoir. Madagascar prend la main en visio, sans rien installer.</p><span class="bprice">8 175 € HT</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
-      <div class="band rise" style="--d:0.25s"><div class="bimg duo"><img src="https://www.generationrobots.com/20650-large_default/temi-3-service-robot.jpg" alt=""><img src="https://global.roborock.com/cdn/shop/files/Saros_10R_ID.png?v=1758784740" alt=""></div><div class="bid"><span class="btag" style="background:#2a2f63">P1 · Sécurité</span><b>Pas de robot en plus</b><small>Temi + les robots de ménage</small></div><p>Ils patrouillent la nuit. Le robot de patrouille RB-WATCHER est écarté : 45 000 €, look industriel.</p><span class="bprice">0 €</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
-      <div class="band rise" style="--d:0.35s"><div class="bimg"><img src="https://a.storyblok.com/f/255103/660x440/fdbd3f4063/kilo_gallery_side_mobile.webp/m/660x0/filters:quality(80)" alt=""></div><div class="bid"><span class="btag" style="background:var(--violet)">P2 · Bagages</span><b>Piaggio Kilo</b><small>Piaggio Fast Forward · États-Unis</small></div><p>Porte 130 kg. Suit le client à l'aller, refait seul le trajet retour.</p><span class="bprice">Sur devis</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
-      <div class="band rise" style="--d:0.45s"><div class="bimg"><img src="https://global.roborock.com/cdn/shop/files/Saros_10R_ID.png?v=1758784740" alt=""></div><div class="bid"><span class="btag" style="background:var(--sky)">P3 · Ménage</span><b>Roborock Saros</b><small>Gamme grand public</small></div><p>Aspire et lave, appartement par appartement, pièce par pièce. Partagé entre appartements.</p><span class="bprice">Grand public</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
-      <div class="band rise" style="--d:0.55s"><div class="bimg photo"><img src="https://lescompanions.com/wp-content/uploads/2024/12/PACO_koln-1.jpg" alt=""></div><div class="bid"><span class="btag" style="background:#c2410c">P3 · Peinture</span><b>PACO</b><small>Les Companions · Lille</small></div><p>Peint murs et plafonds avec le peintre. D'abord une journée d'essai sur un couloir.</p><span class="bprice">≈ 2 000 € / jour</span><span class="chip a"><span class="dot"></span>À tester</span></div>
-    </div>
+<section class="slide full" data-scene="robots">
+  <div class="strips">
+    <div class="strip rise" style="--d:0.05s;--tint:#eef1fa"><div class="simg"><img src="https://www.generationrobots.com/20457-large_default/temi-3-service-robot.jpg" alt="" style="scale:1.35;transform-origin:50% 100%"></div><div class="sid"><span class="btag" style="background:var(--navy)">P1 · Accueil</span><b>Temi 3</b><small>Génération Robots · Bordeaux</small></div><p>Répond aux clients au comptoir. Madagascar prend la main en visio.</p><span class="sprice">8 175 € HT</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
+    <div class="strip rise" style="--d:0.15s;--tint:#eceef6"><div class="simg duo"><img src="https://www.generationrobots.com/20456-large_default/temi-3-service-robot.jpg" alt="" style="scale:1.35;transform-origin:50% 100%"><img src="https://global.roborock.com/cdn/shop/files/Saros_10R_ID.png?v=1758784740" alt=""></div><div class="sid"><span class="btag" style="background:#2a2f63">P1 · Sécurité</span><b>Pas de robot en plus</b><small>Temi + les robots de ménage</small></div><p>Ils patrouillent la nuit. RB-WATCHER est écarté : 45 000 €, look industriel.</p><span class="sprice">0 €</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
+    <div class="strip rise" style="--d:0.25s;--tint:#f3effd"><div class="simg"><img src="https://a.storyblok.com/f/255103/660x440/fdbd3f4063/kilo_gallery_side_mobile.webp/m/1200x0/filters:quality(85)" alt=""></div><div class="sid"><span class="btag" style="background:var(--violet)">P2 · Bagages</span><b>Piaggio Kilo</b><small>Piaggio Fast Forward · États-Unis</small></div><p>Porte 130 kg. Suit le client à l'aller, revient seul.</p><span class="sprice">Sur devis</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
+    <div class="strip rise" style="--d:0.35s;--tint:#e9f6fd"><div class="simg"><img src="https://global.roborock.com/cdn/shop/files/Saros_10R_ID.png?v=1758784740" alt=""></div><div class="sid"><span class="btag" style="background:var(--sky)">P3 · Ménage</span><b>Roborock Saros</b><small>Gamme grand public</small></div><p>Aspire et lave, pièce par pièce. Un robot pour plusieurs appartements.</p><span class="sprice">Grand public</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
+    <div class="strip rise" style="--d:0.45s;--tint:#fdf1ea"><div class="simg photo"><img src="https://lescompanions.com/wp-content/uploads/2024/12/PXL_20240528_1615560902.jpg" alt=""></div><div class="sid"><span class="btag" style="background:#c2410c">P3 · Peinture</span><b>PACO</b><small>Les Companions · Lille</small></div><p>Peint murs et plafonds avec le peintre. D'abord une journée d'essai.</p><span class="sprice">≈ 2 000 € / jour</span><span class="chip a"><span class="dot"></span>À tester</span></div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
