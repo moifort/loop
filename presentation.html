@@ -221,7 +221,7 @@
   .app-shot { position: relative; height: 774px; }
   .app-shot .win { position: absolute; inset: 0; }
   /* Rendered at 1180 px wide (the mockup is responsive) so it reads at slide scale: 1016 / 1180 */
-  iframe.app { position: absolute; left: 0; top: 56px; width: 1180px; height: 834px; border: 0; transform: scale(.861); transform-origin: 0 0; background: var(--bg); pointer-events: none; }
+  iframe.app { position: absolute; left: 0; top: 56px; width: 1180px; height: 834px; border: 0; transform-origin: 0 0; background: var(--bg); pointer-events: none; }
 
   /* ============ 6 · Night watch (dark slide) ============ */
   .vig { padding: 22px 24px 24px; display: flex; flex-direction: column; gap: 12px; position: relative; }
@@ -886,23 +886,12 @@
         <div class="kpi"><b style="color:#fff">23 h – 7 h</b><span>rondes programmées</span></div>
       </div>
     </div>
-    <div class="win rise" style="--d:.2s">
-      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>Sécurité <span class="crumb">/ Saint-Georges</span><span class="r"><span class="chip" style="background:#2a2f63;color:#c9d2ff">Nuit · garde active</span></span></div>
-      <div class="vig">
-        <div class="vstat"><span class="moon"><svg width="24" height="24"><use href="#i-moon"/></svg></span><div><h5>Réception tenue à distance par Hery</h5><small>Mode nuit de 23 h à 7 h · Antananarivo</small></div><span class="clock" id="vig-clock">02:09</span></div>
-        <div class="v-banner" id="vig-banner"><svg width="22" height="22"><use href="#i-siren"/></svg><span id="vig-banner-t">Mouvement au 5ᵉ, devant la suite 503 libre · CAM-É5</span><span class="btn" id="vig-btn">Envoyer CLN-C6F2 vérifier</span></div>
-        <div class="floor closed"><span class="lv">É5</span><span class="corr"></span><span class="closed-lbl">SUITE 503 LIBRE</span><span class="cam" style="left:60%"></span><span class="rb go" id="vig-c6" style="left:16%"></span><span class="alert-dot" id="vig-alert">!</span></div>
-        <div class="floor"><span class="lv">É4</span><span class="corr"></span><span class="cam off" style="left:40%"></span><span class="rb patrol" style="--t:8s"></span></div>
-        <div class="floor"><span class="lv">É3</span><span class="corr"></span><span class="cam" style="left:55%"></span><span class="rb patrol" style="--t:10s;animation-delay:-3s"></span></div>
-        <div class="floor"><span class="lv">É2</span><span class="corr"></span><span class="cam" style="left:30%"></span><span class="rb patrol" style="--t:9s;animation-delay:-6s"></span></div>
-        <div class="floor"><span class="lv">É1</span><span class="corr"></span><span class="cam" style="left:70%"></span><span class="rb patrol" style="--t:11s;animation-delay:-2s"></span></div>
-        <div class="floor"><span class="lv">RDC</span><span class="corr"></span><span class="cam" style="left:45%"></span><span class="cam" style="left:85%"></span><span class="rb temi"></span></div>
-        <div class="rounds"><span class="done"><b>23:30</b>Ronde complète</span><span class="done"><b>01:00</b>Ronde complète</span><span class="next"><b>03:00</b>Ronde suivante</span><span><b>06:45</b>Fin de garde</span></div>
-        <div class="v-cam" id="vig-cam"><span class="lb">CLN-C6F2 · CAMÉRA EMBARQUÉE · É5</span><div class="scan" style="z-index:1"></div>
-          <video class="vid night" muted playsinline data-src="https://videos.pexels.com/video-files/15201563/15201563-sd_640_360_24fps.mp4"></video>
-          <svg viewBox="0 0 360 230" style="position:absolute;inset:0"><path d="M0 230 L130 120 L230 120 L360 230" fill="none" stroke="#3f6b48" stroke-width="2"/><path d="M130 120 V40 M230 120 V40" stroke="#3f6b48" stroke-width="2"/><circle cx="205" cy="96" r="10" fill="#9fd9ad" opacity=".8"/><path d="M190 150 Q192 108 205 106 Q218 108 220 150 Z" fill="#9fd9ad" opacity=".8"/></svg>
-        </div>
+    <div class="app-shot rise" style="--d:.2s">
+      <div class="win">
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Saint-Georges / Vigie</span></div>
+        <iframe class="app" data-src="building-overview.html#vigie" title="Maquette Loop" tabindex="-1"></iframe>
       </div>
+      <svg class="cursor" id="vig-cur"><use href="#i-cursor"/></svg>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -922,35 +911,12 @@
         <div class="kstep" id="ks3"><span class="n">3</span><div><span class="t">13:36</span><h5>Retour seul à la bagagerie</h5><p>Prêt pour le client suivant.</p></div></div>
       </div>
     </div>
-    <div class="win rise" style="--d:.2s">
-      <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>Bagages <span class="crumb">/ KILO-3B8D · Piaggio Kilo</span><span class="r"><span class="chip v" id="kilo-state">À la bagagerie</span></span></div>
-      <div class="kilo">
-        <div class="plan" id="kilo-plan">
-          <svg viewBox="0 0 1000 560" width="1000" height="560">
-            <!-- Level 2 -->
-            <rect x="60" y="40" width="880" height="200" rx="10" class="corr"/>
-            <rect x="60" y="40" width="220" height="80" class="room"/><rect x="280" y="40" width="220" height="80" class="room"/><rect x="500" y="40" width="220" height="80" class="room"/><rect x="720" y="40" width="220" height="80" class="room dest" id="kilo-dest"/>
-            <rect x="60" y="160" width="210" height="80" class="room"/><rect x="270" y="160" width="100" height="80" class="asc"/><rect x="370" y="160" width="270" height="80" class="room"/><rect x="640" y="160" width="300" height="80" class="room"/>
-            <text x="170" y="88" text-anchor="middle" class="rl">201</text><text x="390" y="88" text-anchor="middle" class="rl">202</text><text x="610" y="88" text-anchor="middle" class="rl">203</text><text x="736" y="88" class="rl" style="fill:#7c3aed;font-weight:800">204 · M. Bernard</text>
-            <text x="165" y="208" text-anchor="middle" class="rl">205</text><text x="320" y="208" text-anchor="middle" class="rl" style="font-size:15px">ASC.</text><text x="505" y="208" text-anchor="middle" class="rl">206</text><text x="790" y="208" text-anchor="middle" class="rl">207</text>
-            <rect x="8" y="122" width="44" height="34" rx="5" fill="#3a4150"/><text x="30" y="145" text-anchor="middle" class="lvl">É2</text>
-            <!-- Shaft -->
-            <line x1="320" y1="240" x2="320" y2="320" stroke="#c6cbd4" stroke-width="2" stroke-dasharray="6 5"/>
-            <!-- Ground floor -->
-            <rect x="60" y="320" width="880" height="200" rx="10" class="corr"/>
-            <rect x="60" y="320" width="210" height="80" class="room"/><rect x="270" y="320" width="100" height="80" class="asc"/><rect x="370" y="320" width="270" height="80" class="room"/><rect x="640" y="320" width="300" height="80" class="room"/>
-            <rect x="60" y="440" width="210" height="80" class="room"/><rect x="370" y="440" width="270" height="80" class="room" style="fill:#f5f0ff;stroke:#c4b0f5"/><rect x="640" y="440" width="300" height="80" class="room"/>
-            <text x="165" y="366" text-anchor="middle" class="rl">Réception</text><text x="320" y="366" text-anchor="middle" class="rl" style="font-size:15px">ASC.</text><text x="505" y="366" text-anchor="middle" class="rl">Petit-déjeuner</text><text x="790" y="366" text-anchor="middle" class="rl">Bureau</text>
-            <text x="165" y="486" text-anchor="middle" class="rl">Entrée</text><text x="505" y="510" text-anchor="middle" class="rl" style="fill:#7c3aed">Bagagerie</text><text x="790" y="486" text-anchor="middle" class="rl">Laverie</text>
-            <rect x="8" y="402" width="56" height="34" rx="5" fill="#3a4150"/><text x="36" y="425" text-anchor="middle" class="lvl">RDC</text>
-            <path class="route" d="M505,470 L505,420 L320,420 L320,140 L895,140 L895,82"/>
-          </svg>
-          <div class="mover guest" id="kilo-guest"></div>
-          <div class="mover" id="kilo-cart"><div class="cart"><svg><use href="#i-luggage"/></svg></div></div>
-          <span class="chip n float-chip pop" id="kilo-otis" style="left:340px;top:268px">Ascenseur Otis appelé par Loop</span>
-          <span class="chip v float-chip pop" id="kilo-speed" style="left:560px;top:96px">Assistance · 3 km/h max</span>
-        </div>
+    <div class="app-shot rise" style="--d:.2s">
+      <div class="win">
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Saint-Georges</span></div>
+        <iframe class="app" data-src="building-overview.html" title="Maquette Loop" tabindex="-1"></iframe>
       </div>
+      
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -965,7 +931,7 @@
       <h1 class="rise" style="--d:.1s">Elle fait le lit,<br><em>le robot fait les sols.</em></h1>
       <div class="need rise" style="--d:.2s"><small>Votre besoin</small><p>+30 % de productivité avec une équipe interne. Des robots partagés entre les appartements, pas un robot par appartement.</p></div>
       <ul class="does rise" style="--d:.3s">
-        <li>Un bouton sur son téléphone : « lance le 203 ».</li>
+        <li>Elle entre dans l'appartement : le robot se lance tout seul.</li>
         <li>Le robot passe sous les lits, un point faible des contrôles qualité.</li>
         <li>Jamais de robot dans un appartement occupé.</li>
       </ul>
@@ -991,7 +957,7 @@
             <small>M. Okafor jusqu'au 5 oct.</small>
             <div class="go dim" id="apt-306-go"><svg width="20" height="20"><use href="#i-brush"/></svg>Lancer le robot</div>
           </div>
-          <div class="toast" id="men-toast"><i>!</i><div><b>Refusé par Loop</b><br>App. 306 occupé : jamais de robot dans un appartement occupé.</div></div>
+          <div class="toast" id="men-toast"><i>!</i><div><b>Pas de robot</b><br>Inès passe au 306, mais il est occupé : le robot reste à sa base.</div></div>
         </div>
         <svg class="cursor" id="men-cur"><use href="#i-cursor"/></svg>
       </div>
@@ -1338,7 +1304,14 @@ function pointAt(cursor, el, dx = 0, dy = 0) {
   cursor.style.top = ((r.top + r.height / 2 - p.top) / k + dy) + 'px';
 }
 // Same-origin mockup frames: loaded on first visit, scripted through their own functions
-function loadFrame(f) { if (!f.src) f.src = f.dataset.src; }
+function loadFrame(f) {
+  if (f.src) return;
+  // Render the mockup at 1180 px wide (it is responsive), scaled to fill the window below its title bar
+  const box = f.parentElement, k = box.clientWidth / 1180;
+  f.style.transform = `scale(${k})`;
+  f.style.height = ((box.clientHeight - 56) / k) + 'px';
+  f.src = f.dataset.src;
+}
 function appWin(s) { const w = s.querySelector('iframe.app')?.contentWindow; return w && w.runAccAction ? w : null; }
 // Points the cursor at an element inside a scaled iframe
 function pointInFrame(cursor, f, el) {
@@ -1407,57 +1380,33 @@ const SCENES = {
     },
   },
 
+  // The mockup's Vigie screen: the cursor sends the nearest robot to check the motion alert
   vigie: {
-    dur: 12500,
-    reset() {
-      $('vig-banner').className = 'v-banner'; $('vig-banner-t').textContent = 'Mouvement au 5ᵉ, devant la suite 503 libre · CAM-É5';
-      $('vig-btn').style.display = ''; $('vig-btn').style.transform = '';
-      $('vig-alert').classList.remove('on'); $('vig-cam').classList.remove('on');
-      const r = $('vig-c6'); r.style.transition = 'none'; r.style.left = '16%'; r.offsetWidth; r.style.transition = '';
-      $('vig-clock').textContent = '02:09';
+    once(s) { loadFrame(s.querySelector('iframe.app')); },
+    reset(s) {
+      const f = s.querySelector('iframe.app');
+      if (f.contentWindow?.showView) f.contentWindow.location.reload();
+      const c = $('vig-cur'); c.className = 'cursor'; c.style.transition = 'none'; c.style.left = '520px'; c.style.top = '600px'; c.offsetWidth; c.style.transition = '';
     },
-    run() {
-      let m = 9; const tick = () => { $('vig-clock').textContent = '02:' + String(m).padStart(2, '0'); m++; if (m < 16) at(1700, tick); };
-      tick();
-      at(2200, () => { $('vig-alert').classList.add('on'); $('vig-banner').classList.add('on'); });
-      at(4200, () => { $('vig-btn').style.transform = 'scale(.94)'; });
-      at(4400, () => { $('vig-btn').style.transform = ''; $('vig-btn').style.display = 'none'; $('vig-banner-t').textContent = 'CLN-C6F2 en route vers le couloir de l\'É5…'; $('vig-c6').style.left = '68%'; });
-      at(6800, () => { $('vig-cam').classList.add('on'); $('vig-banner-t').textContent = 'Hery vérifie sur la caméra de CLN-C6F2'; });
-      at(9600, () => {
-        $('vig-banner').classList.add('ok'); $('vig-banner-t').textContent = 'Fausse alerte : un rideau, fenêtre de la 503 restée ouverte. Ticket pour le ménage.';
-        $('vig-alert').classList.remove('on');
-      });
+    run(s) {
+      const c = $('vig-cur'), f = s.querySelector('iframe.app');
+      const btn = () => [...(f.contentDocument?.querySelectorAll('button') || [])].find(b => /Envoyer CLN-C6F2/.test(b.textContent));
+      at(2200, () => { const b = btn(); if (b) { c.classList.add('on'); pointInFrame(c, f, b); } });
+      at(3300, () => { const b = btn(); if (b) { click(c); b.click(); } });
+      at(4200, () => c.classList.remove('on'));
     },
   },
 
+  // The main page of the mockup carries the map; the steps on the left play the trip
   kilo: {
-    dur: 15500,
-    reset() {
-      ['ks1', 'ks2', 'ks3'].forEach(k => $(k).className = 'kstep');
-      ['kilo-otis', 'kilo-speed'].forEach(k => $(k).classList.remove('on'));
-      const path = "path('M505,470 L505,420 L320,420 L320,140 L895,140 L895,82')";
-      [$('kilo-cart'), $('kilo-guest')].forEach(el => { el.style.offsetPath = path; el.style.transition = 'none'; el.style.offsetDistance = '0%'; el.offsetWidth; });
-      $('kilo-guest').classList.remove('on');
-      $('kilo-state').textContent = 'À la bagagerie';
-    },
+    dur: 12000,
+    once(s) { loadFrame(s.querySelector('iframe.app')); },
+    reset() { ['ks1', 'ks2', 'ks3'].forEach(k => $(k).className = 'kstep'); },
     run() {
-      const cart = $('kilo-cart'), guest = $('kilo-guest');
-      at(500, () => { $('ks1').classList.add('on'); $('kilo-state').textContent = 'Réservé · M. Bernard'; });
-      at(2000, () => { guest.classList.add('on'); });
-      at(3000, () => {
-        $('ks1').className = 'kstep done'; $('ks2').classList.add('on'); $('kilo-state').textContent = 'Avec M. Bernard';
-        cart.style.transition = 'offset-distance 6s cubic-bezier(.45,0,.4,1)'; cart.style.offsetDistance = '100%';
-        guest.style.transition = 'offset-distance 6s cubic-bezier(.45,0,.4,1) .35s'; guest.style.offsetDistance = '96%';
-      });
-      at(4300, () => $('kilo-otis').classList.add('on'));
-      at(6300, () => { $('kilo-otis').classList.remove('on'); $('kilo-speed').classList.add('on'); });
-      at(9600, () => { $('kilo-speed').classList.remove('on'); $('kilo-state').textContent = 'Arrivé · app. 204'; });
-      at(10600, () => {
-        guest.classList.remove('on');
-        $('ks2').className = 'kstep done'; $('ks3').classList.add('on'); $('kilo-state').textContent = 'Retour seul';
-        cart.style.transition = 'offset-distance 4s cubic-bezier(.45,0,.4,1)'; cart.style.offsetDistance = '0%';
-      });
-      at(14700, () => { $('ks3').className = 'kstep done'; $('kilo-state').textContent = 'À la bagagerie'; });
+      at(500, () => $('ks1').classList.add('on'));
+      at(3000, () => { $('ks1').className = 'kstep done'; $('ks2').classList.add('on'); });
+      at(7500, () => { $('ks2').className = 'kstep done'; $('ks3').classList.add('on'); });
+      at(11000, () => $('ks3').className = 'kstep done');
     },
   },
 
@@ -1480,17 +1429,20 @@ const SCENES = {
       $('apt-203').classList.remove('live'); $('apt-203-bar').style.transition = 'none'; $('apt-203-bar').style.width = '0';
       $('apt-203-chip').className = 'chip a'; $('apt-203-chip').textContent = 'Départ 11:00';
       $('apt-203-sub').textContent = 'Prochaine arrivée à 16 h';
-      $('apt-203-go').style.display = ''; $('apt-203-go-t').textContent = 'Lancer le robot';
+      $('apt-203-go').style.display = ''; $('apt-203-go').classList.add('dim'); $('apt-203-go-t').textContent = 'Démarre à l\'arrivée d\'Inès';
       $('men-toast').classList.remove('on'); $('men-pct').textContent = '0 %';
       $('men-state').className = 'chip n'; $('men-state').textContent = 'À la base';
       const c = $('men-cur'); c.className = 'cursor'; c.style.transition = 'none'; c.style.left = '250px'; c.style.top = '560px'; c.offsetWidth; c.style.transition = '';
     },
     run() {
-      const c = $('men-cur'), DUR = 7000;
-      at(500, () => { c.classList.add('on'); pointAt(c, $('apt-203-go'), 30, 6); });
-      at(1500, () => { click(c); $('apt-203-go').classList.add('press'); });
+      const DUR = 7000;
+      // Inès badges in with Salto: Loop sees her enter the apartment and starts the robot, no button
+      at(900, () => {
+        $('apt-203-chip').className = 'chip b'; $('apt-203-chip').textContent = 'Inès est là';
+        $('apt-203-sub').textContent = '13:42 · Inès entre (badge Salto)';
+      });
       at(1700, () => {
-        $('apt-203-go').classList.remove('press'); $('apt-203-go-t').textContent = 'Robot lancé';
+        $('apt-203-go').classList.remove('dim'); $('apt-203-go-t').textContent = 'Robot lancé tout seul';
         $('apt-203').classList.add('live'); $('apt-203-chip').className = 'chip s'; $('apt-203-chip').textContent = 'En ménage';
         $('men-state').className = 'chip s'; $('men-state').textContent = 'En ménage';
         const t = $('men-trail'), r = $('men-robot');
@@ -1501,16 +1453,13 @@ const SCENES = {
         const tick = () => { const k = Math.min(1, (performance.now() - t0) / DUR); $('men-pct').textContent = Math.round(k * 100) + ' %'; if (k < 1) at(100, tick); };
         tick();
       });
-      at(2400, () => c.classList.remove('on'));
       at(1700 + DUR, () => {
         $('apt-203-chip').className = 'chip g'; $('apt-203-chip').textContent = 'Prêt';
         $('apt-203-sub').textContent = 'Prêt à 13:58 · Greg prévenu';
         $('apt-203-go').style.display = 'none';
         $('men-state').className = 'chip g'; $('men-state').textContent = 'Terminé · retour base';
       });
-      at(9600, () => { c.classList.add('on'); pointAt(c, $('apt-306-go'), 30, 6); });
-      at(10600, () => { click(c); $('men-toast').classList.add('on'); });
-      at(11200, () => c.classList.remove('on'));
+      at(10000, () => $('men-toast').classList.add('on'));
     },
   },
 
