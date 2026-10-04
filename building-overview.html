@@ -2945,17 +2945,28 @@ function showView(v) {
   if (v === 'accueil') renderAccueil(); else if (v === 'greg') renderConnectors(); else if (v === 'vigie') renderVigie(); else renderAll();
 }
 document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
-// Map labels that link to another view (the greeter's label opens the reception view). The SVG re-renders, so delegate.
+// Map labels that link to another view (robot sheets, the reception view). The SVG re-renders, so delegate.
+// It re-renders on every animation frame while robots move: the label under the pointer is a new node by the
+// time the button comes up, so a 'click' never fires. Act on pointerdown instead, and swallow the click that follows.
 const iso = document.getElementById('iso');
-// Easter egg: the stuck robot cries for help when its label is clicked
-iso.addEventListener('click', e => {
-  if (!e.target.closest('[data-help]')) return;
-  e.stopPropagation();
-  helpAt = performance.now();
-  renderBuilding();
-  setTimeout(renderBuilding, HELP_MS + 50);
+const swallowNextClick = () => {
+  const ac = new AbortController();
+  document.addEventListener('click', e => { e.stopPropagation(); e.preventDefault(); ac.abort(); }, { capture: true, signal: ac.signal });
+  setTimeout(() => ac.abort(), 800); // no click came (drag, long press): never eat a later one
+};
+iso.addEventListener('pointerdown', e => {
+  if (e.button !== 0) return;
+  // Easter egg: the stuck robot cries for help when it is clicked
+  if (e.target.closest('[data-help]')) {
+    swallowNextClick();
+    helpAt = performance.now();
+    renderBuilding();
+    setTimeout(renderBuilding, HELP_MS + 50);
+    return;
+  }
+  const l = e.target.closest('.map-link');
+  if (l) { swallowNextClick(); showView(l.dataset.view); }
 }, true);
-iso.addEventListener('click', e => { const l = e.target.closest('.map-link'); if (l) { e.stopPropagation(); showView(l.dataset.view); } }, true);
 iso.addEventListener('keydown', e => { const l = e.target.closest('.map-link'); if (l && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); showView(l.dataset.view); } });
 // =====================================================================
 // Cleaning robots view — fleet KPIs, robot cards with consumables, day planning,
