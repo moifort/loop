@@ -796,26 +796,54 @@
 
 
   /* ---------- Connectors: list on the left, selected connector on the right ---------- */
-  .conn-layout { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 20px; align-items: start; }
-  .conn-side { position: sticky; top: 0; display: flex; flex-direction: column; max-height: calc(100vh - 92px); }
-  .conn-items { list-style: none; overflow-y: auto; padding: 4px 8px 8px; flex: 1; min-height: 0; }
-  .conn-item { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: center; width: 100%; padding: 9px 8px; border-radius: 10px; }
+  /* Connectors page: full-height list on the left, flush with the nav; each column scrolls on its own */
+  body.conn-view main { padding: 0; overflow: hidden; }
+  body.conn-view.greg-lost main { padding-top: 44px; }
+  #view-greg { max-width: none; height: 100%; gap: 0; }
+  .conn-layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); height: 100%; min-height: 0; }
+  .conn-side { display: flex; flex-direction: column; min-height: 0; background: var(--panel); border-right: 1px solid var(--border); }
+  .conn-side-h { padding: 16px 16px 10px; border-bottom: 1px solid var(--border); }
+  .conn-side-h h3 { font-size: 14px; font-weight: 600; }
+  .conn-side-h small { display: block; color: var(--text); font-size: 12px; margin-top: 2px; }
+  .conn-side-h span { display: block; color: var(--muted); font-size: 12px; margin-top: 1px; }
+  .conn-items { list-style: none; overflow-y: auto; flex: 1; min-height: 0; }
+  .conn-items li + li .conn-item { border-top: 1px solid var(--border); }
+  .conn-item { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: center; width: 100%; padding: 11px 16px; }
   .conn-item:hover { background: var(--panel-2); }
-  .conn-item.sel { background: var(--blue-soft); }
-  .conn-item b { display: block; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .conn-item .cst { display: flex; align-items: center; gap: 6px; font-size: 12px; margin-top: 1px; white-space: nowrap; overflow: hidden; }
-  .conn-item .cst small { color: var(--muted); overflow: hidden; text-overflow: ellipsis; }
-  .conn-cat { padding: 10px 8px 4px; color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+  .conn-item.sel { background: var(--blue-soft); box-shadow: inset 3px 0 0 var(--blue); }
+  .conn-item .cn { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .conn-item b { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .conn-item .cst { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; white-space: nowrap; flex: none; }
+  .conn-item small { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .conn-logo { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 14px; flex: none; }
   .rf-top .conn-logo { width: 52px; height: 52px; border-radius: 14px; font-size: 22px; }
   .sdot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--gray); }
   .sdot.ok { background: var(--green); } .sdot.warn { background: var(--amber); } .sdot.paused { background: var(--gray); } .sdot.setup { background: var(--blue); }
   .sdot.down { background: var(--red); animation: conn-blink 1s steps(2, start) infinite; }
   .cst .l-ok { color: #137a44; } .cst .l-warn { color: #9a5b00; } .cst .l-down { color: #b42318; } .cst .l-paused { color: var(--muted); } .cst .l-setup { color: var(--blue); }
-  .conn-foot { border-top: 1px solid var(--border); padding: 10px; }
+  .conn-foot { border-top: 1px solid var(--border); padding: 12px 16px; }
   .conn-add { width: 100%; justify-content: center; border-style: dashed; color: var(--blue); }
   .conn-add:hover { background: var(--blue-soft); border-color: #b3d1ff; }
-  .conn-main { min-width: 0; }
+  .conn-main { overflow-y: auto; min-height: 0; padding: 20px 24px 40px; }
+  .conn-main > .conn-pane { max-width: 1240px; margin: 0 auto; }
+  .cx-two { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(0, 1.5fr); gap: 16px; align-items: start; }
+  @container (max-width: 1100px) { .cx-two { grid-template-columns: 1fr; } }
+  .cx-opts .opt { grid-template-columns: 1fr auto; }
+  .cx-opts .opt.dim { opacity: .5; pointer-events: none; }
+  .opt-val { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+  .opt-sel { display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 8px 0 10px; border-radius: 7px; border: 1px solid var(--border); background: var(--panel); font-size: 12px; font-weight: 500; white-space: nowrap; }
+  .opt-sel:hover { background: var(--panel-2); }
+  .cx-opts li:has(.opt-sites) { grid-template-columns: 1fr; }
+  .opt-sites { display: flex; flex-wrap: wrap; gap: 6px; }
+  .site-chip { padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+  .site-chip.on { background: var(--blue-soft); border-color: #b3d1ff; color: var(--blue); font-weight: 500; }
+  .site-tag { display: inline-flex; justify-content: center; height: 20px; padding: 0 5px; border-radius: 3px; font-size: 11px; line-height: 20px; font-weight: 600; background: #3a4150; color: #fff; }
+  .gev.cev { grid-template-columns: 40px 30px 112px 1fr auto; }
+  .gev.cev pre { grid-column: 3 / -1; }
+  .gev.bad-warn { box-shadow: inset 3px 0 0 var(--amber); }
+  .gev.bad-err { box-shadow: inset 3px 0 0 var(--red); }
+  #cx-site:empty { display: none; }
+  .top [data-site][hidden] { display: none; }
   .conn-pane { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
   .conn-pane[hidden] { display: none; }
   .cx-setup { padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
@@ -824,7 +852,6 @@
   .cx-steps li { display: flex; align-items: center; gap: 10px; }
   .cx-steps li::before { counter-increment: st; content: counter(st); width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 600; background: var(--panel-2); border: 1px solid var(--border); color: var(--muted); flex: none; }
   .cx-steps li.done::before { content: '✓'; background: var(--green); border-color: var(--green); color: #fff; }
-  @container (max-width: 900px) { .conn-layout { grid-template-columns: 1fr; } .conn-side { position: static; max-height: none; } }
 
   /* Connector library (modal) */
   .lib-ov { position: fixed; inset: 0; z-index: 200; background: rgba(15,23,42,.45); display: grid; place-items: center; padding: 24px; }
@@ -971,8 +998,8 @@
 
 <header class="top">
   <span>Quartier Libre Collection</span>
-  <span class="sep">/</span>
-  <button>Saint-Georges · 14 rue Henry Monnier, Paris 9e
+  <span class="sep" data-site>/</span>
+  <button data-site>Saint-Georges · 14 rue Henry Monnier, Paris 9e
     <i data-icon="chevron-down" data-size="14"></i>
   </button>
   <span class="sep" data-crumb hidden>/</span><span data-crumb id="crumb-label" hidden>Accueil</span>
@@ -1305,12 +1332,12 @@
 <!-- Connectors view: configured connectors on the left (state + library), the selected one's state and log on the right -->
 <div class="wrap" id="view-greg" hidden>
 <div class="conn-layout">
-  <aside class="card conn-side">
-    <div class="card-h"><h3>Connecteurs</h3><div class="right" id="conn-count"></div></div>
+  <aside class="conn-side">
+    <div class="conn-side-h"><h3>Connecteurs</h3><small>Quartier Libre Collection</small><span id="conn-count"></span></div>
     <ul class="conn-items" id="conn-items"></ul>
     <div class="conn-foot"><button class="btn conn-add" data-c="lib"><i data-icon="plus" data-size="15"></i>Ajouter un connecteur</button></div>
   </aside>
-  <div class="conn-main">
+  <div class="conn-main" id="conn-main">
 <!-- GregAi pane: events both ways, platform actions, sync quality, errors -->
 <div class="conn-pane" id="conn-greg">
 
@@ -1353,37 +1380,21 @@
 
 </div>
 
-<!-- Any other connector: state, sync, log, errors, data exchanged -->
+<!-- Any other connector: key options and latest events -->
 <div class="conn-pane" id="conn-other" hidden>
   <div class="card rf-head" id="cx-head"></div>
   <div class="card" id="cx-setup-card" hidden>
-    <div class="card-h"><h3>Configuration</h3><div class="right" id="cx-setup-sub"></div></div>
+    <div class="card-h"><h3>Configuration</h3><div class="right">3 étapes</div></div>
     <div class="cx-setup" id="cx-setup"></div>
   </div>
-  <div class="card" id="cx-sync-card">
-    <div class="card-h"><h3>Qualité de la synchro</h3><div class="right">7 h – 23 h · latence</div></div>
-    <div class="sync-wrap"><div class="sync-chart" id="cx-sync"></div><div class="sync-band" id="cx-band"></div><div class="ticks" id="cx-ticks"></div></div>
-    <div class="sync-inc" id="cx-inc"></div>
-    <div class="legend">
-      <span><i class="sw" style="background:#22a861"></i>Synchro normale</span>
-      <span><i class="sw" style="background:#f0a020"></i>Dégradée</span>
-      <span><i class="sw" style="background:#e5484d"></i>Coupure</span>
-    </div>
-  </div>
-  <div class="acc-grid">
+  <div class="cx-two">
     <div class="card">
-      <div class="card-h"><h3>Journal</h3><div class="right"><div class="seg" id="cx-filter"></div></div></div>
-      <ul class="gev-list" id="cx-events"></ul>
+      <div class="card-h"><h3>Options clés</h3><div class="right">pour tout le groupe</div></div>
+      <ul class="perm cx-opts" id="cx-opts"></ul>
     </div>
-    <div class="side">
-      <div class="card">
-        <div class="card-h"><h3>Erreurs et alertes</h3><div class="right" id="cx-err-count"></div></div>
-        <ul class="greg-err" id="cx-errors"></ul>
-      </div>
-      <div class="card">
-        <div class="card-h"><h3>Données échangées</h3><div class="right">droits</div></div>
-        <ul class="perm" id="cx-scopes"></ul>
-      </div>
+    <div class="card">
+      <div class="card-h"><h3>Derniers événements</h3><div class="right"><span id="cx-site"></span><div class="seg" id="cx-filter"></div></div></div>
+      <ul class="gev-list" id="cx-events"></ul>
     </div>
   </div>
 </div>
@@ -2921,6 +2932,9 @@ function showView(v) {
   history.replaceState(null, '', v === 'building' ? location.pathname : '#' + v + (v === 'robot' ? '/' + sheetRobot : ''));
   document.querySelector('main').scrollTop = 0;
   document.body.classList.toggle('vig-night', v === 'vigie' && VIG.mode !== 'jour');
+  // Connectors are set up for the whole group: no building in the breadcrumb, full-height layout
+  document.body.classList.toggle('conn-view', v === 'greg');
+  document.querySelectorAll('.top [data-site]').forEach(el => el.hidden = v === 'greg');
   if (v === 'accueil') renderAccueil(); else if (v === 'greg') renderConnectors(); else if (v === 'vigie') renderVigie(); else renderAll();
 }
 document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
@@ -3766,59 +3780,90 @@ document.getElementById('view-greg').addEventListener('click', e => {
 
 
 // =====================================================================
-// Connectors — every system Loop talks to. GregAi has its own rich pane;
-// the others share one: state, sync quality, log, errors, data exchanged.
+// Connectors — every system Loop talks to, set up once for Quartier Libre
+// Collection and scoped to the buildings each one covers. GregAi keeps its
+// rich pane; every other connector shows its key options and its latest events.
 // =====================================================================
 const CST = { ok: 'Connecté', warn: 'Dégradé', down: 'Déconnecté', paused: 'En pause', setup: 'À configurer' };
-const cev = (m, dir, name, text, extra = {}) => ({ id: 'c' + (++GREG.seq), at: ago(m), dir, name, text, status: 'ok', ms: 80 + (GREG.seq * 53) % 260, ...extra });
+const SITES = [['SG', 'Saint-Georges'], ['OP', 'Opéra'], ['MA', 'Marais'], ['MD', 'Madeleine'], ['CA', 'Caumartin']];
+const ALL = SITES.map(s => s[0]);
+const siteName = k => SITES.find(s => s[0] === k)?.[1] || k;
+const sitesLabel = l => l.length === ALL.length ? 'Tous les immeubles' : l.map(siteName).join(', ');
+// [minutes ago, direction, event, text, building, status]
+const cev = (m, dir, name, text, site = 'SG', status = 'ok') => ({ id: 'c' + (++GREG.seq), at: ago(m), dir, name, text, site, status, ms: 80 + (GREG.seq * 53) % 260 });
 const CONNS = [
-  { id: 'greg', name: 'GregAi', cat: 'IA', sub: 'Agent IA des opérations' },
-  { id: 'mews', name: 'Mews', cat: 'PMS', mono: 'M', color: '#0f172a', state: 'ok', short: 'Mews', sub: 'Réservations, arrivées et départs',
-    since: ago(60 * 24 * 3), ms: 320, seed: 3, inc: [[.52, .06, 'deg']],
-    details: [['Connexion', 'API REST + webhooks'], ['Compte', 'Quartier Libre · 5 immeubles'], ['Synchro', 'temps réel + toutes les 2 min']],
-    kpis: [['Réservations suivies', '142', 'sur les 5 immeubles', .92, '#006fff', 'user'], ['Arrivées du jour', '18', '11 déjà enregistrées', 11 / 18, '#22a861', 'door-open'], ['Départs du jour', '21', 'dont 4 vus par Temi', .6, '#0ea5e9', 'luggage'], ['Latence', '320 ms', 'moyenne 280 ms', .68, '#22a861', 'gauge']],
-    scopes: [['Lire les réservations et les fiches clients', true], ['Lire les arrivées et les départs', true], ['Marquer un appartement « prêt »', true], ['Modifier une facture', false, 'Réservé à la réception']],
-    events: [[2, 'in', 'reservation.checked_in', '<b>M. Bernard</b> enregistré, app. 204, 2 valises déclarées.'], [2.1, 'act', 'kilo.reserve', 'KILO-3B8D réservé pour M. Bernard.'],
-      [13.4, 'out', 'room.ready', 'App. 203 signalé <b>prêt</b> dans Mews, vers 12 h 55.'], [14, 'in', 'reservation.checked_out', '<b>Mme Haddad</b> a quitté l\'app. 203, facture soldée.'],
-      [32, 'in', 'reservation.created', 'Nouvelle réservation : app. 305, du 6 au 9 oct.'], [47, 'out', 'room.ready', 'App. 105 signalé prêt (CLN-7B19).']],
-    errors: [{ k: 'warn', t: 'Synchro lente 9 min', d: 'Mews répondait en 1,8 s en fin de matinée. Rattrapé sans perte.', f: .52 }],
-    live: [['in', 'reservation.updated', 'Réservation de <b>M. Garcia</b> modifiée : arrivée avancée à 15 h.'], ['out', 'room.status', 'État des 35 appartements envoyé à Mews.'], ['in', 'reservation.checked_in', '<b>Mme Okafor</b> enregistrée, app. 402.']] },
-  { id: 'salto', name: 'Salto KS', cat: 'Serrures', mono: 'S', color: '#e4002b', state: 'ok', short: 'Salto', sub: 'Serrures connectées et codes d\'accès',
-    since: ago(60 * 24 * 12), ms: 210, seed: 5, inc: [],
-    details: [['Connexion', 'Salto KS Connect API'], ['Site', 'Saint-Georges · 147 portes'], ['Robots', 'badges virtuels CLN, KILO']],
-    kpis: [['Portes connectées', '147', 'dont 35 appartements', 1, '#22a861', 'lock'], ['Codes actifs', '98', 'clients et équipe', .67, '#006fff', 'user'], ['Ouvertures du jour', '412', '64 par des robots', .64, '#0ea5e9', 'door-open'], ['Piles faibles', '3', 'à changer cette semaine', .3, '#f0a020', 'zap']],
-    scopes: [['Ouvrir une porte pour un robot', true], ['Créer et révoquer un code client', true], ['Lire l\'historique des ouvertures', true], ['Ouvrir une porte d\'appartement occupé', false, 'Jamais sans le client']],
-    events: [[0.6, 'act', 'access.code_created', 'Nouveau code Salto pour <b>Mme Lefèvre</b>, généré pendant la visio.'], [13.7, 'out', 'access.revoke', 'Code de <b>Mme Haddad</b> révoqué (départ, app. 203).'],
-      [18.5, 'in', 'door.opened', 'Porte de l\'app. 307 ouverte pour <b>CLN-91C5</b> (ménage).'], [40, 'in', 'door.opened', 'Porte de service ouverte par <b>KILO-3B8D</b>.'], [66, 'in', 'battery.low', 'Pile faible : app. 106, 402 et 505.']],
-    errors: [{ k: 'warn', t: 'Piles faibles sur 3 serrures', d: 'App. 106, 402 et 505 : environ 3 semaines d\'autonomie. Ticket envoyé à la maintenance.', f: .3 }],
-    live: [['in', 'door.opened', 'Porte de l\'app. 105 ouverte pour <b>CLN-7B19</b>.'], ['in', 'door.opened', 'Porte du hall ouverte (code client, app. 402).']] },
-  { id: 'whatsapp', name: 'WhatsApp Business', cat: 'Messagerie', mono: 'W', color: '#25d366', state: 'ok', short: 'WhatsApp', sub: 'Alertes à l\'équipe sur place',
-    since: ago(60 * 24 * 6), ms: 540, seed: 9, inc: [],
-    details: [['Connexion', 'WhatsApp Cloud API'], ['Numéro', 'Loop · Quartier Libre'], ['Destinataires', 'Inès, Hery, maintenance']],
-    kpis: [['Messages envoyés', '37', 'aujourd\'hui', .74, '#22a861', 'arrow-up-right'], ['Lus', '35', '2 en attente', 35 / 37, '#006fff', 'check'], ['Réponse moyenne', '2 min', 'par l\'équipe', .8, '#0ea5e9', 'clock'], ['Escalades', '1', 'vers Hery (nuit)', .2, '#1e3a8a', 'phone']],
-    scopes: [['Envoyer des alertes à l\'équipe', true], ['Recevoir « fait » et « je m\'en occupe »', true], ['Écrire aux clients', false, 'Pas sans validation de la réception']],
-    events: [[17.8, 'out', 'message.sent', 'À <b>Inès</b> : « Valise à déplacer dans l\'app. 307 ».'], [11, 'in', 'message.reply', '<b>Inès</b> : « J\'y vais ». Alerte marquée prise en charge.'], [45, 'out', 'message.sent', 'À la maintenance : piles faibles sur 3 serrures.']],
-    errors: [], live: [['out', 'message.sent', 'À <b>Inès</b> : « App. 207 prêt, vous pouvez faire le contrôle ».'], ['in', 'message.reply', '<b>Inès</b> : « Contrôle OK ».']] },
-  { id: 'cams', name: 'Milestone XProtect', cat: 'Caméras', mono: 'X', color: '#1e40af', state: 'warn', short: 'XProtect', sub: '9 caméras du bâtiment',
-    since: ago(60 * 24 * 17), ms: 180, seed: 11, inc: [[.88, 1, 'deg']],
-    details: [['Connexion', 'MIP SDK · serveur local'], ['Caméras', '9 fixes + 7 robots'], ['Stockage', '30 jours, en France']],
-    kpis: [['Caméras en ligne', '8/9', 'CAM-É4 hors ligne', 8 / 9, '#f0a020', 'cctv'], ['Détections du jour', '6', '1 fausse alerte levée', .5, '#006fff', 'eye'], ['Relais robots', '1', 'CLN-5E07 couvre l\'É4', .3, '#8b5cf6', 'bot'], ['Latence', '180 ms', 'flux temps réel', .82, '#22a861', 'gauge']],
-    scopes: [['Recevoir les détections de mouvement', true], ['Afficher les flux dans Loop', true], ['Partager les flux avec GregAi', false, 'RGPD : opérateurs humains seulement']],
-    events: [[3, 'in', 'motion.detected', 'Mouvement au 5ᵉ (zone fermée), <b>CAM-É5</b>.'], [2.6, 'act', 'vigie.dispatch', '<b>CLN-C6F2</b> envoyé vérifier l\'É5.'], [60 * 3, 'in', 'camera.offline', '<b>CAM-É4</b> ne répond plus.'], [60 * 3 - 1, 'act', 'vigie.relay', '<b>CLN-5E07</b> couvre le couloir de l\'É4.']],
-    errors: [{ k: 'err', t: 'CAM-É4 hors ligne', d: 'Depuis cette nuit. CLN-5E07 couvre le couloir en attendant. Intervention demandée à l\'installateur.', f: .88 }],
-    live: [['in', 'motion.detected', 'Mouvement dans le hall, <b>CAM-HALL</b> (client, app. 402).']] },
-  { id: 'otis', name: 'Otis Integrated Dispatch', cat: 'Ascenseur', mono: 'O', color: '#0b3d91', state: 'ok', short: 'Otis', sub: 'Les robots appellent l\'ascenseur',
-    since: ago(60 * 24 * 9), ms: 260, seed: 13, inc: [[.4, .04, 'out']],
-    details: [['Connexion', 'Otis API · passerelle locale'], ['Cabines', '1 ascenseur, 6 niveaux'], ['Priorité', 'clients d\'abord, robots ensuite']],
-    kpis: [['Trajets robots', '46', 'aujourd\'hui', .6, '#7c3aed', 'luggage'], ['Attente moyenne', '38 s', 'avant l\'arrivée de la cabine', .7, '#22a861', 'clock'], ['Cédés aux clients', '9', 'le robot attend le suivant', .4, '#006fff', 'user'], ['Disponibilité', '99,5 %', '1 coupure de 4 min', .995, '#1e3a8a', 'shield-check']],
-    scopes: [['Appeler la cabine pour un robot', true], ['Choisir l\'étage de destination', true], ['Bloquer la cabine', false, 'Jamais : les clients restent prioritaires']],
-    events: [[3.2, 'out', 'lift.call', 'Appel au RDC pour <b>KILO-3B8D</b> et M. Bernard, vers l\'É2.'], [3, 'in', 'lift.arrived', 'Cabine au RDC, portes ouvertes.'], [2.4, 'in', 'lift.arrived', 'Arrivée à l\'É2.']],
-    errors: [{ k: 'err', t: 'Coupure de 4 min', d: 'Passerelle redémarrée par Otis. 2 trajets de robots décalés.', f: .4 }],
-    live: [['out', 'lift.call', 'Appel à l\'É2 pour <b>KILO-3B8D</b>, retour au RDC.'], ['in', 'lift.arrived', 'Cabine au RDC.']] },
-  { id: 'gtb', name: 'GTB Saint-Georges', cat: 'Bâtiment', mono: 'G', color: '#64748b', state: 'setup', short: 'GTB', sub: 'Chauffage, clim, éclairage, présence',
+  { id: 'greg', name: 'GregAi', cat: 'IA', sites: ALL },
+  { id: 'mews', name: 'Mews', cat: 'PMS', mono: 'M', color: '#0f172a', state: 'ok', short: 'Mews', sub: 'Réservations, arrivées et départs', sites: ALL, since: ago(60 * 24 * 41),
+    opts: [
+      { k: 'sites', t: 'Établissements liés', d: 'Un établissement Mews par immeuble' },
+      { k: 'sw', t: 'Recevoir les arrivées et les départs', d: 'En temps réel, par webhook', on: true },
+      { k: 'sw', t: 'Marquer l\'appartement « prêt » dans Mews', d: 'Dès que le robot et le contrôle ont fini', on: true },
+      { k: 'sw', t: 'Envoyer le Kilo à l\'arrivée', d: 'Quand le client déclare des valises', on: true },
+      { k: 'sel', t: 'Synchronisation complète', v: 'Toutes les 2 min', opts: ['Toutes les 2 min', 'Toutes les 5 min', 'Toutes les 15 min'] },
+      { k: 'val', t: 'Compte de service', v: 'loop@quartierlibre.fr', d: 'Accès en lecture + statut des appartements' },
+      { k: 'sw', t: 'Modifier une facture', d: 'Réservé à la réception', on: false, lock: true },
+    ],
+    events: [[1, 'in', 'reservation.checked_in', '<b>Mme Okafor</b> enregistrée, app. 402.', 'OP'], [2, 'in', 'reservation.checked_in', '<b>M. Bernard</b> enregistré, app. 204, 2 valises déclarées.'],
+      [2.1, 'act', 'kilo.reserve', 'KILO-3B8D envoyé à la bagagerie pour M. Bernard.'], [9, 'in', 'reservation.checked_out', '<b>M. Rossi</b> a quitté l\'app. 12.', 'MA'],
+      [13.4, 'out', 'room.ready', 'App. 203 signalé <b>prêt</b> dans Mews.'], [14, 'in', 'reservation.checked_out', '<b>Mme Haddad</b> a quitté l\'app. 203, facture soldée.'],
+      [38, 'out', 'room.ready', 'Synchro lente : Mews a répondu en 1,8 s, rattrapé sans perte.', 'MD', 'warn'], [47, 'in', 'reservation.created', 'Nouvelle réservation : app. 305, du 6 au 9 oct.']],
+    live: [['in', 'reservation.updated', 'Réservation de <b>M. Garcia</b> : arrivée avancée à 15 h.', 'SG'], ['out', 'room.status', 'État des appartements envoyé à Mews.', 'CA'], ['in', 'reservation.checked_in', '<b>Mme Lindqvist</b> enregistrée, app. 8.', 'MA']] },
+  { id: 'salto', name: 'Salto KS', cat: 'Serrures', mono: 'S', color: '#e4002b', state: 'ok', short: 'Salto', sub: 'Serrures connectées et codes d\'accès', sites: ALL, since: ago(60 * 24 * 120),
+    opts: [
+      { k: 'sites', t: 'Sites Salto', d: '612 portes au total' },
+      { k: 'sw', t: 'Badges virtuels pour les robots', d: 'CLN et KILO ouvrent les portes de leur étage', on: true },
+      { k: 'sw', t: 'Révoquer le code au départ', d: 'Dès que Mews confirme le départ', on: true },
+      { k: 'sw', t: 'Nouveau code pendant une visio', d: 'L\'opérateur peut en générer un depuis Loop', on: true },
+      { k: 'sel', t: 'Alerte pile faible', v: 'Sous 20 %', opts: ['Sous 10 %', 'Sous 20 %', 'Sous 30 %'] },
+      { k: 'sw', t: 'Ouvrir un appartement occupé', d: 'Jamais sans le client', on: false, lock: true },
+    ],
+    events: [[0.6, 'act', 'access.code_created', 'Nouveau code pour <b>Mme Lefèvre</b>, généré pendant la visio.'], [5, 'in', 'door.opened', 'Porte de l\'app. 16 ouverte pour <b>CLN-4A21</b>.', 'OP'],
+      [13.7, 'out', 'access.revoke', 'Code de <b>Mme Haddad</b> révoqué (départ, app. 203).'], [18.5, 'in', 'door.opened', 'Porte de l\'app. 307 ouverte pour <b>CLN-91C5</b>.'],
+      [66, 'in', 'battery.low', 'Pile faible : app. 106, 402 et 505.', 'SG', 'warn'], [80, 'in', 'door.forced', 'Porte de service maintenue ouverte 3 min.', 'MA', 'warn']],
+    live: [['in', 'door.opened', 'Porte de l\'app. 105 ouverte pour <b>CLN-7B19</b>.', 'SG'], ['in', 'door.opened', 'Porte du hall ouverte (code client).', 'MD']] },
+  { id: 'whatsapp', name: 'WhatsApp Business', cat: 'Messagerie', mono: 'W', color: '#25d366', state: 'ok', short: 'WhatsApp', sub: 'Alertes à l\'équipe sur place', sites: ALL, since: ago(60 * 24 * 60),
+    opts: [
+      { k: 'val', t: 'Numéro d\'envoi', v: '+33 1 84 80 •• ••', d: 'Compte WhatsApp Business de Quartier Libre' },
+      { k: 'sites', t: 'Immeubles couverts', d: 'Chaque immeuble a son groupe d\'équipe' },
+      { k: 'sw', t: 'La nuit, escalader vers Madagascar', d: 'Hery reçoit les alertes de 23 h à 7 h', on: true },
+      { k: 'sel', t: 'Heures calmes', v: '23 h – 7 h, sauf urgences', opts: ['Aucune', '23 h – 7 h, sauf urgences', '22 h – 8 h, sauf urgences'] },
+      { k: 'sw', t: 'Réponses « fait » et « j\'y vais »', d: 'Ferment l\'alerte dans Loop', on: true },
+      { k: 'sw', t: 'Écrire aux clients', d: 'Pas sans validation de la réception', on: false, lock: true },
+    ],
+    events: [[11, 'in', 'message.reply', '<b>Inès</b> : « J\'y vais ». Alerte prise en charge.'], [17.8, 'out', 'message.sent', 'À <b>Inès</b> : « Valise à déplacer dans l\'app. 307 ».'],
+      [29, 'out', 'message.sent', 'À <b>Karim</b> : « App. 9 prêt pour le contrôle ».', 'CA'], [45, 'out', 'message.sent', 'À la maintenance : piles faibles sur 3 serrures.']],
+    live: [['out', 'message.sent', 'À <b>Inès</b> : « App. 207 prêt, vous pouvez faire le contrôle ».', 'SG'], ['in', 'message.reply', '<b>Karim</b> : « Contrôle OK ».', 'CA']] },
+  { id: 'cams', name: 'Milestone XProtect', cat: 'Caméras', mono: 'X', color: '#1e40af', state: 'warn', short: 'XProtect', sub: 'Vidéosurveillance des immeubles', sites: ['SG', 'OP', 'MD'], since: ago(60 * 24 * 200),
+    opts: [
+      { k: 'sites', t: 'Serveurs vidéo', d: '1 serveur local par immeuble équipé' },
+      { k: 'sw', t: 'Mouvements vers la Vigie', d: 'Les détections arrivent dans Loop en temps réel', on: true },
+      { k: 'sw', t: 'Zones fermées seulement, la nuit', d: 'Pas d\'alerte pour les étages ouverts de 23 h à 7 h', on: true },
+      { k: 'sw', t: 'Un robot relaie une caméra en panne', d: 'Le robot de l\'étage fait le couloir à sa place', on: true },
+      { k: 'val', t: 'Conservation', v: '30 jours, en France', d: 'Réglé dans XProtect' },
+      { k: 'sw', t: 'Partager les flux avec GregAi', d: 'RGPD : opérateurs humains seulement', on: false, lock: true },
+    ],
+    events: [[3, 'in', 'motion.detected', 'Mouvement au 5ᵉ (zone fermée), <b>CAM-É5</b>.'], [2.6, 'act', 'vigie.dispatch', '<b>CLN-C6F2</b> envoyé vérifier l\'É5.'],
+      [24, 'in', 'motion.detected', 'Mouvement dans le hall, <b>CAM-HALL</b>.', 'OP'], [60 * 11, 'in', 'camera.offline', '<b>CAM-É4</b> ne répond plus.', 'SG', 'err'], [60 * 11 - 1, 'act', 'vigie.relay', '<b>CLN-5E07</b> couvre le couloir de l\'É4.']],
+    live: [['in', 'motion.detected', 'Mouvement dans le hall, <b>CAM-HALL</b> (client).', 'MD']] },
+  { id: 'otis', name: 'Otis Integrated Dispatch', cat: 'Ascenseur', mono: 'O', color: '#0b3d91', state: 'ok', short: 'Otis', sub: 'Les robots appellent l\'ascenseur', sites: ['SG', 'OP'], since: ago(60 * 24 * 9),
+    opts: [
+      { k: 'sites', t: 'Immeubles équipés', d: 'Les autres n\'ont pas d\'ascenseur connecté' },
+      { k: 'sw', t: 'Les clients d\'abord', d: 'Le robot cède la cabine et attend la suivante', on: true },
+      { k: 'sel', t: 'Robots dans l\'ascenseur', v: '7 h – 23 h, et la nuit pour la vigie', opts: ['Toute la journée', '7 h – 23 h, et la nuit pour la vigie', '9 h – 18 h'] },
+      { k: 'val', t: 'Passerelle', v: 'Otis API · locale', d: 'Une par immeuble' },
+      { k: 'sw', t: 'Bloquer la cabine', d: 'Jamais : les clients restent prioritaires', on: false, lock: true },
+    ],
+    events: [[2.4, 'in', 'lift.arrived', 'Arrivée à l\'É2 avec <b>KILO-3B8D</b>.'], [3.2, 'out', 'lift.call', 'Appel au RDC pour <b>KILO-3B8D</b> et M. Bernard, vers l\'É2.'],
+      [21, 'out', 'lift.call', 'Appel à l\'É3 pour <b>CLN-4A21</b>, vers l\'É4.', 'OP'], [190, 'in', 'gateway.restart', 'Passerelle redémarrée par Otis : coupure de 4 min, 2 trajets décalés.', 'SG', 'err']],
+    live: [['out', 'lift.call', 'Appel à l\'É2 pour <b>KILO-3B8D</b>, retour au RDC.', 'SG'], ['in', 'lift.arrived', 'Cabine au RDC.', 'OP']] },
+  { id: 'gtb', name: 'GTB Saint-Georges', cat: 'Bâtiment', mono: 'G', color: '#64748b', state: 'setup', short: 'GTB', sub: 'Chauffage, clim, éclairage, présence', sites: ['SG'],
     setupNote: 'Installée au 9ᵉ mais jamais activée. Une fois connectée, la vigie voit les détecteurs de présence de chaque étage et Loop peut éteindre la lumière derrière les robots.',
-    details: [['Protocole', 'BACnet/IP'], ['Équipements', 'détecteurs, CVC, éclairage'], ['État', 'jamais activée']],
-    kpis: [], scopes: [['Lire les détecteurs de présence', true], ['Allumer et éteindre l\'éclairage des couloirs', true], ['Changer les consignes de chauffage', false, 'Réservé à la maintenance']], events: [], errors: [], live: [] },
+    opts: [
+      { k: 'val', t: 'Protocole', v: 'BACnet/IP', d: 'Automate dans le local technique' },
+      { k: 'sw', t: 'Détecteurs de présence vers la Vigie', d: 'Un mouvement dans une zone fermée lève une alerte', on: true },
+      { k: 'sw', t: 'Éteindre la lumière derrière les robots', d: 'Couloirs seulement', on: true },
+      { k: 'sw', t: 'Changer les consignes de chauffage', d: 'Réservé à la maintenance', on: false, lock: true },
+    ], events: [], live: [] },
 ];
 // Library of connectors that can be added
 const LIB = [
@@ -3830,112 +3875,85 @@ const LIB = [
   ['Caméras', [['cams', 'Milestone XProtect', 'X', '#1e40af', 'Vidéosurveillance'], ['genetec', 'Genetec Security Center', 'G', '#0f766e', 'Vidéo et contrôle d\'accès'], ['verkada', 'Verkada', 'V', '#111827', 'Caméras dans le cloud']]],
   ['Outils', [['webhook', 'Webhook générique', '{}', '#3a4150', 'Envoyer les événements où vous voulez'], ['zapier', 'Zapier', 'Z', '#ff4f00', '6 000 applications'], ['sheets', 'Google Sheets', 'G', '#0f9d58', 'Exporter les rapports']]],
 ];
-const CONN = { sel: 'greg', filter: 'all', open: null, lib: false, q: '', cat: 'Tout', connecting: false };
-CONNS.forEach(c => { if (c.events) c.events = c.events.map(([m, dir, name, text]) => cev(m, dir, name, text)); });
+const CONN = { sel: 'greg', filter: 'all', site: 'all', open: null, lib: false, q: '', cat: 'Tout', connecting: false };
+CONNS.forEach(c => { if (c.events) c.events = c.events.map(a => cev(...a)); });
 const connSel = () => CONNS.find(c => c.id === CONN.sel) || CONNS[0];
 const connState = c => c.id === 'greg' ? GREG.state : c.state;
-const connLogo = (c, size) => c.id === 'greg' ? `<span class="greg-av${size === 'sm' ? ' sm' : ''}" style="${size === 'sm' ? 'width:34px;height:34px;border-radius:9px' : ''}">${icon('sparkles', size === 'sm' ? 17 : 26, { sw: 1.8 })}</span>`
+const connLogo = (c, size) => c.id === 'greg' ? `<span class="greg-av" style="${size === 'sm' ? 'width:34px;height:34px;border-radius:9px;box-shadow:none' : ''}">${icon('sparkles', size === 'sm' ? 17 : 26, { sw: 1.8 })}</span>`
   : `<span class="conn-logo" style="background:${c.color}">${c.mono}</span>`;
-// Older than today reads in days, otherwise the time it connected
-const connSince = t => { const d = Math.floor((Date.now() - t) / 864e5); return d >= 1 ? `${d} jour${d > 1 ? 's' : ''}` : fmtH(simH(t)); };
 const connLast = c => c.id === 'greg' ? GEVENTS[0]?.at : c.events?.[0]?.at;
+// Older than today reads in days, otherwise the time it connected
+const connSince = t => { const d = Math.floor((Date.now() - t) / 864e5); return d >= 1 ? `${d} jour${d > 1 ? 's' : ''}` : `${fmtH(simH(t))}`; };
+const siteTag = k => `<span class="site-tag" title="${siteName(k)}">${k}</span>`;
+const EVST = { ok: e => GST.ok(e), warn: () => '<span class="chip warn">Alerte</span>', err: () => '<span class="chip err">Erreur</span>' };
 
 function renderConnectors() {
   const other = CONN.sel !== 'greg';
   document.getElementById('conn-greg').hidden = other;
   document.getElementById('conn-other').hidden = !other;
   setHTML('crumb-sub', connSel().name);
-  if (other) { renderConnList(); renderConn(); } else renderGreg();
+  renderConnList();
+  if (other) renderConn(); else renderGreg();
 }
 
 function renderConnList() {
   const issues = CONNS.filter(c => ['warn', 'down'].includes(connState(c))).length;
-  setHTML('conn-count', `${CONNS.length} configurés${issues ? ` · ${issues} à surveiller` : ''}`);
-  const cats = [...new Set(CONNS.map(c => c.cat))];
+  setHTML('conn-count', `${CONNS.length} connecteurs · ${SITES.length} immeubles${issues ? ` · ${issues} à surveiller` : ''}`);
   setHTML('conn-items', CONNS.map(c => {
-    const st = connState(c), last = connLast(c);
+    const st = connState(c);
     return `<li><button class="conn-item ${CONN.sel === c.id ? 'sel' : ''}" data-csel="${c.id}">${connLogo(c, 'sm')}
-      <span style="min-width:0"><b>${c.name}</b><span class="cst"><i class="sdot ${st}"></i><span class="l-${st}">${CST[st]}</span>${last && st !== 'setup' ? `<small>· ${c.cat}</small>` : `<small>· ${c.cat}</small>`}</span></span></button></li>`;
+      <span style="min-width:0"><span class="cn"><b>${c.name}</b><span class="cst"><i class="sdot ${st}"></i><span class="l-${st}">${CST[st]}</span></span></span>
+        <small>${c.cat} · ${sitesLabel(c.sites)}</small></span></button></li>`;
   }).join(''));
 }
 
 function renderConn() {
   const c = connSel(), st = c.state, setup = st === 'setup', paused = st === 'paused';
+  const day = c.events.filter(e => Date.now() - e.at < 864e5), errs = day.filter(e => e.status !== 'ok').length;
   setHTML('cx-head', `<div class="rf-top">${connLogo(c)}
       <div class="rf-id"><span class="mr-name"><b>${c.name}</b><span class="chip ${st === 'ok' ? 'ok' : st === 'warn' ? 'warn' : st === 'down' ? 'err' : st === 'setup' ? 'occ' : 'idle'}">${st === 'ok' ? '<span class="greg-dot" style="margin:0 4px 0 1px"></span>' : ''}${CST[st]}</span></span>
-        <span class="sub">${c.cat} · ${c.sub}${c.since && !setup ? ` · connecté depuis ${connSince(c.since)}` : ''}</span></div>
+        <span class="sub">${c.cat} · ${c.sub}</span></div>
       <div class="acts">${setup ? '' : `<button class="btn" data-cx="sync">${icon('refresh-cw', 14)}Synchroniser</button>
         ${paused ? `<button class="btn primary" data-cx="resume">${icon('play', 14)}Reprendre</button>` : `<button class="btn" data-cx="pause">${icon('pause', 14)}Mettre en pause</button>`}`}
         <button class="btn danger" data-cx="remove" title="Retirer ce connecteur">${icon('x', 14)}Retirer</button></div>
     </div>
-    ${c.kpis.length && !setup ? `<div class="kpis">${c.kpis.map(([l, v, sub, k, col, ic]) => `<div class="kpi kpi-ring">${ring(paused ? 0 : k, col, ic)}<div><small>${l}</small><b>${paused && l === 'Latence' ? '—' : v}</b><span>${sub}</span></div></div>`).join('')}</div>` : ''}
-    <div class="greg-conn">${c.details.map(([l, v]) => `<div><small>${l}</small><b>${v}</b></div>`).join('')}
-      <div><small>Dernier échange</small><b>${connLast(c) ? `il y a ${since(connLast(c))}` : '—'}</b></div></div>`);
+    <div class="greg-conn">
+      <div><small>Immeubles</small><b>${sitesLabel(c.sites)}</b></div>
+      <div><small>Connecté depuis</small><b>${setup ? '—' : connSince(c.since)}</b></div>
+      <div><small>Dernier échange</small><b>${connLast(c) ? `il y a ${since(connLast(c))}` : '—'}</b></div>
+      <div><small>Dernières 24 h</small><b>${day.length} événement${day.length > 1 ? 's' : ''}${errs ? ` · <span style="color:#b42318">${errs} à voir</span>` : ''}</b></div>
+    </div>`);
 
   // Setup: one-click authorisation, then the connector comes alive
   document.getElementById('cx-setup-card').hidden = !setup;
-  document.getElementById('cx-sync-card').hidden = setup;
-  if (setup) {
-    setHTML('cx-setup-sub', 'Étape 1 sur 3');
-    setHTML('cx-setup', `${c.setupNote ? `<p>${c.setupNote}</p>` : ''}
-      <ol class="cx-steps"><li>Autoriser Loop à accéder à ${c.name}</li><li>Choisir les données échangées (à droite)</li><li>Tester la connexion</li></ol>
+  if (setup) setHTML('cx-setup', `${c.setupNote ? `<p>${c.setupNote}</p>` : ''}
+      <ol class="cx-steps"><li>Autoriser Loop à accéder à ${c.name}</li><li>Régler les options ci-dessous</li><li>Tester la connexion</li></ol>
       <div>${CONN.connecting ? `<button class="btn primary" disabled>${icon('loader-circle', 14, { cls: 'spin' })}Connexion à ${c.name}…</button>`
         : `<button class="btn primary" data-cx="connect">${icon('plug', 14)}Connecter ${c.name}</button>`}</div>`);
-  } else renderConnSync(c);
 
-  const F = { all: ['Tout', () => true], out: ['Envoyés', e => e.dir === 'out'], in: ['Reçus', e => e.dir === 'in'], act: ['Actions', e => e.dir === 'act'] };
-  setHTML('cx-filter', Object.entries(F).map(([k, [l, f]]) => `<button data-cf="${k}" class="${CONN.filter === k ? 'on' : ''}">${l}<em>${c.events.filter(f).length}</em></button>`).join(''));
+  // Key options, the way the source system names them
+  setHTML('cx-opts', c.opts.map((o, i) => `<li class="opt ${o.lock ? 'locked' : ''} ${setup && !o.lock ? 'dim' : ''}"><div><b>${o.t}</b>${o.d ? `<small>${o.lock ? icon('lock', 12) : ''}${o.d}</small>` : ''}</div>
+      ${o.k === 'sw' ? `<button class="sw-t ${o.on ? 'on' : ''}" data-co="${i}" ${o.lock ? 'disabled title="Verrouillé"' : ''} aria-pressed="${o.on}"></button>`
+      : o.k === 'sel' ? `<button class="opt-sel" data-co="${i}">${o.v}${icon('chevron-down', 14)}</button>`
+      : o.k === 'sites' ? `<span class="opt-sites">${SITES.map(([k, n]) => `<button class="site-chip ${c.sites.includes(k) ? 'on' : ''}" data-csite="${k}" title="${n}">${n}</button>`).join('')}</span>`
+      : `<span class="opt-val">${o.v}</span>`}</li>`).join(''));
+
+  // Latest events: building, direction, what happened, outcome
+  const F = { all: ['Tout', () => true], in: ['Reçus', e => e.dir === 'in'], out: ['Envoyés', e => e.dir === 'out'], err: ['À voir', e => e.status !== 'ok'] };
+  const bySite = e => CONN.site === 'all' || e.site === CONN.site;
+  setHTML('cx-filter', Object.entries(F).map(([k, [l, f]]) => `<button data-cf="${k}" class="${CONN.filter === k ? 'on' : ''}">${l}<em>${c.events.filter(bySite).filter(f).length}</em></button>`).join(''));
+  setHTML('cx-site', c.sites.length > 1 ? `<button class="opt-sel" data-csf>${CONN.site === 'all' ? 'Tous les immeubles' : siteName(CONN.site)}${icon('chevron-down', 14)}</button>` : '');
   const lab = { out: `Loop → ${c.short}`, in: `${c.short} → Loop`, act: 'Action Loop' };
-  const list = c.events.filter(F[CONN.filter][1]);
+  const list = c.events.filter(bySite).filter(F[CONN.filter][1]).slice(0, 40);
   const evEl = document.getElementById('cx-events');
   const before = new Set([...evEl.querySelectorAll('.gev')].map(li => li.dataset.ev));
-  setHTML('cx-events', list.length ? list.map(e => `<li class="gev" data-cev="${e.id}" data-ev="${e.id}"><time>${fmtH(simH(e.at))}</time>
+  setHTML('cx-events', list.length ? list.map(e => `<li class="gev cev ${e.status !== 'ok' ? 'bad-' + e.status : ''}" data-cev="${e.id}" data-ev="${e.id}"><time>${fmtH(simH(e.at))}</time>${siteTag(e.site)}
       <span class="dir ${e.dir}">${icon(GDIR[e.dir].ic, 12, { sw: 2.4 })}${lab[e.dir]}</span>
       <div class="t"><span>${e.text}</span><code>${e.name}</code></div>
-      <div class="st">${GST[e.status](e)}${e.status === 'queued' ? '' : `<small>${e.ms} ms</small>`}</div>
-      ${CONN.open === e.id ? `<pre>${gJSON({ event: e.name, connector: c.id, at: new Date(e.at).toISOString().slice(0, 19) + 'Z', building: 'saint-georges' })}</pre>` : ''}</li>`).join('')
-    : `<li class="all-good"><span>${setup ? 'Le journal démarre dès que le connecteur est branché.' : 'Aucun échange pour l\'instant.'}</span></li>`);
+      <div class="st">${EVST[e.status](e)}<small>${e.ms} ms</small></div>
+      ${CONN.open === e.id ? `<pre>${gJSON({ event: e.name, connector: c.id, building: siteName(e.site), at: new Date(e.at).toISOString().slice(0, 19) + 'Z', status: e.status })}</pre>` : ''}</li>`).join('')
+    : `<li class="all-good"><span>${setup ? 'Le journal démarre dès que le connecteur est branché.' : 'Aucun événement pour ce filtre.'}</span></li>`);
   evEl.querySelectorAll('.gev').forEach(li => { if (before.size && !before.has(li.dataset.ev)) li.classList.add('fresh'); });
-
-  const errs = c.errors;
-  setHTML('cx-err-count', errs.length ? `${errs.length} aujourd'hui` : 'Rien à signaler');
-  const span = simH(Date.now()) - DAY0;
-  setHTML('cx-errors', errs.length ? errs.map(x => `<li><span class="ic ${x.k}">${icon(x.k === 'err' ? 'x' : x.k === 'ok' ? 'check' : 'triangle-alert', 13, { sw: 2.6 })}</span>
-      <div><div class="t">${x.t}<time>${x.at || fmtH(DAY0 + span * (x.f ?? .5))}</time></div><p>${x.d}</p></div></li>`).join('')
-    : `<li style="grid-template-columns:1fr"><p style="margin:0">${setup ? 'Pas encore connecté.' : 'Aucune erreur aujourd\'hui.'}</p></li>`);
-
-  setHTML('cx-scopes', c.scopes.map(([t, on, why], i) => `<li class="${why ? 'locked' : ''}"><div><b>${t}</b>${why ? `<small>${icon('lock', 12)}${why}</small>` : ''}</div>
-      <button class="sw-t ${on ? 'on' : ''}" data-cs="${i}" ${why ? 'disabled title="Verrouillé"' : ''} aria-pressed="${on}"></button></li>`).join(''));
-}
-
-function renderConnSync(c) {
-  const nowH = simH(Date.now()), span = DAY1 - DAY0, X = h => (h - DAY0) / span * 1000, pct = h => (X(h) / 10).toFixed(2) + '%';
-  const base = c.ms || 200, MAXMS = Math.max(2000, base * 4), Y = ms => 116 - Math.min(ms, MAXMS) / MAXMS * 108;
-  const zones = (c.inc || []).map(([f, len, k]) => { const a = DAY0 + (nowH - DAY0) * f; return [a, Math.min(nowH, a + (nowH - DAY0) * len), k]; });
-  if (c.pausedAt) zones.push([simH(c.pausedAt), nowH, 'paused']);
-  if (c.pauses) c.pauses.forEach(p => zones.push([...p, 'paused']));
-  let seed = c.seed || 1;
-  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const runs = []; let cur = null;
-  for (let h = DAY0; h <= nowH; h += 1 / 12) {
-    const z = zones.find(z => h >= z[0] && h < z[1]);
-    let ms = base * (.8 + rnd() * .5);
-    if ((c.from && h < c.from) || (z && (z[2] === 'out' || z[2] === 'paused'))) { cur = null; continue; }
-    if (z && z[2] === 'deg') ms = base * (3 + rnd() * 2);
-    if (!cur) runs.push(cur = []);
-    cur.push([X(h), Y(ms)]);
-  }
-  const col = { deg: '#f0a020', out: '#e5484d', paused: '#a0a7b0' };
-  const line = r => r.map((p, i) => `${i ? 'L' : 'M'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join('');
-  setHTML('cx-sync', `<svg viewBox="0 0 1000 120" preserveAspectRatio="none">
-      ${zones.map(([a, b, k]) => `<rect x="${X(a).toFixed(1)}" y="0" width="${Math.max(2, X(b) - X(a)).toFixed(1)}" height="116" fill="${col[k]}" opacity=".1"/>`).join('')}
-      ${runs.map(r => `<path d="${line(r)}L${r[r.length - 1][0].toFixed(1)} 116L${r[0][0].toFixed(1)} 116Z" fill="#22a861" opacity=".12"/><path d="${line(r)}" fill="none" stroke="#22a861" stroke-width="1.6" vector-effect="non-scaling-stroke"/>`).join('')}
-    </svg><span class="now" style="left:${pct(nowH)}"></span>`);
-  setHTML('cx-band', `<i style="left:${c.from ? pct(c.from) : 0};width:max(3px, ${c.from ? ((X(nowH) - X(c.from)) / 10).toFixed(2) : (X(nowH) / 10).toFixed(2)}%);background:#22a861"></i>${zones.map(([a, b, k]) => `<i style="left:${pct(a)};width:max(3px, ${((X(b) - X(a)) / 10).toFixed(2)}%);background:${col[k]}"></i>`).join('')}<span class="now" style="left:${pct(nowH)}"></span>`);
-  let ticks = ''; for (let h = DAY0; h <= DAY1; h += 2) ticks += `<span style="left:${pct(h)}">${h} h</span>`;
-  setHTML('cx-ticks', ticks);
-  setHTML('cx-inc', zones.length ? zones.filter(z => z[2] !== 'paused').map(([a, b, k]) => `<span>${icon(k === 'out' ? 'x' : 'triangle-alert', 12, { color: col[k], sw: 2.8 })}<b>${fmtH(a)}</b> ${k === 'out' ? 'coupure' : 'synchro dégradée'}${b >= nowH - .01 ? ', en cours' : ''}</span>`).join('') + `<span>${icon('check', 12, { color: '#22a861', sw: 3 })}<b>0</b> événement perdu</span>`
-    : `<span>${icon('check', 12, { color: '#22a861', sw: 3 })}Aucun incident aujourd'hui</span>`);
 }
 
 // Library
@@ -3945,7 +3963,7 @@ function renderLib() {
   if (!CONN.lib) return;
   const q = CONN.q.trim().toLowerCase();
   const cats = LIB.map(([cat]) => cat);
-  setHTML('lib-count', `${LIB.reduce((a, [, l]) => a + l.length, 0)} connecteurs`);
+  setHTML('lib-count', `${LIB.reduce((a, [, l]) => a + l.length, 0)} connecteurs · pour tout Quartier Libre Collection`);
   setHTML('lib-cats', ['Tout', ...cats].map(k => `<button data-lcat="${k}" class="${CONN.cat === k ? 'on' : ''}">${k}</button>`).join(''));
   const groups = LIB.filter(([cat]) => CONN.cat === 'Tout' || CONN.cat === cat)
     .map(([cat, items]) => [cat, items.filter(([, n, , , d]) => !q || (n + ' ' + d + ' ' + cat).toLowerCase().includes(q))]).filter(([, l]) => l.length);
@@ -3957,28 +3975,38 @@ function renderLib() {
 }
 
 function connAction(e) {
-  const el = e.target.closest('[data-csel],[data-c],[data-cx],[data-cf],[data-cs],[data-cev]');
+  const el = e.target.closest('[data-csel],[data-c],[data-cx],[data-cf],[data-co],[data-csite],[data-csf],[data-cev]');
   if (!el) return;
   const d = el.dataset, c = connSel();
-  if (d.csel) { CONN.sel = d.csel; CONN.filter = 'all'; CONN.open = null; document.querySelector('main').scrollTop = 0; }
+  const log = (dir, name, text) => c.events.unshift({ ...cev(0, dir, name, text, c.sites[0]), at: Date.now() });
+  if (d.csel) { CONN.sel = d.csel; CONN.filter = 'all'; CONN.site = 'all'; CONN.open = null; document.getElementById('conn-main').scrollTop = 0; }
   else if (d.c === 'lib') { CONN.lib = true; CONN.q = ''; document.getElementById('lib-q').value = ''; renderLib(); setTimeout(() => document.getElementById('lib-q').focus(), 30); return; }
-  else if (d.cx === 'pause') { c.state = 'paused'; c.pausedAt = Date.now(); c.events.unshift({ ...cev(0, 'act', 'connector.paused', `Synchro avec ${c.name} mise en pause par Michael.`), at: Date.now() }); }
-  else if (d.cx === 'resume') { (c.pauses = c.pauses || []).push([simH(c.pausedAt), simH(Date.now())]); c.pausedAt = null; c.state = c.id === 'cams' ? 'warn' : 'ok';
-    c.events.unshift({ ...cev(0, 'act', 'connector.resumed', `Synchro avec ${c.name} reprise, rattrapage terminé.`), at: Date.now() }); }
-  else if (d.cx === 'sync') { c.events.unshift({ ...cev(0, 'act', 'sync.completed', `Synchronisation manuelle avec ${c.name} terminée.`), at: Date.now() }); }
+  else if (d.cx === 'pause') { c.state = 'paused'; log('act', 'connector.paused', `Synchro avec ${c.name} mise en pause par Michael.`); }
+  else if (d.cx === 'resume') { c.state = c.id === 'cams' ? 'warn' : 'ok'; log('act', 'connector.resumed', `Synchro avec ${c.name} reprise, rattrapage terminé.`); }
+  else if (d.cx === 'sync') log('act', 'sync.completed', `Synchronisation manuelle avec ${c.name} terminée.`);
   else if (d.cx === 'remove') { const i = CONNS.indexOf(c); if (c.id !== 'greg' && i > -1) { CONNS.splice(i, 1); CONN.sel = 'greg'; } }
   else if (d.cx === 'connect') {
     CONN.connecting = true;
     setTimeout(() => {
-      CONN.connecting = false; c.state = 'ok'; c.since = Date.now(); c.from = simH(Date.now()); c.details = [['Catégorie', c.cat], ['Connexion', 'OAuth · API ' + c.short], ['Synchro', 'temps réel']]; c.ms = c.ms || 240; c.seed = c.seed || 17; c.inc = [];
-      c.events.unshift({ ...cev(0, 'act', 'connector.connected', `<b>${c.name}</b> connecté. Synchronisation initiale lancée.`), at: Date.now() });
-      setTimeout(() => { c.events.unshift({ ...cev(0, 'in', 'sync.completed', `Synchronisation initiale terminée : données de ${c.name} disponibles dans Loop.`), at: Date.now() }); renderConnectors(); }, 2500);
-      if (!c.kpis.length) c.kpis = [['Événements', '2', 'depuis la connexion', .1, '#006fff', 'arrow-down-left'], ['Erreurs', '0', 'depuis la connexion', 1, '#22a861', 'check'], ['Latence', '240 ms', 'premier test', .8, '#22a861', 'gauge'], ['Disponibilité', '100 %', 'depuis la connexion', 1, '#1e3a8a', 'shield-check']];
+      CONN.connecting = false; c.state = 'ok'; c.since = Date.now();
+      log('act', 'connector.connected', `<b>${c.name}</b> connecté. Synchronisation initiale lancée.`);
+      setTimeout(() => { log('in', 'sync.completed', `Synchronisation initiale terminée : les données de ${c.name} sont dans Loop.`); renderConnectors(); }, 2500);
       renderConnectors();
     }, 1400);
   }
   else if (d.cf) CONN.filter = d.cf;
-  else if (d.cs !== undefined) c.scopes[+d.cs][1] = !c.scopes[+d.cs][1];
+  else if (d.csf !== undefined) { const l = ['all', ...c.sites]; CONN.site = l[(l.indexOf(CONN.site) + 1) % l.length]; }
+  else if (d.csite) {
+    const k = d.csite, on = c.sites.includes(k);
+    if (on && c.sites.length === 1) return;
+    c.sites = on ? c.sites.filter(x => x !== k) : ALL.filter(x => x === k || c.sites.includes(x));
+    log('act', 'connector.sites', `${siteName(k)} ${on ? 'retiré de' : 'ajouté à'} ${c.name}.`);
+  }
+  else if (d.co !== undefined) {
+    const o = c.opts[+d.co];
+    if (o.k === 'sw' && !o.lock) { o.on = !o.on; log('act', 'connector.option', `« ${o.t} » ${o.on ? 'activé' : 'désactivé'} par Michael.`); }
+    if (o.k === 'sel') { o.v = o.opts[(o.opts.indexOf(o.v) + 1) % o.opts.length]; log('act', 'connector.option', `« ${o.t} » réglé sur ${o.v}.`); }
+  }
   else if (d.cev) { if (e.target.closest('pre')) return; CONN.open = CONN.open === d.cev ? null : d.cev; }
   renderConnectors();
 }
@@ -3992,8 +4020,10 @@ document.getElementById('lib').addEventListener('click', e => {
   if (!id) return;
   const [catName, items] = LIB.find(([, l]) => l.some(x => x[0] === id)), [, n, mono, color, d] = items.find(x => x[0] === id);
   const short = n.split(' ')[0];
-  CONNS.push({ id, name: n, cat: catName, mono, color, state: 'setup', short, sub: d, details: [['Catégorie', catName], ['Ajouté', 'à l\'instant'], ['État', 'en attente d\'autorisation']],
-    kpis: [], scopes: [['Lire les données de ' + short, true], ['Recevoir les événements en temps réel', true], ['Écrire dans ' + short, false]], events: [], errors: [], live: [] });
+  CONNS.push({ id, name: n, cat: catName, mono, color, state: 'setup', short, sub: d, sites: [...ALL],
+    opts: [{ k: 'sites', t: 'Immeubles couverts', d: 'Tous par défaut, à affiner' }, { k: 'sw', t: `Recevoir les événements de ${short}`, d: 'En temps réel', on: true },
+      { k: 'sw', t: `Écrire dans ${short}`, d: 'Désactivé tant que le connecteur n\'est pas validé', on: false }, { k: 'sel', t: 'Synchronisation complète', v: 'Toutes les 5 min', opts: ['Toutes les 2 min', 'Toutes les 5 min', 'Toutes les 15 min'] }],
+    events: [], live: [] });
   CONN.sel = id; CONN.lib = false; renderLib(); renderConnectors();
 });
 document.getElementById('lib-q').addEventListener('input', e => { CONN.q = e.target.value; renderLib(); });
@@ -4002,9 +4032,9 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && CONN.lib) 
 setInterval(() => {
   const live = CONNS.filter(c => c.id !== 'greg' && (c.state === 'ok' || c.state === 'warn') && c.live?.length);
   if (!live.length) return;
-  const c = live[Math.floor(Math.random() * live.length)], [dir, name, text] = c.live[Math.floor(Math.random() * c.live.length)];
-  c.events.unshift({ ...cev(0, dir, name, text), at: Date.now() });
-  if (!document.getElementById('view-greg').hidden) { renderConnList(); if (CONN.sel === c.id) renderConn(); }
+  const c = live[Math.floor(Math.random() * live.length)], a = c.live[Math.floor(Math.random() * c.live.length)];
+  c.events.unshift({ ...cev(0, ...a), at: Date.now() });
+  if (!document.getElementById('view-greg').hidden && CONN.sel === c.id) renderConn();
 }, 7000);
 setInterval(() => { if (!document.getElementById('conn-other').hidden && !document.getElementById('view-greg').hidden) document.querySelectorAll('#conn-other [data-since]').forEach(s => s.textContent = dur(Date.now() - +s.dataset.since)); }, 1000);
 
