@@ -465,6 +465,16 @@
   .rule { display: flex; align-items: center; gap: 16px; background: var(--ink); color: #fff; border-radius: 20px; padding: 22px 28px; font-size: 23px; }
   .rule svg { width: 30px; height: 30px; color: #8fb0ff; flex: none; }
 
+  .opts-w { position: absolute; inset: 150px 96px 104px; display: flex; flex-direction: column; gap: 36px; }
+  .opts { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .opt { position: relative; border-radius: 26px; border: 1px solid var(--line); padding: 30px 34px; display: flex; flex-direction: column; gap: 12px; }
+  .opt.best { border: 2px solid var(--loop); box-shadow: 0 0 0 5px var(--loop-50); }
+  .opt .ol { align-self: flex-start; font-size: 16px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .opt.best .ol { color: var(--loop); }
+  .opt h3 { font-size: 40px; letter-spacing: -.02em; }
+  .opt .os { font-size: 21px; color: var(--muted); margin-bottom: 8px; }
+  .opt .seen li { font-size: 22px; }
+
   .inout { display: grid; grid-template-columns: 1fr 220px; gap: 24px; }
   .inout .does li { font-size: 20px; }
   .inout .out p { font-size: 19px; color: var(--muted); line-height: 1.4; margin-top: 6px; }
@@ -534,7 +544,7 @@
   <div class="left">
     <span class="eyebrow rise" style="--d:.1s">Quartier Libre Collection · Saint-Georges</span>
     <h1 class="rise" style="--d:.25s">Des robots qui aident<br><em>vos équipes.</em></h1>
-    <p class="lead rise" style="--d:.45s">Accueil, bagages, ménage et sécurité. Tout se pilote depuis un seul écran, relié à Greg.</p>
+    <p class="lead rise" style="--d:.45s">Accueil, bagages, ménage et sécurité. Les robots choisis pour Saint-Georges, et comment les mettre en place.</p>
     <div class="who rise" style="--d:.65s">
       <svg class="lp"><use href="#loop-mark"/></svg>
       <span class="x">×</span>
@@ -586,10 +596,6 @@
       <div class="fact rise" style="--d:.94s"><b>24/24</b><span>équipe à Madagascar</span></div>
       <div class="fact rise" style="--d:1.02s"><b>Greg</b><span>votre IA d'opérations</span></div>
     </div>
-    <div class="punch rise" style="--d:1.2s">
-      <div class="bar"><span class="r">Robot</span><span class="i">Intégration à votre SI</span></div>
-      <p>Le robot, c'est 20 % du sujet. Le brancher sur vos outils et vos équipes, c'est 80 %. <b>C'est notre métier.</b></p>
-    </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
@@ -599,7 +605,7 @@
   <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 1</div></div>
   <span class="big rise">1</span>
   <h1 class="rise" style="--d:.15s">Les robots</h1>
-  <p class="rise" style="--d:.3s">Ce qu'on a vu chez les fournisseurs, et ce qu'on retient.</p>
+  <p class="rise" style="--d:.3s">Ce que vous nous avez demandé : les robots, et leur mise en place.</p>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
@@ -608,28 +614,12 @@
   <div class="rsum">
     <h1 class="rise">Les robots retenus,<br><em>après les démos.</em></h1>
     <div class="rcards">
-      <div class="rcard rise" style="--d:.2s"><div class="rt" style="background:var(--navy)"><svg><use href="#i-bot"/></svg>P1 · Accueil</div><div class="rbody"><b>Temi 3</b><small>Génération Robots · Bordeaux</small><span class="price">8 175 € HT</span><p>Prise de main à distance native. SDK ouvert pour brancher Greg.</p><span class="chip g pop" data-at="900"><span class="dot"></span>Retenu</span></div></div>
+      <div class="rcard rise" style="--d:.2s"><div class="rt" style="background:var(--navy)"><svg><use href="#i-bot"/></svg>P1 · Accueil</div><div class="rbody"><b>Temi 3</b><small>Génération Robots · Bordeaux</small><span class="price">8 175 € HT</span><p>Madagascar prend la main en visio, sans rien installer.</p><span class="chip g pop" data-at="900"><span class="dot"></span>Retenu</span></div></div>
       <div class="rcard rise" style="--d:.3s"><div class="rt" style="background:var(--violet)"><svg><use href="#i-luggage"/></svg>P2 · Bagages</div><div class="rbody"><b>Piaggio Kilo</b><small>Piaggio Fast Forward · États-Unis</small><span class="price">Sur devis</span><p>Suit le client à l'aller, refait seul le trajet retour.</p><span class="chip g pop" data-at="1200"><span class="dot"></span>Retenu</span></div></div>
-      <div class="rcard rise" style="--d:.4s"><div class="rt" style="background:var(--sky)"><svg><use href="#i-brush"/></svg>P3 · Ménage</div><div class="rbody"><b>Roborock Saros</b><small>Gamme grand public</small><span class="price">Partagé entre appartements</span><p>Le plus complet à piloter depuis notre logiciel, pièce par pièce.</p><span class="chip g pop" data-at="1500"><span class="dot"></span>Retenu</span></div></div>
+      <div class="rcard rise" style="--d:.4s"><div class="rt" style="background:var(--sky)"><svg><use href="#i-brush"/></svg>P3 · Ménage</div><div class="rbody"><b>Roborock Saros</b><small>Gamme grand public</small><span class="price">Partagé entre appartements</span><p>Aspire et lave, appartement par appartement, pièce par pièce.</p><span class="chip g pop" data-at="1500"><span class="dot"></span>Retenu</span></div></div>
       <div class="rcard rise" style="--d:.5s"><div class="rt" style="background:#2a2f63"><svg><use href="#i-shield"/></svg>P1 · Sécurité</div><div class="rbody"><b>Pas de robot en plus</b><small>Temi + les robots de ménage</small><span class="price">0 €</span><p>Le robot de patrouille RB-WATCHER est écarté : 45 000 €, look industriel.</p><span class="chip g pop" data-at="1800"><span class="dot"></span>Retenu</span></div></div>
     </div>
     <p class="rfoot rise" style="--d:.7s"><b>Peinture :</b> pas de robot dans la plateforme. Une journée d'essai du robot PACO (≈ 2 000 €) sur un couloir, à part.</p>
-  </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
-</section>
-
-<section class="slide dark" data-scene="soft">
-  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 1 · Pourquoi ces robots</div></div>
-  <div class="soft">
-    <h1 class="rise">Un robot sans logiciel,<br><em>ça ne sert pas à grand-chose.</em></h1>
-    <div class="sbar rise" style="--d:.2s"><span class="r">Robot · 20 %</span><span class="i">Logiciel · 80 %</span></div>
-    <p class="lead rise" style="--d:.3s">80 % de ce qu'un robot apporte vient du logiciel. Notre premier critère de choix : des robots ouverts, qu'on peut piloter avec notre logiciel.</p>
-    <div class="vs">
-      <div class="vsh rise" style="--d:.4s"><span></span><span>Seul</span><span>Avec Loop</span></div>
-      <div class="vsr pop" data-at="900"><b>Temi</b><span>Répond aux questions.</span><span>Voit un client partir, prévient Greg, le ménage est lancé.</span></div>
-      <div class="vsr pop" data-at="1500"><b>Kilo</b><span>Suit une personne.</span><span>Part au check-in, appelle l'ascenseur, revient seul.</span></div>
-      <div class="vsr pop" data-at="2100"><b>Robot de ménage</b><span>Nettoie quand on appuie.</span><span>Lance le 203 dès le départ du client, jamais si c'est occupé.</span></div>
-    </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
@@ -646,7 +636,7 @@
         <h6>Vu en démo</h6>
         <ul class="seen">
           <li class="ok">Prise de main à distance native, depuis une appli.</li>
-          <li class="ok">SDK Android ouvert : on branche notre logiciel et Greg.</li>
+          <li class="ok">Écran tactile 13,3 pouces : lisible au comptoir.</li>
           <li class="ok">Format discret, il ne fait pas gadget.</li>
           <li class="ko">Ne prend pas l'ascenseur : il reste au rez-de-chaussée.</li>
           <li class="ko">Pas de vision de nuit.</li>
@@ -656,13 +646,13 @@
     </div>
     <div class="alts">
       <h6 class="rise" style="--d:.2s">Aussi vus en démo, écartés</h6>
-        <div class="alt pop" data-at="600"><span class="x">✕</span><div><b>GreetingBot Nova</b><small>≈ 27 000 € en location</small></div><p>56 kg, et son logiciel fait concurrence au nôtre.</p></div>
+        <div class="alt pop" data-at="600"><span class="x">✕</span><div><b>GreetingBot Nova</b><small>≈ 27 000 € en location</small></div><p>1,35 m et 56 kg : imposant pour le hall.</p></div>
         <div class="alt pop" data-at="1050"><span class="x">✕</span><div><b>GreetingBot Mini</b><small>5 512 € HT</small></div><p>55 cm : trop petit pour le hall.</p></div>
         <div class="alt pop" data-at="1500"><span class="x">✕</span><div><b>PadBot P3</b><small>Sur devis</small></div><p>Même format que Temi, mais pas de revendeur en France.</p></div>
         <div class="alt pop" data-at="1950"><span class="x">✕</span><div><b>Awabot Pro</b><small>Sur devis</small></div><p>Téléprésence seulement, pas d'autonomie.</p></div>
         <div class="alt pop" data-at="2400"><span class="x">✕</span><div><b>Furhat</b><small>30 000 €</small></div><p>Un comptoir qui parle, sans mobilité.</p></div>
         <div class="alt pop" data-at="2850"><span class="x">✕</span><div><b>Humanoïdes (Unitree G1, ARI)</b><small>22 500 € et plus</small></div><p>Pas prêts : encore téléopérés, et chers.</p></div>
-      <p class="note rise" style="--d:.4s">Le meilleur équilibre entre le prix, l'image et un logiciel ouvert.</p>
+      <p class="note rise" style="--d:.4s">Le meilleur équilibre entre le prix, l'image et la visio à distance.</p>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -683,7 +673,7 @@
           <li class="ok">Refait seul le trajet retour vers la bagagerie.</li>
           <li class="ok">Déjà utilisé dans des hôtels aux États-Unis, pour les bagages et le linge.</li>
           <li class="ko">Pas encore distribué en Europe.</li>
-          <li class="ko">L'ascenseur passe par notre logiciel.</li>
+          <li class="ko">Ne prend pas l'ascenseur tout seul.</li>
         </ul>
         <span class="chip g stamp pop" data-at="2700"><span class="dot"></span>Retenu</span>
       </div>
@@ -711,10 +701,10 @@
         <p class="specs">Aspire et lave · nettoyage pièce par pièce · plusieurs cartes</p>
         <h6>Vu en démo</h6>
         <ul class="seen">
-          <li class="ok">Le plus complet à piloter depuis notre logiciel.</li>
-          <li class="ok">On choisit les pièces : « lance le 203 » fonctionne.</li>
-          <li class="ok">Les commandes passent en local.</li>
-          <li class="ko">Sans le cloud Roborock, il coupe son accès local.</li>
+          <li class="ok">Le plus complet de sa gamme : aspire et lave.</li>
+          <li class="ok">On choisit l'appartement et les pièces à nettoyer.</li>
+          <li class="ok">Plusieurs cartes : un robot pour plusieurs appartements.</li>
+          <li class="ko">Dépend du cloud Roborock.</li>
           <li class="ko">Les cartes se créent dans l'appli Roborock.</li>
         </ul>
         <span class="chip g stamp pop" data-at="2700"><span class="dot"></span>Retenu</span>
@@ -722,11 +712,11 @@
     </div>
     <div class="alts">
       <h6 class="rise" style="--d:.2s">Aussi vus en démo, écartés</h6>
-        <div class="alt pop" data-at="600"><span class="x">✕</span><div><b>Dreame</b><small>Grand public</small></div><p>Le plus local, mais les nouveaux modèles arrivent en retard.</p></div>
+        <div class="alt pop" data-at="600"><span class="x">✕</span><div><b>Dreame</b><small>Grand public</small></div><p>Bon robot, mais les nouveaux modèles arrivent en retard en France.</p></div>
         <div class="alt pop" data-at="1050"><span class="x">✕</span><div><b>DJI Romo</b><small>Grand public</small></div><p>Tout passe par le cloud DJI. Faille de sécurité en février 2026.</p></div>
         <div class="alt pop" data-at="1500"><span class="x">✕</span><div><b>Ecovacs DEEBOT PRO</b><small>Sur devis</small></div><p>Gère l'ascenseur : à suivre pour plus tard.</p></div>
         <div class="alt pop" data-at="1950"><span class="x">✕</span><div><b>Pudu CC1</b><small>≈ 700 €/mois</small></div><p>Trop gros pour un appartement, bien pour les parties communes.</p></div>
-      <p class="note rise" style="--d:.4s">Notre logiciel parle à toutes les marques : on peut changer de robot sans tout refaire.</p>
+      <p class="note rise" style="--d:.4s">Des robots grand public : moins chers, faciles à remplacer.</p>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -736,7 +726,23 @@
   <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2</div></div>
   <span class="big rise">2</span>
   <h1 class="rise" style="--d:.15s">La plateforme</h1>
-  <p class="rise" style="--d:.3s">Un seul écran pour piloter les robots, branché sur vos outils.</p>
+  <p class="rise" style="--d:.3s">En plus des robots : un seul écran pour tout piloter, branché sur Greg.</p>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide dark" data-scene="soft">
+  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2 · En plus des robots</div></div>
+  <div class="soft">
+    <h1 class="rise">Un robot sans logiciel,<br><em>ça ne sert pas à grand-chose.</em></h1>
+    <div class="sbar rise" style="--d:.2s"><span class="r">Robot · 20 %</span><span class="i">Logiciel · 80 %</span></div>
+    <p class="lead rise" style="--d:.3s">80 % de ce qu'un robot apporte vient du logiciel. C'est pour ça qu'on a choisi des robots ouverts : on peut les brancher sur vos outils.</p>
+    <div class="vs">
+      <div class="vsh rise" style="--d:.4s"><span></span><span>Seul</span><span>Avec Loop</span></div>
+      <div class="vsr pop" data-at="900"><b>Temi</b><span>Répond aux questions.</span><span>Voit un client partir, prévient Greg, le ménage est lancé.</span></div>
+      <div class="vsr pop" data-at="1500"><b>Kilo</b><span>Suit une personne.</span><span>Part au check-in, appelle l'ascenseur, revient seul.</span></div>
+      <div class="vsr pop" data-at="2100"><b>Robot de ménage</b><span>Nettoie quand on appuie.</span><span>Lance le 203 dès le départ du client, jamais si c'est occupé.</span></div>
+    </div>
+  </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
@@ -1089,14 +1095,64 @@
   <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3</div></div>
   <span class="big rise">3</span>
   <h1 class="rise" style="--d:.15s">La roadmap</h1>
-  <p class="rise" style="--d:.3s">Des petites étapes, dans l'ordre des priorités de Michael.</p>
+  <p class="rise" style="--d:.3s">Deux options, dans l'ordre des priorités de Michael.</p>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
 <section class="slide" data-scene="roadmap">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · La roadmap</div></div>
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Deux options</div></div>
+  <div class="opts-w">
+    <h1 class="rise">Deux façons d'avancer,<br><em>avec les mêmes robots.</em></h1>
+    <div class="opts">
+      <div class="opt rise" style="--d:.2s">
+        <span class="ol">Option 1</span>
+        <h3>Les robots seuls</h3>
+        <p class="os">Ce que vous nous avez demandé.</p>
+        <ul class="seen">
+          <li class="ok">Rapide à lancer, peu de risque.</li>
+          <li class="ok">Chaque robot marche avec son appli.</li>
+          <li class="ko">Une appli par robot : les équipes jonglent.</li>
+          <li class="ko">Rien n'est relié à Greg, Mews ou Salto.</li>
+        </ul>
+      </div>
+      <div class="opt best rise" style="--d:.35s">
+        <span class="ol">Option 2</span>
+        <h3>Les robots + Loop</h3>
+        <p class="os">Ce qu'on vous propose en plus.</p>
+        <ul class="seen">
+          <li class="ok">Tout sur un seul écran.</li>
+          <li class="ok">Greg pilote les robots : un départ détecté, le ménage est lancé.</li>
+          <li class="ok">Madagascar voit et reprend tout à distance.</li>
+          <li class="ko">Plus long : on avance par petites étapes.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="rule rise" style="--d:.5s"><svg><use href="#i-check"/></svg>On peut commencer par l'option 1 et passer à l'option 2 ensuite : les robots restent les mêmes.</div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide" data-scene="roadmap">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Option 1</div></div>
   <div class="road2">
-    <h1 class="rise">Des petites étapes,<br><em>dans l'ordre de vos priorités.</em></h1>
+    <h1 class="rise">Option 1 : les robots seuls,<br><em>dans l'ordre de vos priorités.</em></h1>
+    <div class="stairs" style="grid-template-columns:repeat(6, 1fr)">
+      <div class="stp pop" data-at="300" style="--i:0"><span class="sn">0</span><h4>Écouter</h4><p>Interviews à Saint-Georges : réception, ménage, maintenance, Madagascar.</p></div>
+      <div class="stp pop" data-at="650" style="--i:1"><span class="sn">1</span><span class="st" style="background:var(--navy)">P1</span><h4>Temi</h4><p>Installé avec son appli : accueil et visio depuis Madagascar.</p></div>
+      <div class="stp pop" data-at="1000" style="--i:2"><span class="sn">2</span><span class="st" style="background:var(--violet)">P2</span><h4>Chariot</h4><p>Un Kilo testé avec l'équipe, puis au quotidien.</p></div>
+      <div class="stp pop" data-at="1350" style="--i:3"><span class="sn">3</span><span class="st" style="background:var(--navy)">P1</span><h4>Sécurité</h4><p>Temi pris en main la nuit depuis Madagascar.</p></div>
+      <div class="stp pop" data-at="1700" style="--i:4"><span class="sn">4</span><span class="st" style="background:var(--sky)">P3</span><h4>Ménage</h4><p>Robots installés, lancés depuis leur appli.</p></div>
+      <div class="stp pop" data-at="2050" style="--i:5"><span class="sn">5</span><h4>Bilan</h4><p>On mesure, puis on décide de la suite.</p></div>
+    </div>
+    <div class="rule rise" style="--d:.4s"><svg><use href="#i-check"/></svg>Chaque robot arrive avec son appli. Simple, mais rien n'est relié entre eux ni à Greg.</div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide" data-scene="roadmap">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Option 2</div></div>
+  <div class="road2">
+    <h1 class="rise">Option 2 : les robots + Loop,<br><em>par petites étapes.</em></h1>
     <div class="stairs">
       <div class="stp pop" data-at="300" style="--i:0"><span class="sn">0</span><h4>Écouter</h4><p>Interviews à Saint-Georges : réception, ménage, maintenance, Madagascar.</p></div>
       <div class="stp pop" data-at="650" style="--i:1"><span class="sn">1</span><span class="st" style="background:var(--navy)">P1</span><h4>Temi, version de base</h4><p>Plateforme minimale, sans 3D : check-in, check-out, bouton panique.</p></div>
@@ -1113,7 +1169,7 @@
 </section>
 
 <section class="slide" data-scene="step1">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Étape 1</div></div>
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Option 2 · étape 1</div></div>
   <div class="feat">
     <div class="txt">
       <span class="eyebrow rise"><span class="p">Étape 1</span>Accueil</span>
