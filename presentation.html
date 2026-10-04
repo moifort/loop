@@ -532,6 +532,35 @@
   .nstrip { grid-template-columns: 620px 520px 1fr 170px; }
   .nshot { align-self: stretch; background-size: 620px auto; background-position: center 0; background-repeat: no-repeat; }
   .slide.active .nshot { animation: robot-in .9s var(--ease) both; animation-delay: calc(var(--d, 0s) + .15s); }
+
+  /* ============ Robot choice (P1–P3): same language as the robots slide, tinted hero band and hairline rows ============ */
+  .pk { position: absolute; inset: 0; display: grid; grid-template-columns: 720px 1fr; }
+  .pk-hero { position: relative; overflow: hidden; background: var(--tint); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 104px 72px 0 96px; }
+  .pk-hero .name { font-size: 76px; letter-spacing: -.045em; line-height: 1; margin-top: 8px; }
+  .pk-hero small { font-size: 22px; color: var(--muted); }
+  .pk-hero .meta { display: flex; align-items: center; gap: 16px; margin-top: 14px; }
+  .pk-hero .price { font-size: 30px; font-weight: 800; letter-spacing: -.02em; }
+  .pk-hero .stamp { height: 38px; font-size: 17px; box-shadow: 0 4px 12px rgba(34,168,97,.25); }
+  .pk-hero .specs { font-size: 20px; line-height: 1.45; color: var(--ink-2); max-width: 520px; margin-top: 6px; }
+  .pk-hero .img { position: absolute; left: 0; right: 0; bottom: 0; height: 560px; display: flex; align-items: flex-end; justify-content: center; padding: 0 56px 48px; }
+  .pk-hero .img img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
+  .slide.active .pk-hero .img img { animation: robot-in .9s var(--ease) both; animation-delay: .25s; }
+  .pk-body { display: flex; flex-direction: column; justify-content: center; gap: 48px; padding: 96px 96px 96px 72px; }
+  .pk-body h6 { font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; }
+  .pk-seen { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 40px; }
+  .pk-seen li { position: relative; padding-left: 30px; font-size: 21px; line-height: 1.4; color: var(--ink-2); }
+  .pk-seen li::before { content: '✓'; position: absolute; left: 0; top: 0; font-weight: 800; color: var(--green); }
+  .pk-seen li.ko::before { content: '✕'; color: var(--red); }
+  .pk-alts { border-top: 1px solid var(--line); }
+  .pk-alt { display: grid; grid-template-columns: 96px 290px 1fr; gap: 24px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .pk-alt .th { position: relative; width: 96px; height: 72px; display: grid; place-items: center; }
+  .pk-alt .th img { max-width: 96px; max-height: 72px; object-fit: contain; mix-blend-mode: multiply; filter: grayscale(.35); }
+  .pk-alt .th.ph img { width: 96px; height: 72px; object-fit: cover; border-radius: 10px; mix-blend-mode: normal; }
+  .pk-alt .x { position: absolute; right: -4px; bottom: -2px; width: 22px; height: 22px; border-radius: 50%; background: var(--red); color: #fff; display: grid; place-items: center; font-size: 11px; font-weight: 800; box-shadow: 0 0 0 2px #fff; }
+  .pk-alt b { display: block; font-size: 21px; }
+  .pk-alt small { font-size: 16px; color: var(--muted); }
+  .pk-alt p { font-size: 18px; line-height: 1.4; color: var(--ink-2); }
+  .pk-note { font-size: 22px; font-weight: 600; color: var(--ink); }
 </style>
 </head>
 <body>
@@ -656,102 +685,81 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<section class="slide" data-scene="pick">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">P1 · Accueil · choix du robot</div></div>
-  <div class="pick">
-    <div class="txt">
-      <span class="eyebrow rise"><span class="p">P1</span>Accueil</span>
-      <h1 class="rise" style="--d:.1s">Accueil :<br><em>Temi 3.</em></h1>
-      <div class="keep rise" style="--d:.2s">
-        <div class="kh"><span class="kimg"><img src="https://www.generationrobots.com/20650-large_default/temi-3-service-robot.jpg" alt=""></span><div><b>Temi 3</b><small>Génération Robots · Bordeaux</small></div><span class="price">8 175 € HT</span></div>
-        <p class="specs">1 m · 12 kg · écran tactile 13,3 pouces · environ 8 h d'autonomie</p>
-        <h6>Vu en démo</h6>
-        <ul class="seen">
-          <li class="ok">Prise de main à distance native, depuis une appli.</li>
-          <li class="ok">Écran tactile 13,3 pouces : lisible au comptoir.</li>
-          <li class="ok">Format discret, il ne fait pas gadget.</li>
-          <li class="ko">Ne prend pas l'ascenseur : il reste au rez-de-chaussée.</li>
-          <li class="ko">Pas de vision de nuit.</li>
-        </ul>
-        <span class="chip g stamp pop" data-at="3600"><span class="dot"></span>Retenu</span>
-      </div>
+<section class="slide full" data-scene="pick">
+  <div class="pk">
+    <div class="pk-hero" style="--tint:#eef1fa">
+      <span class="btag rise" style="background:var(--navy)">P1 · Accueil</span>
+      <b class="name rise" style="--d:.1s">Temi 3</b>
+      <small class="rise" style="--d:.15s">Génération Robots · Bordeaux</small>
+      <div class="meta rise" style="--d:.2s"><span class="price">8 175 € HT</span><span class="chip g stamp pop" data-at="3600"><span class="dot"></span>Retenu</span></div>
+      <p class="specs rise" style="--d:.25s">1 m · 12 kg · écran tactile 13,3 pouces · environ 8 h d'autonomie</p>
+      <div class="img"><img src="https://www.generationrobots.com/20650-large_default/temi-3-service-robot.jpg" alt="Temi 3"></div>
     </div>
-    <div class="alts">
-      <h6 class="rise" style="--d:.2s">Aussi vus en démo, écartés</h6>
-        <div class="alt pop" data-at="600"><span class="ath"><img src="https://salesmotion.de/assets/greetingbot-nova-cut.webp" alt=""><span class="x">✕</span></span><div><b>GreetingBot Nova</b><small>≈ 27 000 € en location</small></div><p>1,35 m et 56 kg : imposant pour le hall.</p></div>
-        <div class="alt pop" data-at="1050"><span class="ath"><img src="https://www.generationrobots.com/20192-large_default/robot-de-service-greetingbot-mini.jpg" alt=""><span class="x">✕</span></span><div><b>GreetingBot Mini</b><small>5 512 € HT</small></div><p>55 cm : trop petit pour le hall.</p></div>
-        <div class="alt pop" data-at="1500"><span class="ath"><img src="https://padbotrobot.com/wp-content/uploads/2024/10/1-6.webp" alt=""><span class="x">✕</span></span><div><b>PadBot P3</b><small>Sur devis</small></div><p>Même format que Temi, mais pas de revendeur en France.</p></div>
-        <div class="alt pop" data-at="1950"><span class="ath"><img src="https://telepresence.awabot.com/wp-content/uploads/2018/06/4.png" alt=""><span class="x">✕</span></span><div><b>Awabot Pro</b><small>Sur devis</small></div><p>Téléprésence seulement, pas d'autonomie.</p></div>
-        <div class="alt pop" data-at="2400"><span class="ath ph"><img src="https://cdn.prod.website-files.com/66b323f041094f01cd836ea9/6704f8bd30c84ba34f884c46_Furhat%20Research.png" alt=""><span class="x">✕</span></span><div><b>Furhat</b><small>30 000 €</small></div><p>Un comptoir qui parle, sans mobilité.</p></div>
-        <div class="alt pop" data-at="2850"><span class="ath"><img src="https://escadrone.com/wp-content/uploads/2025/10/Robot-humanoide-Unitree-G1.png" alt=""><span class="x">✕</span></span><div><b>Humanoïdes (Unitree G1, ARI)</b><small>22 500 € et plus</small></div><p>Pas prêts : encore téléopérés, et chers.</p></div>
-      <p class="note rise" style="--d:.4s">Le meilleur équilibre entre le prix, l'image et la visio à distance.</p>
+    <div class="pk-body">
+      <div class="rise" style="--d:.2s"><h6>Vu en démo</h6><ul class="pk-seen"><li class="ok">Prise de main à distance native, depuis une appli.</li><li class="ok">Écran tactile 13,3 pouces : lisible au comptoir.</li><li class="ok">Format discret, il ne fait pas gadget.</li><li class="ko">Ne prend pas l'ascenseur : il reste au rez-de-chaussée.</li><li class="ko">Pas de vision de nuit.</li></ul></div>
+      <div class="rise" style="--d:.3s"><h6>Aussi vus en démo, écartés</h6>
+      <div class="pk-alts">
+        <div class="pk-alt pop" data-at="600"><span class="th"><img src="https://salesmotion.de/assets/greetingbot-nova-cut.webp" alt=""><span class="x">✕</span></span><div><b>GreetingBot Nova</b><small>≈ 27 000 € en location</small></div><p>1,35 m et 56 kg : imposant pour le hall.</p></div>
+        <div class="pk-alt pop" data-at="1050"><span class="th"><img src="https://www.generationrobots.com/20192-large_default/robot-de-service-greetingbot-mini.jpg" alt=""><span class="x">✕</span></span><div><b>GreetingBot Mini</b><small>5 512 € HT</small></div><p>55 cm : trop petit pour le hall.</p></div>
+        <div class="pk-alt pop" data-at="1500"><span class="th"><img src="https://padbotrobot.com/wp-content/uploads/2024/10/1-6.webp" alt=""><span class="x">✕</span></span><div><b>PadBot P3</b><small>Sur devis</small></div><p>Même format que Temi, mais pas de revendeur en France.</p></div>
+        <div class="pk-alt pop" data-at="1950"><span class="th"><img src="https://telepresence.awabot.com/wp-content/uploads/2018/06/4.png" alt=""><span class="x">✕</span></span><div><b>Awabot Pro</b><small>Sur devis</small></div><p>Téléprésence seulement, pas d'autonomie.</p></div>
+        <div class="pk-alt pop" data-at="2400"><span class="th ph"><img src="https://cdn.prod.website-files.com/66b323f041094f01cd836ea9/6704f8bd30c84ba34f884c46_Furhat%20Research.png" alt=""><span class="x">✕</span></span><div><b>Furhat</b><small>30 000 €</small></div><p>Un comptoir qui parle, sans mobilité.</p></div>
+        <div class="pk-alt pop" data-at="2850"><span class="th"><img src="https://escadrone.com/wp-content/uploads/2025/10/Robot-humanoide-Unitree-G1.png" alt=""><span class="x">✕</span></span><div><b>Humanoïdes (Unitree G1, ARI)</b><small>22 500 € et plus</small></div><p>Pas prêts : encore téléopérés, et chers.</p></div>
+      </div></div>
+      <p class="pk-note rise" style="--d:.4s">Le meilleur équilibre entre le prix, l'image et la visio à distance.</p>
     </div>
   </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection · P1 · Accueil · choix du robot</span><span class="n"></span></div>
 </section>
 
-<section class="slide" data-scene="pick">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">P2 · Bagages · choix du robot</div></div>
-  <div class="pick">
-    <div class="txt">
-      <span class="eyebrow rise"><span class="p">P2</span>Bagages</span>
-      <h1 class="rise" style="--d:.1s">Bagages :<br><em>Piaggio Kilo.</em></h1>
-      <div class="keep rise" style="--d:.2s">
-        <div class="kh"><span class="kimg"><img src="https://a.storyblok.com/f/255103/660x440/fdbd3f4063/kilo_gallery_side_mobile.webp/m/660x0/filters:quality(80)" alt=""></span><div><b>Piaggio Kilo</b><small>Piaggio Fast Forward · États-Unis</small></div><span class="price">Sur devis</span></div>
-        <p class="specs">Plateau 4 roues · 130 kg de charge · suit la personne devant ou derrière</p>
-        <h6>Vu en démo</h6>
-        <ul class="seen">
-          <li class="ok">Suit le client à basse vitesse, sans le doubler.</li>
-          <li class="ok">Refait seul le trajet retour vers la bagagerie.</li>
-          <li class="ok">Déjà utilisé dans des hôtels aux États-Unis, pour les bagages et le linge.</li>
-          <li class="ko">Pas encore distribué en Europe.</li>
-          <li class="ko">Ne prend pas l'ascenseur tout seul.</li>
-        </ul>
-        <span class="chip g stamp pop" data-at="2700"><span class="dot"></span>Retenu</span>
-      </div>
+<section class="slide full" data-scene="pick">
+  <div class="pk">
+    <div class="pk-hero" style="--tint:#f3effd">
+      <span class="btag rise" style="background:var(--violet)">P2 · Bagages</span>
+      <b class="name rise" style="--d:.1s">Piaggio Kilo</b>
+      <small class="rise" style="--d:.15s">Piaggio Fast Forward · États-Unis</small>
+      <div class="meta rise" style="--d:.2s"><span class="price">Sur devis</span><span class="chip g stamp pop" data-at="2700"><span class="dot"></span>Retenu</span></div>
+      <p class="specs rise" style="--d:.25s">Plateau 4 roues · 130 kg de charge · suit la personne devant ou derrière</p>
+      <div class="img"><img src="https://a.storyblok.com/f/255103/660x440/fdbd3f4063/kilo_gallery_side_mobile.webp/m/1200x0/filters:quality(85)" alt="Piaggio Kilo"></div>
     </div>
-    <div class="alts">
-      <h6 class="rise" style="--d:.2s">Aussi vus en démo, écartés</h6>
-        <div class="alt pop" data-at="600"><span class="ath ph"><img src="https://cdn.pudutech.com/official-website/pudut300/t300-banner-h5.webp" alt=""><span class="x">✕</span></span><div><b>Pudu T300</b><small>Sur devis</small></div><p>Base de 300 kg à habiller en chariot : look logistique.</p></div>
-        <div class="alt pop" data-at="1050"><span class="ath ph"><img src="https://cdn.pudutech.com/official-website/flashbot_new/s1-h5-1.webp" alt=""><span class="x">✕</span></span><div><b>Pudu FlashBot</b><small>Sur devis</small></div><p>30 kg maximum : pas fait pour des valises.</p></div>
-        <div class="alt pop" data-at="1500"><span class="ath"><img src="https://www.effidence.com/wp-content/uploads/2022/06/Effibot-HD-detoure-1170x660.png.webp" alt=""><span class="x">✕</span></span><div><b>EffiBOT, TwinswHeel</b><small>Sur devis</small></div><p>Pensés pour les entrepôts, à habiller et à sécuriser.</p></div>
-        <div class="alt pop" data-at="1950"><span class="ath ph"><img src="https://www.swissinfo.ch/content/wp-content/uploads/sites/13/2021/10/7b3cd6bd17a56f176fd7f574871c1f2b-image_20211022phf9151-data.jpg?ver=6293c0e6" alt=""><span class="x">✕</span></span><div><b>Robi (CarPostal)</b><small>Projet pilote</small></div><p>Bonne référence en Suisse, mais pas à vendre.</p></div>
-      <p class="note rise" style="--d:.4s">Aucun robot porte-bagages d'hôtel n'est prêt en France. Le Kilo est le plus proche du besoin.</p>
+    <div class="pk-body">
+      <div class="rise" style="--d:.2s"><h6>Vu en démo</h6><ul class="pk-seen"><li class="ok">Suit le client à basse vitesse, sans le doubler.</li><li class="ok">Refait seul le trajet retour vers la bagagerie.</li><li class="ok">Déjà utilisé dans des hôtels aux États-Unis, pour les bagages et le linge.</li><li class="ko">Pas encore distribué en Europe.</li><li class="ko">Ne prend pas l'ascenseur tout seul.</li></ul></div>
+      <div class="rise" style="--d:.3s"><h6>Aussi vus en démo, écartés</h6>
+      <div class="pk-alts">
+        <div class="pk-alt pop" data-at="600"><span class="th ph"><img src="https://cdn.pudutech.com/official-website/pudut300/t300-banner-h5.webp" alt=""><span class="x">✕</span></span><div><b>Pudu T300</b><small>Sur devis</small></div><p>Base de 300 kg à habiller en chariot : look logistique.</p></div>
+        <div class="pk-alt pop" data-at="1050"><span class="th ph"><img src="https://cdn.pudutech.com/official-website/flashbot_new/s1-h5-1.webp" alt=""><span class="x">✕</span></span><div><b>Pudu FlashBot</b><small>Sur devis</small></div><p>30 kg maximum : pas fait pour des valises.</p></div>
+        <div class="pk-alt pop" data-at="1500"><span class="th"><img src="https://www.effidence.com/wp-content/uploads/2022/06/Effibot-HD-detoure-1170x660.png.webp" alt=""><span class="x">✕</span></span><div><b>EffiBOT, TwinswHeel</b><small>Sur devis</small></div><p>Pensés pour les entrepôts, à habiller et à sécuriser.</p></div>
+        <div class="pk-alt pop" data-at="1950"><span class="th ph"><img src="https://www.swissinfo.ch/content/wp-content/uploads/sites/13/2021/10/7b3cd6bd17a56f176fd7f574871c1f2b-image_20211022phf9151-data.jpg?ver=6293c0e6" alt=""><span class="x">✕</span></span><div><b>Robi (CarPostal)</b><small>Projet pilote</small></div><p>Bonne référence en Suisse, mais pas à vendre.</p></div>
+      </div></div>
+      <p class="pk-note rise" style="--d:.4s">Aucun robot porte-bagages d'hôtel n'est prêt en France. Le Kilo est le plus proche du besoin.</p>
     </div>
   </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection · P2 · Bagages · choix du robot</span><span class="n"></span></div>
 </section>
 
-<section class="slide" data-scene="pick">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">P3 · Ménage · choix du robot</div></div>
-  <div class="pick">
-    <div class="txt">
-      <span class="eyebrow rise"><span class="p">P3</span>Ménage</span>
-      <h1 class="rise" style="--d:.1s">Ménage :<br><em>Roborock Saros.</em></h1>
-      <div class="keep rise" style="--d:.2s">
-        <div class="kh"><span class="kimg"><img src="https://global.roborock.com/cdn/shop/files/Saros_10R_ID.png?v=1758784740" alt=""></span><div><b>Roborock Saros</b><small>Gamme grand public</small></div><span class="price">Partagé</span></div>
-        <p class="specs">Aspire et lave · nettoyage pièce par pièce · plusieurs cartes</p>
-        <h6>Vu en démo</h6>
-        <ul class="seen">
-          <li class="ok">Le plus complet de sa gamme : aspire et lave.</li>
-          <li class="ok">On choisit l'appartement et les pièces à nettoyer.</li>
-          <li class="ok">Plusieurs cartes : un robot pour plusieurs appartements.</li>
-          <li class="ko">Dépend du cloud Roborock.</li>
-          <li class="ko">Les cartes se créent dans l'appli Roborock.</li>
-        </ul>
-        <span class="chip g stamp pop" data-at="2700"><span class="dot"></span>Retenu</span>
-      </div>
+<section class="slide full" data-scene="pick">
+  <div class="pk">
+    <div class="pk-hero" style="--tint:#e9f6fd">
+      <span class="btag rise" style="background:var(--sky)">P3 · Ménage</span>
+      <b class="name rise" style="--d:.1s">Roborock Saros</b>
+      <small class="rise" style="--d:.15s">Gamme grand public</small>
+      <div class="meta rise" style="--d:.2s"><span class="price">Partagé</span><span class="chip g stamp pop" data-at="2700"><span class="dot"></span>Retenu</span></div>
+      <p class="specs rise" style="--d:.25s">Aspire et lave · nettoyage pièce par pièce · plusieurs cartes</p>
+      <div class="img"><img src="https://global.roborock.com/cdn/shop/files/Saros_10R_ID.png?v=1758784740" alt="Roborock Saros"></div>
     </div>
-    <div class="alts">
-      <h6 class="rise" style="--d:.2s">Aussi vus en démo, écartés</h6>
-        <div class="alt pop" data-at="600"><span class="ath"><img src="https://www.dreametech.com/cdn/shop/files/X50-W_1_1200x1200.webp?v=1767170718" alt=""><span class="x">✕</span></span><div><b>Dreame</b><small>Grand public</small></div><p>Bon robot, mais les nouveaux modèles arrivent en retard en France.</p></div>
-        <div class="alt pop" data-at="1050"><span class="ath"><img src="https://www-cdn.djiits.com/dps/7123b636800c7e45bacc86c04bfab006.jpg?w=1516&h=1516" alt=""><span class="x">✕</span></span><div><b>DJI Romo</b><small>Grand public</small></div><p>Tout passe par le cloud DJI. Faille de sécurité en février 2026.</p></div>
-        <div class="alt pop" data-at="1500"><span class="ath ph"><img src="https://shopcdnalpha.grainajz.com/category/433863/3365/0b1f75c95dbb4920063777da886f709f/k1vac-2.jpg" alt=""><span class="x">✕</span></span><div><b>Ecovacs DEEBOT PRO</b><small>Sur devis</small></div><p>Gère l'ascenseur : à suivre pour plus tard.</p></div>
-        <div class="alt pop" data-at="1950"><span class="ath"><img src="https://static.generation-robots.com/img/robot-de-nettoyage-pudu-cc1.jpg" alt=""><span class="x">✕</span></span><div><b>Pudu CC1</b><small>≈ 700 €/mois</small></div><p>Trop gros pour un appartement, bien pour les parties communes.</p></div>
-      <p class="note rise" style="--d:.4s">Des robots grand public : moins chers, faciles à remplacer.</p>
+    <div class="pk-body">
+      <div class="rise" style="--d:.2s"><h6>Vu en démo</h6><ul class="pk-seen"><li class="ok">Le plus complet de sa gamme : aspire et lave.</li><li class="ok">On choisit l'appartement et les pièces à nettoyer.</li><li class="ok">Plusieurs cartes : un robot pour plusieurs appartements.</li><li class="ko">Dépend du cloud Roborock.</li><li class="ko">Les cartes se créent dans l'appli Roborock.</li></ul></div>
+      <div class="rise" style="--d:.3s"><h6>Aussi vus en démo, écartés</h6>
+      <div class="pk-alts">
+        <div class="pk-alt pop" data-at="600"><span class="th"><img src="https://www.dreametech.com/cdn/shop/files/X50-W_1_1200x1200.webp?v=1767170718" alt=""><span class="x">✕</span></span><div><b>Dreame</b><small>Grand public</small></div><p>Bon robot, mais les nouveaux modèles arrivent en retard en France.</p></div>
+        <div class="pk-alt pop" data-at="1050"><span class="th"><img src="https://www-cdn.djiits.com/dps/7123b636800c7e45bacc86c04bfab006.jpg?w=1516&h=1516" alt=""><span class="x">✕</span></span><div><b>DJI Romo</b><small>Grand public</small></div><p>Tout passe par le cloud DJI. Faille de sécurité en février 2026.</p></div>
+        <div class="pk-alt pop" data-at="1500"><span class="th ph"><img src="https://shopcdnalpha.grainajz.com/category/433863/3365/0b1f75c95dbb4920063777da886f709f/k1vac-2.jpg" alt=""><span class="x">✕</span></span><div><b>Ecovacs DEEBOT PRO</b><small>Sur devis</small></div><p>Gère l'ascenseur : à suivre pour plus tard.</p></div>
+        <div class="pk-alt pop" data-at="1950"><span class="th"><img src="https://static.generation-robots.com/img/robot-de-nettoyage-pudu-cc1.jpg" alt=""><span class="x">✕</span></span><div><b>Pudu CC1</b><small>≈ 700 €/mois</small></div><p>Trop gros pour un appartement, bien pour les parties communes.</p></div>
+      </div></div>
+      <p class="pk-note rise" style="--d:.4s">Des robots grand public : moins chers, faciles à remplacer.</p>
     </div>
   </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection · P3 · Ménage · choix du robot</span><span class="n"></span></div>
 </section>
 
 <section class="slide divider" data-scene="divider">
