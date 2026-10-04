@@ -1824,15 +1824,19 @@ function robotGlyph(x, y, z, color, label, opts = {}) {
   if (opts.tall) s += `<rect x="${cx - 4}" y="${cy - h - 12}" width="8" height="10" rx="2" fill="${color}"/><rect x="${cx - 3}" y="${cy - h - 10}" width="6" height="4" rx="1" fill="#fff" opacity=".8"/>`;
   if (opts.help) s += '</g>';
   // Every label opens its robot's sheet: an "open" arrow right after the name, a pointer on hover.
-  const tx = opts.alert ? 23 : 18, tw = labelW(label);
-  const lw = opts.link ? tx + tw + 14 : tx + tw + 10;
-  // Lucide arrow drawn at half size: its stroke spans 3.5–8.5 px of the 12 px box, so the box starts just before the text end
-  const linkIcon = opts.link ? `<g transform="translate(${tx + tw - 2},4) scale(.5)" fill="none" stroke="#006fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['arrow-up-right']}</g>` : '';
+  // Pill anatomy after Material 3 chips: what leads and what trails sit symmetrically. Same edge padding on both
+  // sides (dot or "!" badge on the left, arrow on the right) and the same gap on both sides of the name.
+  const pad = opts.alert ? 4 : 6, tx = opts.alert ? 23 : 18, gap = opts.alert ? 5 : 4, tw = labelW(label);
+  const ink = opts.alert ? '#b42318' : '#1f2328'; // the arrow takes the label's colour
+  // Lucide arrow at half size in a 12 px box: with its 1.6 px stroke it shows from 2.7 to 9.3 px
+  const ax = tx + tw + gap - 2.7;
+  const lw = opts.link ? Math.ceil(ax + 9.3 + pad) : tx + tw + pad + 4;
+  const linkIcon = opts.link ? `<g transform="translate(${ax.toFixed(1)},4) scale(.5)" fill="none" stroke="${ink}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['arrow-up-right']}</g>` : '';
   const linkAttrs = opts.link ? ` class="map-link" data-view="${opts.link}" role="link" tabindex="0"` : '';
   const badge = opts.alert
     ? `<circle cx="11" cy="10" r="7" fill="#e5484d"/><text x="11" y="14" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`
     : `<circle cx="10" cy="10" r="4" fill="${color}"/>`;
-  const tag = `<g${linkAttrs} transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><title>${opts.link ? (opts.link === 'accueil' ? 'Ouvrir la vue Accueil' : `Ouvrir la fiche de ${label}`) : label}</title><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : opts.focus ? color : '#e4e6ea'}"${opts.focus ? ' stroke-width="2.5"' : ''}/>${badge}<text x="${tx}" y="14" font-size="11" font-weight="600" fill="${opts.alert ? '#b42318' : '#1f2328'}">${label}</text>${linkIcon}</g>`;
+  const tag = `<g${linkAttrs} transform="translate(${cx - lw / 2},${cy - h - (opts.tall ? 42 : 30)})"><title>${opts.link ? (opts.link === 'accueil' ? 'Ouvrir la vue Accueil' : `Ouvrir la fiche de ${label}`) : label}</title><rect width="${lw}" height="20" rx="10" fill="#fff" stroke="${opts.alert ? '#f7c9cb' : opts.focus ? color : '#e4e6ea'}"${opts.focus ? ' stroke-width="2.5"' : ''}/>${badge}<text x="${tx}" y="14" font-size="11" font-weight="600" fill="${ink}">${label}</text>${linkIcon}</g>`;
   // Labels go to the overlay layer when one is given, so walls never hide them.
   // The robot picked in the robots table goes to the top layer, so no other label covers it.
   const layer = opts.focus && opts.top ? opts.top : opts.overlay;
