@@ -766,9 +766,9 @@
       <span class="eyebrow rise" style="align-self:flex-start">Le tableau de bord</span>
       <h1 class="rise" style="--d:.1s;font-size:56px">Tout Saint-Georges <em>sur un seul écran.</em></h1>
       <div class="list">
-        <div class="item rise" data-at="600" style="--d:.25s"><span class="ii"><svg><use href="#i-building"/></svg></span><div><h4>Les étages</h4><p>Le ménage avance en direct. Un problème passe au rouge.</p></div></div>
-        <div class="item rise" data-at="3200" style="--d:.35s"><span class="ii"><svg><use href="#i-bot"/></svg></span><div><h4>Les robots</h4><p>Position, batterie et mission de chaque robot.</p></div></div>
-        <div class="item rise" data-at="5800" style="--d:.45s"><span class="ii"><svg><use href="#i-siren"/></svg></span><div><h4>À traiter</h4><p>Une seule liste, triée par urgence. L'action est à un clic.</p></div></div>
+        <div class="item rise" data-at="600" data-off="7400" style="--d:.25s"><span class="ii"><svg><use href="#i-building"/></svg></span><div><h4>Les étages</h4><p>Le ménage avance en direct. Un problème passe au rouge.</p></div></div>
+        <div class="item rise" data-at="7600" data-off="10200" style="--d:.35s"><span class="ii"><svg><use href="#i-bot"/></svg></span><div><h4>Les robots</h4><p>Position, batterie et mission de chaque robot.</p></div></div>
+        <div class="item rise" data-at="10400" data-off="13000" style="--d:.45s"><span class="ii"><svg><use href="#i-siren"/></svg></span><div><h4>À traiter</h4><p>Une seule liste, triée par urgence. L'action est à un clic.</p></div></div>
       </div>
       <p class="open rise" style="--d:.6s">Maquette en direct : <a href="building-overview.html" target="_blank">ouvrir en plein écran ↗</a></p>
     </div>
@@ -777,9 +777,9 @@
         <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Quartier Libre Collection / Saint-Georges</span></div>
         <iframe data-src="building-overview.html" title="Maquette Loop" tabindex="-1"></iframe>
       </div>
-      <div class="hot pop" data-at="600" data-off="3000" style="left:120px;top:300px"><span class="pin"></span><span class="lbl">Le ménage, étage par étage</span></div>
-      <div class="hot pop" data-at="3200" data-off="5600" style="left:520px;top:400px"><span class="pin"></span><span class="lbl">Temi à l'accueil</span></div>
-      <div class="hot pop" data-at="5800" data-off="8400" style="left:120px;top:130px"><span class="pin"></span><span class="lbl">Les problèmes, du plus urgent au moins urgent</span></div>
+      <div class="hot pop" data-at="600" data-off="7400" style="left:350px;top:118px"><span class="pin"></span><span class="lbl">Le ménage, étage par étage</span></div>
+      <div class="hot pop" data-at="7600" data-off="10200" style="left:520px;top:400px"><span class="pin"></span><span class="lbl">Temi à l'accueil</span></div>
+      <div class="hot pop" data-at="10400" data-off="13000" style="left:120px;top:130px"><span class="pin"></span><span class="lbl">Les problèmes, du plus urgent au moins urgent</span></div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -1262,10 +1262,15 @@ const SCENES = {
 
   // Live mockup, loaded on first visit only (it is heavy and runs its own simulation)
   overview: {
-    dur: 8600,
+    dur: 13200,
     once(s) { const f = s.querySelector('iframe'); if (!f.src) f.src = f.dataset.src; },
-    reset(s) { s.querySelectorAll('.item').forEach(i => i.classList.remove('on')); },
-    run(s) { s.querySelectorAll('.item').forEach(i => at(+i.dataset.at + 2400, () => i.classList.remove('on'))); },
+    reset(s) { s.querySelector('iframe').contentWindow?.select?.('all'); },
+    // While "Les étages" is highlighted, the mockup opens each floor in turn, top to bottom, then the whole building again
+    run(s) {
+      const pick = (id) => s.querySelector('iframe').contentWindow?.select?.(id);
+      [5, 4, 3, 2, 1, 0].forEach((id, i) => at(1000 + i * 1050, () => pick(id)));
+      at(7400, () => pick('all'));
+    },
   },
 
   accueil: {
