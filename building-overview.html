@@ -41,17 +41,21 @@
   .nav-btn .conn[data-state="down"] { background: var(--red); animation: conn-blink 1s steps(2, start) infinite; }
   .nav-btn .conn[data-state="down"]::after { animation-duration: 1s; }
   @keyframes conn-blink { to { opacity: .35; } }
-  /* GregAi lost: degraded-mode strip under the top bar, on every view */
-  .greg-down { position: fixed; top: 52px; left: 64px; right: 0; height: 44px; z-index: 60; display: flex; align-items: center; gap: 12px; padding: 0 24px;
-    background: repeating-linear-gradient(-45deg, #f0a020 0 14px, #f4ab2e 14px 28px); color: #2b1a00; box-shadow: 0 2px 6px rgba(154,91,0,.25); }
+  /* Degraded mode: a thin amber frame around the whole UI, a timer button in the top bar, details in a popover */
+  body.greg-lost::before { content: ''; position: fixed; inset: 0; z-index: 99; pointer-events: none; box-shadow: inset 0 0 0 2px #f0a020; }
+  .top-acts { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+  .top .deg-btn { height: 32px; padding: 0 12px 0 10px; border-radius: 999px; gap: 7px; background: var(--amber-soft); border: 1px solid #f5d49a; color: #9a5b00; font-weight: 600; }
+  .top .deg-btn:hover { background: #ffecc7; }
+  .top .deg-btn[hidden] { display: none; }
+  .top .deg-btn .t { font-variant-numeric: tabular-nums; font-weight: 500; }
+  .top .deg-btn.down { background: var(--red-soft); border-color: #f5c2c3; color: #b42318; }
+  .greg-down { position: fixed; top: 58px; right: 16px; width: 380px; z-index: 120; display: flex; flex-direction: column; gap: 10px; padding: 14px 16px;
+    background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 12px 32px rgba(15,23,42,.18); }
   .greg-down[hidden] { display: none; }
-  .greg-down p { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .greg-down b { font-weight: 700; }
-  .greg-down .btn { height: 28px; background: #fff; border-color: transparent; color: #1f2328; font-weight: 600; }
-  .greg-down .btn.ghost { background: transparent; border-color: rgba(43,26,0,.45); color: inherit; }
-  .greg-down .btn.ghost:hover { background: rgba(255,255,255,.2); }
-  body.greg-lost main { padding-top: 64px; }
-  body.greg-lost .top { border-bottom-color: #f0a020; }
+  .greg-down .hd { display: flex; align-items: center; gap: 8px; font-weight: 600; color: #9a5b00; }
+  .greg-down.down .hd { color: #b42318; }
+  .greg-down p { color: var(--muted); line-height: 1.5; }
+  .greg-down .acts { display: flex; gap: 8px; flex-wrap: wrap; }
   @media (prefers-reduced-motion: reduce) { .nav-btn .conn[data-state="down"] { animation: none; } }
   @media (prefers-reduced-motion: reduce) { .nav-btn .conn::after { animation: none; } }
   .nav-sep { width: 24px; height: 1px; background: var(--border); margin: 6px 0; flex: none; }
@@ -598,8 +602,10 @@
   .pos-actions .btn:disabled { opacity: .5; cursor: default; }
 
   /* ---------- Panic button (top bar) ---------- */
-  .top .panic-fab { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 14px 0 11px; border-radius: 999px; background: var(--red); color: #fff; font-weight: 600; box-shadow: 0 2px 6px rgba(229,72,77,.3); transition: background .12s; }
+  .top .panic-fab { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 32px; min-width: 32px; padding: 0 7px; border-radius: 999px; background: var(--red); color: #fff; font-weight: 600; box-shadow: 0 2px 6px rgba(229,72,77,.3); transition: background .12s; }
   .top .panic-fab:hover { background: #d23b40; }
+  .top .panic-fab.alarm { padding: 0 14px 0 11px; }
+  #panic-fab-label:empty { display: none; }
   .top .panic-fab:active { transform: scale(.98); }
   .panic-fab.alarm { animation: fab-alarm 1.2s ease-out infinite; }
   @keyframes fab-alarm { 0% { box-shadow: 0 0 0 0 rgba(229,72,77,.55), 0 6px 16px rgba(229,72,77,.35); } 100% { box-shadow: 0 0 0 16px rgba(229,72,77,0), 0 6px 16px rgba(229,72,77,.35); } }
@@ -798,7 +804,6 @@
   /* ---------- Connectors: list on the left, selected connector on the right ---------- */
   /* Connectors page: full-height list on the left, flush with the nav; each column scrolls on its own */
   body.conn-view main { padding: 0; overflow: hidden; }
-  body.conn-view.greg-lost main { padding-top: 44px; }
   #view-greg { max-width: none; height: 100%; gap: 0; }
   .conn-layout { display: grid; grid-template-columns: 300px minmax(0, 1fr); height: 100%; min-height: 0; }
   .conn-side { display: flex; flex-direction: column; min-height: 0; background: var(--panel); border-right: 1px solid var(--border); }
@@ -1004,11 +1009,15 @@
   </button>
   <span class="sep" data-crumb hidden>/</span><span data-crumb id="crumb-label" hidden>Accueil</span>
   <span class="sep" data-crumb2 hidden>/</span><span data-crumb2 id="crumb-sub" hidden></span>
-  <!-- Always-available panic button, in the top bar on every view -->
-  <button class="panic-fab" id="panic-fab" title="Déclencher le bouton panique">
-    <i data-icon="siren" data-size="18"></i>
-    <span id="panic-fab-label">Panique</span>
-  </button>
+  <div class="top-acts">
+    <!-- Degraded mode (GregAi lost or paused, a connector paused): how long it has lasted; opens the details -->
+    <button class="deg-btn" id="deg-btn" hidden title="Voir le mode dégradé"><i data-icon="pause" data-size="15"></i>Mode dégradé<span class="t" id="deg-time"></span></button>
+    <!-- Always-available panic button, in the top bar on every view -->
+    <button class="panic-fab" id="panic-fab" title="Déclencher le bouton panique">
+      <i data-icon="siren" data-size="18"></i>
+      <span id="panic-fab-label"></span>
+    </button>
+  </div>
 </header>
 
 <!-- GregAi link lost: the whole interface shows the degraded mode -->
@@ -2340,7 +2349,7 @@ setInterval(() => {
   const on = !!ACC.panicAt;
   panicFab.classList.toggle('alarm', on);
   document.body.classList.toggle('alarm', on);
-  document.getElementById('panic-fab-label').textContent = on ? `Alerte en cours · ${dur(Date.now() - ACC.panicAt)}` : 'Panique';
+  document.getElementById('panic-fab-label').textContent = on ? `Alerte en cours · ${dur(Date.now() - ACC.panicAt)}` : '';
   panicFab.title = on ? 'Voir l\'alerte en cours' : 'Déclencher le bouton panique';
 }, 500);
 // The list re-renders every 1.5 s, so listen on its stable container rather than on each row.
@@ -3608,29 +3617,38 @@ function renderGregNav() {
   const others = typeof CONNS === 'undefined' ? [] : CONNS.filter(c => c.id !== 'greg' && c.state === 'paused');
   const gs = GREG.state, degraded = gs !== 'ok' || others.length > 0;
   document.getElementById('greg-nav-dot').dataset.state = gs === 'down' ? 'down' : degraded ? 'paused' : 'ok';
-  const el = document.getElementById('greg-down');
+  const el = document.getElementById('greg-down'), btn = document.getElementById('deg-btn');
   document.body.classList.toggle('greg-lost', degraded);
-  el.hidden = !degraded;
-  if (!degraded) return;
+  btn.hidden = !degraded;
+  if (!degraded) { el.hidden = true; GREG.popOpen = false; return; }
+  el.hidden = !GREG.popOpen;
+  // Since when the platform runs degraded: the oldest ongoing cause
+  const t0 = Math.min(...[gs === 'down' && GREG.downAt, gs === 'paused' && GREG.pausedAt, ...others.map(c => c.pausedAt || Date.now())].filter(Boolean));
+  btn.dataset.since = t0;
+  btn.classList.toggle('down', gs === 'down');
+  el.classList.toggle('down', gs === 'down');
+  document.getElementById('deg-time').textContent = dur(Date.now() - t0);
   const q = GEVENTS.filter(e => e.status === 'queued').length, qs = `${q} événement${q > 1 ? 's' : ''} en file`;
-  const open = document.getElementById('view-greg').hidden ? '<button class="btn ghost" data-g="open">Voir les connecteurs <span aria-hidden="true">→</span></button>' : '';
+  const open = document.getElementById('view-greg').hidden ? '<button class="btn" data-g="open">Voir les connecteurs <span aria-hidden="true">→</span></button>' : '';
   const more = n => n > 0 ? ` · ${n} autre${n > 1 ? 's' : ''} connecteur${n > 1 ? 's' : ''} en pause` : '';
   if (gs === 'down') {
     const next = Math.max(1, Math.ceil((GREG.nextTry - Date.now()) / 1000));
-    setHTML('greg-down', `${icon('plug', 18)}
-    <p><b>GregAi déconnecté · mode dégradé.</b> Les robots continuent seuls, les commandes de Greg sont suspendues, ${qs}. Nouvel essai dans ${next} s (tentative ${GREG.tries})${more(others.length)}.</p>
-    <button class="btn" data-g="reconnect">${icon('refresh-cw', 14)}Réessayer maintenant</button>${open}`);
+    setHTML('greg-down', `<div class="hd">${icon('plug', 16)}GregAi déconnecté</div>
+    <p>Les robots continuent seuls, les commandes de Greg sont suspendues, ${qs}. Nouvel essai dans ${next} s (tentative ${GREG.tries})${more(others.length)}.</p>
+    <div class="acts"><button class="btn primary" data-g="reconnect">${icon('refresh-cw', 14)}Réessayer maintenant</button>${open}</div>`);
   } else if (gs === 'paused') {
-    setHTML('greg-down', `${icon('pause', 18)}
-    <p><b>GregAi en pause · mode dégradé.</b> Synchro arrêtée par Michael depuis ${since(GREG.pausedAt)}. Les robots continuent seuls, les commandes de Greg sont suspendues, ${qs}${more(others.length)}.</p>
-    <button class="btn" data-g="resume">${icon('play', 14)}Reprendre et rejouer ${q}</button>${open}`);
+    setHTML('greg-down', `<div class="hd">${icon('pause', 16)}GregAi en pause</div>
+    <p>Synchro arrêtée par Michael. Les robots continuent seuls, les commandes de Greg sont suspendues, ${qs}${more(others.length)}.</p>
+    <div class="acts"><button class="btn primary" data-g="resume">${icon('play', 14)}Reprendre et rejouer ${q}</button>${open}</div>`);
   } else {
     const c = others[0];
-    setHTML('greg-down', `${icon('pause', 18)}
-    <p><b>${c.name} en pause · mode dégradé.</b> ${CONN_IMPACT[c.id] || `Les données de ${c.name} ne sont plus à jour dans Loop.`}${more(others.length - 1)}</p>
-    <button class="btn" data-cresume="${c.id}">${icon('play', 14)}Reprendre ${c.name}</button>${open}`);
+    setHTML('greg-down', `<div class="hd">${icon('pause', 16)}${c.name} en pause</div>
+    <p>${CONN_IMPACT[c.id] || `Les données de ${c.name} ne sont plus à jour dans Loop.`}${more(others.length - 1)}</p>
+    <div class="acts"><button class="btn primary" data-cresume="${c.id}">${icon('play', 14)}Reprendre ${c.name}</button>${open}</div>`);
   }
 }
+// The connector to open from the degraded-mode details: GregAi first, else the first paused one
+const degradedConn = () => GREG.state !== 'ok' ? 'greg' : (CONNS.find(c => c.id !== 'greg' && c.state === 'paused') || {}).id;
 // Resume a paused GregAi: queued events are replayed in order, oldest first
 function gregResume() {
   if (GREG.state !== 'paused') return;
@@ -3794,13 +3812,17 @@ setInterval(() => {
   if (Date.now() >= GREG.nextTry) { GREG.tries++; GREG.nextTry = Date.now() + 5000; }
   renderGreg();
 }, 1000);
-// The strip's "since" counter ticks on every view
-setInterval(() => document.querySelectorAll('#greg-down [data-since]').forEach(s => s.textContent = dur(Date.now() - +s.dataset.since)), 1000);
+// The degraded-mode timer ticks on every view
+setInterval(() => { const b = document.getElementById('deg-btn'); if (!b.hidden) document.getElementById('deg-time').textContent = dur(Date.now() - +b.dataset.since); }, 1000);
+document.getElementById('deg-btn').addEventListener('click', e => { e.stopPropagation(); GREG.popOpen = !GREG.popOpen; renderGregNav(); });
+// Click elsewhere closes the details
+document.addEventListener('click', e => { if (GREG.popOpen && !e.target.closest('#greg-down, #deg-btn')) { GREG.popOpen = false; renderGregNav(); } });
 document.getElementById('greg-down').addEventListener('click', e => {
   const g = e.target.closest('[data-g]')?.dataset.g, cr = e.target.closest('[data-cresume]')?.dataset.cresume;
+  if (g || e.target.closest('[data-cresume]')) GREG.popOpen = false;
   if (g === 'reconnect') gregUp();
   else if (g === 'resume') { gregResume(); renderGreg(); }
-  else if (g === 'open') showView('greg');
+  else if (g === 'open') { if (CONNS.some(c => c.id === degradedConn())) CONN.sel = degradedConn(); showView('greg'); }
   else if (cr) {
     const c = CONNS.find(x => x.id === cr);
     c.state = c.id === 'cams' ? 'warn' : 'ok';
@@ -4038,7 +4060,7 @@ function connAction(e) {
   const log = (dir, name, text) => c.events.unshift({ ...cev(0, dir, name, text, c.sites[0]), at: Date.now() });
   if (d.csel) { CONN.sel = d.csel; CONN.filter = 'all'; CONN.site = 'all'; CONN.open = null; document.getElementById('conn-main').scrollTop = 0; }
   else if (d.c === 'lib') { CONN.lib = true; CONN.q = ''; document.getElementById('lib-q').value = ''; renderLib(); setTimeout(() => document.getElementById('lib-q').focus(), 30); return; }
-  else if (d.cx === 'pause') { c.state = 'paused'; log('act', 'connector.paused', `Synchro avec ${c.name} mise en pause par Michael.`); }
+  else if (d.cx === 'pause') { c.state = 'paused'; c.pausedAt = Date.now(); log('act', 'connector.paused', `Synchro avec ${c.name} mise en pause par Michael.`); }
   else if (d.cx === 'resume') { c.state = c.id === 'cams' ? 'warn' : 'ok'; log('act', 'connector.resumed', `Synchro avec ${c.name} reprise, rattrapage terminé.`); }
   else if (d.cx === 'sync') log('act', 'sync.completed', `Synchronisation manuelle avec ${c.name} terminée.`);
   else if (d.cx === 'remove') { const i = CONNS.indexOf(c); if (c.id !== 'greg' && i > -1) { CONNS.splice(i, 1); CONN.sel = 'greg'; } }
