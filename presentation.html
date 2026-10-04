@@ -470,12 +470,13 @@
   .iph { flex: none; width: 290px; aspect-ratio: 1320 / 2868; padding: 10px; border-radius: 48px; background: #12131a; box-shadow: 0 30px 70px -24px rgba(18,19,26,.5); }
   .iph img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 38px; }
   /* One tinted column per role, the real screen rising from the bottom edge */
-  .rcols { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(5, 1fr); }
-  .rcol { position: relative; background: var(--tint); border-right: 1px solid rgba(18,19,26,.06); overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 96px 40px 0; }
+  .rhead { position: absolute; left: 96px; right: 96px; top: 72px; display: flex; flex-direction: column; gap: 20px; }
+  .rcols { position: absolute; inset: 236px 0 0; display: grid; grid-template-columns: repeat(5, 1fr); }
+  .rcol { position: relative; background: var(--tint); border-right: 1px solid rgba(18,19,26,.06); overflow: hidden; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 44px 40px 0; }
   .rcol b { font-size: 40px; letter-spacing: -.03em; line-height: 1.05; }
   .rcol small { font-size: 18px; color: var(--muted); line-height: 1.4; }
-  .rcol .scr { position: absolute; left: 50%; bottom: 56px; width: 290px; aspect-ratio: 1320 / 2868; margin-left: -145px; border-radius: 46px; border: 9px solid #12131a; background: #12131a; box-shadow: 0 40px 80px -30px rgba(18,19,26,.45); overflow: hidden; }
-  .rcol .scr img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 37px; }
+  .rcol .scr { position: absolute; left: 50%; bottom: 40px; width: 250px; aspect-ratio: 1320 / 2868; margin-left: -125px; border-radius: 40px; border: 8px solid #12131a; background: #12131a; box-shadow: 0 40px 80px -30px rgba(18,19,26,.45); overflow: hidden; }
+  .rcol .scr img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 32px; }
   .slide.active .rcol .scr { animation: scr-up 1s var(--ease) both; animation-delay: calc(var(--d, 0s) + .15s); }
   @keyframes scr-up { from { opacity: 0; transform: translateY(80px); } }
 
@@ -975,6 +976,10 @@
 
 <!-- ======================= Companion app · one screen per role (same language as the robots slide) ======================= -->
 <section class="slide full" data-scene="companion">
+  <div class="rhead">
+    <span class="eyebrow rise">L'app compagnon</span>
+    <h1 class="rise" style="--d:.1s">Un compagnon <em>pour chaque métier.</em></h1>
+  </div>
   <div class="rcols">
     <div class="rcol rise" style="--d:0.05s;--tint:#eef1fa"><span class="btag" style="background:var(--navy)">Accueil et sécurité</span><b>Sarah</b><small>Alertes, Temi en visio, caméras, bouton panique.</small><div class="scr"><img src="assets/ios/deck/reception.jpg" alt="Écran Accueil et sécurité"></div></div>
     <div class="rcol rise" style="--d:0.15s;--tint:#e9f6fd"><span class="btag" style="background:var(--sky)">Entretien</span><b>Inès</b><small>Ses appartements, le robot qui se lance, ce qui reste à faire.</small><div class="scr"><img src="assets/ios/deck/housekeeping.jpg" alt="Écran Entretien"></div></div>
