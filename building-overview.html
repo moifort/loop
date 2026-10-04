@@ -747,11 +747,17 @@
   #view-vigie .vig-alert .btn.ghost { background: transparent; border-color: rgba(255,255,255,.6); color: #fff; }
   @keyframes vig-alert { 50% { box-shadow: 0 0 0 7px rgba(229,72,77,.18); } }
   /* Section plan */
-  .vig-plan { padding: 4px 16px 0; }
-  .vig-plan svg { width: 100%; height: auto; }
-  .vig-plan .lvl { cursor: pointer; }
-  .vig-plan .lvl:hover .band { stroke: var(--blue); }
-  .vig-plan .lvl.sel .band { stroke: var(--blue); stroke-width: 2; }
+  .vig-stage > .floors { gap: 16px; }
+  .vig-stage .bld .legend { justify-content: center; }
+  #view-vigie.night .fl.sel { background: #1f2a3d; border-color: #2f3c55; box-shadow: none; }
+  #view-vigie.night .fl .lv { background: #3a465c; }
+  .fl .vig-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 6px; padding-left: 42px; color: var(--muted); font-size: 12px; }
+  .fl.all .vig-meta { padding-left: 0; }
+  .fl .vig-meta span { display: inline-flex; align-items: center; gap: 4px; }
+  .fl .vig-meta .off { color: #e5484d; }
+  .fl .fl-acts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; padding-left: 42px; }
+  .fl.trouble .vig-meta, .fl.trouble .vig-meta .off { color: #fff; }
+  #view-vigie .fl.trouble .btn { background: #fff; border-color: #fff; color: #b42318; font-weight: 600; }
   .vig-pulse { transform-box: fill-box; transform-origin: center; animation: vig-pulse 1.3s ease-out infinite; }
   @keyframes vig-pulse { from { transform: scale(.6); opacity: .9; } to { transform: scale(2.4); opacity: 0; } }
   /* Mission */
@@ -780,6 +786,16 @@
   .cam-t.motion { box-shadow: 0 0 0 2px var(--red); }
   .cam-t.mine { box-shadow: 0 0 0 2px #8b5cf6; }
   .cam-t.off svg { filter: grayscale(1) brightness(.35); }
+  /* Real footage over the illustrated fallback; night cameras switch to infrared (black and white) */
+  .cam-t video.feed { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .45s ease; }
+  .cam-t video.fading { opacity: 0; }
+  .cam-t.has-video > svg.scene { visibility: hidden; }
+  #view-vigie.night .cam-t video.feed { filter: grayscale(1) contrast(1.25) brightness(1.1); }
+  .cam-t svg.ovl { position: absolute; inset: 0; pointer-events: none; }
+  #vig-cams-sub .link { color: var(--blue); font-weight: 500; margin-left: 4px; }
+  #vig-cams-sub .link:hover { text-decoration: underline; }
+  #view-vigie .bld svg .floor:hover { filter: brightness(1.06); }
+  .cams-empty { padding: 4px 16px 16px; color: var(--muted); }
   .vig-two { display: grid; grid-template-columns: 1fr 340px; gap: 16px; align-items: start; }
   @container (max-width: 800px) { .vig-two { grid-template-columns: 1fr; } }
   .vig-log li { grid-template-columns: 44px 24px 1fr; }
@@ -1290,28 +1306,27 @@
   <div class="vig-alert" id="vig-alert" hidden></div>
   <div class="card rf-head" id="vig-head"></div>
 
-  <div class="acc-grid">
-    <div class="card">
-      <div class="card-h"><h3>Plan de vigie</h3><div class="right">Cliquez un étage pour l'explorer</div></div>
-      <div class="vig-plan" id="vig-plan"></div>
-      <div class="legend">
-        <span><i class="sw" style="background:#0ea5e9"></i>Robot de ménage</span>
-        <span><i class="sw" style="background:#1e3a8a"></i>Temi</span>
-        <span><i class="sw" style="background:#22a861"></i>Caméra</span>
-        <span><i class="sw" style="background:#8b5cf6"></i>Robot en mission</span>
-        <span><i class="sw" style="background:repeating-linear-gradient(-45deg,#f0a020 0 3px,transparent 3px 6px)"></i>Zone fermée</span>
-      </div>
-    </div>
-    <div class="side">
+  <!-- Same stage as the building view: floor list on the left (filters the plan and the feeds), 3D building on the right -->
+  <div class="stage vig-stage">
+    <div class="floors">
+      <div id="vig-floors" class="floors"></div>
       <div class="card">
         <div class="card-h"><h3>Mission</h3><div class="right" id="vig-mis-state"></div></div>
         <div class="vig-mis" id="vig-mis"></div>
       </div>
     </div>
+    <div class="bld">
+      <svg id="vig-iso" viewBox="30 24 532 632"></svg>
+      <div class="legend">
+        <span><i class="sw" style="background:#22a861;opacity:.5"></i>Champ des caméras</span>
+        <span><i class="sw" style="background:#8b5cf6"></i>Robot en mission</span>
+        <span><i class="sw" style="background:repeating-linear-gradient(-45deg,#f0a020 0 3px,transparent 3px 6px)"></i>Zone fermée</span>
+      </div>
+    </div>
   </div>
 
   <div class="card">
-    <div class="card-h"><h3>Caméras</h3><div class="right" id="vig-cams-sub"></div></div>
+    <div class="card-h"><h3 id="vig-cams-title">Caméras</h3><div class="right" id="vig-cams-sub"></div></div>
     <div class="cams" id="vig-cams"></div>
   </div>
 
@@ -1861,18 +1876,21 @@ function helpBubble(x, y) {
 }
 
 // Open storey: cutaway with extruded rooms and robot position.
-function openFloor(f, z0) {
-  const states = roomStates(f);
+// The Vigie view reuses it (opts.vig): neutral rooms, camera fields of view, robots on patrol, closed zone.
+function openFloor(f, z0, opts = {}) {
+  const vig = !!opts.vig, states = roomStates(f);
   const WALL = 30, LOW = 7;
   let s = poly(quad(0, D, W, D, z0 - 6, z0), `fill="${CORNICE}"`) + poly(quad(W, 0, W, D, z0 - 6, z0), 'fill="#c8baa0"');
   f.layout.rooms.forEach(r => {
     let fill = '#f2f4f7';
-    if (r.kind === 'apt') fill = ROOM_STATE[states[r.id]].fill;
-    if (r.kind === 'corridor' || r.kind === 'lobby') fill = f.robot.pct > 0 ? '#e6f6f3' : '#f2f4f7';
+    if (r.kind === 'apt' && !vig) fill = ROOM_STATE[states[r.id]].fill;
+    if ((r.kind === 'corridor' || r.kind === 'lobby') && !vig) fill = f.robot.pct > 0 ? '#e6f6f3' : '#f2f4f7';
     if (r.kind === 'core') fill = '#e4e7eb';
     s += poly([P(r.x1, r.y1, z0), P(r.x2, r.y1, z0), P(r.x2, r.y2, z0), P(r.x1, r.y2, z0)], `fill="${fill}" stroke="#e1e5ea" stroke-width=".6"`);
   });
-  const items = [];
+  // Under the walls: closed-zone hatching and the camera fields of view, drawn on the floor
+  if (vig) s += vigFloorPlate(f, z0);
+  const items = vig ? vigFloorItems(f, z0) : [];
   // Each wall is cut into <= 0.5 unit pieces: sorting long walls by their midpoint
   // draws a long back wall over a short partition in front of it.
   const wall = (x1, y1, x2, y2, h, shade) => {
@@ -1899,10 +1917,10 @@ function openFloor(f, z0) {
     const inside = guest || [f.robot.at, f.greeter && f.greeter.at, f.porter && f.porter.at].some(a => a && a[0] > r.x1 && a[0] < r.x2 && a[1] > r.y1 && a[1] < r.y2);
     const c = inside ? P(r.x1 + 0.9, r.y1 + 0.7, z0) : P((r.x1 + r.x2) / 2, (r.y1 + r.y2) / 2, z0);
     const st = r.kind === 'apt' ? states[r.id] : null;
-    roomLabels.push(`<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' ? '#b42318' : '#5b636d'}" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">${r.id}</text>`);
+    roomLabels.push(`<text x="${c[0]}" y="${c[1] + 4}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${st === 'blocked' && !vig ? '#b42318' : '#5b636d'}" stroke="#fff" stroke-width="3" stroke-linejoin="round" paint-order="stroke">${r.id}</text>`);
   });
   // State marker on every apartment: coloured disc + white icon (same icons as the list chips)
-  f.layout.rooms.filter(q => q.kind === 'apt').forEach(q => {
+  if (!vig) f.layout.rooms.filter(q => q.kind === 'apt').forEach(q => {
     const st = ROOM_STATE[states[q.id]];
     const [cx, cy] = P((q.x1 + q.x2) / 2 + 0.35, (q.y1 + q.y2) / 2 + 0.35, z0);
     items.push({ d: (q.x1 + q.x2) / 2 + (q.y1 + q.y2) / 2 + 0.7, svg:
@@ -1910,6 +1928,18 @@ function openFloor(f, z0) {
       `<g transform="translate(${cx - 5},${cy - 16}) scale(.4167)" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">${ICON[st.icon]}</g>` });
   });
   const r = f.robot, st = STATE[r.state];
+  if (vig) {
+    // Night watch: robots at their base or on patrol (violet), the greeter in the hall
+    const mine = VIG.mission && !VIG.mission.done && VIG.mission.floors.includes(f.id);
+    const bots = [[r.name, mine ? '#8b5cf6' : STATE.run.color, 1, 'robot/' + r.name, {}]];
+    if (f.greeter) bots.push([f.greeter.name, mine ? '#8b5cf6' : '#1e3a8a', 0, 'accueil', { tall: true }]);
+    bots.forEach(([name, color, which, link, o]) => {
+      const a = vRobotAt(f.id, f.greeter ? which : 0);
+      items.push({ d: a.x + a.y + 0.1, svg: robotGlyph(a.x, a.y, z0, color, name, { ...o, link, pulse: mine, overlay: robotTags, top: topTags }) });
+    });
+    items.sort((a, b) => a.d - b.d).forEach(i => s += i.svg);
+    return s + roomLabels.join('') + robotTags.join('') + topTags.join('');
+  }
   items.push({ d: r.at[0] + r.at[1] + 0.1, svg: robotGlyph(r.at[0], r.at[1], z0, st.color, r.name, { link: 'robot/' + r.name, pulse: r.state === 'run', alert: r.state === 'blocked', help: r.state === 'blocked', focus: shownFocus() === r.name, overlay: robotTags, top: topTags }) });
   if (f.porter && !inLift(f.porter)) {
     const p = f.porter;
@@ -1932,15 +1962,19 @@ function ghost(zFrom, zTo) {
   return s + '</g>';
 }
 
-function renderBuilding() {
-  const svg = document.getElementById('iso');
-  const top = FLOORS.length * H;
-  // Sidewalk: a strip along the facade, exactly as wide as the building.
+// Sidewalk along the facade, exactly as wide as the building, with the street lamp of the brand illustration
+function streetSvg() {
   let s = poly([P(0, D, 0), P(W, D, 0), P(W, D + 1.8, 0), P(0, D + 1.8, 0)], 'fill="#e6e8e4"');
   s += poly([P(0, D + 0.6, 0), P(W, D + 0.6, 0), P(W, D + 1.8, 0), P(0, D + 1.8, 0)], 'fill="#d9dcd6"');
   // street lamp, as in the brand illustration
   const lb = P(0.5, D + 1.2, 0), lt = P(0.5, D + 1.2, 58);
-  s += line(lb, lt, `stroke="${IRON}" stroke-width="2"`) + `<rect x="${lt[0] - 4}" y="${lt[1] - 10}" width="8" height="10" rx="1.5" fill="${IRON}"/><rect x="${lt[0] - 2.5}" y="${lt[1] - 8}" width="5" height="6" fill="#ffe7a3"/>`;
+  return s + line(lb, lt, `stroke="${IRON}" stroke-width="2"`) + `<rect x="${lt[0] - 4}" y="${lt[1] - 10}" width="8" height="10" rx="1.5" fill="${IRON}"/><rect x="${lt[0] - 2.5}" y="${lt[1] - 8}" width="5" height="6" fill="#ffe7a3"/>`;
+}
+
+function renderBuilding() {
+  const svg = document.getElementById('iso');
+  const top = FLOORS.length * H;
+  let s = streetSvg();
   const ordered = [...FLOORS].sort((a, b) => a.id - b.id), view = shown();
   if (view === 'all') {
     ordered.forEach(f => s += closedFloor(f, f.id * H, { progress: true }));
@@ -2630,10 +2664,15 @@ function mountClip(name, parent, before = null) {
   if (!v) {
     v = clipEls[name] = document.createElement('video');
     Object.assign(v, { src: c.src, muted: true, loop: true, playsInline: true, preload: 'auto', className: c.className });
+    // Clips sharing a source start at different points, so two feeds never show the same frame
+    if (c.start) v.addEventListener('loadedmetadata', () => { v.currentTime = c.start; }, { once: true });
     // Fade out just before the loop point and back in after the jump, so the cut never shows.
     v.addEventListener('timeupdate', () => {
-      if (v.currentTime >= c.end) { v.currentTime = 0; v.classList.remove('fading'); }
-      else if (v.currentTime >= c.end - 0.6) v.classList.add('fading');
+      const end = c.end || v.duration;
+      if (!end) return;
+      if (v.currentTime >= end - 0.05) { v.currentTime = 0; v.classList.remove('fading'); }
+      else if (v.currentTime >= end - 0.6) v.classList.add('fading');
+      else v.classList.remove('fading');
     });
     v.addEventListener('playing', () => v.parentElement && v.parentElement.classList.add('has-video'));
     // A loop must never end: restart on 'ended' (if the loop point is missed) and retry after a network error.
@@ -2661,6 +2700,8 @@ setInterval(() => {
   if (document.hidden) return;   // hidden pane: playback is throttled, not stuck
   Object.values(clipEls).forEach(v => {
     if (!v.isConnected) return;
+    // In a hidden view (the camera wall while on another screen): pause rather than stream for nothing
+    if (!v.getClientRects().length) { if (!v.paused) v.pause(); return; }
     if (v.paused) { v.play().catch(() => {}); return; }
     if (v.currentTime !== v.lastTime) { v.stuck = 0; v.lastTime = v.currentTime; return; }
     // Not advancing: a loaded clip only needs a nudge; reload only a stream that has been starved for ~8 s
@@ -2670,7 +2711,7 @@ setInterval(() => {
   });
 }, 2000);
 document.addEventListener('visibilitychange', () => {
-  if (!document.hidden) Object.values(clipEls).forEach(v => v.isConnected && v.play().catch(() => {}));
+  if (!document.hidden) Object.values(clipEls).forEach(v => v.isConnected && v.getClientRects().length && v.play().catch(() => {}));
 });
 
 // FaceTime-style communication controls over the feed: mic on/off, then a green camera to take control
@@ -2947,6 +2988,8 @@ function showView(v) {
   document.body.classList.toggle('conn-view', v === 'greg');
   document.querySelectorAll('.top [data-site]').forEach(el => el.hidden = v === 'greg');
   renderGregNav(); // the degraded-mode strip offers a way to the connectors from every other view
+  // The camera wall streams only while it is on screen
+  if (v !== 'vigie') Object.entries(clipEls).forEach(([k, c]) => k.startsWith('vig:') && c.pause());
   if (v === 'accueil') renderAccueil(); else if (v === 'greg') renderConnectors(); else if (v === 'vigie') renderVigie(); else renderAll();
 }
 document.querySelectorAll('.nav-btn[data-view]').forEach(b => b.onclick = () => showView(b.dataset.view));
@@ -4131,18 +4174,24 @@ const vClock = () => {
   const m = Math.floor(VIG.base + (Date.now() - VIG.t0) / 60000) % 1440;
   return `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
 };
-// Fixed cameras of the building (plan units along the floor, 0–12)
+// Fixed cameras of the building, placed on the plan (x, y in plan units), looking along `dir` (degrees) with a
+// field of view `fov` (degrees) and a reach `range`; the field is clipped to the room the camera is in.
+// `feed`: looping Pexels footage (free licence) standing in for the live stream.
+const PEXELS = id => `https://videos.pexels.com/video-files/${id}.mp4`;
 const CAMS = [
-  { id: 'CAM-É5', floor: 5, x: 0.7, name: 'Couloir É5' },
-  { id: 'CAM-É4', floor: 4, x: 0.7, name: 'Couloir É4', off: true },
-  { id: 'CAM-É3', floor: 3, x: 0.7, name: 'Couloir É3' },
-  { id: 'CAM-É2', floor: 2, x: 0.7, name: 'Couloir É2' },
-  { id: 'CAM-É1', floor: 1, x: 0.7, name: 'Couloir É1' },
-  { id: 'CAM-ESC', floor: 3, x: 4.6, name: 'Cage d\'escalier' },
-  { id: 'CAM-HALL', floor: 0, x: 0.8, name: 'Hall · entrée' },
-  { id: 'CAM-REC', floor: 0, x: 4.4, name: 'Réception' },
-  { id: 'CAM-SERV', floor: 0, x: 11.4, name: 'Porte de service' },
+  { id: 'CAM-É5', floor: 5, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É5', feed: PEXELS('1509536/1509536-sd_960_540_30fps') },
+  { id: 'CAM-É4', floor: 4, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É4', off: true },
+  { id: 'CAM-É3', floor: 3, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É3', feed: PEXELS('5372868/5372868-sd_960_506_25fps') },
+  { id: 'CAM-É2', floor: 2, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É2', feed: PEXELS('4500262/4500262-sd_960_540_24fps') },
+  { id: 'CAM-É1', floor: 1, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É1', feed: PEXELS('5372870/5372870-sd_960_506_25fps') },
+  { id: 'CAM-ESC', floor: 3, x: 3.15, y: 5.85, dir: -45, fov: 80, range: 3.2, name: 'Cage d\'escalier', feed: PEXELS('4752628/4752628-sd_960_540_25fps') },
+  { id: 'CAM-HALL', floor: 0, x: 4.85, y: 0.15, dir: 118, fov: 62, range: 7, name: 'Hall · entrée', kind: 'hall', feed: PEXELS('855139/855139-sd_960_540_30fps') },
+  { id: 'CAM-REC', floor: 0, x: 0.15, y: 0.15, dir: 50, fov: 56, range: 5, name: 'Réception', kind: 'hall', feed: PEXELS('7820478/7820478-sd_960_540_25fps') },
+  { id: 'CAM-SERV', floor: 0, x: 11.85, y: 3.25, dir: -140, fov: 58, range: 4.5, name: 'Porte de service', kind: 'door', feed: PEXELS('9218140/9218140-sd_960_540_30fps') },
 ];
+// Robot cameras: first-person walk down a corridor while patrolling; the É4 robot stands still to relay CAM-É4
+const ROBOT_FEEDS = [PEXELS('15201563/15201563-sd_640_360_24fps'), PEXELS('15201618/15201618-sd_640_360_24fps')];
+const RELAY_FEED = PEXELS('36188116/15347467_640_360_25fps');
 // Scripted findings of a mission, per floor (fraction of the mission when they come up)
 const VIG_FIND = {
   5: { at: .48, lvl: 'warn', txt: 'CLN-C6F2 · É5 : le mouvement venait d\'un rideau. Fenêtre de l\'app. 503 restée ouverte par les peintres. Photo prise.', fix: true },
@@ -4193,16 +4242,132 @@ function vTick() {
     VIG_LOG.unshift({ t: vClock(), k: 'ok', ic: 'check', html: `<b>${m.kind === 'ronde' ? 'Ronde terminée' : 'Exploration terminée'}</b> : ${warn} anomalie${warn > 1 ? 's' : ''}, 0 intrusion`, sub: 'Rapport envoyé à GregAi · robots rentrés à leur base' });
   }
 }
-// Position of a robot along its floor (plan units): patrolling ping-pong during a mission, at its base otherwise
-function vRobotX(id, which = 0) {
+// Where a robot is on its floor (plan units) and which way it faces: patrolling back and forth during a mission
+// (corridor upstairs, hall and through-rooms on the RDC), at its base otherwise. which = 0: greeter on the RDC.
+const vOnMission = id => { const m = VIG.mission; return !!m && !m.done && m.floors.includes(id); };
+function vRobotAt(id, which = 0) {
   const m = VIG.mission, f = vFloor(id);
-  if (m && !m.done && m.floors.includes(id)) {
-    const ph = (vProg() * (m.kind === 'ronde' ? 2 : 1.5) + id * .13 + which * .5) % 1, tri = ph < .5 ? ph * 2 : 2 - ph * 2;
-    return .6 + tri * 10.8;
+  if (vOnMission(id)) {
+    const ph = (vProg() * (m.kind === 'ronde' ? 2 : 1.5) + id * .13 + which * .5) % 1, fwd = ph < .5, tri = fwd ? ph * 2 : 2 - ph * 2;
+    if (id === 0 && which === 0) return { x: .8 + tri * 3.4, y: 4.2, dir: fwd ? 0 : 180 };
+    return { x: .6 + tri * 10.8, y: id === 0 ? 1.7 : 3, dir: fwd ? 0 : 180 };
   }
-  if (id === 0 && which === 0) return greeterOf().at[0];
-  if (VIG.mode === 'jour') return f.robot.at[0];
-  return f.robot.base ? f.robot.base[0] : 4;
+  if (id === 0 && which === 0) { const [x, y] = greeterOf().at; return { x, y, dir: 90 }; }
+  const [x, y] = VIG.mode === 'jour' ? f.robot.at : f.robot.base || [4, 3];
+  return { x, y, dir: 0 };
+}
+const vAlertOpen = id => VIG.alert && VIG.alert.floor === id && VIG.alert.state === 'open' && VIG.closed[id];
+
+// Field of view on the plan: a fan from the camera, clipped to the room it looks into (Sutherland–Hodgman)
+function vFan(x, y, dir, fov, range, f) {
+  const room = f.layout.rooms.find(q => x >= q.x1 && x <= q.x2 && y >= q.y1 && y <= q.y2) || { x1: 0, y1: 0, x2: W, y2: D };
+  let pts = [[x, y]];
+  for (let i = 0; i <= 12; i++) { const a = (dir - fov / 2 + fov * i / 12) * Math.PI / 180; pts.push([x + Math.cos(a) * range, y + Math.sin(a) * range]); }
+  [[0, room.x1, 1], [0, room.x2, -1], [1, room.y1, 1], [1, room.y2, -1]].forEach(([k, v, sg]) => {
+    const inside = p => (p[k] - v) * sg >= -1e-9, out = [];
+    pts.forEach((p, n) => {
+      const q = pts[(n + pts.length - 1) % pts.length];
+      const cut = () => { const t = (v - q[k]) / (p[k] - q[k]); return [q[0] + (p[0] - q[0]) * t, q[1] + (p[1] - q[1]) * t]; };
+      if (inside(p)) { if (!inside(q)) out.push(cut()); out.push(p); } else if (inside(q)) out.push(cut());
+    });
+    pts = out;
+  });
+  return pts;
+}
+// Floor of an open storey in the Vigie view: hatching when the zone is closed, then the camera fields of view
+function vigFloorPlate(f, z0) {
+  const z = z0 + 0.5, plate = (pts, attrs) => poly(pts.map(([x, y]) => P(x, y, z)), attrs);
+  let s = VIG.closed[f.id] ? plate([[0, 0], [W, 0], [W, D], [0, D]], 'fill="url(#vhatch3d)"') : '';
+  CAMS.filter(c => c.floor === f.id).forEach(c => {
+    const fan = vFan(c.x, c.y, c.dir, c.fov, c.range, f), motion = c.id === VIG.alert?.cam && vAlertOpen(f.id);
+    s += c.off ? plate(fan, 'fill="none" stroke="#e5484d" stroke-width="1.2" stroke-dasharray="4 4" opacity=".7"')
+      : plate(fan, `fill="${motion ? '#e5484d' : '#22a861'}" fill-opacity="${motion ? .28 : .2}" stroke="${motion ? '#e5484d' : '#22a861'}" stroke-opacity=".55" stroke-width="1"`);
+  });
+  // Robots on patrol film ahead of them
+  [[f.robot, f.greeter ? 1 : 0]].concat(f.greeter ? [[f.greeter, 0]] : []).forEach(([, which]) => {
+    if (!vOnMission(f.id)) return;
+    const a = vRobotAt(f.id, which);
+    s += plate(vFan(a.x, a.y, a.dir, 70, 2.6, f), 'fill="#8b5cf6" fill-opacity=".22" stroke="#8b5cf6" stroke-opacity=".5" stroke-width="1"');
+  });
+  return s;
+}
+// Camera markers (disc + icon, like the apartment markers of the building view) and the live alert, depth-sorted with the walls
+function vigFloorItems(f, z0) {
+  const items = [];
+  const disc = (x, y, color, ic, title, cls = '') => { const [cx, cy] = P(x, y, z0);
+    return `<g${cls}><title>${title}</title><circle cx="${cx}" cy="${cy - 11}" r="10" fill="${color}" stroke="#fff" stroke-width="2"/>` +
+      `<g transform="translate(${cx - 6},${cy - 17}) scale(.5)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE[ic]}</g></g>`; };
+  CAMS.filter(c => c.floor === f.id).forEach(c => {
+    const motion = c.id === VIG.alert?.cam && vAlertOpen(f.id);
+    // In front of the wall the camera hangs on
+    items.push({ d: c.x + c.y + 0.8, svg: disc(c.x, c.y, c.off ? '#e5484d' : motion ? '#e5484d' : '#22a861', c.off ? 'video-off' : 'cctv', `${c.id} · ${c.name}${c.off ? ' · hors ligne' : ''}`) });
+  });
+  if (vAlertOpen(f.id)) {
+    const [cx, cy] = P(10, 1.2, z0);
+    items.push({ d: 11.2, svg: `<g><title>Mouvement détecté · app. 503</title><circle class="vig-pulse" cx="${cx}" cy="${cy - 11}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy - 11}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy - 6.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>` });
+  }
+  return items;
+}
+// Closed storey in the Vigie view: hatching on the facade when the zone is closed, offline camera, live alert,
+// robots on patrol as violet dots at their position along the floor
+function vigFacade(f, z0) {
+  const z1 = z0 + H - 6, zm = (z0 + z1) / 2;
+  let s = `<g class="floor" data-id="${f.id}">`;
+  if (VIG.closed[f.id]) s += poly(quad(0, D, W, D, z0, z1), 'fill="url(#vhatch3d)"') + poly(quad(W, 0, W, D, z0, z1), 'fill="url(#vhatch3d)"');
+  CAMS.filter(c => c.floor === f.id && c.off).forEach(c => {
+    const [cx, cy] = P(c.x + .6, D, zm);
+    s += `<g><title>${c.id} hors ligne</title><circle cx="${cx}" cy="${cy}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2"/><g transform="translate(${cx - 6},${cy - 6}) scale(.5)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['video-off']}</g></g>`;
+  });
+  if (vOnMission(f.id)) (f.greeter ? [0, 1] : [0]).forEach(w => {
+    const [cx, cy] = P(vRobotAt(f.id, w).x, D, zm);
+    s += `<circle class="pulse" cx="${cx}" cy="${cy}" r="6" fill="#8b5cf6" style="animation-delay:-${Math.round(performance.now() % 1600)}ms"/><circle cx="${cx}" cy="${cy}" r="6" fill="#fff" stroke="#8b5cf6" stroke-width="3"/>`;
+  });
+  if (vAlertOpen(f.id)) {
+    const [cx, cy] = P(10, D, zm);
+    s += `<g><title>Mouvement au ${f.id}ᵉ · zone fermée</title><circle class="vig-pulse" cx="${cx}" cy="${cy}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy + 4.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>`;
+  }
+  return s + '</g>';
+}
+
+// Same building as the main view: whole building closed, or the picked floor opened with the ones above as a ghost
+function renderVigBuilding() {
+  const svg = document.getElementById('vig-iso'), view = VIG.sel, ordered = [...FLOORS].sort((a, b) => a.id - b.id);
+  let s = '<defs><pattern id="vhatch3d" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="3" height="9" fill="#f0a020" opacity=".4"/></pattern></defs>' + streetSvg();
+  if (view === null) ordered.forEach(f => s += closedFloor(f, f.id * H, { progress: false }) + vigFacade(f, f.id * H));
+  else {
+    const sel = vFloor(view);
+    ordered.filter(f => f.id < view).forEach(f => s += closedFloor(f, f.id * H, { progress: false }) + vigFacade(f, f.id * H));
+    s += openFloor(sel, sel.id * H, { vig: true });
+    if (sel.id < FLOORS.length - 1) s += ghost(sel.id * H + H, FLOORS.length * H);
+  }
+  svg.innerHTML = s;
+}
+
+// Floor list: same rows as the building view; picking a floor filters the plan and the camera feeds,
+// and the picked floor carries its own actions
+function renderVigFloors() {
+  const running = VIG.mission && !VIG.mission.done, camsOn = CAMS.filter(c => !c.off).length;
+  const open = vAll().find(vAlertOpen), off = CAMS.filter(c => c.off);
+  const issues = [
+    open !== undefined && `<span class="issue alarm-issue" data-vfloor="${open}">${BELL('#e5484d')}<span class="txt">Mouvement au ${open}ᵉ · ${VIG.alert.cam}</span><span class="tags"><span class="tag-lvl">${vLvl(open)}</span></span></span>`,
+    ...off.map(c => `<span class="issue" data-vfloor="${c.floor}">${BELL('#f0a020')}<span class="txt">${c.id} hors ligne</span><span class="tags"><span class="tag-lvl">${vLvl(c.floor)}</span></span></span>`),
+  ].filter(Boolean);
+  let h = `<div class="fl all ${VIG.sel === null ? 'sel' : ''}" data-vfloor="all" role="button" tabindex="0">
+      <div class="r1"><span class="nm">Tout le bâtiment</span>${open !== undefined ? '<span class="chip err">Alerte en cours</span>' : running ? '<span class="chip acc">Ronde en cours</span>' : '<span class="chip ok">Tout est calme</span>'}</div>
+      <div class="vig-meta"><span>${icon('cctv', 13)}${camsOn}/${CAMS.length} caméras</span><span>${icon('bot', 13)}7 robots</span></div>
+      ${issues.length ? `<div class="issues">${issues.join('')}</div>` : ''}</div>`;
+  vAll().forEach(id => {
+    const f = vFloor(id), cams = CAMS.filter(c => c.floor === id), alert = vAlertOpen(id), mine = vOnMission(id), sel = VIG.sel === id;
+    const chip = alert ? '<span class="chip err">Mouvement</span>' : mine ? `<span class="chip acc">${icon('loader-circle', 12, { cls: 'spin' })}En ronde</span>`
+      : VIG.closed[id] ? '<span class="chip warn">Fermé</span>' : cams.some(c => c.off) ? '<span class="chip warn">Caméra HS</span>' : '<span class="chip ok">Calme</span>';
+    const acts = !sel ? '' : alert && !mine ? `<button class="btn primary" data-v="check">${icon('brush-cleaning', 14)}Envoyer ${f.robot.name} vérifier</button>`
+      : mine ? '' : `<button class="btn" data-v="explore">${icon('eye', 14)}Envoyer ${vTeam(id).join(' et ')} explorer</button>`;
+    h += `<div class="fl ${sel ? 'sel' : ''} ${alert ? 'trouble' : ''}" data-vfloor="${id}" role="button" tabindex="0">
+      <div class="r1"><span class="lv">${f.label}</span><span class="nm">${f.name}</span>${chip}</div>
+      <div class="vig-meta">${cams.map(c => `<span class="${c.off ? 'off' : ''}">${icon(c.off ? 'video-off' : 'cctv', 13)}${c.id}</span>`).join('')}<span>${icon(id === 0 ? 'bot' : 'brush-cleaning', 13)}${vTeam(id).join(' · ')}</span></div>
+      ${acts ? `<div class="fl-acts">${acts}</div>` : ''}</div>`;
+  });
+  setHTML('vig-floors', h);
 }
 
 function vCamScene(kind, o = {}) {
@@ -4211,7 +4376,7 @@ function vCamScene(kind, o = {}) {
                : { bg: '#2a2f3b', ceil: '#efe9de', wall: '#d9d0bf', wall2: '#cfc5b2', floor: '#9c8a70', door: '#8a6b4a', light: '#fffbe8', far: '#c8bda8' };
   const vy = o.low ? 64 : 84, ft = vy - 26, fb = vy + 26, fl = 128, fr = 192;
   const L = (a, b, t) => a + (b - a) * t;
-  let s = `<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice"><rect width="320" height="180" fill="${C.bg}"/>`;
+  let s = `<svg class="scene" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice"><rect width="320" height="180" fill="${C.bg}"/>`;
   s += `<polygon points="0,0 320,0 ${fr},${ft} ${fl},${ft}" fill="${C.ceil}"/>`;
   s += `<polygon points="0,180 320,180 ${fr},${fb} ${fl},${fb}" fill="${C.floor}"/>`;
   s += `<polygon points="0,0 ${fl},${ft} ${fl},${fb} 0,180" fill="${C.wall}"/>`;
@@ -4233,6 +4398,12 @@ function vCamScene(kind, o = {}) {
   }
   if (kind === 'door') s += `<rect x="${fl + 18}" y="${ft + 10}" width="28" height="${fb - ft - 10}" fill="${C.door}"/><rect x="${fl + 22}" y="${ft + 2}" width="20" height="6" rx="1" fill="#22a861"/>`;
   if (o.robot) s += `<ellipse cx="160" cy="176" rx="60" ry="10" fill="#000" opacity=".25"/>`;
+  return s + '</svg>';
+}
+// Detection boxes drawn over the feed (video or illustration)
+function vCamOverlay(o) {
+  if (!o.motion && !o.found) return '';
+  let s = '<svg class="ovl" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">';
   if (o.motion) s += `<rect x="232" y="44" width="54" height="84" fill="none" stroke="#ff4d55" stroke-width="2"/><rect x="232" y="34" width="54" height="11" fill="#ff4d55"/><text x="236" y="42.5" font-size="8" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">MOUVEMENT</text>`;
   if (o.found) s += `<rect x="226" y="40" width="62" height="92" fill="none" stroke="#f0a020" stroke-width="2" stroke-dasharray="5 3"/><rect x="226" y="30" width="62" height="11" fill="#f0a020"/><text x="230" y="38.5" font-size="8" font-weight="700" fill="#2b1a00" font-family="-apple-system,sans-serif">RIDEAU · 503</text>`;
   return s + '</svg>';
@@ -4281,7 +4452,8 @@ function renderVigie() {
          <button class="btn ghost" data-v="cam">Voir la caméra</button><button class="btn ghost" data-v="dismiss">Lever l'alerte</button>`);
   }
 
-  renderVigPlan();
+  renderVigFloors();
+  renderVigBuilding();
 
   // Mission card
   setHTML('vig-mis-state', running ? `<span class="chip acc">${icon('loader-circle', 14, { cls: 'spin' })}${Math.round(p * 100)} %</span>` : m ? '<span class="chip ok">Terminée</span>' : '<span class="chip idle">Aucune</span>');
@@ -4297,32 +4469,53 @@ function renderVigie() {
       ${m.found.length ? `<ul class="vig-find">${m.found.map(id => VIG_FIND[id]).map(f => `<li>${icon(f.lvl === 'warn' ? 'triangle-alert' : 'check', 13, { color: f.lvl === 'warn' ? '#f0a020' : '#22a861', sw: 2.6 })}<span>${f.txt}</span></li>`).join('')}</ul>` : ''}
       ${running ? '' : '<div class="acts"><button class="btn" data-v="clear">Fermer</button></div>'}`
     : `<p class="hint">Les robots quittent leur base, parcourent les couloirs caméra allumée et rentrent seuls. Temi couvre le hall et la porte de service.</p>
-      ${VIG.sel !== null ? `<div class="acts"><button class="btn primary" data-v="explore">${icon('eye', 14)}Explorer l'${vLvl(VIG.sel)}</button></div>` : ''}
-      ${VIG.sel === null ? '<p class="hint">Cliquez un étage sur le plan pour y envoyer son robot en exploration.</p>' : `<p class="hint">${vTeam(VIG.sel).join(' et ')} ${vTeam(VIG.sel).length > 1 ? 'partent' : 'part'} explorer l'${vLvl(VIG.sel)}${VIG.mode === 'jour' ? ' ; le ménage reprend juste après' : ''}.</p>`}`);
+      <p class="hint">${VIG.sel === null ? 'Choisissez un étage dans la liste ou sur le plan pour y envoyer son robot en exploration.' : `Le bouton de l'${vLvl(VIG.sel)} envoie ${vTeam(VIG.sel).join(' et ')} explorer${VIG.mode === 'jour' ? ' ; le ménage reprend juste après' : ''}.`}</p>`);
 
-  // Camera wall: fixed cameras + the robots' own cameras
+  // Camera wall: fixed cameras + the robots' own cameras, filtered by the floor picked in the list or on the plan
   const motion = alertOpen && VIG.alert.state === 'open';
-  const tiles = [
-    { id: 'CAM-HALL', kind: 'hall' }, { id: 'CAM-SERV', kind: 'door' }, { id: 'CAM-É5' }, { id: 'CAM-É4' }, { id: 'CAM-É3' },
-    { id: greeterOf().name, robot: true, floor: 0, name: 'Caméra de Temi · hall', kind: 'hall' },
-    { id: vFloor(5).robot.name, robot: true, floor: 5, name: 'Caméra embarquée · É5', low: true },
-    { id: vFloor(4).robot.name, robot: true, floor: 4, name: 'Relaie CAM-É4 · É4', low: true },
+  const robotCam = id => ({ id: id === 0 ? vFloor(0).robot.name : vFloor(id).robot.name, robot: true, floor: id, low: true,
+    name: id === 4 ? 'Relaie CAM-É4 · É4' : `Caméra embarquée · ${vLvl(id)}` });
+  const all = [
+    ...CAMS.map(c => ({ id: c.id, floor: c.floor, kind: c.kind })),
+    { id: greeterOf().name, robot: true, temi: true, floor: 0, name: 'Caméra de Temi · hall', kind: 'hall' },
+    ...vAll().map(robotCam),
   ];
-  setHTML('vig-cams-sub', `${camsOn} fixes en ligne · ${night || running ? 'caméras des robots actives' : 'caméras des robots en veille'}`);
+  const live = t => t.temi || t.floor === 4 || vOnMission(t.floor);
+  const tiles = (VIG.sel === null ? all.filter(t => !t.robot || live(t)) : all.filter(t => t.floor === VIG.sel))
+    .map((t, n) => ({ ...t, n, rank: (motion && t.id === VIG.alert.cam ? -100 : 0) - t.floor * 2 + (t.robot ? 1 : 0) }))
+    .sort((a, b) => a.rank - b.rank || a.n - b.n);
+  const liveCount = tiles.filter(t => !(CAMS.find(c => c.id === t.id) || {}).off && (!t.robot || live(t))).length;
+  setHTML('vig-cams-title', VIG.sel === null ? 'Caméras' : `Caméras · ${vLvl(VIG.sel)}`);
+  setHTML('vig-cams-sub', VIG.sel === null ? `${camsOn} fixes en ligne · ${running ? 'caméras des robots en ronde actives' : 'caméras des robots à leur base'}`
+    : `${liveCount} flux sur ${tiles.length} · <button class="link" data-vfloor="all">Toutes les caméras</button>`);
   setHTML('vig-cams', tiles.map(t => {
     const c = CAMS.find(x => x.id === t.id) || {}, off = c.off;
-    const onMission = t.robot && running && m.floors.includes(t.floor);
-    const robotIdle = t.robot && !night && !onMission && t.floor !== 0;
-    const isMotion = motion && t.id === 'CAM-É5';
+    const onMission = t.robot && vOnMission(t.floor);
+    const robotIdle = t.robot && !live(t);
+    const isMotion = motion && t.id === VIG.alert.cam;
     const found = t.id === vFloor(5).robot.name && m && m.found.includes(5);
     const chip = off ? '<span class="chip err">Hors ligne</span>' : isMotion ? '<span class="chip err">Mouvement</span>' : found ? '<span class="chip warn">Photo prise</span>'
-      : onMission ? '<span class="chip acc">En mission</span>' : robotIdle ? '<span class="chip idle" style="color:#fff">En veille</span>' : VIG.closed[t.floor ?? c.floor] ? '<span class="chip warn">Zone fermée</span>' : '<span class="chip ok">En ligne</span>';
-    return `<div class="cam-t ${isMotion ? 'motion' : ''} ${onMission ? 'mine' : ''} ${off || robotIdle ? 'off' : ''}" ${t.id === 'CAM-É5' ? 'id="vig-cam-e5"' : ''}>
-      ${vCamScene(t.kind, { night, low: t.low, robot: t.robot, motion: isMotion, found })}
+      : onMission ? '<span class="chip acc">En ronde</span>' : robotIdle ? '<span class="chip idle" style="color:#fff">À sa base</span>' : VIG.closed[t.floor] ? '<span class="chip warn">Zone fermée</span>' : '<span class="chip ok">En ligne</span>';
+    return `<div class="cam-t ${isMotion ? 'motion' : ''} ${onMission ? 'mine' : ''} ${off || robotIdle ? 'off' : ''}" data-cam="${t.id}" ${t.id === 'CAM-É5' ? 'id="vig-cam-e5"' : ''}>
+      ${vCamScene(t.kind, { night, low: t.low, robot: t.robot })}${vCamOverlay({ motion: isMotion, found })}
       <span class="lb">${t.id}<small>${t.name || c.name}</small></span>
       ${off ? '' : `<span class="rec"><i></i>${vClock()}</span>`}
       <span class="ft">${chip}</span></div>`;
-  }).join(''));
+  }).join('') || '<p class="cams-empty">Aucune caméra à cet étage.</p>');
+  // Footage: one looping clip per feed, kept across re-renders; feeds filtered out or idle are paused
+  const want = new Set();
+  tiles.forEach(t => {
+    const c = CAMS.find(x => x.id === t.id) || {};
+    if (c.off || (t.robot && !live(t))) return;
+    const key = 'vig:' + t.id;
+    if (!CLIPS[key]) CLIPS[key] = t.temi ? { ...CLIPS.lobby, className: 'feed' }
+      : t.robot ? { src: t.floor === 4 ? RELAY_FEED : ROBOT_FEEDS[t.floor % 2], start: t.floor * 1.7, className: 'feed' }
+      : { src: c.feed, className: 'feed' };
+    const tile = document.querySelector(`#vig-cams [data-cam="${t.id}"]`);
+    want.add(key);
+    mountClip(key, tile, tile.querySelector('.lb'));
+  });
+  Object.entries(clipEls).forEach(([k, v]) => { if (k.startsWith('vig:') && !want.has(k)) { v.pause(); v.remove(); } });
 
   setHTML('vig-log-title', night ? 'Journal de la nuit' : 'Journal de vigie');
   setHTML('vig-log-count', `${VIG_LOG.length} événements`);
@@ -4339,46 +4532,16 @@ function renderVigie() {
   }).join(''));
 }
 
-function renderVigPlan() {
-  const X = u => 70 + u / 12 * 640, H = 40, G = 8, top = 36, Y = id => top + (5 - id) * (H + G);
-  const m = VIG.mission, running = m && !m.done, night = VIG.mode !== 'jour';
-  let s = `<svg viewBox="0 0 740 ${top + 6 * (H + G) + 8}"><defs><pattern id="vhatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="8" height="8" style="fill:var(--panel-2)"/><rect width="3" height="8" fill="#f0a020" opacity=".35"/></pattern></defs>`;
-  // Mansard roof
-  s += `<path d="M${X(0) - 4} ${top - 6} L${X(.8)} 8 H${X(11.2)} L${X(12) + 4} ${top - 6} Z" style="fill:var(--faint)" opacity=".5"/>`;
-  vAll().forEach(id => {
-    const y = Y(id), closed = VIG.closed[id], f = vFloor(id);
-    s += `<g class="lvl ${VIG.sel === id ? 'sel' : ''}" data-vfloor="${id}"><title>${vLvl(id)} · ${f.name}${closed ? ' · fermé' : ''}</title>`;
-    s += `<rect x="6" y="${y + 10}" width="40" height="20" rx="3" fill="#3a4150"/><text x="26" y="${y + 24}" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">${vLvl(id)}</text>`;
-    s += `<rect class="band" x="${X(0)}" y="${y}" width="${X(12) - X(0)}" height="${H}" rx="4" style="fill:${closed ? 'url(#vhatch)' : 'var(--panel-2)'};stroke:var(--border)"/>`;
-    s += `<line x1="${X(.3)}" x2="${X(11.7)}" y1="${y + H / 2}" y2="${y + H / 2}" style="stroke:var(--faint)" stroke-dasharray="3 5"/>`;
-    // Apartment partitions and the lift core
-    (id === 0 ? [5, 9] : id === 5 ? [4, 8] : [3, 6, 9]).forEach(u => { s += `<line x1="${X(u)}" x2="${X(u)}" y1="${y + 3}" y2="${y + 12}" style="stroke:var(--faint)"/>`; });
-    s += `<rect x="${X(3.6)}" y="${y + H - 11}" width="${X(5) - X(3.6)}" height="8" rx="2" style="fill:var(--border)"/>`;
-    if (closed) s += `<text x="${X(11.8)}" y="${y + 14}" text-anchor="end" font-size="10" font-weight="600" fill="#c2410c">FERMÉ${VIG.mode === 'garde' ? ' · TRAVAUX' : closed.startsWith('Travaux') ? ' · TRAVAUX' : ''}</text>`;
-    // Cameras with their field of view
-    CAMS.filter(c => c.floor === id).forEach(c => {
-      const cx = X(c.x), cy = y + 8, col = c.off ? '#e5484d' : '#22a861', dir = c.x > 6 ? -1 : 1;
-      if (!c.off) s += `<path d="M${cx} ${cy} L${cx + dir * 70} ${cy + 22} L${cx + dir * 70} ${cy + 30} Z" fill="${col}" opacity=".12"/>`;
-      s += `<rect x="${cx - 5}" y="${cy - 4}" width="10" height="7" rx="2" fill="${col}"/><title>${c.id} · ${c.name}${c.off ? ' · hors ligne' : ''}</title>`;
-    });
-    // Robots
-    const bots = id === 0 ? [[greeterOf().name, 'var(--accueil)', 0], [f.robot.name, 'var(--menage)', 1]] : [[f.robot.name, 'var(--menage)', 0]];
-    bots.forEach(([name, col, w]) => {
-      const rx = X(vRobotX(id, w)), ry = y + H / 2 + (w ? 8 : 0), mine = running && m.floors.includes(id);
-      if (mine) s += `<circle cx="${rx}" cy="${ry}" r="16" fill="#8b5cf6" opacity=".18"/>`;
-      s += `<circle cx="${rx}" cy="${ry}" r="7" fill="${mine ? '#8b5cf6' : col}" stroke="#fff" stroke-width="2"><title>${name}</title></circle>`;
-    });
-    // Live alert marker
-    if (VIG.alert && VIG.alert.floor === id && VIG.alert.state === 'open' && closed) {
-      const ax = X(9.6), ay = y + H / 2;
-      s += `<circle class="vig-pulse" cx="${ax}" cy="${ay}" r="8" fill="#e5484d"/><circle cx="${ax}" cy="${ay}" r="7" fill="#e5484d" stroke="#fff" stroke-width="2"/><text x="${ax}" y="${ay + 4}" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">!</text>`;
-    }
-    s += '</g>';
-  });
-  s += `<rect x="${X(-.3)}" y="${Y(0) + H}" width="${X(12.3) - X(-.3)}" height="3" rx="1.5" style="fill:var(--faint)"/>`;
-  setHTML('vig-plan', s + '</svg>');
-}
-
+// The 3D plan re-renders several times a second: act on pointerdown (see the building view) to pick a floor or follow a label
+document.getElementById('vig-iso').addEventListener('pointerdown', e => {
+  if (e.button !== 0) return;
+  const l = e.target.closest('.map-link'), g = e.target.closest('.floor[data-id]');
+  if (!l && !g) return;
+  swallowNextClick();
+  if (l) return showView(l.dataset.view);
+  VIG.sel = +g.dataset.id;
+  renderVigie();
+}, true);
 // Missions move on their own; the plan and the cards follow
 setInterval(() => { if (!document.getElementById('view-vigie').hidden) renderVigie(); else vTick(); }, 250);
 document.getElementById('view-vigie').addEventListener('click', e => {
@@ -4391,7 +4554,7 @@ document.getElementById('view-vigie').addEventListener('click', e => {
     VIG.mode = d.vmode;
     VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: d.vmode === 'jour' ? 'sun' : d.vmode === 'nuit' ? 'moon' : 'hard-hat', html: `<b>${d.vmode === 'jour' ? 'Mode jour' : d.vmode === 'nuit' ? 'Mode nuit activé' : 'Garde travaux activée'}</b>`, sub: 'Par Michael depuis Loop' });
   }
-  else if (d.vfloor !== undefined) VIG.sel = VIG.sel === +d.vfloor ? null : +d.vfloor;
+  else if (d.vfloor !== undefined) VIG.sel = d.vfloor === 'all' ? null : +d.vfloor;
   else if (d.v === 'ronde') vStartMission('ronde', vAll());
   else if (d.v === 'explore') vStartMission('explore', [VIG.sel]);
   else if (d.v === 'check') { VIG.sel = VIG.alert.floor; vStartMission('explore', [VIG.alert.floor]); }
