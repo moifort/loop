@@ -355,24 +355,65 @@
 
   /* ============ Part 1 · Robots ============ */
 
-  /* Transition: a robot is nothing without software */
-  .soft { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 34px; padding: 0 96px; }
-  .soft h1 { font-size: 76px; color: #fff; }
-  .soft .lead { max-width: 1300px; }
-  .sbar { display: flex; width: 1100px; height: 64px; border-radius: 999px; overflow: hidden; font-size: 21px; font-weight: 700; }
-  .sbar span { display: grid; place-items: center; }
-  .sbar .r { width: 20%; background: #3a3d4a; color: #c8cee0; }
-  .sbar .i { width: 80%; background: var(--loop); color: #fff; transform-origin: left; }
+  /* Transition to Part 2: the robot is the replaceable part, Loop is the hub that wires it to the hotel's tools.
+     .soft[data-s] holds the scenario being played (1-3); elements tagged .s1/.s2/.s3 light up with it. */
+  .soft { position: absolute; inset: 0; display: grid; grid-template-columns: 700px 1fr; gap: 60px; align-items: center; padding: 0 96px; }
+  .soft::before { content: ''; position: absolute; z-index: 0; left: 1050px; top: 80px; width: 1000px; height: 900px; background: radial-gradient(closest-side, rgba(31,91,255,.22), rgba(31,91,255,0)); pointer-events: none; }
+  .soft > * { position: relative; z-index: 1; }
+  .sx { display: flex; flex-direction: column; gap: 30px; }
+  .soft h1 { font-size: 68px; color: #fff; }
+  .soft .lead { font-size: 24px; }
+  .soft .lead b { color: #fff; font-weight: 600; }
+  .sbar { display: flex; width: 620px; height: 56px; border-radius: 999px; overflow: hidden; font-size: 17px; font-weight: 700; }
+  .sbar span { display: grid; place-items: center; white-space: nowrap; }
+  .sbar .r { width: 20%; background: #2b3047; color: #aab1c7; }
+  .sbar .i { width: 80%; background: linear-gradient(90deg, var(--loop), #5b8bff); color: #fff; transform-origin: left; }
   .slide.active .sbar .i { animation: grow 1.4s var(--ease) .6s both; }
-  .vs { display: flex; flex-direction: column; margin-top: 6px; border-bottom: 1px solid rgba(255,255,255,.12); }
-  .vsh, .vsr { display: grid; grid-template-columns: 260px 1fr 1.6fr; gap: 24px; align-items: center; }
-  .vsh { padding-bottom: 14px; }
-  .vsh span { font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #8a91a8; }
-  .vsh span:last-child { color: #8fb0ff; }
-  .vsr { padding: 22px 0; border-top: 1px solid rgba(255,255,255,.12); font-size: 23px; }
-  .vsr b { color: #fff; font-size: 30px; letter-spacing: -.03em; }
-  .vsr span { color: #8a91a8; }
-  .vsr span:last-child { color: #fff; }
+
+  /* Scenario caption: one card per scenario, stacked in the same spot */
+  .scns { position: relative; height: 210px; }
+  .scn { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 14px; padding: 24px 28px; border-radius: 22px; background: #151a2e; border: 1px solid #262d47; opacity: 0; transform: translateY(10px); transition: opacity .45s var(--ease), transform .45s var(--ease); }
+  .scn .who { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -.02em; }
+  .scn .who .ni { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--c); color: #fff; }
+  .scn .who .ni svg { width: 22px; height: 22px; }
+  .scn .row { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline; font-size: 21px; line-height: 1.35; }
+  .scn .row small { font-size: 14px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6f7590; }
+  .scn .row.solo span { color: #8a91a8; }
+  .scn .row.loop small { color: #8fb0ff; }
+  .scn .row.loop span { color: #fff; }
+  .sdots { display: flex; gap: 8px; margin-top: -12px; }
+  .sdots i { width: 28px; height: 4px; border-radius: 2px; background: #2b3047; transition: background .4s, width .4s var(--ease); }
+
+  /* Hub map: robots on the left, Loop in the centre, the hotel's tools on the right */
+  .hubmap { position: relative; width: 968px; height: 760px; }
+  .hubmap .wires { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .wires .base { fill: none; stroke: #2b3250; stroke-width: 2; }
+  .wires .flow { fill: none; stroke: #6f97ff; stroke-width: 3.5; stroke-linecap: round; stroke-dasharray: 2 16; opacity: 0; transition: opacity .4s; filter: drop-shadow(0 0 6px rgba(111,151,255,.8)); animation: flow 0.9s linear infinite; }
+  @keyframes flow { to { stroke-dashoffset: -36; } }
+  .lane-lbl { position: absolute; top: 18px; width: 220px; font-size: 14px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: #6f7590; }
+  .nd { position: absolute; width: 220px; height: 68px; transform: translateY(-50%); display: flex; align-items: center; gap: 14px; padding: 0 16px; border-radius: 18px; background: #151a2e; border: 1px solid #262d47; opacity: .5; transition: opacity .4s, border-color .4s, background .4s, box-shadow .4s; }
+  .nd .ni { flex: none; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--c); color: #fff; font-weight: 800; font-size: 19px; }
+  .nd .ni svg { width: 22px; height: 22px; }
+  .nd b { display: block; font-size: 20px; color: #fff; letter-spacing: -.02em; }
+  .nd small { display: block; font-size: 15px; color: #8a91a8; }
+  .hub { position: absolute; left: 384px; top: 230px; width: 200px; height: 200px; }
+  .hub .core { position: absolute; inset: 0; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 35% 30%, #4d7dff, var(--loop) 55%, #1238b8); box-shadow: 0 0 0 10px rgba(31,91,255,.14), 0 0 90px rgba(31,91,255,.55); }
+  .hub .core svg { width: 120px; height: 120px; }
+  .hub .ring { position: absolute; inset: -26px; border-radius: 50%; border: 2px dashed rgba(143,176,255,.35); animation: spin 24s linear infinite; }
+  .hub .wave { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(111,151,255,.5); animation: ping 2.8s ease-out infinite; }
+  .hub .wave:nth-of-type(2) { animation-delay: 1.4s; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hub-lbl { position: absolute; left: 334px; top: 462px; width: 300px; text-align: center; }
+  .hub-lbl b { display: block; font-size: 30px; color: #fff; letter-spacing: -.03em; }
+  .hub-lbl small { font-size: 16px; color: #8a91a8; }
+  .keep-line { position: absolute; left: 0; right: 0; bottom: 0; text-align: center; font-size: 22px; color: #8a91a8; }
+  .keep-line b { color: #fff; font-weight: 700; }
+
+  /* Lit state for the scenario being played */
+  :is(.soft[data-s="1"] .s1, .soft[data-s="2"] .s2, .soft[data-s="3"] .s3).nd { opacity: 1; border-color: var(--c); background: color-mix(in srgb, var(--c) 16%, #151a2e); box-shadow: 0 0 0 6px color-mix(in srgb, var(--c) 14%, transparent), 0 0 44px color-mix(in srgb, var(--c) 35%, transparent); }
+  :is(.soft[data-s="1"] .s1, .soft[data-s="2"] .s2, .soft[data-s="3"] .s3).flow { opacity: 1; }
+  :is(.soft[data-s="1"] .s1, .soft[data-s="2"] .s2, .soft[data-s="3"] .s3).scn { opacity: 1; transform: none; }
+  .sdots i:is(.soft[data-s="1"] .s1, .soft[data-s="2"] .s2, .soft[data-s="3"] .s3) { background: #6f97ff; width: 56px; }
 
   .btag { color: #fff; font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 3px 10px; }
   .kimg { width: 110px; height: 110px; flex: none; border-radius: 16px; background: #f3f4f7; display: grid; place-items: center; padding: 8px; }
@@ -730,15 +771,53 @@
 
 <section class="slide dark" data-scene="soft">
   <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2 · En plus des robots</div></div>
-  <div class="soft">
-    <h1 class="rise">Un robot sans logiciel,<br><em>ça ne sert pas à grand-chose.</em></h1>
-    <div class="sbar rise" style="--d:.2s"><span class="r">Robot · 20 %</span><span class="i">Logiciel · 80 %</span></div>
-    <p class="lead rise" style="--d:.3s">80 % de ce qu'un robot apporte vient du logiciel. C'est pour ça qu'on a choisi des robots ouverts : on peut les brancher sur vos outils.</p>
-    <div class="vs">
-      <div class="vsh rise" style="--d:.4s"><span></span><span>Seul</span><span>Avec Loop</span></div>
-      <div class="vsr pop" data-at="900"><b>Temi</b><span>Répond aux questions.</span><span>Voit un client partir, prévient Greg, le ménage est lancé.</span></div>
-      <div class="vsr pop" data-at="1500"><b>Kilo</b><span>Suit une personne.</span><span>Part au check-in, appelle l'ascenseur, revient seul.</span></div>
-      <div class="vsr pop" data-at="2100"><b>Robot de ménage</b><span>Nettoie quand on appuie.</span><span>Lance le 203 dès le départ du client, jamais si c'est occupé.</span></div>
+  <div class="soft" data-s="0">
+    <div class="sx">
+      <span class="eyebrow rise">La plateforme</span>
+      <h1 class="rise" style="--d:.1s">Le robot fait 20 %<br>du travail.<br><em>Loop fait le reste.</em></h1>
+      <div class="sbar rise" style="--d:.2s"><span class="r">Robot · 20 %</span><span class="i">Loop · 80 %</span></div>
+      <p class="lead rise" style="--d:.3s">Seul, un robot fait une tâche quand on appuie. <b>Branché sur vos outils, il sait quand la faire.</b> C'est pour ça qu'on a choisi des robots ouverts.</p>
+      <div class="scns rise" style="--d:.4s">
+        <div class="scn s1"><div class="who"><span class="ni" style="--c:#4f6bd8"><svg><use href="#i-bot"/></svg></span>Temi · accueil</div><div class="row solo"><small>Seul</small><span>Répond aux questions.</span></div><div class="row loop"><small>Avec Loop</small><span>Voit un client partir, prévient Greg, le ménage est lancé.</span></div></div>
+        <div class="scn s2"><div class="who"><span class="ni" style="--c:var(--violet)"><svg><use href="#i-luggage"/></svg></span>Kilo · bagages</div><div class="row solo"><small>Seul</small><span>Suit une personne.</span></div><div class="row loop"><small>Avec Loop</small><span>Part au check-in, appelle l'ascenseur, revient seul.</span></div></div>
+        <div class="scn s3"><div class="who"><span class="ni" style="--c:var(--sky)"><svg><use href="#i-brush"/></svg></span>Robot de ménage</div><div class="row solo"><small>Seul</small><span>Nettoie quand on appuie.</span></div><div class="row loop"><small>Avec Loop</small><span>Lance le 203 dès le départ du client, jamais si c'est occupé.</span></div></div>
+      </div>
+      <div class="sdots rise" style="--d:.45s"><i class="s1"></i><i class="s2"></i><i class="s3"></i></div>
+    </div>
+    <div class="hubmap rise" style="--d:.25s">
+      <svg class="wires" viewBox="0 0 968 760">
+        <path class="base" d="M220,150 C310,150 300,330 384,330"/>
+        <path class="base" d="M220,330 L384,330"/>
+        <path class="base" d="M220,510 C310,510 300,330 384,330"/>
+        <path class="base" d="M584,330 C670,330 660,120 748,120"/>
+        <path class="base" d="M584,330 C670,330 660,260 748,260"/>
+        <path class="base" d="M584,330 C670,330 660,400 748,400"/>
+        <path class="base" d="M584,330 C670,330 660,540 748,540"/>
+        <!-- Scenario 1: Temi sees a guest leave, Greg is told, the cleaning robot starts -->
+        <path class="flow s1" d="M220,150 C310,150 300,330 384,330"/>
+        <path class="flow s1" d="M584,330 C670,330 660,120 748,120"/>
+        <path class="flow s1" d="M384,330 C300,330 310,510 220,510"/>
+        <!-- Scenario 2: Kilo leaves at check-in and calls the lift -->
+        <path class="flow s2" d="M220,330 L384,330"/>
+        <path class="flow s2" d="M584,330 C670,330 660,260 748,260"/>
+        <path class="flow s2" d="M584,330 C670,330 660,540 748,540"/>
+        <!-- Scenario 3: the cleaning robot checks the booking and the lock before starting -->
+        <path class="flow s3" d="M220,510 C310,510 300,330 384,330"/>
+        <path class="flow s3" d="M584,330 C670,330 660,260 748,260"/>
+        <path class="flow s3" d="M584,330 C670,330 660,400 748,400"/>
+      </svg>
+      <span class="lane-lbl" style="left:0">Les robots</span>
+      <span class="lane-lbl" style="left:748px">Vos outils</span>
+      <div class="nd s1" style="left:0;top:150px;--c:#4f6bd8"><span class="ni"><svg><use href="#i-bot"/></svg></span><div><b>Temi</b><small>Accueil</small></div></div>
+      <div class="nd s2" style="left:0;top:330px;--c:var(--violet)"><span class="ni"><svg><use href="#i-luggage"/></svg></span><div><b>Kilo</b><small>Bagages</small></div></div>
+      <div class="nd s1 s3" style="left:0;top:510px;--c:var(--sky)"><span class="ni"><svg><use href="#i-brush"/></svg></span><div><b>Ménage</b><small>Robot de ménage</small></div></div>
+      <div class="hub"><span class="wave"></span><span class="wave"></span><span class="ring"></span><span class="core"><svg viewBox="0 0 512 512"><!-- Loop mark without its square background --><path d="M338 176 A118 118 0 1 1 188 166" fill="none" stroke="#fff" stroke-width="46" stroke-linecap="round"/><path d="M170 100 L264 112 L211 190 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><circle cx="256" cy="262" r="25" fill="#fff"/></svg></span></div>
+      <div class="hub-lbl"><b>Loop</b><small>Planning · règles · alertes</small></div>
+      <div class="nd s1" style="left:748px;top:120px;--c:#6f97ff"><span class="ni" style="background:#3a3d4a"><svg><use href="#i-sparkles"/></svg></span><div><b>Greg</b><small>IA d'opérations</small></div></div>
+      <div class="nd s2 s3" style="left:748px;top:260px;--c:#e9ecf5"><span class="ni" style="background:#fff;color:#111">M</span><div><b>Mews</b><small>Réservations</small></div></div>
+      <div class="nd s3" style="left:748px;top:400px;--c:#ff4d6a"><span class="ni" style="background:#e4002b">S</span><div><b>Salto</b><small>Serrures</small></div></div>
+      <div class="nd s2" style="left:748px;top:540px;--c:#4d7fe0"><span class="ni" style="background:#1b3f8f">O</span><div><b>Otis</b><small>Ascenseurs</small></div></div>
+      <p class="keep-line">Le robot est la pièce qu'on remplace. <b>Loop est la pièce qui reste.</b></p>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -1352,7 +1431,12 @@ const SCENES = {
 
   divider: {},
   robots: {},
-  soft: {},
+  // Plays the three robots one after the other: lights the robot, Loop's wires and the tools involved
+  soft: {
+    dur: 12000,
+    once: (s) => { s.querySelector('.soft').dataset.s = '0'; },
+    run: (s) => { const m = s.querySelector('.soft'); [1, 2, 3].forEach((k, i) => at(900 + i * 3700, () => m.dataset.s = k)); },
+  },
   pick: {},
   roadmap: {},
 };
