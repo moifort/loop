@@ -118,10 +118,11 @@
 
   /* ============ 1 · Cover ============ */
   .cover { background: radial-gradient(1200px 700px at 85% 40%, var(--loop-50), #fff 70%); }
-  .cover .left { position: absolute; left: 96px; top: 210px; width: 940px; display: flex; flex-direction: column; gap: 34px; }
+  .cover .left { position: absolute; left: 96px; top: 210px; bottom: 120px; width: 940px; display: flex; flex-direction: column; gap: 34px; }
   .cover h1 { font-size: 92px; }
   .cover .lead { font-size: 30px; max-width: 820px; }
-  .cover .who { display: flex; align-items: center; gap: 22px; margin-top: 30px; font-size: 20px; color: var(--muted); }
+  /* Pinned to the bottom of the cover, just above the footer */
+  .cover .who { display: flex; align-items: center; gap: 22px; margin-top: auto; font-size: 20px; color: var(--muted); }
   .cover .who .x { font-size: 30px; color: var(--faint); font-weight: 300; }
   .cover .who .lp { width: 64px; height: 64px; }
   .cover .who .ql { font-size: 19px; font-weight: 500; letter-spacing: .14em; color: #1d2650; line-height: 1.25; }
