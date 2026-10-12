@@ -26,26 +26,13 @@
   .brand svg { width: 30px; height: 30px; }
   .brand span { color: var(--muted); font-weight: 500; font-size: 16px; letter-spacing: 0; margin-left: 8px; white-space: nowrap; }
   h1 { font-size: 52px; line-height: 1.05; font-weight: 800; letter-spacing: -.04em; }
-  h1 em { font-style: normal; color: var(--loop); }
-  .sub { font-size: 21px; line-height: 1.45; color: var(--ink-2); margin-top: 14px; max-width: 900px; }
-  .facts { margin-left: auto; display: flex; gap: 40px; flex-shrink: 0; }
-  .fact { display: flex; flex-direction: column; gap: 4px; }
-  .fact b { font-size: 38px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .fact span { font-size: 15px; color: var(--muted); }
 
-  /* ---------- The loop: how every iteration works ---------- */
-  .rules { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
-  .rule { padding: 24px 28px 24px 0; display: flex; gap: 14px; align-items: flex-start; }
-  .rule + .rule { padding-left: 28px; border-left: 1px solid var(--line); }
-  .rule i { font-style: normal; flex-shrink: 0; width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--loop-50); color: var(--loop); font-weight: 800; font-size: 15px; }
-  .rule b { display: block; font-size: 18px; margin-bottom: 4px; }
-  .rule p { font-size: 16px; line-height: 1.45; color: var(--ink-2); }
 
   h2 { font-size: 30px; font-weight: 800; letter-spacing: -.03em; margin: 52px 0 6px; }
   .h2-sub { font-size: 17px; color: var(--muted); margin-bottom: 24px; }
 
   /* ---------- Legend ---------- */
-  .legend { display: flex; gap: 22px; flex-wrap: wrap; font-size: 15px; color: var(--ink-2); margin-bottom: 18px; }
+  .legend { margin-top: 32px; display: flex; gap: 22px; flex-wrap: wrap; font-size: 15px; color: var(--ink-2); margin-bottom: 18px; }
   .legend span { display: inline-flex; align-items: center; gap: 8px; }
   .legend i { width: 22px; height: 12px; border-radius: 4px; background: var(--c); }
   .legend i.dash { background: repeating-linear-gradient(135deg, var(--c) 0 4px, transparent 4px 8px); border: 1px solid var(--c); }
@@ -145,25 +132,9 @@
       <svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#1f5bff"/><path d="M13 12v16h14" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       loop <span>× Quartier Libre Collection · Document de travail</span>
     </div>
-    <h1>Option 2 : la roadmap, <em>itération par itération</em>.</h1>
-    <p class="sub">On suit l'ordre des priorités du client : P1 d'abord, puis P2, puis P3. Chaque itération met un robot de plus en service. On mesure, puis on décide de la suite.</p>
-  </div>
-  <div class="facts">
-    <div class="fact"><b>≈ 340–490</b><span>jours-homme au total</span></div>
-    <div class="fact"><b>≈ 14 mois</b><span>pour tout l'immeuble</span></div>
-    <div class="fact"><b>8 mois</b><span>pour P1, P2 et P3</span></div>
+    <h1>Option 2 : la roadmap.</h1>
   </div>
 </header>
-
-<div class="rules">
-  <div class="rule"><i>1</i><div><b>Une itération, un usage</b><p>Chaque itération finit sur quelque chose que l'équipe utilise vraiment, à Saint-Georges ou à Madagascar.</p></div></div>
-  <div class="rule"><i>2</i><div><b>On mesure</b><p>Une semaine de bilan avec l'équipe à la fin de chaque itération. Des chiffres, pas des impressions.</p></div></div>
-  <div class="rule"><i>3</i><div><b>On décide</b><p>On continue, on corrige ou on arrête. Le client peut s'arrêter après chaque itération, sans perdre ce qui marche.</p></div></div>
-  <div class="rule"><i>4</i><div><b>On réutilise</b><p>Le socle de l'itération 1 et la téléopération de l'itération 2 servent à toutes les suivantes.</p></div></div>
-</div>
-
-<h2>La timeline</h2>
-<p class="h2-sub">En semaines, à partir du lancement. Équipe supposée : 2 devs et 1 lead produit/tech à mi-temps. Cliquer sur une barre pour voir le détail.</p>
 
 <div class="legend">
   <span><i style="--c:var(--grey)"></i>Écouter</span>
