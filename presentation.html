@@ -256,53 +256,6 @@
   /* ============ 8 · Cleaning ============ */
   .pct { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
-  /* ============ 9 · Greg chain ============ */
-  .gx { position: absolute; inset: 0; display: flex; flex-direction: column; }
-  .gx .head { display: flex; align-items: flex-end; gap: 60px; padding: 88px 96px 52px; }
-  .chain { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 22px; padding-top: 50px; margin-top: 40px; }
-  .chain .rail { position: absolute; left: 10%; right: 10%; top: 78px; height: 6px; border-radius: 9px; background: var(--line); }
-  .chain .rail i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 9px; background: var(--loop); transition: width 1s var(--ease); }
-  .chain .pulse { position: absolute; top: 69px; left: 10%; width: 24px; height: 24px; margin-left: -12px; border-radius: 50%; background: var(--loop); box-shadow: 0 0 0 8px rgba(31,91,255,.18); transition: left 1s var(--ease), opacity .3s; opacity: 0; }
-  .node { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; }
-  .node .ni { width: 64px; height: 64px; border-radius: 20px; background: #fff; border: 2px solid var(--line); display: grid; place-items: center; color: var(--muted); z-index: 1; transition: all .4s var(--ease); }
-  .node .ni svg { width: 30px; height: 30px; }
-  .node.on .ni { background: var(--c, var(--loop)); border-color: var(--c, var(--loop)); color: #fff; transform: scale(1.08); box-shadow: 0 10px 24px -6px var(--c, var(--loop)); }
-  .node .card { border-radius: 20px; border: 1px solid var(--line); padding: 22px 20px 24px; background: #fff; opacity: .35; transform: translateY(10px); transition: all .5s var(--ease); width: 100%; }
-  .node.on .card { opacity: 1; transform: none; box-shadow: 0 16px 36px -18px rgba(18,19,26,.3); }
-  .node .t { font-size: 15px; font-weight: 700; color: var(--faint); font-variant-numeric: tabular-nums; }
-  .node h4 { font-size: 24px; margin: 4px 0 8px; letter-spacing: -.01em; }
-  .node p { font-size: 19px; color: var(--muted); line-height: 1.4; }
-  .node code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 14px; background: var(--loop-50); color: var(--loop); padding: 2px 6px; border-radius: 5px; }
-  .gx .bottom { display: grid; grid-template-columns: 1fr auto; gap: 48px; align-items: center; padding: 34px 96px 92px; }
-  .gx .bottom .kpis { gap: 32px; }
-  .gx .bottom .kpi b { font-size: 40px; }
-  .conns { display: flex; flex-wrap: wrap; gap: 12px 30px; align-items: center; }
-  .conns > small { font-size: 15px; color: var(--muted); font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
-  .conn { display: flex; align-items: center; gap: 10px; font-size: 19px; font-weight: 600; }
-  .conn .lg { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: #fff; font-weight: 800; font-size: 16px; }
-  .conn small { display: none; }
-  .conn .st { width: 9px; height: 9px; border-radius: 50%; background: var(--green); }
-  .conn .st.a { background: var(--amber); }
-
-  /* One full-bleed tinted band per trigger chain, like the robots strips */
-  .chains { flex: 1; display: flex; flex-direction: column; }
-  .ch2 { flex: 1; display: grid; grid-template-columns: 270px 1fr 30px 1fr 30px 1fr 30px 1fr; align-items: center; gap: 14px; padding: 0 96px; background: var(--tint); border-bottom: 1px solid rgba(18,19,26,.06); }
-  .ch2:nth-child(1) { --tint: #eef3ff; }
-  .ch2:nth-child(2) { --tint: #f3f4f7; }
-  .ch2 .cl { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
-  .ch2 .cl .btag { display: inline-flex; align-items: center; gap: 6px; }
-  .ch2 .cl .btag svg { width: 15px; height: 15px; }
-  .ch2 .cl b { font-size: 30px; letter-spacing: -.03em; line-height: 1.1; }
-  .ca { align-self: center; text-align: center; font-size: 26px; color: var(--faint); }
-  .cn { display: flex; gap: 14px; align-items: flex-start; opacity: .3; transition: opacity .45s var(--ease); }
-  .cn.on { opacity: 1; }
-  .cn .ni { width: 52px; height: 52px; flex: none; border-radius: 15px; display: grid; place-items: center; background: rgba(18,19,26,.06); color: var(--muted); transition: all .45s var(--ease); }
-  .cn .ni svg { width: 26px; height: 26px; }
-  .cn .ni b { font-size: 22px; }
-  .cn.on .ni { background: var(--c); color: #fff; }
-  .cn h4 { font-size: 22px; letter-spacing: -.01em; margin-bottom: 4px; }
-  .cn p { font-size: 17px; color: var(--muted); line-height: 1.4; }
-  .conn.more { color: var(--muted); font-weight: 500; }
   /* ============ 10 · Reliability ============ */
   .rel { position: absolute; inset: 0; display: grid; grid-template-columns: 1.35fr 1fr; }
   /* Both columns start at the same height so their titles line up */
@@ -937,36 +890,6 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<!-- ======================= 9 · Greg chain ======================= -->
-<section class="slide" data-scene="greg">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Intégration · Greg et vos outils</div></div>
-  <div class="gx">
-    <div class="head">
-      <div style="display:flex;flex-direction:column;gap:22px">
-        <span class="eyebrow rise">Vos outils lancent les robots</span>
-        <h1 class="rise" style="--d:.1s">Un événement chez vous,<br><em>le robot se lance.</em></h1>
-      </div>
-    </div>
-    <div class="chains">
-      <div class="ch2 rise" style="--d:.3s"><div class="cl"><span class="btag" style="background:var(--loop)"><svg><use href="#i-sparkles"/></svg>Avec GregAI</span><b>Un client part</b></div><div class="cn" data-at="500" style="--c:var(--navy)"><span class="ni"><svg><use href="#i-bot"/></svg></span><div><h4>Temi voit partir Mme Haddad</h4><p>2 valises, reconnue à 94 %.</p></div></div><span class="ca">→</span><div class="cn" data-at="1200" style="--c:var(--ink)"><span class="ni"><svg><use href="#i-sparkles"/></svg></span><div><h4>Greg vérifie</h4><p>Mews : facture soldée. Salto : code révoqué.</p></div></div><span class="ca">→</span><div class="cn" data-at="1900" style="--c:var(--loop)"><span class="ni"><svg viewBox="0 0 512 512" style="width:34px;height:34px"><use href="#loop-mark"/></svg></span><div><h4>Loop planifie le ménage</h4><p>App. 203, avant l'arrivée de 16 h.</p></div></div><span class="ca">→</span><div class="cn" data-at="2600" style="--c:var(--sky)"><span class="ni"><svg><use href="#i-brush"/></svg></span><div><h4>CLN-2D84 s'en charge</h4><p>Inès est prévenue sur WhatsApp.</p></div></div></div>
-      <div class="ch2 rise" style="--d:.4s"><div class="cl"><span class="btag" style="background:var(--ink-2)">Sans GregAI</span><b>Inès arrive pour le ménage</b></div><div class="cn" data-at="3800" style="--c:#e4002b"><span class="ni"><svg><use href="#i-lock"/></svg></span><div><h4>Inès badge au 203</h4><p>Serrure Salto, 13:42.</p></div></div><span class="ca">→</span><div class="cn" data-at="4500" style="--c:var(--loop)"><span class="ni"><svg viewBox="0 0 512 512" style="width:34px;height:34px"><use href="#loop-mark"/></svg></span><div><h4>Loop reçoit le badge</h4><p>Directement, sans passer par Greg.</p></div></div><span class="ca">→</span><div class="cn" data-at="5200" style="--c:#2b2b2b"><span class="ni"><b>M</b></span><div><h4>L'appartement est libre</h4><p>Mews : client parti, arrivée à 16 h.</p></div></div><span class="ca">→</span><div class="cn" data-at="5900" style="--c:var(--sky)"><span class="ni"><svg><use href="#i-brush"/></svg></span><div><h4>Le robot se lance</h4><p>Pendant qu'Inès fait le lit.</p></div></div></div>
-    </div>
-    <div class="bottom">
-      <div class="conns rise" style="--d:.5s">
-        <small>Se branche sur</small>
-        <span class="conn"><span class="lg" style="background:var(--ink)"><svg width="18" height="18"><use href="#i-sparkles"/></svg></span>Greg <small>IA</small><span class="st"></span></span>
-        <span class="conn"><span class="lg" style="background:#2b2b2b">M</span>Mews <small>PMS</small><span class="st"></span></span>
-        <span class="conn"><span class="lg" style="background:#e4002b">S</span>Salto KS <small>serrures</small><span class="st"></span></span>
-        <span class="conn"><span class="lg" style="background:#25d366">W</span>WhatsApp <small>équipes</small><span class="st"></span></span>
-        <span class="conn"><span class="lg" style="background:#0a4b8c">X</span>Milestone <small>caméras</small><span class="st a"></span></span>
-        <span class="conn"><span class="lg" style="background:#1b3f8f">O</span>Otis <small>ascenseurs</small><span class="st"></span></span>
-        <span class="conn more">+ votre IA, vos serrures, votre PMS</span>
-      </div>
-    </div>
-  </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
-</section>
-
 <!-- ======================= 10 · Reliability & guard rails ======================= -->
 <section class="slide" data-scene="fiab">
   <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Fiabilité · garde-fous · RGPD</div></div>
@@ -1343,8 +1266,6 @@ const SCENES = {
       [[900, 1], [1700, 2], [7600, 3], [9800, 4]].forEach(([ms, n]) => at(ms, () => { $('men-shot').src = `assets/ios/deck/menage-${n}.jpg`; }));
     },
   },
-
-  greg: { dur: 9000 },
 
   // The mockup's connectors view: pause GregAi, open the degraded-mode explanation, then resume and replay
   fiab: {
