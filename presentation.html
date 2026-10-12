@@ -43,6 +43,8 @@
   /* Part reminder, top left of every slide inside a part (added by script from the dividers) */
   .part-tag { position: absolute; top: 28px; left: 96px; z-index: 6; display: flex; align-items: center; gap: 10px; padding: 4px 16px 4px 4px; border-radius: 999px; background: rgba(255,255,255,.92); border: 1px solid var(--line); box-shadow: 0 6px 18px -8px rgba(18,19,26,.2); font-size: 17px; font-weight: 700; color: var(--ink-2); }
   .part-tag .pn { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; background: var(--loop); color: #fff; font-size: 16px; font-weight: 800; }
+  /* Work-in-progress stamp on slides waiting for the final roadmap */
+  .wip { position: absolute; top: 40px; right: 96px; z-index: 7; padding: 6px 28px; border: 5px solid #e8590c; border-radius: 14px; color: #e8590c; background: rgba(255,244,235,.92); font-size: 56px; font-weight: 900; letter-spacing: .08em; transform: rotate(-6deg); }
   .dark .part-tag { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.14); color: #e9ecf5; box-shadow: none; }
   .dark .s-foot, .dark .s-head .client { color: #6f7590; }
   .dark { background: #0d1020; color: #e9ecf5; }
@@ -992,6 +994,7 @@
 </section>
 
 <section class="slide" data-scene="roadmap">
+  <div class="wip">WIP</div>
   <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Option 1</div></div>
   <div class="road2">
     <h1 class="rise">Option 1 : les robots seuls,<br><em>dans l'ordre de vos priorités.</em></h1>
@@ -1008,6 +1011,7 @@
 </section>
 
 <section class="slide" data-scene="roadmap">
+  <div class="wip">WIP</div>
   <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Option 2</div></div>
   <div class="road2">
     <h1 class="rise">Option 2 : les robots + tableau de bord,<br><em>par petites étapes.</em></h1>
@@ -1036,6 +1040,7 @@
 
 <!-- ======================= Budget · pilot cost per option, robots excluded ======================= -->
 <section class="slide" data-scene="budget">
+  <div class="wip">WIP</div>
   <div class="opts-w budget">
     <h1 class="rise">Le budget du pilote,<br><em>robots compris.</em></h1>
     <div class="opts">
