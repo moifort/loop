@@ -2652,11 +2652,11 @@ const VIDEO = (() => {
   s += '<rect x="398" y="262" width="36" height="58" rx="5" fill="#c0503f"/><path d="M408 262 v-14 h16 v14" fill="none" stroke="#2a2f3b" stroke-width="3"/><circle cx="404" cy="322" r="3" fill="#2a2f3b"/><circle cx="428" cy="322" r="3" fill="#2a2f3b"/>';
   return s + '<rect width="640" height="360" fill="url(#vig)"/></svg>';
 })();
-// Real footage, streamed from Pexels (free licence). Offline, the illustrated lobby and the initials stay visible.
-// Lobby (6474635): two guests cross a hotel lobby and walk up to the robot, a bellboy behind them; cut at 11 s, before they walk past the lens. The shot drifts slightly; the other feeds are fixed.
+// Real footage, streamed from Pexels and Mixkit (free licences). Offline, the illustrated lobby and the initials stay visible.
+// Lobby (Mixkit 21670): wide side shot of a guest talking with the receptionist at the desk. Every camera feed is a fixed shot, no camera move.
 // Operator (7706641): webcam framing with headset, shown picture-in-picture while Hery speaks through the robot.
 const CLIPS = {
-  lobby:    { src: 'https://videos.pexels.com/video-files/6474635/6474635-hd_1366_720_25fps.mp4', end: 11, className: 'cam' },
+  lobby:    { src: 'https://assets.mixkit.co/videos/21670/21670-720.mp4', className: 'cam' },
   operator: { src: 'https://videos.pexels.com/video-files/7706641/7706641-sd_960_506_25fps.mp4', end: 12, className: 'face' },
 };
 const clipEls = {};
