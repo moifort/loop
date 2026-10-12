@@ -802,11 +802,11 @@
   <div class="feat">
     <div class="txt">
       <span class="eyebrow rise" style="align-self:flex-start"><span class="p">P1</span>Robot d'accueil</span>
-      <h1 class="rise" style="--d:.1s">Le robot accueille.<br><em>Hery prend la main.</em></h1>
+      <h1 class="rise" style="--d:.1s">Le robot accueille.<br><em>L'humain prend la main.</em></h1>
       <div class="need rise" style="--d:.2s"><small>Votre besoin</small><p>Une présence à l'accueil sans recruter, y compris quand le réceptionniste est dans les étages ou en pause.</p></div>
       <ul class="does rise" style="--d:.3s">
         <li>Temi répond seul aux questions courantes, en plusieurs langues.</li>
-        <li>Si un humain est nécessaire, Hery prend la main en visio depuis Madagascar.</li>
+        <li>Si besoin, un humain prend la main en visio depuis Madagascar.</li>
         <li>Pendant l'échange, Greg retrouve le client dans Mews.</li>
       </ul>
       <div class="kpis rise" style="--d:.4s">
@@ -838,7 +838,7 @@
       <div class="need rise" style="--d:.2s"><small>Votre besoin</small><p>Environ 2 incidents par an (intrus, client agressif). Les caméras voient la scène, mais sans le son. Le robot doit dissuader, pas faire la sécurité.</p></div>
       <ul class="does rise" style="--d:.3s">
         <li>Un bouton panique, au comptoir ou à distance.</li>
-        <li>Le robot enregistre le son et l'image. Hery apparaît à l'écran.</li>
+        <li>Le robot enregistre le son et l'image. Un humain apparaît à l'écran.</li>
         <li>Les secours s'appellent en un clic, avec l'adresse de l'hôtel affichée.</li>
       </ul>
     </div>
@@ -863,7 +863,7 @@
       <div class="need rise" style="--d:.2s"><small>Votre besoin</small><p>Une seule personne sur place. La nuit, la réception est tenue depuis Madagascar.</p></div>
       <ul class="does rise" style="--d:.3s">
         <li>Les robots de ménage patrouillent la nuit, caméra allumée.</li>
-        <li>Un mouvement devant une suite libre : Hery envoie le robot le plus proche vérifier.</li>
+        <li>Un mouvement devant une suite libre : Madagascar envoie le robot le plus proche vérifier.</li>
         <li>Une caméra en panne : un robot prend le relais.</li>
       </ul>
       <div class="kpis rise" style="--d:.4s">
@@ -1083,7 +1083,7 @@
     <div class="stairs">
       <div class="stp pop" data-at="300" style="--i:0"><span class="sn">0</span><h4>Écouter</h4><p>Interviews à Saint-Georges : réception, ménage, maintenance, Madagascar.</p></div>
       <div class="stp pop" data-at="650" style="--i:1"><span class="sn">1</span><span class="st" style="background:var(--navy)">P1</span><h4>Temi, version de base</h4><p>Plateforme minimale, sans 3D : check-in, check-out, bouton panique.</p></div>
-      <div class="stp pop" data-at="1000" style="--i:2"><span class="sn">2</span><span class="st" style="background:var(--navy)">P1</span><h4>Téléopération</h4><p>Hery prend la main depuis Madagascar, en version simple.</p></div>
+      <div class="stp pop" data-at="1000" style="--i:2"><span class="sn">2</span><span class="st" style="background:var(--navy)">P1</span><h4>Téléopération</h4><p>Un humain prend la main depuis Madagascar, en version simple.</p></div>
       <div class="stp pop" data-at="1350" style="--i:3"><span class="sn">3</span><span class="st" style="background:var(--violet)">P2</span><h4>Chariot, seul</h4><p>Un Kilo testé sans plateforme, avec l'équipe.</p></div>
       <div class="stp pop" data-at="1700" style="--i:4"><span class="sn">4</span><span class="st" style="background:var(--violet)">P2</span><h4>Chariot + accueil</h4><p>Branché sur l'accueil, petit à petit.</p></div>
       <div class="stp pop" data-at="2050" style="--i:5"><span class="sn">5</span><span class="st" style="background:var(--navy)">P1</span><h4>Sécurité</h4><p>Avec Temi seulement : rondes du rez-de-chaussée la nuit.</p></div>
@@ -1259,7 +1259,7 @@ const SCENES = {
       const w = appWin(s); if (w) { if (w.eval('ACC.mode') === 'remote') w.runAccAction('release'); w.showView('accueil'); }
       $('acc-shot').src = 'assets/ios/deck/reception.jpg';
     },
-    // A guest asks for a human; Hery takes over from Madagascar: the mockup and the iPhone both show her card
+    // A guest asks for a human; a Madagascar operator takes over: the mockup and the iPhone both show their card
     run(s) { at(4500, () => { appWin(s)?.runAccAction('take'); $('acc-shot').src = 'assets/ios/deck/reception-remote.jpg'; }); },
   },
 
