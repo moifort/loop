@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loop × Quartier Libre — Option 2, roadmap itérative</title>
+<style>
+  /* Same palette as the deck: Loop blue, client priorities P1 navy, P2 violet, P3 sky */
+  :root {
+    --loop: #1f5bff; --loop-50: #eef3ff; --loop-100: #dce6ff;
+    --ink: #12131a; --ink-2: #3a3d4a; --muted: #6b7080; --faint: #b8bec6;
+    --line: #e6e8ee; --bg: #f5f6f8;
+    --green: #22a861; --green-soft: #e7f6ee; --amber: #f0a020; --amber-soft: #fff4e0; --red: #e5484d; --red-soft: #fdecec;
+    --navy: #1e3a8a; --navy-soft: #eef1fa; --violet: #7c3aed; --violet-soft: #f1eafe; --sky: #0ea5e9; --sky-soft: #e2f4fc;
+    --grey: #6b7080; --grey-soft: #eef0f3;
+    --ease: cubic-bezier(.22, .8, .24, 1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, "Segoe UI", sans-serif; color: var(--ink); background: #fff; -webkit-font-smoothing: antialiased; }
+  b { font-weight: 700; }
+  .wrap { max-width: 1760px; margin: 0 auto; padding: 56px 64px 80px; }
+
+  /* ---------- Header ---------- */
+  header { display: flex; align-items: flex-end; gap: 48px; padding-bottom: 32px; border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 10px; font-size: 22px; font-weight: 800; letter-spacing: -.04em; margin-bottom: 20px; }
+  .brand svg { width: 30px; height: 30px; }
+  .brand span { color: var(--muted); font-weight: 500; font-size: 16px; letter-spacing: 0; margin-left: 8px; }
+  h1 { font-size: 52px; line-height: 1.05; font-weight: 800; letter-spacing: -.04em; }
+  h1 em { font-style: normal; color: var(--loop); }
+  .sub { font-size: 21px; line-height: 1.45; color: var(--ink-2); margin-top: 14px; max-width: 900px; }
+  .facts { margin-left: auto; display: flex; gap: 40px; flex-shrink: 0; }
+  .fact { display: flex; flex-direction: column; gap: 4px; }
+  .fact b { font-size: 38px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .fact span { font-size: 15px; color: var(--muted); }
+
+  /* ---------- The loop: how every iteration works ---------- */
+  .rules { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+  .rule { padding: 24px 28px 24px 0; display: flex; gap: 14px; align-items: flex-start; }
+  .rule + .rule { padding-left: 28px; border-left: 1px solid var(--line); }
+  .rule i { font-style: normal; flex-shrink: 0; width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--loop-50); color: var(--loop); font-weight: 800; font-size: 15px; }
+  .rule b { display: block; font-size: 18px; margin-bottom: 4px; }
+  .rule p { font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+
+  h2 { font-size: 30px; font-weight: 800; letter-spacing: -.03em; margin: 52px 0 6px; }
+  .h2-sub { font-size: 17px; color: var(--muted); margin-bottom: 24px; }
+
+  /* ---------- Legend ---------- */
+  .legend { display: flex; gap: 22px; flex-wrap: wrap; font-size: 15px; color: var(--ink-2); margin-bottom: 18px; }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .legend i { width: 22px; height: 12px; border-radius: 4px; background: var(--c); }
+  .legend i.dash { background: repeating-linear-gradient(135deg, var(--c) 0 4px, transparent 4px 8px); border: 1px solid var(--c); }
+  .legend i.gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
+
+  /* ---------- Gantt: one column per week ---------- */
+  .gantt { --label: 300px; --weeks: 67; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .g-row { display: grid; grid-template-columns: var(--label) 1fr; min-height: 44px; border-top: 1px solid var(--line); }
+  .g-row:first-child { border-top: 0; }
+  .g-label { padding: 10px 18px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: var(--ink-2); border-right: 1px solid var(--line); background: #fff; }
+  .g-label small { font-weight: 500; color: var(--muted); font-size: 13px; }
+  .g-track { position: relative; }
+  .g-group .g-label { background: var(--bg); font-size: 13px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); min-height: 34px; padding: 6px 18px; }
+  .g-group .g-track { background: var(--bg); }
+  .g-group { min-height: 34px; }
+  .prio { display: inline-grid; place-items: center; min-width: 30px; height: 22px; padding: 0 6px; border-radius: 6px; font-size: 12px; font-weight: 800; color: #fff; background: var(--c); letter-spacing: .03em; }
+
+  .g-head { position: sticky; top: 0; z-index: 4; }
+  .g-head .g-label { background: #fff; font-size: 13px; color: var(--muted); font-weight: 700; }
+  .months { position: absolute; inset: 0; }
+  .months span { position: absolute; top: 0; bottom: 0; display: flex; align-items: center; padding-left: 8px; font-size: 13px; font-weight: 700; color: var(--muted); border-left: 1px solid var(--line); }
+
+  /* Week grid lines behind everything */
+  .grid-bg { position: absolute; top: 0; bottom: 0; right: 0; left: var(--label); pointer-events: none; z-index: 0;
+    background-image: linear-gradient(to right, rgba(18,19,26,.035) 1px, transparent 1px); background-size: calc(100% / var(--weeks)) 100%; }
+
+  .bar { position: absolute; top: 8px; bottom: 8px; z-index: 1; border-radius: 8px; background: var(--c); color: #fff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px; padding: 0 10px; white-space: nowrap; overflow: hidden; cursor: pointer; text-decoration: none;
+    transform-origin: left center; animation: grow .9s var(--ease) both; animation-delay: var(--d, 0s); transition: filter .2s, box-shadow .2s; }
+  .bar:hover { filter: brightness(1.08); box-shadow: 0 8px 20px -10px var(--c); }
+  .bar .jh { margin-left: auto; font-weight: 600; opacity: .85; font-variant-numeric: tabular-nums; }
+  .bar.soft { background: var(--soft); color: var(--c); box-shadow: inset 0 0 0 1px var(--c); }
+  .bar.dash { background: repeating-linear-gradient(135deg, var(--soft) 0 6px, #fff 6px 12px); color: var(--c); box-shadow: inset 0 0 0 1px var(--c); }
+  .ms.end span { left: auto; right: 6px; }
+  .bar-l { position: absolute; top: 50%; transform: translateY(-50%); margin-left: 10px; z-index: 1; font-size: 13px; font-weight: 700; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .bar-l span { color: var(--muted); font-weight: 500; }
+  @keyframes grow { from { transform: scaleX(0); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  .gate { position: absolute; top: 50%; z-index: 2; width: 16px; height: 16px; margin: -8px 0 0 -8px; background: var(--ink); transform: rotate(45deg); border-radius: 3px; box-shadow: 0 0 0 3px #fff; }
+  .gate-l { position: absolute; top: 50%; z-index: 2; transform: translateY(-50%); margin-left: 14px; font-size: 12px; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
+
+  /* Milestones: a vertical line across the whole chart */
+  .ms { position: absolute; top: 0; bottom: 0; z-index: 3; width: 0; border-left: 2px dashed var(--c); pointer-events: none; }
+  .ms span { position: absolute; top: 52px; left: 6px; white-space: nowrap; font-size: 12px; font-weight: 800; color: #fff; background: var(--c); padding: 3px 8px; border-radius: 999px; }
+
+  /* ---------- Iteration cards ---------- */
+  .phase { display: grid; grid-template-columns: 300px 1fr; gap: 0; border-top: 1px solid var(--line); }
+  .phase:last-of-type { border-bottom: 1px solid var(--line); }
+  .phase-side { padding: 28px 28px 28px 0; display: flex; flex-direction: column; gap: 10px; }
+  .phase-side .prio { align-self: flex-start; height: 26px; font-size: 13px; padding: 0 10px; }
+  .phase-side h3 { font-size: 26px; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+  .phase-side p { font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+  .phase-side .sum { margin-top: 6px; font-size: 15px; color: var(--muted); }
+  .phase-side .sum b { color: var(--ink); font-variant-numeric: tabular-nums; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 0; border-left: 1px solid var(--line); }
+  .card { padding: 28px; display: flex; flex-direction: column; gap: 14px; border-left: 4px solid transparent; scroll-margin-top: 24px; transition: background .4s; }
+  .card + .card { box-shadow: -1px 0 0 var(--line); }
+  .card.flash { background: var(--soft); border-left-color: var(--c); }
+  .card-top { display: flex; align-items: baseline; gap: 10px; }
+  .card-top .n { font-size: 14px; font-weight: 800; color: var(--c); letter-spacing: .04em; }
+  .card-top .w { margin-left: auto; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .card h4 { font-size: 21px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
+  .card .jh { font-size: 30px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .card .jh small { font-size: 15px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+  .blk small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .blk ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+  .blk li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.4; color: var(--ink-2); }
+  .blk.out li::before { content: '✓'; position: absolute; left: 0; font-weight: 800; color: var(--green); }
+  .blk.mes li::before { content: '→'; position: absolute; left: 0; font-weight: 800; color: var(--loop); }
+  .risk { font-size: 14px; line-height: 1.4; color: #8a5a00; background: var(--amber-soft); border-radius: 8px; padding: 8px 12px; }
+  .risk b { color: #6b4500; }
+
+  /* ---------- Totals ---------- */
+  .totals { display: grid; grid-template-columns: 1.3fr 1fr; gap: 64px; align-items: start; }
+  table { width: 100%; border-collapse: collapse; font-size: 17px; }
+  td, th { padding: 12px 0; border-bottom: 1px solid var(--line); text-align: left; }
+  th { font-size: 13px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
+  td:last-child, th:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td:nth-child(2), th:nth-child(2) { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; padding-right: 32px; white-space: nowrap; }
+  tr.total td { font-weight: 800; font-size: 20px; border-bottom: 0; border-top: 2px solid var(--ink); }
+  tr.sub td { color: var(--muted); font-size: 15px; }
+  .cum { display: inline-block; height: 8px; border-radius: 4px; background: var(--c); vertical-align: middle; margin-right: 10px; }
+  .notes { display: flex; flex-direction: column; gap: 18px; }
+  .note { border-left: 3px solid var(--c, var(--loop)); padding: 4px 0 4px 18px; }
+  .note b { display: block; font-size: 17px; margin-bottom: 4px; }
+  .note p { font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+
+  footer { margin-top: 56px; font-size: 14px; color: var(--faint); display: flex; }
+  footer span:last-child { margin-left: auto; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div>
+    <div class="brand">
+      <svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#1f5bff"/><path d="M13 12v16h14" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      loop <span>× Quartier Libre Collection · Document de travail</span>
+    </div>
+    <h1>Option 2 : la roadmap, <em>itération par itération</em>.</h1>
+    <p class="sub">On suit l'ordre des priorités du client : P1 d'abord, puis P2, puis P3. Chaque itération met un robot de plus en service. On mesure, puis on décide de la suite.</p>
+  </div>
+  <div class="facts">
+    <div class="fact"><b>≈ 340–490</b><span>jours-homme au total</span></div>
+    <div class="fact"><b>≈ 14 mois</b><span>pour tout l'immeuble</span></div>
+    <div class="fact"><b>8 mois</b><span>pour P1, P2 et P3</span></div>
+  </div>
+</header>
+
+<div class="rules">
+  <div class="rule"><i>1</i><div><b>Une itération, un usage</b><p>Chaque itération finit sur quelque chose que l'équipe utilise vraiment, à Saint-Georges ou à Madagascar.</p></div></div>
+  <div class="rule"><i>2</i><div><b>On mesure</b><p>Une semaine de bilan avec l'équipe à la fin de chaque itération. Des chiffres, pas des impressions.</p></div></div>
+  <div class="rule"><i>3</i><div><b>On décide</b><p>On continue, on corrige ou on arrête. Le client peut s'arrêter après chaque itération, sans perdre ce qui marche.</p></div></div>
+  <div class="rule"><i>4</i><div><b>On réutilise</b><p>Le socle de l'itération 1 et la téléopération de l'itération 2 servent à toutes les suivantes.</p></div></div>
+</div>
+
+<h2>La timeline</h2>
+<p class="h2-sub">En semaines, à partir du lancement. Équipe supposée : 2 devs et 1 lead produit/tech à mi-temps. Cliquer sur une barre pour voir le détail.</p>
+
+<div class="legend">
+  <span><i style="--c:var(--grey)"></i>Écouter</span>
+  <span><i style="--c:var(--navy)"></i>P1 · Accueil et sécurité</span>
+  <span><i style="--c:var(--violet)"></i>P2 · Bagages</span>
+  <span><i style="--c:var(--sky)"></i>P3 · Ménage</span>
+  <span><i style="--c:var(--loop)"></i>Tout l'immeuble</span>
+  <span><i class="dash" style="--c:var(--amber)"></i>Démarches en parallèle, sans dev</span>
+  <span><i class="gate"></i>Bilan et décision</span>
+</div>
+
+<div class="gantt" id="gantt"></div>
+
+<h2>Le détail des itérations</h2>
+<p class="h2-sub">Les j/h couvrent le dev, les tests et l'installation sur site. Ils ne comptent pas l'achat des robots.</p>
+
+<div id="phases"></div>
+
+<h2>Le total</h2>
+<p class="h2-sub">Les fourchettes se resserreront après Écouter, quand on aura vu les API de Mews, Salto et Greg.</p>
+
+<div class="totals">
+  <table id="totals"></table>
+  <div class="notes">
+    <div class="note" style="--c:var(--navy)"><b>Pourquoi la sécurité passe avant le Piaggio Kilo</b><p>Le Kilo n'est pas distribué en Europe : sa livraison peut prendre du retard. La sécurité réutilise la téléopération, donc elle coûte peu. Tout le P1 est en service en 5 mois, sans dépendre du Kilo.</p></div>
+    <div class="note" style="--c:var(--amber)"><b>Ce qu'il faut lancer dès la semaine 1</b><p>La certification partenaire Mews, qui prend plusieurs semaines. L'analyse RGPD de l'enregistrement du son. La commande du Kilo : import, marquage CE, délai.</p></div>
+    <div class="note" style="--c:var(--loop)"><b>Après la mise en service</b><p>Support et maintenance des connecteurs : 3 à 5 j/h par mois. Roborock n'a pas d'API officielle, une mise à jour peut casser l'intégration.</p></div>
+    <div class="note" style="--c:var(--grey)"><b>Encore à trancher</b><p>La taille de l'équipe, le paiement et la pièce d'identité au check-in (+15 à 25 j/h), l'API de Greg, l'ascenseur Otis (+20 à 40 j/h).</p></div>
+  </div>
+</div>
+
+<footer><span>Loop × Quartier Libre Collection</span><span>Estimation de travail, à affiner après la phase Écouter</span></footer>
+</div>
+
+<script>
+// ---------- Data: one entry per iteration. Weeks are 1-based and inclusive. ----------
+const C = {
+  grey:   ['var(--grey)', 'var(--grey-soft)'],
+  p1:     ['var(--navy)', 'var(--navy-soft)'],
+  p2:     ['var(--violet)', 'var(--violet-soft)'],
+  p3:     ['var(--sky)', 'var(--sky-soft)'],
+  all:    ['var(--loop)', 'var(--loop-50)'],
+  side:   ['var(--amber)', 'var(--amber-soft)'],
+};
+const WEEKS = 67;
+
+const phases = [
+  { title: 'Écouter', prio: null, color: 'grey', text: 'Comprendre le terrain avant d\'écrire une ligne de code.', items: [
+    { id: 'it0', n: 'Itération 0', name: 'Écouter', from: 1, to: 2, jh: [8, 10],
+      out: ['Interviews à Saint-Georges : réception, ménage, maintenance, Madagascar', 'Le vrai parcours de check-in et de check-out', 'Les accès API : Mews, Salto, Greg'],
+      mes: ['Les questions les plus posées au comptoir', 'Le Wi-Fi et l\'éclairage du rez-de-chaussée la nuit'] },
+  ]},
+  { title: 'Accueil et sécurité', prio: 'P1', color: 'p1', text: 'La priorité du client. Trois itérations, et tout le P1 est en service en 5 mois.', items: [
+    { id: 'it1', n: 'Itération 1', name: 'Temi accueille les clients', from: 3, to: 10, jh: [80, 105],
+      out: ['Le socle : backend, comptes, console web, hébergement', 'Appli Temi : accueil, check-in, check-out, multilingue', 'Lecture des réservations dans Mews', 'Bouton panique sur Temi et à distance'],
+      mes: ['Part des check-ins faits avec Temi', 'Temps passé au comptoir par la réception'],
+      risk: '<b>Mews</b> : la certification partenaire doit être lancée dès la semaine 1.', note: 'Le socle (25–35 j/h) est construit ici et sert à tout le reste.' },
+    { id: 'it2', n: 'Itération 2', name: 'Madagascar prend la main', from: 12, to: 16, jh: [25, 35],
+      out: ['Visio entre Temi et la console de Madagascar', 'Envoyer Temi vers un point, parler, afficher un écran', 'Test de latence réel depuis Madagascar'],
+      mes: ['Nombre de prises en main par jour', 'Latence ressentie par Hery'],
+      note: 'En attendant, la visio native de Temi sert dès l\'itération 1, sans dev.' },
+    { id: 'it3', n: 'Itération 3', name: 'Temi surveille la nuit', from: 18, to: 21, jh: [20, 30],
+      out: ['Rondes programmées au rez-de-chaussée', 'Vidéo en direct vers l\'opérateur de nuit', 'Alerte en cas d\'anomalie'],
+      mes: ['Rondes faites sur rondes prévues', 'Alertes utiles sur alertes reçues'],
+      risk: '<b>Temi ne voit pas la nuit</b> : le rez-de-chaussée doit rester éclairé.' },
+  ]},
+  { title: 'Bagages', prio: 'P2', color: 'p2', text: 'Le Kilo est commandé dès le début. On le teste seul pendant le P1, puis on le branche.', items: [
+    { id: 'kilo0', n: 'En parallèle', name: 'Piaggio Kilo, seul', from: 12, to: 21, jh: [5, 8], dash: true,
+      out: ['Installation et formation de l\'équipe', 'Tests sans plateforme, au quotidien', 'Vérification de la sécurité avec les enfants'],
+      mes: ['Trajets par jour', 'Incidents et blocages'],
+      risk: '<b>Pas distribué en Europe</b> : import, marquage CE et délai à vérifier avant de commander.' },
+    { id: 'it4', n: 'Itération 4', name: 'Le Kilo branché sur l\'accueil', from: 23, to: 27, jh: [20, 30],
+      out: ['Le check-in confirmé dans Mews envoie le Kilo', 'Son statut dans la console', 'Retour automatique à la bagagerie'],
+      mes: ['Bagages montés par le Kilo', 'Temps gagné par la réception'],
+      risk: '<b>Inconnue</b> : sans API Piaggio, on se limite au suivi. Sans Otis, le client appelle l\'ascenseur lui-même.' },
+  ]},
+  { title: 'Ménage', prio: 'P3', color: 'p3', text: 'Un robot, un appartement, puis cinq.', items: [
+    { id: 'it5', n: 'Itération 5', name: 'Roborock Saros au ménage', from: 29, to: 35, jh: [35, 50],
+      out: ['Connecteur Roborock', 'Badge Salto et statut Mews : jamais dans un appartement occupé', 'Une carte par appartement, un robot pour plusieurs', 'Suivi dans la console, notification WhatsApp'],
+      mes: ['Pilote sur 1 appartement, puis 5', 'Temps de ménage gagné par appartement'],
+      risk: '<b>Pas d\'API officielle</b> : une mise à jour de Roborock peut casser l\'intégration.' },
+  ]},
+  { title: 'Tout l\'immeuble', prio: null, color: 'all', text: 'Une fois les trois priorités en service. Cinq itérations courtes, chacune utile seule.', items: [
+    { id: 'it6', n: 'Itération 6', name: 'La vue 3D de l\'immeuble', from: 37, to: 40, jh: [20, 30],
+      out: ['Tous les robots sur une seule vue', 'La maquette existe déjà'], mes: ['Utilisée chaque jour par la réception et Madagascar'] },
+    { id: 'it7', n: 'Itération 7', name: 'Greg branché', from: 41, to: 46, jh: [25, 40],
+      out: ['Connecteur Greg et file d\'événements', 'Mode dégradé et garde-fous'], mes: ['Demandes traitées par Greg sans humain'],
+      risk: '<b>Pas encore de doc</b> : si l\'API est simple, on peut le brancher plus tôt.' },
+    { id: 'it8', n: 'Itération 8', name: 'L\'app compagnon', from: 47, to: 53, jh: [30, 45],
+      out: ['Une app par rôle : réception, ménage, maintenance, Madagascar, direction', 'Le prototype iOS existe déjà'], mes: ['Utilisateurs actifs par rôle'] },
+    { id: 'it9', n: 'Itération 9', name: 'Rondes de nuit complètes', from: 54, to: 56, jh: [15, 20],
+      out: ['Les Saros font des rondes la nuit', 'Caméras Milestone dans la console'], mes: ['Zones couvertes la nuit'] },
+    { id: 'it10', n: 'Itération 10', name: 'Un deuxième immeuble', from: 57, to: 59, jh: [10, 15],
+      out: ['Même plateforme, autre adresse'], mes: ['Jours pour ouvrir un immeuble'] },
+  ]},
+];
+
+// Side tracks with no dev, and the decision gates
+const side = [
+  { label: 'Certification Mews', from: 1, to: 9 },
+  { label: 'Analyse RGPD (son)', from: 1, to: 6 },
+  { label: 'Commande et import du Kilo', from: 1, to: 11 },
+];
+const gates = [
+  { w: 2.5, l: 'Go' }, { w: 11, l: 'Bilan' }, { w: 17, l: 'Bilan' }, { w: 22, l: 'Bilan P1' },
+  { w: 28, l: 'Bilan P2' }, { w: 36, l: 'Bilan P3' }, { w: 60, l: 'Bilan final' },
+];
+const milestones = [
+  { w: 22, l: 'P1 · mois 5', c: 'var(--navy)' },
+  { w: 28, l: 'P2 · mois 6,5', c: 'var(--violet)' },
+  { w: 36, l: 'P3 · mois 8', c: 'var(--sky)' },
+  { w: 60, l: 'Tout l\'immeuble · mois 14', c: 'var(--loop)', end: true },
+];
+
+// ---------- Gantt ----------
+const pct = w => `${((w - 1) / WEEKS) * 100}%`;
+const span = (a, b) => `left:${pct(a)};width:${((b - a + 1) / WEEKS) * 100}%`;
+const jh = r => `${r[0]}–${r[1]} j/h`;
+const g = document.getElementById('gantt');
+let html = '<div class="grid-bg"></div>';
+const row = (label, track, cls = '') => `<div class="g-row ${cls}"><div class="g-label">${label}</div><div class="g-track">${track}</div></div>`;
+
+// Month header: 4.33 weeks per month
+html += '<div class="g-row g-head"><div class="g-label">Semaines</div><div class="g-track"><div class="months">';
+for (let m = 0; m * 4.333 < WEEKS; m++) html += `<span style="left:${(m * 4.333 / WEEKS) * 100}%">M${m + 1}</span>`;
+html += '</div></div></div>';
+html += row('Jalons', '', 'g-group');
+
+
+html += row('Démarches', '', 'g-group');
+side.forEach((s, i) => {
+  html += row(s.label, `<div class="bar dash" style="${span(s.from, s.to)};--c:${C.side[0]};--soft:${C.side[1]};--d:${i * .05}s"></div><span class="bar-l" style="left:${pct(s.to + 1)}">S${s.from}–S${s.to}</span>`);
+});
+
+let d = .15;
+phases.forEach(p => {
+  const [c, soft] = C[p.color];
+  html += row(`${p.prio ? `<span class="prio" style="--c:${c}">${p.prio}</span>` : ''}${p.title}`, '', 'g-group');
+  p.items.forEach(it => {
+    d += .06;
+    const cls = it.dash ? 'bar dash' : 'bar';
+    html += row(`${it.name}<small>${it.n === 'En parallèle' ? '' : it.n.replace('Itération ', 'It. ')}</small>`,
+      `<a href="#${it.id}" class="${cls}" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${it.n} · ${it.name} · S${it.from}–S${it.to} · ${jh(it.jh)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}">${jh(it.jh)} <span>· S${it.from}–${it.to}</span></span>`);
+  });
+});
+
+html += row('Décisions', '', 'g-group');
+html += row('Bilan avec le client', gates.map(x => `<i class="gate" style="left:${pct(x.w)}"></i><span class="gate-l" style="left:${pct(x.w)}">${x.l}</span>`).join(''));
+
+g.innerHTML = html;
+
+// Milestone lines span every row, positioned over the track area
+g.insertAdjacentHTML('beforeend', `<div style="position:absolute;top:0;bottom:0;left:var(--label);right:0;pointer-events:none">${
+  milestones.map(m => `<div class="ms${m.end ? ' end' : ''}" style="left:${pct(m.w)};--c:${m.c}"><span>${m.l}</span></div>`).join('')}</div>`);
+
+// ---------- Iteration cards ----------
+const ph = document.getElementById('phases');
+ph.innerHTML = phases.map(p => {
+  const [c, soft] = C[p.color];
+  const lo = p.items.reduce((s, i) => s + i.jh[0], 0), hi = p.items.reduce((s, i) => s + i.jh[1], 0);
+  const from = Math.min(...p.items.map(i => i.from)), to = Math.max(...p.items.map(i => i.to));
+  return `<section class="phase">
+    <div class="phase-side">
+      ${p.prio ? `<span class="prio" style="--c:${c}">${p.prio}</span>` : ''}
+      <h3>${p.title}</h3><p>${p.text}</p>
+      <p class="sum"><b>${lo}–${hi} j/h</b> · semaines ${from} à ${to}</p>
+    </div>
+    <div class="cards">${p.items.map(it => `
+      <article class="card" id="${it.id}" style="--c:${c};--soft:${soft}">
+        <div class="card-top"><span class="n">${it.n.toUpperCase()}</span><span class="w">S${it.from}–S${it.to} · ${it.to - it.from + 1} sem.</span></div>
+        <h4>${it.name}</h4>
+        <div class="jh">${it.jh[0]}–${it.jh[1]} <small>j/h</small></div>
+        <div class="blk out"><small>En service à la fin</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
+        <div class="blk mes"><small>On mesure</small><ul>${it.mes.map(x => `<li>${x}</li>`).join('')}</ul></div>
+        ${it.note ? `<p class="blk" style="font-size:14px;color:var(--muted);line-height:1.4">${it.note}</p>` : ''}
+        ${it.risk ? `<p class="risk">${it.risk}</p>` : ''}
+      </article>`).join('')}
+    </div>
+  </section>`;
+}).join('');
+
+// Clicking a bar highlights its card
+addEventListener('hashchange', flash);
+function flash() {
+  document.querySelectorAll('.card.flash').forEach(e => e.classList.remove('flash'));
+  const el = document.getElementById(location.hash.slice(1));
+  if (el && el.classList.contains('card')) { el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1800); }
+}
+
+// ---------- Totals, with the cumulative share as a small bar ----------
+const sum = (list, k) => list.reduce((s, i) => s + i.jh[k], 0);
+const core = phases.slice(0, 4).flatMap(p => p.items), building = phases[4].items;
+const lines = phases.map(p => ({ t: `${p.prio ? p.prio + ' · ' : ''}${p.title}`, c: C[p.color][0], lo: sum(p.items, 0), hi: sum(p.items, 1),
+  w: `S${Math.min(...p.items.map(i => i.from))}–S${Math.max(...p.items.map(i => i.to))}` }));
+const coreLo = sum(core, 0), coreHi = sum(core, 1), allLo = coreLo + sum(building, 0), allHi = coreHi + sum(building, 1);
+const pilotLo = Math.round(allLo * .15 / 5) * 5, pilotHi = Math.round(allHi * .15 / 5) * 5;
+const max = allHi + pilotHi;
+document.getElementById('totals').innerHTML = `
+  <tr><th>Itérations</th><th>Semaines</th><th>j/h</th></tr>
+  ${lines.map(l => `<tr><td><span class="cum" style="width:${l.hi / max * 160}px;--c:${l.c}"></span>${l.t}</td><td>${l.w}</td><td>${l.lo}–${l.hi}</td></tr>`).join('')}
+  <tr class="sub"><td>Sous-total P1, P2, P3 (avec Écouter)</td><td>8 mois</td><td>${coreLo}–${coreHi}</td></tr>
+  <tr><td><span class="cum" style="width:${pilotHi / max * 160}px;--c:var(--faint)"></span>Pilotage, QA, déplacements (≈ 15 %)</td><td>tout du long</td><td>${pilotLo}–${pilotHi}</td></tr>
+  <tr class="total"><td>Total</td><td>≈ 14 mois</td><td>≈ ${allLo + pilotLo}–${allHi + pilotHi}</td></tr>`;
+</script>
+</body>
+</html>
