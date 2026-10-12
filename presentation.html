@@ -128,7 +128,7 @@
   .cover .who .lp { width: 88px; height: 88px; }
   .cover .who .ql { font-size: 26px; font-weight: 500; letter-spacing: .14em; color: #1d2650; line-height: 1.25; }
   .bld { position: absolute; right: 150px; top: 150px; width: 576px; height: 716px; overflow: hidden; }
-  .bld img { position: absolute; width: 1269px; left: -351px; top: -463px; mix-blend-mode: multiply; }
+  .bld img { position: absolute; width: 1269px; left: -351px; top: -463px; mix-blend-mode: multiply; opacity: .3; }
   .bot-dot { position: absolute; width: 26px; height: 26px; border-radius: 50%; background: var(--loop); border: 4px solid #fff; box-shadow: 0 4px 12px rgba(31,91,255,.4); opacity: 0; transform: scale(.4); transition: opacity .4s, transform .5s var(--ease); }
   .bot-dot.on { opacity: 1; transform: none; }
   .bot-dot::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; background: var(--loop); animation: ping 2.2s ease-out infinite; }
@@ -136,7 +136,7 @@
   .bot-dot.violet, .bot-dot.violet::after { background: var(--violet); }
   .bot-dot.sky, .bot-dot.sky::after { background: var(--sky); }
   .bot-dot.red, .bot-dot.red::after { background: var(--red); }
-  .bot-lbl { position: absolute; left: 34px; top: -4px; white-space: nowrap; font-size: 15px; font-weight: 700; background: #fff; border-radius: 6px; padding: 3px 9px; box-shadow: 0 2px 8px rgba(18,19,26,.12); }
+  .bot-lbl { position: absolute; left: 38px; top: -6px; white-space: nowrap; font-size: 20px; font-weight: 700; color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 5px 12px; box-shadow: 0 6px 18px rgba(18,19,26,.18); }
   .cover .arc { position: absolute; right: 70px; top: 90px; width: 760px; height: 860px; pointer-events: none; }
   .cover .arc path { stroke-dasharray: 2400; stroke-dashoffset: 2400; }
   .cover.active .arc path { animation: draw 2.6s var(--ease) .3s forwards; }
