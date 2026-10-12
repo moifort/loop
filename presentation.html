@@ -129,13 +129,18 @@
   .cover .who .ql { font-size: 26px; font-weight: 500; letter-spacing: .14em; color: #1d2650; line-height: 1.25; }
   .bld { position: absolute; right: 150px; top: 150px; width: 576px; height: 716px; overflow: hidden; }
   .bld img { position: absolute; width: 1269px; left: -351px; top: -463px; mix-blend-mode: multiply; }
-  .toc { position: absolute; top: 0; bottom: 0; left: 96px; width: 1000px; display: flex; flex-direction: column; }
-  .toc .top-txt { display: flex; flex-direction: column; gap: 22px; padding: 88px 0 56px; }
-  .toc-i { display: grid; grid-template-columns: 120px 1fr; column-gap: 0; row-gap: 10px; align-items: baseline; padding: 40px 0; border-top: 1px solid var(--line); }
-  .toc-i p { grid-column: 2; }
-  .toc-n { grid-row: span 2; font-size: 64px; font-weight: 800; line-height: 1; color: var(--loop); }
-  .toc-i b { font-size: 56px; font-weight: 800; letter-spacing: -.03em; line-height: 1.05; color: var(--ink); }
-  .toc-i p { font-size: 26px; line-height: 1.4; color: var(--muted); }
+  .toc-head { position: absolute; left: 96px; top: 88px; display: flex; flex-direction: column; gap: 22px; }
+  .toc-i { position: absolute; left: 96px; top: var(--y); width: calc(var(--px) - 96px + 19px); transform: translateY(-50%); display: flex; align-items: center; gap: 28px; }
+  .slide.active .toc-i.rise { animation-name: toc-rise; }
+  @keyframes toc-rise { from { opacity: 0; transform: translateY(calc(-50% + 24px)); } to { opacity: 1; transform: translateY(-50%); } }
+  .toc-n { flex: none; width: 64px; height: 64px; border-radius: 18px; display: grid; place-items: center; background: var(--loop); color: #fff; font-size: 32px; font-weight: 800; }
+  .toc-t { flex: none; width: 600px; display: flex; flex-direction: column; gap: 6px; }
+  .toc-t b { font-size: 48px; font-weight: 800; letter-spacing: -.03em; line-height: 1.05; color: var(--ink); }
+  .toc-t p { font-size: 22px; line-height: 1.4; color: var(--muted); }
+  .toc-l { flex: 1; height: 3px; border-radius: 2px; background: var(--loop); }
+  .toc-pin { position: relative; flex: none; width: 38px; height: 38px; margin-left: -28px; border-radius: 50%; background: var(--loop); border: 6px solid #fff; box-shadow: 0 4px 14px rgba(31,91,255,.5); }
+  [data-scene="toc"] .bld img { opacity: .35; }
+  .toc-pin::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; background: var(--loop); animation: ping 2.2s ease-out infinite; z-index: -1; }
   @keyframes draw { to { stroke-dashoffset: 0; } }
 
   /* ============ 2 · Needs ============ */
@@ -605,16 +610,15 @@
 
 <!-- ======================= Table of contents ======================= -->
 <section class="slide" data-scene="toc">
-  <div class="toc">
-    <div class="top-txt">
-      <span class="eyebrow rise">Sommaire</span>
-      <h1 class="rise" style="--d:.1s">Trois parties.</h1>
-    </div>
-    <div class="toc-i rise" style="--d:.25s"><span class="toc-n">1</span><b>Les robots</b><p>Ce que vous nous avez demandé : les robots, et leur mise en place.</p></div>
-    <div class="toc-i rise" style="--d:.4s"><span class="toc-n">2</span><b>Le tableau de bord</b><p>En plus des robots : un seul écran pour tout piloter, branché sur Greg.</p></div>
-    <div class="toc-i rise" style="--d:.55s"><span class="toc-n">3</span><b>La roadmap</b><p>Deux options, dans l'ordre des priorités de Michael.</p></div>
+  <div class="toc-head">
+    <span class="eyebrow rise">Sommaire</span>
+    <h1 class="rise" style="--d:.1s">Trois parties.</h1>
   </div>
-  <div class="bld rise" style="--d:.2s"><img src="assets/quartier-libre-collection-logo.jpg" alt="Quartier Libre Collection"></div>
+  <div class="bld rise" style="--d:.15s"><img src="assets/quartier-libre-collection-logo.jpg" alt="Quartier Libre Collection"></div>
+  <!-- Each entry is pinned on a floor of the building: --y is the pin height, --px its x on the slide -->
+  <div class="toc-i rise" style="--d:.3s;--y:350px;--px:1330px"><span class="toc-n">1</span><div class="toc-t"><b>Les robots</b><p>Ce que vous nous avez demandé : les robots, et leur mise en place.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
+  <div class="toc-i rise" style="--d:.5s;--y:570px;--px:1500px"><span class="toc-n">2</span><div class="toc-t"><b>Le tableau de bord</b><p>En plus des robots : un seul écran pour tout piloter, branché sur Greg.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
+  <div class="toc-i rise" style="--d:.7s;--y:790px;--px:1400px"><span class="toc-n">3</span><div class="toc-t"><b>La roadmap</b><p>Deux options, dans l'ordre des priorités de Michael.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
