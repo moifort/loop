@@ -812,8 +812,8 @@
       <h1 class="rise" style="--d:.1s">La nuit,<br><em>le Temi fait la ronde.</em></h1>
       <div class="need rise" style="--d:.2s"><small>Votre besoin</small><p>Une seule personne sur place. La nuit, la réception est tenue depuis Madagascar.</p></div>
       <ul class="does rise" style="--d:.3s">
-        <li>Le Temi patrouille la nuit, caméra allumée.</li>
-        <li>Un mouvement devant une suite libre : Madagascar envoie le Temi vérifier.</li>
+        <li>Le Temi patrouille le rez-de-chaussée la nuit, caméra allumée.</li>
+        <li>Un mouvement à la porte de service : Madagascar envoie le Temi vérifier.</li>
         <li>Une caméra en panne : le Temi prend le relais.</li>
       </ul>
       <div class="kpis rise" style="--d:.4s">
@@ -1004,7 +1004,7 @@
       <div class="opt rise" style="--d:.2s">
         <span class="ol">Option 1</span>
         <h3>Les robots seuls</h3>
-        <div class="bud-p"><b>18 750 €</b><span>HT · 25 jours</span></div>
+        <div class="bud-p"><b>18 750 €</b><span>HT · 25 jours-homme</span></div>
         <ul class="bud-l">
           <li><span>Écouter : interviews à Saint-Georges</span><b>3 j</b></li>
           <li><span>Temi : installation, accueil, visio</span><b>6 j</b></li>
@@ -1017,7 +1017,7 @@
       <div class="opt best rise" style="--d:.35s">
         <span class="ol">Option 2</span>
         <h3>Les robots + tableau de bord</h3>
-        <div class="bud-p"><b>57 000 €</b><span>HT · 76 jours</span></div>
+        <div class="bud-p"><b>57 000 €</b><span>HT · 76 jours-homme</span></div>
         <ul class="bud-l">
           <li><span>Écouter : interviews à Saint-Georges</span><b>3 j</b></li>
           <li><span>Temi, version de base : check-in, check-out, panique</span><b>15 j</b></li>
@@ -1030,7 +1030,7 @@
         </ul>
       </div>
     </div>
-    <div class="rule rise" style="--d:.5s"><svg><use href="#i-check"/></svg>TJM de 750 € HT. Estimation à affiner après la phase Écouter.</div>
+    <div class="rule rise" style="--d:.5s"><svg><use href="#i-check"/></svg>TJM de 750 € HT par personne, Boris et Thibaut. Estimation à affiner après la phase Écouter.</div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
@@ -1250,9 +1250,9 @@ const SCENES = {
     },
     run(s) {
       const c = $('vig-cur'), f = s.querySelector('iframe.app');
-      const btn = () => [...(f.contentDocument?.querySelectorAll('button') || [])].find(b => /Envoyer CLN-C6F2/.test(b.textContent));
+      const btn = () => [...(f.contentDocument?.querySelectorAll('button') || [])].find(b => /Envoyer TEMI-4F2A/.test(b.textContent));
       // The plan re-renders several times a second: look the camera marker up again at each step
-      const cam = () => f.contentDocument?.querySelector('#vig-iso .cam-mk[data-cam="CAM-É5"]');
+      const cam = () => f.contentDocument?.querySelector('#vig-iso .cam-mk[data-cam="CAM-SERV"]');
       // First the cursor hovers the camera that raised the alert: its live feed opens above the marker.
       // The mockup has just been reloaded, so wait for the marker before playing the rest.
       const hover = (tries = 0) => {

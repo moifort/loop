@@ -3961,8 +3961,8 @@ const CONNS = [
       { k: 'val', t: 'Conservation', v: '30 jours, en France', d: 'Réglé dans XProtect' },
       { k: 'sw', t: 'Partager les flux avec GregAi', d: 'RGPD : opérateurs humains seulement', on: false, lock: true },
     ],
-    events: [[3, 'in', 'motion.detected', 'Mouvement au 5ᵉ devant la suite 503 libre, <b>CAM-É5</b>.'], [2.6, 'act', 'vigie.dispatch', '<b>CLN-C6F2</b> envoyé vérifier l\'É5.'],
-      [24, 'in', 'motion.detected', 'Mouvement dans le hall, <b>CAM-HALL</b>.', 'OP'], [60 * 11, 'in', 'camera.offline', '<b>CAM-É4</b> ne répond plus.', 'SG', 'err'], [60 * 11 - 1, 'act', 'vigie.relay', '<b>CLN-5E07</b> couvre le couloir de l\'É4.']],
+    events: [[3, 'in', 'motion.detected', 'Mouvement à la porte de service, <b>CAM-SERV</b>.'], [2.6, 'act', 'vigie.dispatch', '<b>TEMI-4F2A</b> envoyé vérifier la porte de service.'],
+      [24, 'in', 'motion.detected', 'Mouvement dans le hall, <b>CAM-HALL</b>.', 'OP'], [60 * 11, 'in', 'camera.offline', '<b>CAM-REC</b> ne répond plus.', 'SG', 'err'], [60 * 11 - 1, 'act', 'vigie.relay', '<b>TEMI-4F2A</b> couvre la réception.']],
     live: [['in', 'motion.detected', 'Mouvement dans le hall, <b>CAM-HALL</b> (client).', 'MD']] },
   { id: 'otis', name: 'Otis Integrated Dispatch', cat: 'Ascenseur', mono: 'O', color: '#0b3d91', state: 'ok', short: 'Otis', sub: 'Les robots appellent l\'ascenseur', sites: ['SG', 'OP'], since: ago(60 * 24 * 9),
     opts: [
@@ -4167,7 +4167,7 @@ const VIG = {
   t0: Date.now(), base: 2 * 60 + 14, // night replay starts at 02:14
   sel: null,                 // floor picked on the plan
   mission: null,             // { kind, floors, start, dur, found: [], done }
-  alert: { floor: 5, cam: 'CAM-É5', at: '02:11', state: 'open' },
+  alert: { floor: 0, cam: 'CAM-SERV', at: '02:11', state: 'open' },
 };
 const VIG_DUR = 32000;
 const vClock = () => {
@@ -4181,13 +4181,13 @@ const vClock = () => {
 const PEXELS = id => `https://videos.pexels.com/video-files/${id}.mp4`;
 const CAMS = [
   { id: 'CAM-É5', floor: 5, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É5', feed: PEXELS('10577855/10577855-sd_960_540_30fps') },
-  { id: 'CAM-É4', floor: 4, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É4', off: true, offAt: '00:05' },
+  { id: 'CAM-É4', floor: 4, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É4', feed: PEXELS('3192916/3192916-sd_960_540_24fps') },
   { id: 'CAM-É3', floor: 3, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É3', feed: PEXELS('6390310/6390310-sd_960_540_25fps') },
   { id: 'CAM-É2', floor: 2, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É2', feed: PEXELS('3192916/3192916-sd_960_540_24fps') },
   { id: 'CAM-É1', floor: 1, x: 0.15, y: 3, dir: 0, fov: 34, range: 12, name: 'Couloir É1', feed: PEXELS('8946572/8946572-sd_960_540_24fps') },
   { id: 'CAM-ESC', floor: 3, x: 3.15, y: 5.85, dir: -45, fov: 80, range: 3.2, name: 'Cage d\'escalier', feed: PEXELS('36219113/15359217_960_540_24fps') },
   { id: 'CAM-HALL', floor: 0, x: 4.85, y: 0.15, dir: 118, fov: 62, range: 7, name: 'Hall · entrée', kind: 'hall', feed: PEXELS('38469386/16337290_960_540_25fps') },
-  { id: 'CAM-REC', floor: 0, x: 0.15, y: 0.15, dir: 50, fov: 56, range: 5, name: 'Réception', kind: 'hall', feed: PEXELS('36219791/15359774_960_540_50fps') },
+  { id: 'CAM-REC', floor: 0, x: 0.15, y: 0.15, dir: 50, fov: 56, range: 5, name: 'Réception', kind: 'hall', off: true, offAt: '00:05', feed: PEXELS('36219791/15359774_960_540_50fps') },
   { id: 'CAM-SERV', floor: 0, x: 11.85, y: 3.25, dir: -140, fov: 58, range: 4.5, name: 'Porte de service', kind: 'door', feed: PEXELS('35130882/14882355_960_540_50fps') },
 ];
 // Robot cameras, fixed shots too (the robot films when it stops): low view down a corridor on patrol or while
@@ -4198,31 +4198,25 @@ const RELAY_FEED = PEXELS('36188116/15347477_960_540_25fps');
 const BASE_FEEDS = [PEXELS('19217899/19217899-sd_960_540_30fps'), PEXELS('19217895/19217895-sd_960_540_30fps')];
 // Scripted findings of a mission, per floor (fraction of the mission when they come up)
 const VIG_FIND = {
-  5: { at: .48, lvl: 'warn', txt: 'CLN-C6F2 · É5 : le mouvement venait d\'un rideau. Fenêtre de la suite 503 restée ouverte après le ménage. Photo prise.', fix: true },
-  4: { at: .4, lvl: 'ok', txt: 'CLN-5E07 · É4 : couloir parcouru à la place de CAM-É4 (hors ligne). Rien à signaler.' },
-  3: { at: .62, lvl: 'ok', txt: 'CLN-91C5 · É3 : couloir et cage d\'escalier dégagés.' },
-  2: { at: .55, lvl: 'ok', txt: 'CLN-2D84 · É2 : rien à signaler.' },
-  1: { at: .5, lvl: 'ok', txt: 'CLN-7B19 · É1 : rien à signaler.' },
-  0: { at: .72, lvl: 'ok', txt: 'TEMI-4F2A · RDC : porte de service fermée à clé, hall vide.' },
+  0: { at: .55, lvl: 'warn', txt: 'TEMI-4F2A · RDC : porte de service mal fermée, un client de l\'app. 204 sortait fumer. Photo prise.', fix: true },
 };
 const VIG_LOG = [
-  { t: '02:11', k: 'err', ic: 'cctv', html: '<b>Mouvement au 5ᵉ</b>, devant la suite 503 inoccupée', sub: 'CAM-É5 couloir · en attente de vérification' },
-  { t: '01:24', k: 'ok', ic: 'route', html: '<b>Ronde de 01:00 terminée</b> : 6 étages, 0 anomalie', sub: 'Temi + 6 robots de ménage · 21 min' },
-  { t: '00:47', k: 'warn', ic: 'door-open', html: '<b>Porte de service ouverte 3 min</b>', sub: 'Temi est allé voir : un client de l\'app. 204 sortait fumer. Alerte levée par Hery.' },
-  { t: '00:05', k: 'warn', ic: 'cctv', html: '<b>CAM-É4 hors ligne</b>', sub: 'CLN-5E07 couvre le couloir de l\'É4 jusqu\'à la réparation' },
-  { t: '23:52', k: 'ok', ic: 'route', html: '<b>Ronde de 23:30 terminée</b> : 0 anomalie', sub: 'Temi + 6 robots de ménage · 22 min' },
-  { t: '23:00', k: 'ok', ic: 'moon', html: '<b>Mode nuit activé</b>', sub: 'Automatique · 1 réceptionniste de nuit à distance (Hery, Madagascar)' },
-];
-const vFloor = id => FLOORS.find(f => f.id === id);
+  { t: '02:11', k: 'err', ic: 'cctv', html: '<b>Mouvement à la porte de service</b>, au rez-de-chaussée', sub: 'CAM-SERV · en attente de vérification' },
+  { t: '01:24', k: 'ok', ic: 'route', html: '<b>Ronde de 01:00 terminée</b> : rez-de-chaussée, 0 anomalie', sub: 'Le Temi · 14 min' },
+  { t: '00:47', k: 'warn', ic: 'door-open', html: '<b>Mouvement dans le hall</b>', sub: 'Le Temi est allé voir : un client rentrait tard. Alerte levée depuis Madagascar.' },
+  { t: '00:05', k: 'warn', ic: 'cctv', html: '<b>CAM-REC hors ligne</b>', sub: 'Le Temi couvre la réception jusqu\'à la réparation' },
+  { t: '23:52', k: 'ok', ic: 'route', html: '<b>Ronde de 23:30 terminée</b> : 0 anomalie', sub: 'Le Temi · 15 min' },
+  { t: '23:00', k: 'ok', ic: 'moon', html: '<b>Mode nuit activé</b>', sub: 'Automatique · réception tenue à distance depuis Madagascar' },
+];const vFloor = id => FLOORS.find(f => f.id === id);
 const vAll = () => [5, 4, 3, 2, 1, 0];
 const vLvl = id => id === 0 ? 'RDC' : 'É' + id;
-// Robots that take part in a mission on a floor
-const vTeam = id => id === 0 ? [greeterOf().name, vFloor(0).robot.name] : [vFloor(id).robot.name];
+// The Temi is the only robot on watch at night; it does not take the lift, so it patrols the RDC only
+const vTeam = id => id === 0 ? [greeterOf().name] : [];
 const vProg = () => VIG.mission ? Math.min(1, (Date.now() - VIG.mission.start) / VIG.mission.dur) : 0;
 
 function vStartMission(kind, floors) {
   VIG.mission = { kind, floors, start: Date.now(), dur: kind === 'ronde' ? VIG_DUR : VIG_DUR * .6, found: [], done: false };
-  VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: 'route', html: `<b>${kind === 'ronde' ? 'Ronde lancée' : `Exploration de l'${vLvl(floors[0])} lancée`}</b>`, sub: floors.flatMap(vTeam).join(' · ') });
+  VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: 'route', html: `<b>${kind === 'ronde' ? 'Ronde lancée' : `Exploration ${floors[0] === 0 ? 'du rez-de-chaussée' : 'de l\'' + vLvl(floors[0])} lancée`}</b>`, sub: floors.flatMap(vTeam).join(' · ') });
   renderVigie();
 }
 function vTick() {
@@ -4236,14 +4230,14 @@ function vTick() {
       VIG_LOG.unshift({ t: vClock(), k: f.lvl, ic: id === 0 ? 'bot' : 'brush-cleaning', html: f.txt.replace(/^([^:]+:)/, '<b>$1</b>'), sub: '' });
       if (f.fix && VIG.alert && VIG.alert.floor === id && VIG.alert.state === 'open') {
         VIG.alert.state = 'resolved';
-        VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: 'sparkles', html: '<b>Ticket envoyé à GregAi</b> pour l\'équipe ménage : fermer la fenêtre de la suite 503', sub: 'Fausse alerte, aucune intrusion' });
+        VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: 'sparkles', html: '<b>Ticket envoyé à GregAi</b> : vérifier la fermeture de la porte de service', sub: 'Fausse alerte, aucune intrusion' });
       }
     }
   });
   if (p >= 1) {
     m.done = true;
     const warn = m.floors.filter(id => VIG_FIND[id]?.lvl === 'warn').length;
-    VIG_LOG.unshift({ t: vClock(), k: 'ok', ic: 'check', html: `<b>${m.kind === 'ronde' ? 'Ronde terminée' : 'Exploration terminée'}</b> : ${warn} anomalie${warn > 1 ? 's' : ''}, 0 intrusion`, sub: 'Rapport envoyé à GregAi · robots rentrés à leur base' });
+    VIG_LOG.unshift({ t: vClock(), k: 'ok', ic: 'check', html: `<b>${m.kind === 'ronde' ? 'Ronde terminée' : 'Exploration terminée'}</b> : ${warn} anomalie${warn > 1 ? 's' : ''}, 0 intrusion`, sub: 'Rapport envoyé à GregAi · le Temi rentré à l\'accueil' });
   }
 }
 // Where a robot is on its floor (plan units) and which way it faces: patrolling back and forth during a mission
@@ -4288,7 +4282,7 @@ function vigFloorPlate(f, z0) {
       : plate(fan, `fill="${motion ? '#e5484d' : '#22a861'}" fill-opacity="${motion ? .28 : .2}" stroke="${motion ? '#e5484d' : '#22a861'}" stroke-opacity=".55" stroke-width="1"`);
   });
   // Robots on patrol film ahead of them
-  [[f.robot, f.greeter ? 1 : 0]].concat(f.greeter ? [[f.greeter, 0]] : []).forEach(([, which]) => {
+  (f.greeter ? [[f.greeter, 0]] : []).forEach(([, which]) => {
     if (!vOnMission(f.id)) return;
     const a = vRobotAt(f.id, which);
     s += plate(vFan(a.x, a.y, a.dir, 70, 2.6, f), 'fill="#8b5cf6" fill-opacity=".22" stroke="#8b5cf6" stroke-opacity=".5" stroke-width="1"');
@@ -4309,8 +4303,8 @@ function vigFloorItems(f, z0, tags) {
     tags.push(`<g class="cam-mk" data-cam="${c.id}">${disc(c.x, c.y, color, c.off ? 'video-off' : 'cctv', '')}${pill}</g>`);
   });
   if (vAlertOpen(f.id)) {
-    const [cx, cy] = P(10, 1.2, z0);
-    tags.push(`<g><title>Mouvement détecté · suite 503 inoccupée</title><circle class="vig-pulse" cx="${cx}" cy="${cy - 11}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy - 11}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy - 6.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>`);
+    const [cx, cy] = P(11, 3.25, z0);
+    tags.push(`<g><title>Mouvement détecté · porte de service</title><circle class="vig-pulse" cx="${cx}" cy="${cy - 11}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy - 11}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy - 6.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>`);
   }
   return items;
 }
@@ -4323,13 +4317,13 @@ function vigFacade(f, z0) {
     const [cx, cy] = P(c.x + .6, D, zm);
     s += `<g><title>${c.id} hors ligne</title><circle cx="${cx}" cy="${cy}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2"/><g transform="translate(${cx - 6},${cy - 6}) scale(.5)" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['video-off']}</g></g>`;
   });
-  if (vOnMission(f.id)) (f.greeter ? [0, 1] : [0]).forEach(w => {
+  if (vOnMission(f.id)) (f.greeter ? [0] : []).forEach(w => {
     const [cx, cy] = P(vRobotAt(f.id, w).x, D, zm);
     s += `<circle class="pulse" cx="${cx}" cy="${cy}" r="6" fill="#8b5cf6" style="animation-delay:-${Math.round(performance.now() % 1600)}ms"/><circle cx="${cx}" cy="${cy}" r="6" fill="#fff" stroke="#8b5cf6" stroke-width="3"/>`;
   });
   if (vAlertOpen(f.id)) {
     const [cx, cy] = P(10, D, zm);
-    s += `<g><title>Mouvement au ${f.id}ᵉ · suite 503 inoccupée</title><circle class="vig-pulse" cx="${cx}" cy="${cy}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy + 4.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>`;
+    s += `<g><title>Mouvement à la porte de service</title><circle class="vig-pulse" cx="${cx}" cy="${cy}" r="9" fill="#e5484d"/><circle cx="${cx}" cy="${cy}" r="10" fill="#e5484d" stroke="#fff" stroke-width="2.5"/><text x="${cx}" y="${cy + 4.5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text></g>`;
   }
   return s + '</g>';
 }
@@ -4354,12 +4348,12 @@ function renderVigFloors() {
   const running = VIG.mission && !VIG.mission.done, camsOn = CAMS.filter(c => !c.off).length;
   const open = vAll().find(vAlertOpen), off = CAMS.filter(c => c.off);
   const issues = [
-    open !== undefined && `<span class="issue alarm-issue" data-vfloor="${open}">${BELL('#e5484d')}<span class="txt">Mouvement au ${open}ᵉ · ${VIG.alert.cam}</span><span class="tags"><span class="tag-lvl">${vLvl(open)}</span></span></span>`,
+    open !== undefined && `<span class="issue alarm-issue" data-vfloor="${open}">${BELL('#e5484d')}<span class="txt">Mouvement · ${VIG.alert.cam}</span><span class="tags"><span class="tag-lvl">${vLvl(open)}</span></span></span>`,
     ...off.map(c => `<span class="issue" data-vfloor="${c.floor}">${BELL('#f0a020')}<span class="txt">${c.id} hors ligne</span><span class="tags"><span class="tag-lvl">${vLvl(c.floor)}</span></span></span>`),
   ].filter(Boolean);
   let h = `<div class="fl all ${VIG.sel === null ? 'sel' : ''}" data-vfloor="all" role="button" tabindex="0">
       <div class="r1"><span class="nm">Tout le bâtiment</span>${open !== undefined ? '<span class="chip err">Alerte en cours</span>' : running ? `<span class="chip acc">${icon('loader-circle', 12, { cls: 'spin' })}${VIG.mission.kind === 'ronde' ? 'Ronde' : 'Exploration'} · ${Math.round(vProg() * 100)} %</span>` : '<span class="chip ok">Tout est calme</span>'}</div>
-      <div class="vig-meta"><span>${icon('cctv', 13)}${camsOn}/${CAMS.length} caméras</span><span>${icon('bot', 13)}7 robots</span></div>
+      <div class="vig-meta"><span>${icon('cctv', 13)}${camsOn}/${CAMS.length} caméras</span><span>${icon('bot', 13)}Le Temi de garde</span></div>
       ${issues.length ? `<div class="issues">${issues.join('')}</div>` : ''}</div>`;
   setHTML('vig-all', h);
   h = '';
@@ -4367,11 +4361,12 @@ function renderVigFloors() {
     const f = vFloor(id), cams = CAMS.filter(c => c.floor === id), alert = vAlertOpen(id), mine = vOnMission(id), sel = VIG.sel === id;
     const chip = alert ? '<span class="chip err">Mouvement</span>' : mine ? `<span class="chip acc">${icon('loader-circle', 12, { cls: 'spin' })}En ronde</span>`
       : cams.some(c => c.off) ? '<span class="chip warn">Caméra HS</span>' : '<span class="chip ok">Calme</span>';
-    const acts = !sel ? '' : alert && !mine ? `<button class="btn primary" data-v="check">${icon('brush-cleaning', 14)}Envoyer ${f.robot.name} vérifier</button>`
+    const team = vTeam(id);
+    const acts = !sel || !team.length ? '' : alert && !mine ? `<button class="btn primary" data-v="check">${icon('bot', 14)}Envoyer ${team[0]} vérifier</button>`
       : mine ? '' : `<button class="btn" data-v="explore">${icon('eye', 14)}Envoyer ${vTeam(id).join(' et ')} explorer</button>`;
     h += `<div class="fl ${sel ? 'sel' : ''} ${alert ? 'trouble' : ''}" data-vfloor="${id}" role="button" tabindex="0">
       <div class="r1"><span class="lv">${f.label}</span><span class="nm">${f.name}</span>${chip}</div>
-      <div class="vig-meta">${cams.map(c => `<span class="${c.off ? 'off' : ''}">${icon(c.off ? 'video-off' : 'cctv', 13)}${c.id}</span>`).join('')}<span>${icon(id === 0 ? 'bot' : 'brush-cleaning', 13)}${vTeam(id).join(' · ')}</span></div>
+      <div class="vig-meta">${cams.map(c => `<span class="${c.off ? 'off' : ''}">${icon(c.off ? 'video-off' : 'cctv', 13)}${c.id}</span>`).join('')}${team.length ? `<span>${icon('bot', 13)}${team.join(' · ')}</span>` : ''}</div>
       ${acts ? `<div class="fl-acts">${acts}</div>` : ''}</div>`;
   });
   setHTML('vig-floors', h);
@@ -4418,7 +4413,7 @@ function vCamOverlay(o) {
   if (!o.motion && !o.found) return '';
   let s = '<svg class="ovl" viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">';
   if (o.motion) s += `<rect x="232" y="44" width="54" height="84" fill="none" stroke="#ff4d55" stroke-width="2"/><rect x="232" y="34" width="54" height="11" fill="#ff4d55"/><text x="236" y="42.5" font-size="8" font-weight="700" fill="#fff" font-family="-apple-system,sans-serif">MOUVEMENT</text>`;
-  if (o.found) s += `<rect x="226" y="40" width="62" height="92" fill="none" stroke="#f0a020" stroke-width="2" stroke-dasharray="5 3"/><rect x="226" y="30" width="62" height="11" fill="#f0a020"/><text x="230" y="38.5" font-size="8" font-weight="700" fill="#2b1a00" font-family="-apple-system,sans-serif">RIDEAU · 503</text>`;
+  if (o.found) s += `<rect x="226" y="40" width="62" height="92" fill="none" stroke="#f0a020" stroke-width="2" stroke-dasharray="5 3"/><rect x="216" y="30" width="72" height="11" fill="#f0a020"/><text x="220" y="38.5" font-size="8" font-weight="700" fill="#2b1a00" font-family="-apple-system,sans-serif">PORTE · SERVICE</text>`;
   return s + '</svg>';
 }
 
@@ -4436,7 +4431,7 @@ function renderVigie() {
   setHTML('vig-head', `<div class="rf-top">
       <span class="vig-av">${icon(night ? 'moon' : 'shield', 26, { sw: 1.8 })}</span>
       <div class="rf-id"><span class="mr-name"><b>Vigie</b>${night ? '<span class="chip acc">Nuit · garde active</span>' : '<span class="chip ok">Jour</span>'}</span>
-        <span class="sub">${night ? 'Mode nuit de 23 h à 7 h · réception tenue à distance par Hery (Madagascar)' : 'Caméras en direct · les robots font le ménage'}</span></div>
+        <span class="sub">${night ? 'Mode nuit de 23 h à 7 h · réception tenue à distance depuis Madagascar' : 'Caméras en direct · le Temi à l\'accueil'}</span></div>
       <div class="acts vig-mode">
         <span class="vig-clock">${vClock()}</span>
         ${running ? `<button class="btn" data-v="stop">${icon('x', 14)}Interrompre</button>` : `<button class="btn primary" data-v="ronde">${icon('route', 14)}Lancer une ronde</button>`}
@@ -4444,8 +4439,8 @@ function renderVigie() {
       </div>
     </div>
     <div class="kpis">${[
-      ['Caméras en ligne', `${camsOn}/${CAMS.length}`, 'CAM-É4 relayée par CLN-5E07', camsOn / CAMS.length, '#22a861', 'cctv'],
-      ['Robots en vigie', night ? '7/7' : running ? `${m.floors.flatMap(vTeam).length}/7` : '1/7', night ? 'Temi + 6 robots de ménage' : 'Temi, les autres font le ménage', night ? 1 : running ? m.floors.flatMap(vTeam).length / 7 : 1 / 7, '#8b5cf6', 'bot'],
+      ['Caméras en ligne', `${camsOn}/${CAMS.length}`, 'CAM-REC relayée par le Temi', camsOn / CAMS.length, '#22a861', 'cctv'],
+      ['Robot en vigie', '1/1', night || running ? 'Le Temi, au rez-de-chaussée' : 'Le Temi, à l\'accueil', 1, '#8b5cf6', 'bot'],
       ['Rondes cette nuit', '2/5', 'Prochaine à 03:00', 2 / 5, '#f0a020', 'route'],
       ['Alertes cette nuit', '3', `${alertOpen ? '1 en cours · ' : ''}${alertOpen ? 2 : 3} levées`, alertOpen ? 2 / 3 : 1, alertOpen ? '#e5484d' : '#1e3a8a', 'siren'],
     ].map(([l, v, sub, k, col, ic]) => `<div class="kpi kpi-ring">${ring(k, col, ic)}<div><small>${l}</small><b>${v}</b><span>${sub}</span></div></div>`).join('')}</div>`);
@@ -4456,34 +4451,31 @@ function renderVigie() {
   al.hidden = !showAl;
   al.classList.toggle('ok', !!showAl && VIG.alert.state === 'resolved');
   if (showAl) {
-    const a = VIG.alert, r = vFloor(a.floor).robot.name;
+    const a = VIG.alert, r = greeterOf().name;
     setHTML('vig-alert', a.state === 'resolved'
-      ? `${icon('check', 20, { sw: 2.6 })}<p><b>Fausse alerte levée.</b> ${r} est allé voir : un rideau de la suite 503 bougeait, la fenêtre était restée ouverte. Ticket transmis à GregAi pour l'équipe ménage.</p><button class="btn" data-v="dismiss">OK</button>`
-      : `${icon('siren', 20)}<p><b>Mouvement au ${a.floor}ᵉ, devant la suite 503.</b> ${a.cam} couloir · ${a.at}. La suite est inoccupée, personne n'est censé s'y trouver.</p>
-         ${running && m.floors.includes(a.floor) ? `<span class="chip" style="background:#fff;color:#b42318">${icon('loader-circle', 14, { cls: 'spin' })}${r} en route</span>` : `<button class="btn" data-v="check">${icon('brush-cleaning', 15)}Envoyer ${r} vérifier</button>`}
+      ? `${icon('check', 20, { sw: 2.6 })}<p><b>Fausse alerte levée.</b> ${r} est allé voir : la porte de service était mal fermée, un client de l'app. 204 sortait fumer. Ticket transmis à GregAi.</p><button class="btn" data-v="dismiss">OK</button>`
+      : `${icon('siren', 20)}<p><b>Mouvement à la porte de service.</b> ${a.cam} · ${a.at}. Personne n'est censé passer par là la nuit.</p>
+         ${running && m.floors.includes(a.floor) ? `<span class="chip" style="background:#fff;color:#b42318">${icon('loader-circle', 14, { cls: 'spin' })}${r} en route</span>` : `<button class="btn" data-v="check">${icon('bot', 15)}Envoyer ${r} vérifier</button>`}
          <button class="btn ghost" data-v="cam">Voir la caméra</button><button class="btn ghost" data-v="dismiss">Lever l'alerte</button>`);
   }
 
   renderVigFloors();
   renderVigBuilding();
 
-  // Camera wall: fixed cameras + the robots' own cameras, filtered by the floor picked in the list or on the plan
+  // Camera wall: fixed cameras + the Temi's own camera, filtered by the floor picked in the list or on the plan
   const motion = alertOpen && VIG.alert.state === 'open';
-  const robotCam = id => ({ id: id === 0 ? vFloor(0).robot.name : vFloor(id).robot.name, robot: true, floor: id, low: true,
-    name: id === 4 ? 'Relaie CAM-É4 · É4' : `Caméra embarquée · ${vLvl(id)}` });
   const all = [
     ...CAMS.map(c => ({ id: c.id, floor: c.floor, kind: c.kind })),
-    { id: greeterOf().name, robot: true, temi: true, floor: 0, name: 'Caméra de Temi · hall', kind: 'hall' },
-    ...vAll().map(robotCam),
+    { id: greeterOf().name, robot: true, temi: true, floor: 0, name: 'Caméra du Temi · relaie CAM-REC', kind: 'hall' },
   ];
-  const live = t => t.temi || t.floor === 4 || vOnMission(t.floor);
+  const live = t => t.temi || vOnMission(t.floor);
   // Robot camera footage: walking down a corridor on patrol or while cleaning (day), a still corridor at its base (night)
   const robotFeed = t => t.floor === 4 && !vOnMission(4) ? ['relay', RELAY_FEED] : vOnMission(t.floor) || !night ? ['walk', ROBOT_FEEDS[t.floor % 3]] : ['base', BASE_FEEDS[t.floor % 2]];
   // Whole building: only what deserves a look (the camera on alert, the robot checking it, the two entrances);
   // every camera of a floor once that floor is picked
   const alertFloor = VIG.alert && VIG.alert.state !== 'dismissed' ? VIG.alert.floor : null;
   const headline = t => (motion && t.id === VIG.alert.cam) || t.id === 'CAM-HALL' || t.id === 'CAM-SERV'
-    || (t.robot && !t.temi && t.floor === alertFloor && (vOnMission(alertFloor) || (m && m.found.includes(alertFloor))));
+    || (t.temi && (vOnMission(0) || (m && m.found.includes(0))));
   const tiles = (VIG.sel === null ? all.filter(headline) : all.filter(t => t.floor === VIG.sel))
     .map((t, n) => ({ ...t, n, rank: (motion && t.id === VIG.alert.cam ? -100 : 0) - t.floor * 2 + (t.robot ? 1 : 0) }))
     .sort((a, b) => a.rank - b.rank || a.n - b.n);
@@ -4496,7 +4488,7 @@ function renderVigie() {
     const onMission = t.robot && vOnMission(t.floor);
     const robotIdle = t.robot && !live(t);
     const isMotion = motion && t.id === VIG.alert.cam;
-    const found = t.id === vFloor(5).robot.name && m && m.found.includes(5);
+    const found = t.temi && m && m.found.includes(0);
     const chip = off ? '<span class="chip err">Hors ligne</span>' : isMotion ? '<span class="chip err">Mouvement</span>' : found ? '<span class="chip warn">Photo prise</span>'
       : onMission ? '<span class="chip acc">En ronde</span>' : robotIdle ? (night ? '<span class="chip idle">À sa base</span>' : '<span class="chip run">En ménage</span>') : '<span class="chip ok">En ligne</span>';
     return `<div class="cam-t ${isMotion ? 'motion' : ''} ${onMission ? 'mine' : ''} ${off ? 'off' : ''}" data-cam="${t.id}" ${t.id === 'CAM-É5' ? 'id="vig-cam-e5"' : ''}>
@@ -4528,7 +4520,7 @@ function renderVigie() {
 
   const now = vClock();
   setHTML('vig-sched-sub', night ? '23 h – 7 h' : 'cette nuit');
-  setHTML('vig-sched', [['23:30', 'Ronde complète'], ['01:00', 'Ronde complète'], ['03:00', 'Ronde complète'], ['05:00', 'Ronde complète'], ['06:45', 'Fin de garde, retour au ménage']].map(([t, l]) => {
+  setHTML('vig-sched', [['23:30', 'Ronde du rez-de-chaussée'], ['01:00', 'Ronde du rez-de-chaussée'], ['03:00', 'Ronde du rez-de-chaussée'], ['05:00', 'Ronde du rez-de-chaussée'], ['06:45', 'Fin de garde, retour à l\'accueil']].map(([t, l]) => {
     const past = night && (t > '12:00' || t <= now);
     const next = night && !past && !(t > '12:00') && t > now && t === ['01:00', '03:00', '05:00', '06:45'].find(x => x > now);
     return `<li><time>${t}</time><span>${l}</span>${past ? '<span class="chip ok">Faite</span>' : next ? '<span class="chip acc">Suivante</span>' : '<span class="chip idle">Prévue</span>'}</li>`;
@@ -4582,10 +4574,10 @@ document.getElementById('view-vigie').addEventListener('click', e => {
     VIG_LOG.unshift({ t: vClock(), k: 'acc', ic: d.vmode === 'jour' ? 'sun' : 'moon', html: `<b>${d.vmode === 'jour' ? 'Mode jour' : 'Mode nuit activé'}</b>`, sub: 'Par Michael depuis Loop' });
   }
   else if (d.vfloor !== undefined) VIG.sel = d.vfloor === 'all' ? null : +d.vfloor;
-  else if (d.v === 'ronde') vStartMission('ronde', vAll());
+  else if (d.v === 'ronde') vStartMission('ronde', [0]);
   else if (d.v === 'explore') vStartMission('explore', [VIG.sel]);
   else if (d.v === 'check') { VIG.sel = VIG.alert.floor; vStartMission('explore', [VIG.alert.floor]); }
-  else if (d.v === 'stop') { VIG.mission.done = true; VIG_LOG.unshift({ t: vClock(), k: 'warn', ic: 'x', html: '<b>Mission interrompue</b>', sub: 'Robots rappelés à leur base' }); }
+  else if (d.v === 'stop') { VIG.mission.done = true; VIG_LOG.unshift({ t: vClock(), k: 'warn', ic: 'x', html: '<b>Mission interrompue</b>', sub: 'Le Temi rappelé à l\'accueil' }); }
   else if (d.v === 'dismiss') VIG.alert.state = 'dismissed';
   else if (d.v === 'cam') { document.getElementById('vig-cam-e5')?.scrollIntoView({ block: 'center', behavior: 'smooth' }); return; }
   renderVigie();
