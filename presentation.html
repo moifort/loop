@@ -128,13 +128,13 @@
   .cover .who .lp { width: 88px; height: 88px; }
   .cover .who .ql { font-size: 26px; font-weight: 500; letter-spacing: .14em; color: #1d2650; line-height: 1.25; }
   .bld { position: absolute; right: 150px; top: 150px; width: 576px; height: 716px; overflow: hidden; }
-  .bld img { position: absolute; width: 1269px; left: -351px; top: -463px; mix-blend-mode: multiply; opacity: .3; }
-  .toc { position: absolute; left: 70px; right: 70px; top: 50%; transform: translateY(-50%); padding: 30px 36px 18px; background: rgba(255,255,255,.92); border-radius: 20px; box-shadow: 0 10px 30px rgba(18,19,26,.08); }
-  .toc-t { display: block; margin-bottom: 8px; font-size: 15px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--loop); }
-  .toc-i { display: flex; align-items: baseline; gap: 20px; padding: 16px 0; font-size: 30px; font-weight: 800; color: var(--ink); letter-spacing: -.01em; opacity: 0; transform: translateY(10px); transition: opacity .5s, transform .6s var(--ease); }
-  .toc-i + .toc-i { border-top: 1px solid var(--line); }
-  .toc-i.on { opacity: 1; transform: none; }
-  .toc-n { flex: none; width: 28px; color: var(--loop); }
+  .bld img { position: absolute; width: 1269px; left: -351px; top: -463px; mix-blend-mode: multiply; }
+  .toc { position: absolute; inset: 0 96px; display: flex; flex-direction: column; }
+  .toc .top-txt { display: flex; flex-direction: column; gap: 22px; padding: 88px 0 56px; }
+  .toc-i { display: grid; grid-template-columns: 140px 620px 1fr; align-items: baseline; padding: 44px 0; border-top: 1px solid var(--line); }
+  .toc-n { font-size: 64px; font-weight: 800; line-height: 1; color: var(--loop); }
+  .toc-i b { font-size: 56px; font-weight: 800; letter-spacing: -.03em; line-height: 1.05; color: var(--ink); }
+  .toc-i p { font-size: 26px; line-height: 1.4; color: var(--muted); }
   @keyframes draw { to { stroke-dashoffset: 0; } }
 
   /* ============ 2 · Needs ============ */
@@ -605,13 +605,21 @@
   </div>
   <div class="bld">
     <img src="assets/quartier-libre-collection-logo.jpg" alt="Quartier Libre Collection">
-    <div class="toc">
-      <span class="toc-t">Sommaire</span>
-      <div class="toc-i" data-at="900"><span class="toc-n">1</span>Les robots</div>
-      <div class="toc-i" data-at="1200"><span class="toc-n">2</span>Le tableau de bord</div>
-      <div class="toc-i" data-at="1500"><span class="toc-n">3</span>La roadmap</div>
-    </div>
   </div>
+</section>
+
+<!-- ======================= Table of contents ======================= -->
+<section class="slide" data-scene="toc">
+  <div class="toc">
+    <div class="top-txt">
+      <span class="eyebrow rise">Sommaire</span>
+      <h1 class="rise" style="--d:.1s">Trois parties.</h1>
+    </div>
+    <div class="toc-i rise" style="--d:.25s"><span class="toc-n">1</span><b>Les robots</b><p>Ce que vous nous avez demandé : les robots, et leur mise en place.</p></div>
+    <div class="toc-i rise" style="--d:.4s"><span class="toc-n">2</span><b>Le tableau de bord</b><p>En plus des robots : un seul écran pour tout piloter, branché sur Greg.</p></div>
+    <div class="toc-i rise" style="--d:.55s"><span class="toc-n">3</span><b>La roadmap</b><p>Deux options, dans l'ordre des priorités de Michael.</p></div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
 <!-- ======================= 2 · What we heard ======================= -->
