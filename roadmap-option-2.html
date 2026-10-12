@@ -36,7 +36,7 @@
   .legend span { display: inline-flex; align-items: center; gap: 8px; }
   .legend i { width: 22px; height: 12px; border-radius: 4px; background: var(--c); }
   .legend i.dash { background: repeating-linear-gradient(135deg, var(--c) 0 4px, transparent 4px 8px); border: 1px solid var(--c); }
-  .legend i.gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
+  .legend i.lg-gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
 
   /* ---------- Gantt: one column per week ---------- */
   .gantt { --label: 300px; --weeks: 67; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
@@ -143,7 +143,7 @@
   <span><i style="--c:var(--sky)"></i>P3 · Ménage</span>
   <span><i style="--c:var(--loop)"></i>Tout l'immeuble</span>
   <span><i class="dash" style="--c:var(--amber)"></i>Démarches en parallèle, sans dev</span>
-  <span><i class="gate"></i>Bilan et décision</span>
+  <span><i class="lg-gate"></i>Bilan et décision</span>
 </div>
 
 <div class="gantt" id="gantt"></div>
@@ -243,10 +243,10 @@ const gates = [
   { w: 28, l: 'Bilan P2' }, { w: 36, l: 'Bilan P3' }, { w: 60, l: 'Bilan final' },
 ];
 const milestones = [
-  { w: 22, l: 'P1 · mois 5', c: 'var(--navy)' },
-  { w: 28, l: 'P2 · mois 6,5', c: 'var(--violet)' },
-  { w: 36, l: 'P3 · mois 8', c: 'var(--sky)' },
-  { w: 60, l: 'Tout l\'immeuble · mois 14', c: 'var(--loop)', end: true },
+  { w: 22, l: 'P1 · M5', c: 'var(--navy)' },
+  { w: 28, l: 'P2 · M7', c: 'var(--violet)' },
+  { w: 36, l: 'P3 · M9', c: 'var(--sky)' },
+  { w: 60, l: 'Tout l\'immeuble · M14', c: 'var(--loop)', end: true },
 ];
 
 // ---------- Gantt ----------
