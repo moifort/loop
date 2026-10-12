@@ -449,6 +449,21 @@
   .bud-t b { font-size: 28px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
   .bud-x { display: flex; justify-content: space-between; gap: 24px; padding: 7px 0; border-bottom: 1px solid rgba(18,19,26,.1); font-size: 19px; color: var(--ink-2); }
   .bud-x b { flex: none; font-variant-numeric: tabular-nums; color: var(--ink); }
+  /* ============ ROI: money on the left, brand on the right, hypotheses underneath ============ */
+  .roi .opt { padding-top: 64px; gap: 14px; }
+  .roi .opt h3 { font-size: 38px; }
+  .roi .bud-p b { font-size: 76px; }
+  .roi .opt:not(.best) .bud-p b { color: var(--loop); }
+  .roi .bud-p span { font-size: 24px; }
+  .roi .bud-l li { font-size: 21px; padding: 11px 0; }
+  .roi .opt.best .seen li { padding-top: 18px; padding-bottom: 18px; }
+  .roi .opt.best .seen li::before { top: 18px; }
+  .roi .bud-l li span { max-width: 600px; }
+  .roi-k { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 44px; margin-top: 26px; }
+  .roi-k small { display: block; font-size: 15px; color: var(--muted); font-weight: 600; }
+  .roi-k b { font-size: 34px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
+  .roi .opt.best .seen li { font-size: 24px; }
+  .roi-h { padding: 18px 96px 84px; font-size: 15px; color: var(--muted); }
   /* ============ Robot choice (P1–P3): same language as the robots slide, tinted hero band and hairline rows ============ */
   .pk { position: absolute; inset: 0; display: grid; grid-template-columns: 720px 1fr; }
   .pk-hero { position: relative; overflow: hidden; background: var(--tint); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 104px 72px 0 96px; }
@@ -1038,6 +1053,43 @@
         <div class="bud-t">Total du pilote<b>81 675 € HT</b></div>
       </div>
     </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= ROI · what the pilot brings back, in money and in brand ======================= -->
+<section class="slide" data-scene="roi">
+  <div class="opts-w budget roi">
+    <h1 class="rise">Ce que le pilote rapporte,<br><em>en argent et en image.</em></h1>
+    <div class="opts">
+      <div class="opt rise" style="--d:.2s">
+        <span class="ol">Argent</span>
+        <h3>Ce que Saint-Georges économise</h3>
+        <div class="bud-p"><b>≈ 51 000 €</b><span>par an</span></div>
+        <ul class="bud-l">
+          <li><span>Accueil : le Temi tient le comptoir 2 h par jour, la réception fait autre chose</span><b>18 000 €</b></li>
+          <li><span>Ménage : les sols faits par le Roborock Saros, 10 % d'heures facturées en moins</span><b>23 000 €</b></li>
+          <li><span>Sécurité : 2 incidents par an traités tout de suite, pas subis</span><b>10 000 €</b></li>
+        </ul>
+        <div class="roi-k">
+          <div><small>Option 1 remboursée en</small><b>≈ 10 mois</b></div>
+          <div><small>Option 2 remboursée en</small><b>≈ 19 mois</b></div>
+          <div><small>Sur les 5 immeubles</small><b>≈ 200 000 € / an</b></div>
+        </div>
+      </div>
+      <div class="opt best rise" style="--d:.35s">
+        <span class="ol">Marque</span>
+        <h3>Ce que Quartier Libre gagne en image</h3>
+        <ul class="seen">
+          <li class="ok">Un accueil dont les clients parlent, en photo et dans leurs avis.</li>
+          <li class="ok">Une différence nette face aux hôtels du quartier et aux locations Airbnb.</li>
+          <li class="ok">Un service 24 h/24 avec une seule personne sur place.</li>
+          <li class="ok">Une équipe qui laisse les tâches répétitives aux robots et garde le temps pour le client.</li>
+          <li class="ok">Un modèle prêt pour les 4 immeubles en projet.</li>
+        </ul>
+      </div>
+    </div>
+    <p class="roi-h rise" style="--d:.5s">Hypothèses : 25 €/h chargé à l'accueil · ≈ 230 000 € de ménage par an à Saint-Georges (1 M€ pour 130 appartements) · ≈ 5 000 € par incident. À valider ensemble.</p>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
