@@ -449,32 +449,29 @@
   .bud-t b { font-size: 28px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
   .bud-x { display: flex; justify-content: space-between; gap: 24px; padding: 7px 0; border-bottom: 1px solid rgba(18,19,26,.1); font-size: 19px; color: var(--ink-2); }
   .bud-x b { flex: none; font-variant-numeric: tabular-nums; color: var(--ink); }
-  /* ============ ROI: money on the left, brand on the right, hypotheses underneath ============ */
-  .roi .opt { padding-top: 52px; gap: 12px; }
-  .roi .opt h3 { font-size: 38px; }
-  .roi .bud-p b { font-size: 76px; }
-  .roi .opt:not(.best) .bud-p b { color: var(--loop); }
-  .roi .bud-p span { font-size: 24px; }
-  .roi .bud-l li { font-size: 21px; padding: 11px 0; }
-  .roi .opt.best .seen li { padding-top: 13px; padding-bottom: 13px; }
-  .roi .opt.best .seen li::before { top: 13px; }
-  .roi-c { margin-top: 10px; padding-left: 16px; border-left: 3px solid var(--loop); font-size: 20px; line-height: 1.45; color: var(--ink-2); }
-  .roi .bud-l li span { max-width: 600px; }
-  .roi-k { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 44px; margin-top: 26px; }
-  .roi-k small { display: block; font-size: 15px; color: var(--muted); font-weight: 600; }
-  .roi-k b { font-size: 34px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
-  .roi .opt.best .seen li { font-size: 24px; }
-  .roi-h { padding: 18px 96px 84px; font-size: 15px; color: var(--muted); }
-  .roi-t { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 20px; color: var(--ink-2); }
-  .roi-t th { text-align: right; font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 0 10px 18px; white-space: nowrap; }
-  .roi-t th:first-child { text-align: left; padding-left: 0; }
-  .roi-t th.o2 { color: var(--loop); }
-  .roi-t td { padding: 10px 0 10px 18px; border-top: 1px solid rgba(18,19,26,.1); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .roi-t td:first-child { text-align: left; padding-left: 0; white-space: normal; }
-  .roi-t td.o2 { color: var(--loop); font-weight: 700; }
-  .roi-t tr.sum td { font-weight: 800; color: var(--ink); font-size: 22px; }
-  .roi-t tr.sum td.o2 { color: var(--loop); }
-  .roi-t tbody tr:last-child td { border-bottom: 1px solid rgba(18,19,26,.1); }
+  /* ============ ROI: one message, four numbers per option, then why option 2 earns more ============ */
+  .roi2 { position: absolute; inset: 0; display: flex; flex-direction: column; }
+  .roi2 h1 { padding: 116px 96px 44px; }
+  .roi-cols { display: grid; grid-template-columns: 1fr 1fr; }
+  .roi-card { display: flex; flex-direction: column; gap: 26px; padding: 44px 72px 48px 96px; background: #f3f4f7; }
+  .roi-card.best { padding: 44px 96px 48px 72px; background: #eef3ff; }
+  .roi-card .ol { align-self: flex-start; color: #fff; background: var(--ink-2); font-size: 15px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 5px 14px; }
+  .roi-card.best .ol { background: var(--loop); }
+  .roi-g { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 40px; }
+  .roi-g small { display: block; font-size: 18px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+  .roi-g b { font-size: 54px; font-weight: 800; letter-spacing: -.035em; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .roi-card.best .roi-g b { color: var(--loop); }
+  .roi-why { flex: 1; display: grid; grid-template-columns: 240px 1fr 1fr 1fr; gap: 48px; align-content: center; align-items: start; padding: 0 96px; }
+  .roi-why small { font-size: 17px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); line-height: 1.35; }
+  .roi-why b { display: block; font-size: 40px; font-weight: 800; letter-spacing: -.02em; color: var(--loop); margin-bottom: 6px; }
+  .roi-why span { font-size: 22px; line-height: 1.45; color: var(--ink-2); }
+  .roi-h { padding: 0 96px 84px; font-size: 15px; color: var(--muted); }
+  .brand-l { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; background: #eef3ff; }
+  .brand-l > div { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 48px 56px; border-right: 1px solid rgba(18,19,26,.06); border-bottom: 1px solid rgba(18,19,26,.06); }
+  .brand-l > div:nth-child(3n+1) { padding-left: 96px; }
+  .brand-l > div:nth-child(3n) { padding-right: 96px; border-right: 0; }
+  .brand-l b { font-size: 34px; letter-spacing: -.03em; line-height: 1.1; color: var(--ink); }
+  .brand-l span { font-size: 21px; line-height: 1.45; color: var(--ink-2); }
   /* ============ Robot choice (P1–P3): same language as the robots slide, tinted hero band and hairline rows ============ */
   .pk { position: absolute; inset: 0; display: grid; grid-template-columns: 720px 1fr; }
   .pk-hero { position: relative; overflow: hidden; background: var(--tint); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 104px 72px 0 96px; }
@@ -1068,42 +1065,53 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<!-- ======================= ROI · what the pilot brings back, in money and in brand ======================= -->
+<!-- ======================= ROI · the money, option against option, for a decision in ten seconds ======================= -->
 <section class="slide" data-scene="roi">
-  <div class="opts-w budget roi">
-    <h1 class="rise">Ce que le pilote rapporte,<br><em>en argent et en image.</em></h1>
-    <div class="opts">
-      <div class="opt rise" style="--d:.2s">
-        <span class="ol">Argent</span>
-        <h3>L'option 2 rapporte 75 % de plus</h3>
-        <table class="roi-t">
-          <thead><tr><th>Par an, à Saint-Georges</th><th>Option 1</th><th class="o2">Option 2</th></tr></thead>
-          <tbody>
-            <tr><td>Accueil : le Temi tient le comptoir</td><td>12 000 €</td><td class="o2">18 000 €</td></tr>
-            <tr><td>Ménage : les sols faits par le Roborock Saros</td><td>12 000 €</td><td class="o2">23 000 €</td></tr>
-            <tr><td>Sécurité : les incidents traités tout de suite</td><td>5 000 €</td><td class="o2">10 000 €</td></tr>
-            <tr class="sum"><td>Économisé par an</td><td>29 000 €</td><td class="o2">51 000 €</td></tr>
-            <tr><td>Remboursé en</td><td>≈ 18 mois</td><td class="o2">≈ 19 mois</td></tr>
-            <tr class="sum"><td>Gain net sur 3 ans</td><td>≈ 44 000 €</td><td class="o2">≈ 71 000 €</td></tr>
-            <tr><td>Sur les 5 immeubles, par an</td><td>≈ 125 000 €</td><td class="o2">≈ 220 000 €</td></tr>
-          </tbody>
-        </table>
-        <p class="roi-c">Même délai de remboursement, et l'option 2 gagne plus chaque année : les robots se lancent seuls depuis Mews, Salto et Greg, au lieu d'être lancés à la main.</p>
+  <div class="roi2">
+    <h1 class="rise">L'option 2 rapporte<br><em>22 000 € de plus par an.</em></h1>
+    <div class="roi-cols">
+      <div class="roi-card rise" style="--d:.2s">
+        <span class="ol">Option 1 · Les robots seuls</span>
+        <div class="roi-g">
+          <div><small>Investissement</small><b>43 425 €</b></div>
+          <div><small>Économisé par an</small><b>29 000 €</b></div>
+          <div><small>Remboursé en</small><b>18 mois</b></div>
+          <div><small>Gain net sur 3 ans</small><b>44 000 €</b></div>
+        </div>
       </div>
-      <div class="opt best rise" style="--d:.35s">
-        <span class="ol">Marque</span>
-        <h3>Ce que Quartier Libre gagne en image</h3>
-        <ul class="seen">
-          <li class="ok">Un accueil dont les clients parlent, en photo et dans leurs avis.</li>
-          <li class="ok">Une différence nette face aux hôtels du quartier et aux locations Airbnb.</li>
-          <li class="ok">Un service 24 h/24 avec une seule personne sur place.</li>
-          <li class="ok">Une équipe qui laisse les tâches répétitives aux robots et garde le temps pour le client.</li>
-          <li class="ok">Un modèle prêt pour les 4 immeubles en projet.</li>
-          <li class="ok">Avec l'option 2, un hôtel qui se pilote sur un seul écran : une vitrine pour vos partenaires.</li>
-        </ul>
+      <div class="roi-card best rise" style="--d:.3s">
+        <span class="ol">Option 2 · Robots + tableau de bord · recommandée</span>
+        <div class="roi-g">
+          <div><small>Investissement</small><b>81 675 €</b></div>
+          <div><small>Économisé par an</small><b>51 000 €</b></div>
+          <div><small>Remboursé en</small><b>19 mois</b></div>
+          <div><small>Gain net sur 3 ans</small><b>71 000 €</b></div>
+        </div>
       </div>
     </div>
-    <p class="roi-h rise" style="--d:.5s">Hypothèses : 25 €/h chargé à l'accueil · ≈ 230 000 € de ménage par an à Saint-Georges · ≈ 5 000 € par incident. À valider ensemble.</p>
+    <div class="roi-why rise" style="--d:.4s">
+      <small>Pourquoi l'option 2 rapporte plus</small>
+      <div><b>+ 11 000 € / an</b><span>Le ménage se lance seul quand le client part. Plus de temps perdu à attendre ou à vérifier.</span></div>
+      <div><b>+ 6 000 € / an</b><span>Madagascar tient l'accueil sur un seul écran. La réception est libérée plus souvent.</span></div>
+      <div><b>+ 5 000 € / an</b><span>Un incident est vu et traité tout de suite, pas découvert le lendemain.</span></div>
+    </div>
+    <p class="roi-h rise" style="--d:.5s">Montants HT, robots compris. Hypothèses à valider ensemble : 25 €/h à l'accueil · ≈ 230 000 € de ménage par an à Saint-Georges · ≈ 5 000 € par incident.</p>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= Brand · what Quartier Libre gains in image ======================= -->
+<section class="slide" data-scene="brand">
+  <div class="roi2">
+    <h1 class="rise">Et en image,<br><em>une longueur d'avance.</em></h1>
+    <div class="brand-l rise" style="--d:.2s">
+      <div><b>Un accueil dont on parle</b><span>Les clients le prennent en photo et le citent dans leurs avis.</span></div>
+      <div><b>Une vraie différence</b><span>Face aux hôtels du quartier et aux locations Airbnb.</span></div>
+      <div><b>24 h/24 avec une personne</b><span>Un service continu sans recruter.</span></div>
+      <div><b>Une équipe sur le client</b><span>Les tâches répétitives passent aux robots.</span></div>
+      <div><b>Prêt pour la suite</b><span>Le même modèle pour les 4 immeubles en projet.</span></div>
+      <div><b>Une vitrine</b><span>Avec l'option 2, tout l'hôtel sur un seul écran, à montrer à vos partenaires.</span></div>
+    </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
