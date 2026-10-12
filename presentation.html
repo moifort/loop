@@ -615,7 +615,6 @@
     <div class="bot-dot violet" data-at="1500" style="left:420px;top:420px"><span class="bot-lbl">Bagages</span></div>
     <div class="bot-dot navy" data-at="1800" style="left:250px;top:640px"><span class="bot-lbl">Accueil</span></div>
   </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
 <!-- ======================= 2 · What we heard ======================= -->
@@ -1167,7 +1166,7 @@ function fit() {
 addEventListener('resize', fit);
 fit();
 
-slides.forEach((s, i) => s.querySelector('.s-foot .n').textContent = `${String(i + 1).padStart(2, '0')} / ${slides.length}`);
+slides.forEach((s, i) => { const n = s.querySelector('.s-foot .n'); if (n) n.textContent = `${String(i + 1).padStart(2, '0')} / ${slides.length}`; });
 
 // Looping clips: fade out just before the loop point and back in after the jump so the cut never shows,
 // restart if the loop point is missed, retry after a network error. Same behaviour as the mockup.
