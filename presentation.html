@@ -450,20 +450,31 @@
   .bud-x { display: flex; justify-content: space-between; gap: 24px; padding: 7px 0; border-bottom: 1px solid rgba(18,19,26,.1); font-size: 19px; color: var(--ink-2); }
   .bud-x b { flex: none; font-variant-numeric: tabular-nums; color: var(--ink); }
   /* ============ ROI: money on the left, brand on the right, hypotheses underneath ============ */
-  .roi .opt { padding-top: 64px; gap: 14px; }
+  .roi .opt { padding-top: 52px; gap: 12px; }
   .roi .opt h3 { font-size: 38px; }
   .roi .bud-p b { font-size: 76px; }
   .roi .opt:not(.best) .bud-p b { color: var(--loop); }
   .roi .bud-p span { font-size: 24px; }
   .roi .bud-l li { font-size: 21px; padding: 11px 0; }
-  .roi .opt.best .seen li { padding-top: 18px; padding-bottom: 18px; }
-  .roi .opt.best .seen li::before { top: 18px; }
+  .roi .opt.best .seen li { padding-top: 13px; padding-bottom: 13px; }
+  .roi .opt.best .seen li::before { top: 13px; }
+  .roi-c { margin-top: 10px; padding-left: 16px; border-left: 3px solid var(--loop); font-size: 20px; line-height: 1.45; color: var(--ink-2); }
   .roi .bud-l li span { max-width: 600px; }
   .roi-k { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 44px; margin-top: 26px; }
   .roi-k small { display: block; font-size: 15px; color: var(--muted); font-weight: 600; }
   .roi-k b { font-size: 34px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
   .roi .opt.best .seen li { font-size: 24px; }
   .roi-h { padding: 18px 96px 84px; font-size: 15px; color: var(--muted); }
+  .roi-t { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 20px; color: var(--ink-2); }
+  .roi-t th { text-align: right; font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); padding: 0 0 10px 18px; white-space: nowrap; }
+  .roi-t th:first-child { text-align: left; padding-left: 0; }
+  .roi-t th.o2 { color: var(--loop); }
+  .roi-t td { padding: 10px 0 10px 18px; border-top: 1px solid rgba(18,19,26,.1); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .roi-t td:first-child { text-align: left; padding-left: 0; white-space: normal; }
+  .roi-t td.o2 { color: var(--loop); font-weight: 700; }
+  .roi-t tr.sum td { font-weight: 800; color: var(--ink); font-size: 22px; }
+  .roi-t tr.sum td.o2 { color: var(--loop); }
+  .roi-t tbody tr:last-child td { border-bottom: 1px solid rgba(18,19,26,.1); }
   /* ============ Robot choice (P1–P3): same language as the robots slide, tinted hero band and hairline rows ============ */
   .pk { position: absolute; inset: 0; display: grid; grid-template-columns: 720px 1fr; }
   .pk-hero { position: relative; overflow: hidden; background: var(--tint); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 104px 72px 0 96px; }
@@ -963,7 +974,7 @@
         </ul>
       </div>
       <div class="opt best rise" style="--d:.35s">
-        <span class="ol">Option 2</span>
+        <span class="ol">Option 2 · recommandée</span>
         <h3>Les robots + tableau de bord</h3>
         <p class="os">Ce qu'on vous propose en plus.</p>
         <ul class="seen">
@@ -1036,7 +1047,7 @@
         <div class="bud-t">Total du pilote<b>43 425 € HT</b></div>
       </div>
       <div class="opt best rise" style="--d:.35s">
-        <span class="ol">Option 2</span>
+        <span class="ol">Option 2 · recommandée</span>
         <h3>Les robots + tableau de bord</h3>
         <div class="bud-p"><b>57 000 €</b><span>HT · 76 jours-homme à 750 €</span></div>
         <ul class="bud-l">
@@ -1064,18 +1075,20 @@
     <div class="opts">
       <div class="opt rise" style="--d:.2s">
         <span class="ol">Argent</span>
-        <h3>Ce que Saint-Georges économise</h3>
-        <div class="bud-p"><b>≈ 51 000 €</b><span>par an</span></div>
-        <ul class="bud-l">
-          <li><span>Accueil : le Temi tient le comptoir 2 h par jour, la réception fait autre chose</span><b>18 000 €</b></li>
-          <li><span>Ménage : les sols faits par le Roborock Saros, 10 % d'heures facturées en moins</span><b>23 000 €</b></li>
-          <li><span>Sécurité : 2 incidents par an traités tout de suite, pas subis</span><b>10 000 €</b></li>
-        </ul>
-        <div class="roi-k">
-          <div><small>Option 1 remboursée en</small><b>≈ 10 mois</b></div>
-          <div><small>Option 2 remboursée en</small><b>≈ 19 mois</b></div>
-          <div><small>Sur les 5 immeubles</small><b>≈ 200 000 € / an</b></div>
-        </div>
+        <h3>L'option 2 rapporte 75 % de plus</h3>
+        <table class="roi-t">
+          <thead><tr><th>Par an, à Saint-Georges</th><th>Option 1</th><th class="o2">Option 2</th></tr></thead>
+          <tbody>
+            <tr><td>Accueil : le Temi tient le comptoir</td><td>12 000 €</td><td class="o2">18 000 €</td></tr>
+            <tr><td>Ménage : les sols faits par le Roborock Saros</td><td>12 000 €</td><td class="o2">23 000 €</td></tr>
+            <tr><td>Sécurité : les incidents traités tout de suite</td><td>5 000 €</td><td class="o2">10 000 €</td></tr>
+            <tr class="sum"><td>Économisé par an</td><td>29 000 €</td><td class="o2">51 000 €</td></tr>
+            <tr><td>Remboursé en</td><td>≈ 18 mois</td><td class="o2">≈ 19 mois</td></tr>
+            <tr class="sum"><td>Gain net sur 3 ans</td><td>≈ 44 000 €</td><td class="o2">≈ 71 000 €</td></tr>
+            <tr><td>Sur les 5 immeubles, par an</td><td>≈ 125 000 €</td><td class="o2">≈ 220 000 €</td></tr>
+          </tbody>
+        </table>
+        <p class="roi-c">Même délai de remboursement, et l'option 2 gagne plus chaque année : les robots se lancent seuls depuis Mews, Salto et Greg, au lieu d'être lancés à la main.</p>
       </div>
       <div class="opt best rise" style="--d:.35s">
         <span class="ol">Marque</span>
@@ -1086,10 +1099,11 @@
           <li class="ok">Un service 24 h/24 avec une seule personne sur place.</li>
           <li class="ok">Une équipe qui laisse les tâches répétitives aux robots et garde le temps pour le client.</li>
           <li class="ok">Un modèle prêt pour les 4 immeubles en projet.</li>
+          <li class="ok">Avec l'option 2, un hôtel qui se pilote sur un seul écran : une vitrine pour vos partenaires.</li>
         </ul>
       </div>
     </div>
-    <p class="roi-h rise" style="--d:.5s">Hypothèses : 25 €/h chargé à l'accueil · ≈ 230 000 € de ménage par an à Saint-Georges (1 M€ pour 130 appartements) · ≈ 5 000 € par incident. À valider ensemble.</p>
+    <p class="roi-h rise" style="--d:.5s">Hypothèses : 25 €/h chargé à l'accueil · ≈ 230 000 € de ménage par an à Saint-Georges · ≈ 5 000 € par incident. À valider ensemble.</p>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
