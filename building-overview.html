@@ -2291,7 +2291,7 @@ function porterWhat(p) {
     home:     `<b>À la bagagerie</b>, en charge<small>Prochain client : ${n.name}, check-in à ${checkin(p, 1)}</small>`,
     call:     `<b>Va à l'accueil</b> chercher ${g.name}<small>Check-in à ${checkin(p, 0)} · ${g.bags} valises</small>`,
     pickup:   `<b>${g.name} charge ses valises</b> à l'accueil<small>${g.bags} valises · direction ${dest}</small>`,
-    deliver:  `<b>Avec ${g.name}</b> · ${g.bags} valises vers ${dest}<small>Check-in à ${checkin(p, 0)} · le client pousse, le moteur assiste</small>`,
+    deliver:  `<b>Avec ${g.name}</b> · ${g.bags} valises vers ${dest}<small>Check-in à ${checkin(p, 0)} · le chariot suit le client</small>`,
     liftUp:   `<b>Dans l'ascenseur</b> avec ${g.name}<small>Monte à l'${floorLabel(g.floor)}</small>`,
     unload:   `<b>${g.name} vide le chariot</b> devant l'app. ${g.apt}<small>${g.bags} valises · repart seul dans quelques secondes</small>`,
     back:     `<b>Revient seul</b>, à vide<small>${p.recalled ? 'Retour à la bagagerie demandé' : `Prochain client : ${n.name}, check-in à ${checkin(p, 1)}`}</small>`,
@@ -3459,7 +3459,7 @@ function renderKiloSheet() {
   // Current errand
   setHTML('kf-mission-state', porterChip(p));
   const row = (l, v) => `<div class="rf-row"><span>${l}</span><b>${v}</b></div>`;
-  const STEP = { call: 'va chercher le client à l\'accueil', pickup: 'chargement à l\'accueil', deliver: 'le client pousse, le moteur assiste',
+  const STEP = { call: 'va chercher le client à l\'accueil', pickup: 'chargement à l\'accueil', deliver: 'le chariot suit le client',
     liftUp: `ascenseur vers l'${floorLabel(g.floor)}`, unload: 'déchargement devant la porte', back: 'retour seul, à vide', liftDown: 'ascenseur vers le RDC' };
   setHTML('kf-mission', idle || ['back', 'liftDown'].includes(p.state)
     ? row('Mission', idle ? 'aucune en cours' : 'terminée, retour à la bagagerie') + row('Client suivant', `${nx.name}<small>check-in à ${checkin(p, 1)}</small>`) + row('Valises', `${nx.bags}`) + row('Destination', `app. ${nx.apt} · ${floorLabel(nx.floor)}`)
