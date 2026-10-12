@@ -462,6 +462,7 @@
   .roi-g b { font-size: 64px; font-weight: 800; letter-spacing: -.035em; line-height: 1; color: #15924f; font-variant-numeric: tabular-nums; }
   .roi-solo { flex: 1; display: grid; grid-template-columns: 560px 1fr; gap: 96px; align-items: center; padding: 0 96px; background: #f3f4f7; }
   .roi-solo .roi-g b { font-size: 88px; }
+  .roi-n { margin-top: 16px; font-size: 17px; color: var(--muted); }
   .roi-solo .roi-l li { grid-template-columns: 150px 1fr auto; padding: 20px 0; }
   .roi-solo .roi-l span { font-size: 26px; }
   .roi-solo .roi-l i { font-size: 22px; }
@@ -1079,11 +1080,14 @@
     <h1 class="rise">Ce que les robots font économiser,<br><em>avec l'une ou l'autre option.</em></h1>
     <div class="roi-solo rise" style="--d:.2s">
       <div class="roi-g"><div><small>Économisé par an, par immeuble</small><b>≈ 42 000 €</b></div></div>
-      <ul class="roi-l">
-        <li><span>Accueil</span><i>1 h 30 de réception libérée par jour × 25 €</i><b>14 000 €</b></li>
-        <li><span>Ménage</span><i>8 % d'heures de ménage en moins × 230 000 €</i><b>18 000 €</b></li>
-        <li><span>Sécurité</span><i>2 incidents évités par an × 5 000 €</i><b>10 000 €</b></li>
-      </ul>
+      <div>
+        <ul class="roi-l">
+          <li><span>Accueil</span><i>1 h 30 de réception libérée par jour × 25 €</i><b>14 000 €</b></li>
+          <li><span>Ménage</span><i>8 % d'heures de ménage en moins × 230 000 €*</i><b>18 000 €</b></li>
+          <li><span>Sécurité</span><i>2 incidents évités par an × 5 000 €</i><b>10 000 €</b></li>
+        </ul>
+        <p class="roi-n">* 1 M€ de ménage par an pour 130 appartements, ramené à un immeuble de 30 appartements comme Saint-Georges.</p>
+      </div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
