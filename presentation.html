@@ -257,13 +257,7 @@
   .pct { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
   /* ============ 10 · Reliability ============ */
-  .rel { position: absolute; inset: 0; display: grid; grid-template-columns: 1.35fr 1fr; }
-  /* Both columns start at the same height so their titles line up */
-  .rel .col { display: flex; flex-direction: column; gap: 22px; padding: 138px 72px 0 96px; }
-  .rel .col:first-child { background: #eef3ff; }
-  .rel .col:last-child { padding: 138px 96px 0 72px; }
-  .rel h2 { font-size: 44px; letter-spacing: -.035em; line-height: 1.08; }
-  .rel .lead { font-size: 22px; }
+  .rails-t { display: block; font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
   .dg .win-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; min-height: 430px; }
   .dg .win { transition: box-shadow .3s; }
   .dg .frame { position: absolute; inset: 0; border: 8px solid transparent; border-image: repeating-linear-gradient(-45deg, #f0a020 0 12px, #f7c35f 12px 24px) 8; border-radius: 24px; opacity: 0; transition: opacity .4s; pointer-events: none; z-index: 5; }
@@ -282,7 +276,7 @@
   .dg .sum { display: flex; gap: 12px; align-items: center; font-size: 19px; color: var(--muted); }
   .dg .sum b { color: var(--ink); font-size: 28px; font-variant-numeric: tabular-nums; }
   .rails { display: flex; flex-direction: column; border-bottom: 1px solid var(--line); margin-top: 10px; }
-  .rail-row { display: grid; grid-template-columns: 30px 1fr; gap: 16px; align-items: center; padding: 16px 0; border-top: 1px solid var(--line); }
+  .rail-row { display: grid; grid-template-columns: 30px 1fr; gap: 16px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
   .rail-row .ri { display: grid; place-items: center; }
   .rail-row .ri.ok { color: var(--green); }
   .rail-row .ri.lock { color: var(--red); }
@@ -893,30 +887,29 @@
 <!-- ======================= 10 · Reliability & guard rails ======================= -->
 <section class="slide" data-scene="fiab">
   <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Fiabilité · garde-fous · RGPD</div></div>
-  <div class="rel">
-    <div class="col">
-      <span class="eyebrow rise" style="align-self:flex-start">Mode dégradé</span>
-      <h2 class="rise" style="--d:.1s">Greg ne répond plus ? <em style="font-style:normal;color:var(--loop)">Rien ne se perd.</em></h2>
+  <div class="feat" style="--txt:860px">
+    <div class="txt">
+      <span class="eyebrow rise" style="align-self:flex-start">Fiabilité</span>
+      <h1 class="rise" style="--d:.1s">Greg ne répond plus ?<br><em>Rien ne se perd.</em></h1>
       <p class="lead rise" style="--d:.2s">Les robots continuent de travailler. Loop garde les événements en file et les rejoue dans l'ordre au retour de Greg.</p>
-      <div class="app-shot rise" style="--d:.3s;height:600px">
-        <div class="win">
-          <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Connecteurs / GregAi</span></div>
-          <iframe class="app" data-w="980" data-src="building-overview.html#greg" title="Maquette Loop · Connecteurs" tabindex="-1"></iframe>
+      <div class="rise" style="--d:.3s">
+        <small class="rails-t">Garde-fous</small>
+        <div class="rails">
+          <div class="rail-row"><span class="ri ok"><svg><use href="#i-check"/></svg></span><div><h5>Lancer et reprogrammer le ménage</h5><p>Jamais dans un appartement occupé</p></div></div>
+          <div class="rail-row"><span class="ri ok"><svg><use href="#i-check"/></svg></span><div><h5>Envoyer le chariot à bagages</h5><p>À la demande ou au check-in</p></div></div>
+          <div class="rail-row"><span class="ri ok"><svg><use href="#i-check"/></svg></span><div><h5>Parler à travers Temi</h5><p>Annonces et réponses aux clients</p></div></div>
+          <div class="rail-row"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Voir les flux vidéo</h5><p>RGPD : réservé aux opérateurs, jamais à l'IA</p></div></div>
+          <div class="rail-row"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Déclencher ou lever la panique</h5><p>Toujours une décision humaine</p></div></div>
+          <div class="rail-row"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Filmer dans un appartement</h5><p>Les caméras des robots restent dans les couloirs et les parties communes</p></div></div>
         </div>
-        <svg class="cursor" id="dg-cur"><use href="#i-cursor"/></svg>
       </div>
     </div>
-    <div class="col">
-      <span class="eyebrow rise" style="align-self:flex-start">Garde-fous</span>
-      <h2 class="rise" style="--d:.1s">Ce que Greg peut faire,<br>et ce qui reste humain.</h2>
-      <div class="rails">
-        <div class="rail-row rise" style="--d:.25s"><span class="ri ok"><svg><use href="#i-check"/></svg></span><div><h5>Lancer et reprogrammer le ménage</h5><p>Jamais dans un appartement occupé</p></div></div>
-        <div class="rail-row rise" style="--d:.32s"><span class="ri ok"><svg><use href="#i-check"/></svg></span><div><h5>Envoyer le chariot à bagages</h5><p>À la demande ou au check-in</p></div></div>
-        <div class="rail-row rise" style="--d:.39s"><span class="ri ok"><svg><use href="#i-check"/></svg></span><div><h5>Parler à travers Temi</h5><p>Annonces et réponses aux clients</p></div></div>
-        <div class="rail-row rise" style="--d:.46s"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Voir les flux vidéo</h5><p>RGPD : réservé aux opérateurs, jamais à l'IA</p></div></div>
-        <div class="rail-row rise" style="--d:.53s"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Déclencher ou lever la panique</h5><p>Toujours une décision humaine</p></div></div>
-        <div class="rail-row rise" style="--d:.6s"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Filmer dans un appartement</h5><p>Les caméras des robots restent dans les couloirs et les parties communes</p></div></div>
+    <div class="app-shot rise" style="--d:.2s">
+      <div class="win">
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Connecteurs / GregAi</span></div>
+        <iframe class="app" data-src="building-overview.html#greg" title="Maquette Loop · Connecteurs" tabindex="-1"></iframe>
       </div>
+      <svg class="cursor" id="dg-cur"><use href="#i-cursor"/></svg>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
