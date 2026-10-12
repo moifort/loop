@@ -435,16 +435,25 @@
   .iph img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 38px; }
 
   /* ============ Budget: the options layout, a price per option and its days per step ============ */
-  .budget h1 { padding-bottom: 40px; }
-  .budget .opt { gap: 10px; justify-content: flex-start; padding-top: 56px; }
+  .budget h1 { padding-bottom: 32px; }
+  .budget .opt { gap: 10px; justify-content: flex-start; padding-top: 40px; }
   .budget .opt h3 { font-size: 40px; }
   .bud-p { display: flex; align-items: baseline; gap: 14px; margin: 4px 0 12px; }
   .bud-p b { font-size: 60px; font-weight: 800; letter-spacing: -.04em; line-height: 1; color: var(--ink); }
   .opt.best .bud-p b { color: var(--loop); }
   .bud-p span { font-size: 21px; color: var(--muted); font-weight: 600; }
   .bud-l { list-style: none; border-bottom: 1px solid rgba(18,19,26,.1); }
-  .bud-l li { display: flex; justify-content: space-between; gap: 24px; padding: 9px 0; border-top: 1px solid rgba(18,19,26,.1); font-size: 19px; color: var(--ink-2); }
+  .bud-l li { display: flex; justify-content: space-between; gap: 24px; padding: 7px 0; border-top: 1px solid rgba(18,19,26,.1); font-size: 19px; color: var(--ink-2); }
   .bud-l li b { flex: none; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .bud-t { display: flex; align-items: baseline; gap: 12px; margin-top: 14px; font-size: 20px; font-weight: 600; color: var(--ink-2); }
+  .bud-t b { font-size: 28px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
+  .bud-t span { font-size: 17px; color: var(--muted); font-weight: 500; }
+  .bud-r { display: flex; align-items: center; gap: 36px; padding: 26px 96px 84px; font-size: 19px; color: var(--ink-2); }
+  .bud-r small { font-size: 14px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); max-width: 190px; line-height: 1.3; }
+  .bud-r span { display: flex; flex-direction: column; gap: 2px; }
+  .bud-r span b { font-size: 22px; font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .bud-r .tot { margin-left: auto; padding-left: 36px; border-left: 1px solid var(--line); }
+  .bud-r .tot b { color: var(--loop); font-size: 26px; }
   /* ============ Robot choice (P1–P3): same language as the robots slide, tinted hero band and hairline rows ============ */
   .pk { position: absolute; inset: 0; display: grid; grid-template-columns: 720px 1fr; }
   .pk-hero { position: relative; overflow: hidden; background: var(--tint); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 104px 72px 0 96px; }
@@ -999,12 +1008,12 @@
 <!-- ======================= Budget · pilot cost per option, robots excluded ======================= -->
 <section class="slide" data-scene="budget">
   <div class="opts-w budget">
-    <h1 class="rise">Le budget du pilote,<br><em>hors achat des robots.</em></h1>
+    <h1 class="rise">Le budget du pilote,<br><em>robots compris.</em></h1>
     <div class="opts">
       <div class="opt rise" style="--d:.2s">
         <span class="ol">Option 1</span>
         <h3>Les robots seuls</h3>
-        <div class="bud-p"><b>18 750 €</b><span>HT · 25 jours-homme</span></div>
+        <div class="bud-p"><b>18 750 €</b><span>HT · 25 jours-homme à 750 €</span></div>
         <ul class="bud-l">
           <li><span>Écouter : interviews à Saint-Georges</span><b>3 j</b></li>
           <li><span>Temi : installation, accueil, visio</span><b>6 j</b></li>
@@ -1013,11 +1022,12 @@
           <li><span>Roborock Saros : cartes et formation</span><b>4 j</b></li>
           <li><span>Suivi des fournisseurs et bilan</span><b>5 j</b></li>
         </ul>
+        <div class="bud-t">Avec les robots<b>31 425 € HT</b><span>+ Piaggio Kilo</span></div>
       </div>
       <div class="opt best rise" style="--d:.35s">
         <span class="ol">Option 2</span>
         <h3>Les robots + tableau de bord</h3>
-        <div class="bud-p"><b>57 000 €</b><span>HT · 76 jours-homme</span></div>
+        <div class="bud-p"><b>57 000 €</b><span>HT · 76 jours-homme à 750 €</span></div>
         <ul class="bud-l">
           <li><span>Écouter : interviews à Saint-Georges</span><b>3 j</b></li>
           <li><span>Temi, version de base : check-in, check-out, panique</span><b>15 j</b></li>
@@ -1028,9 +1038,10 @@
           <li><span>Tout l'immeuble : vue 3D, Greg</span><b>15 j</b></li>
           <li><span>Suivi et bilan</span><b>7 j</b></li>
         </ul>
+        <div class="bud-t">Avec les robots<b>69 675 € HT</b><span>+ Piaggio Kilo</span></div>
       </div>
     </div>
-    <div class="rule rise" style="--d:.5s"><svg><use href="#i-check"/></svg>TJM de 750 € HT par personne, Boris et Thibaut. Estimation à affiner après la phase Écouter.</div>
+    <div class="bud-r rise" style="--d:.5s"><small>Robots, les mêmes pour les deux options</small><span>Temi 3<b>8 175 €</b></span><span>Piaggio Kilo<b>sur devis</b></span><span>2 Roborock Saros 10R<b>2 500 €</b></span><span>PACO, journée d'essai<b>2 000 €</b></span><span class="tot">Total robots<b>12 675 € HT</b></span></div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
