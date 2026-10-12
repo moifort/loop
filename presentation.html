@@ -460,12 +460,16 @@
   .roi-g { display: grid; grid-template-columns: 1fr; gap: 26px 40px; }
   .roi-r { font-size: 21px; line-height: 1.45; color: var(--ink-2); max-width: 720px; margin-top: -12px; }
   .roi-cols { flex: 1; }
-  .roi-card { justify-content: center; }
+  .roi-card, .roi-card.best { justify-content: flex-start; padding-top: 108px; }
   .roi-l { list-style: none; border-bottom: 1px solid rgba(18,19,26,.1); }
   .roi-l li { display: grid; grid-template-columns: 120px 1fr auto; gap: 18px; align-items: baseline; padding: 14px 0; border-top: 1px solid rgba(18,19,26,.1); }
   .roi-l span { font-size: 21px; font-weight: 700; color: var(--ink); }
   .roi-l i { font-style: normal; font-size: 19px; color: var(--muted); }
-  .roi-l b { font-size: 22px; font-weight: 800; color: #15924f; font-variant-numeric: tabular-nums; }
+  .roi-q { list-style: none; display: flex; flex-direction: column; border-bottom: 1px solid rgba(18,19,26,.1); }
+  .roi-q li { display: flex; flex-direction: column; gap: 4px; padding: 16px 0; border-top: 1px solid rgba(18,19,26,.1); }
+  .roi-q b { font-size: 24px; color: var(--ink); letter-spacing: -.01em; }
+  .roi-q span { font-size: 19px; line-height: 1.45; color: var(--ink-2); }
+  .roi-h b { color: var(--ink-2); }  .roi-l b { font-size: 22px; font-weight: 800; color: #15924f; font-variant-numeric: tabular-nums; }
   .roi-g small { display: block; font-size: 18px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
   .roi-g b { font-size: 64px; font-weight: 800; letter-spacing: -.035em; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
   .roi-g b, .roi-card.best .roi-g b { color: #15924f; }
@@ -1072,30 +1076,29 @@
 <!-- ======================= ROI · the money, option against option, for a decision in ten seconds ======================= -->
 <section class="slide" data-scene="roi">
   <div class="roi2">
-    <h1 class="rise">Ce que le pilote fait économiser,<br><em>selon l'option choisie.</em></h1>
+    <h1 class="rise">Ce que les robots font économiser,<br><em>avec l'une ou l'autre option.</em></h1>
     <div class="roi-cols">
       <div class="roi-card rise" style="--d:.2s">
-        <span class="ol">Option 1 · Les robots seuls</span>
-        <p class="roi-r">Chaque robot est lancé à la main, depuis son appli.</p>
-        <div class="roi-g"><div><small>Économisé par an</small><b>29 000 €</b></div></div>
+        <span class="ol">Option 1 et option 2</span>
+        <div class="roi-g"><div><small>Économisé par an à Saint-Georges</small><b>≈ 42 000 €</b></div></div>
         <ul class="roi-l">
-          <li><span>Accueil</span><i>1 h 20 de réception libérée par jour × 25 €</i><b>12 000 €</b></li>
-          <li><span>Ménage</span><i>5 % d'heures de ménage en moins × 230 000 €</i><b>12 000 €</b></li>
-          <li><span>Sécurité</span><i>1 incident évité par an × 5 000 €</i><b>5 000 €</b></li>
-        </ul>
-      </div>
-      <div class="roi-card best rise" style="--d:.3s">
-        <span class="ol">Option 2 · Robots + tableau de bord</span>
-        <p class="roi-r">Les robots se lancent seuls, depuis Mews, Salto et Greg.</p>
-        <div class="roi-g"><div><small>Économisé par an</small><b>51 000 €</b></div></div>
-        <ul class="roi-l">
-          <li><span>Accueil</span><i>2 h de réception libérées par jour × 25 €</i><b>18 000 €</b></li>
-          <li><span>Ménage</span><i>10 % d'heures de ménage en moins × 230 000 €</i><b>23 000 €</b></li>
+          <li><span>Accueil</span><i>1 h 30 de réception libérée par jour × 25 €</i><b>14 000 €</b></li>
+          <li><span>Ménage</span><i>8 % d'heures de ménage en moins × 230 000 €</i><b>18 000 €</b></li>
           <li><span>Sécurité</span><i>2 incidents évités par an × 5 000 €</i><b>10 000 €</b></li>
         </ul>
       </div>
+      <div class="roi-card best rise" style="--d:.3s">
+        <span class="ol">Ce que l'option 2 ajoute</span>
+        <ul class="roi-q">
+          <li><b>Un seul écran pour Madagascar</b><span>Tout l'hôtel suivi à distance, avec la prise en main du Temi en visio.</span></li>
+          <li><b>La flotte suivie en direct</b><span>Batterie, pannes et missions de chaque robot.</span></li>
+          <li><b>Un mode dégradé</b><span>Si Greg ne répond plus, les robots continuent et rien ne se perd.</span></li>
+          <li><b>Les vidéos réservées aux humains</b><span>Greg n'y a jamais accès : le RGPD est respecté.</span></li>
+        </ul>
+      </div>
     </div>
-    <p class="roi-h rise" style="--d:.4s">Bases à valider ensemble : 25 €/h à l'accueil · 230 000 € de ménage par an à Saint-Georges (1 M€ pour 130 appartements) · 5 000 € par incident.</p>  </div>
+    <p class="roi-h rise" style="--d:.4s"><b>À confirmer avec vous :</b> le coût horaire de la réception (ici 25 €), le coût du ménage à Saint-Georges (ici ≈ 230 000 € par an, soit 1 M€ réparti sur 130 appartements) et le coût d'un incident (ici 5 000 €).</p>
+  </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
