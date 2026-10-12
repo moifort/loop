@@ -458,15 +458,18 @@
   .roi-card .ol { align-self: flex-start; color: #fff; background: var(--ink-2); font-size: 15px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; border-radius: 999px; padding: 5px 14px; }
   .roi-card.best .ol { background: var(--loop); }
   .roi-g { display: grid; grid-template-columns: 1fr; gap: 26px 40px; }
-  .roi-r { font-size: 21px; line-height: 1.45; color: var(--ink-2); max-width: 720px; }
+  .roi-r { font-size: 21px; line-height: 1.45; color: var(--ink-2); max-width: 720px; margin-top: -12px; }
+  .roi-cols { flex: 1; }
+  .roi-card { justify-content: center; }
+  .roi-l { list-style: none; border-bottom: 1px solid rgba(18,19,26,.1); }
+  .roi-l li { display: grid; grid-template-columns: 120px 1fr auto; gap: 18px; align-items: baseline; padding: 14px 0; border-top: 1px solid rgba(18,19,26,.1); }
+  .roi-l span { font-size: 21px; font-weight: 700; color: var(--ink); }
+  .roi-l i { font-style: normal; font-size: 19px; color: var(--muted); }
+  .roi-l b { font-size: 22px; font-weight: 800; color: #15924f; font-variant-numeric: tabular-nums; }
   .roi-g small { display: block; font-size: 18px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
   .roi-g b { font-size: 64px; font-weight: 800; letter-spacing: -.035em; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
   .roi-g b, .roi-card.best .roi-g b { color: #15924f; }
-  .roi-why { flex: 1; display: grid; grid-template-columns: 300px 1fr 1fr 1fr; gap: 48px; align-content: center; align-items: start; padding: 0 96px; }
-  .roi-why small { font-size: 32px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); line-height: 1.15; }
-  .roi-why b { display: block; font-size: 40px; font-weight: 800; letter-spacing: -.02em; color: #15924f; margin-bottom: 6px; }
-  .roi-why span { font-size: 22px; line-height: 1.45; color: var(--ink-2); }
-  .roi-h { padding: 0 96px 84px; font-size: 15px; color: var(--muted); }
+  .roi-h { padding: 22px 96px 84px; font-size: 15px; color: var(--muted); }
   .brand-l { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; background: #eef3ff; }
   .brand-l > div { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 48px 56px; border-right: 1px solid rgba(18,19,26,.06); border-bottom: 1px solid rgba(18,19,26,.06); }
   .brand-l > div:nth-child(3n+1) { padding-left: 96px; }
@@ -1073,27 +1076,26 @@
     <div class="roi-cols">
       <div class="roi-card rise" style="--d:.2s">
         <span class="ol">Option 1 · Les robots seuls</span>
-        <div class="roi-g">
-          <div><small>Économisé par an</small><b>29 000 €</b></div>
-        </div>
-        <p class="roi-r">Moins cher et en place plus vite. Chaque robot travaille seul, lancé depuis son appli. Le Temi répond au comptoir, le Roborock Saros fait une partie des sols, le Piaggio Kilo porte les valises.</p>
+        <p class="roi-r">Chaque robot est lancé à la main, depuis son appli.</p>
+        <div class="roi-g"><div><small>Économisé par an</small><b>29 000 €</b></div></div>
+        <ul class="roi-l">
+          <li><span>Accueil</span><i>1 h 20 de réception libérée par jour × 25 €</i><b>12 000 €</b></li>
+          <li><span>Ménage</span><i>5 % d'heures de ménage en moins × 230 000 €</i><b>12 000 €</b></li>
+          <li><span>Sécurité</span><i>1 incident évité par an × 5 000 €</i><b>5 000 €</b></li>
+        </ul>
       </div>
       <div class="roi-card best rise" style="--d:.3s">
         <span class="ol">Option 2 · Robots + tableau de bord</span>
-        <div class="roi-g">
-          <div><small>Économisé par an</small><b>51 000 €</b></div>
-        </div>
-        <p class="roi-r">Plus long à mettre en place. Les mêmes robots, mais ils se lancent seuls depuis Mews, Salto et Greg. Le ménage démarre au départ du client, Madagascar tient l'accueil, un incident est traité tout de suite.</p>
+        <p class="roi-r">Les robots se lancent seuls, depuis Mews, Salto et Greg.</p>
+        <div class="roi-g"><div><small>Économisé par an</small><b>51 000 €</b></div></div>
+        <ul class="roi-l">
+          <li><span>Accueil</span><i>2 h de réception libérées par jour × 25 €</i><b>18 000 €</b></li>
+          <li><span>Ménage</span><i>10 % d'heures de ménage en moins × 230 000 €</i><b>23 000 €</b></li>
+          <li><span>Sécurité</span><i>2 incidents évités par an × 5 000 €</i><b>10 000 €</b></li>
+        </ul>
       </div>
     </div>
-    <div class="roi-why rise" style="--d:.4s">
-      <small>Ce que le tableau de bord ajoute</small>
-      <div><b>+ 11 000 € / an</b><span>Le ménage se lance seul quand le client part. Plus de temps perdu à attendre ou à vérifier.</span></div>
-      <div><b>+ 6 000 € / an</b><span>Madagascar tient l'accueil sur un seul écran. La réception est libérée plus souvent.</span></div>
-      <div><b>+ 5 000 € / an</b><span>Un incident est vu et traité tout de suite, pas découvert le lendemain.</span></div>
-    </div>
-    <p class="roi-h rise" style="--d:.5s">Montants HT, robots compris. Hypothèses à valider ensemble : 25 €/h à l'accueil · ≈ 230 000 € de ménage par an à Saint-Georges · ≈ 5 000 € par incident.</p>
-  </div>
+    <p class="roi-h rise" style="--d:.4s">Bases à valider ensemble : 25 €/h à l'accueil · 230 000 € de ménage par an à Saint-Georges (1 M€ pour 130 appartements) · 5 000 € par incident.</p>  </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
