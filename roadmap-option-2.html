@@ -73,6 +73,9 @@
   .gate { position: absolute; top: 50%; z-index: 2; width: 16px; height: 16px; margin: -8px 0 0 -8px; background: var(--ink); transform: rotate(45deg); border-radius: 3px; box-shadow: 0 0 0 3px #fff; }
   .gate-l { position: absolute; top: 50%; z-index: 2; transform: translateY(-50%); margin-left: 14px; font-size: 12px; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
 
+  .gate.block { background: var(--red); width: 20px; height: 20px; margin: -10px 0 0 -10px; }
+  .gate-l.block { color: var(--red); font-weight: 800; }
+
   /* Milestones: a vertical line across the whole chart */
   .ms { position: absolute; top: 0; bottom: 0; z-index: 3; width: 0; border-left: 2px dashed var(--c); pointer-events: none; }
   .ms span { position: absolute; top: 52px; left: 6px; white-space: nowrap; font-size: 12px; font-weight: 800; color: #fff; background: var(--c); padding: 3px 8px; border-radius: 999px; }
@@ -103,6 +106,8 @@
   .blk.mes li::before { content: '→'; position: absolute; left: 0; font-weight: 800; color: var(--loop); }
   .risk { font-size: 14px; line-height: 1.4; color: #8a5a00; background: var(--amber-soft); border-radius: 8px; padding: 8px 12px; }
   .risk b { color: #6b4500; }
+  .risk.block { color: #9b2226; background: var(--red-soft); }
+  .risk.block b { color: #7a1a1d; }
 
   /* ---------- Totals ---------- */
   .totals { display: grid; grid-template-columns: 1.3fr 1fr; gap: 64px; align-items: start; }
@@ -139,6 +144,7 @@
 <div class="legend">
   <span><i style="--c:var(--navy)"></i>P1 · Accueil</span>
   <span><i class="lg-gate"></i>Bilan et décision avec le client</span>
+  <span><i class="lg-gate" style="background:var(--red)"></i>Décision bloquante : peut décaler tout le planning</span>
 </div>
 
 <div class="gantt" id="gantt"></div>
@@ -176,7 +182,7 @@ const phases = [
     { id: 'e2', n: 'Étape 2', name: 'Valider Temi', from: 2, to: 4, jh: [2, 3],
       out: ['Démos chez les fournisseurs (Génération Robots, Leobotics)', 'SAV, robot de remplacement et prix d\'une location de 3 mois', 'Validation technique : SDK, visio, ce qu\'il faut développer', 'Contrat de location ou d\'achat prêt à signer'],
       mes: ['Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'],
-      risk: '<b>Si Temi ne passe pas</b> : on repart sur les autres candidats du benchmark (GreetingBot, Awabot).' },
+      risk: '<b>Point bloquant</b> : si Temi ne passe pas, on repart sur un autre robot du benchmark (GreetingBot, Awabot). Ça coûte quelques jours et décale tout le planning.', block: true },
     { id: 'e3', n: 'Étape 3', name: 'Check-in et check-out automatiques', from: 6, to: 12, jh: [25, 35],
       out: ['Le client retrouve sa réservation sur Temi et reçoit son code d\'appartement', 'Au départ, il le dit à Temi, et l\'appartement passe « à nettoyer »', 'En français et en anglais', 'Le socle minimal : serveur, comptes, logs'],
       mes: ['Part des arrivées et des départs faits avec Temi', 'Temps gagné par l\'accueil'],
@@ -189,7 +195,7 @@ const phases = [
   ]},
 ];
 
-const gates = [{ w: 2, l: 'Besoin validé' }, { w: 5, l: 'Go Temi' }, { w: 13, l: 'Bilan' }, { w: 21, l: 'Bilan P1' }];
+const gates = [{ w: 2, l: 'Cadrage validé' }, { w: 5, l: '⚠ Go / no go robot', block: true }, { w: 13, l: 'Bilan' }, { w: 21, l: 'Bilan P1' }];
 const milestones = [{ w: 21, l: 'Accueil en service · M5', c: 'var(--navy)', end: true }];
 
 // ---------- Gantt ----------
@@ -221,7 +227,7 @@ phases.forEach(p => {
 });
 
 html += row('Décisions', '', 'g-group');
-html += row('Bilan avec le client', gates.map(x => `<i class="gate" style="left:${pct(x.w)}"></i><span class="gate-l" style="left:${pct(x.w)}">${x.l}</span>`).join(''));
+html += row('Bilan avec le client', '<div style="height:64px"></div>' + gates.map((x, i) => `<i class="gate${x.block ? ' block' : ''}" style="left:${pct(x.w)}"></i><span class="gate-l${x.block ? ' block' : ''}" style="left:${pct(x.w)};top:${i % 2 ? 84 : 16}%">${x.l}</span>`).join(''));
 
 g.innerHTML = html;
 
@@ -249,7 +255,7 @@ ph.innerHTML = phases.map(p => {
         <div class="blk out"><small>À la fin de l'étape</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
         <div class="blk mes"><small>On mesure</small><ul>${it.mes.map(x => `<li>${x}</li>`).join('')}</ul></div>
         ${it.note ? `<p class="blk" style="font-size:14px;color:var(--muted);line-height:1.4">${it.note}</p>` : ''}
-        ${it.risk ? `<p class="risk">${it.risk}</p>` : ''}
+        ${it.risk ? `<p class="risk${it.block ? ' block' : ''}">${it.risk}</p>` : ''}
       </article>`).join('')}
     </div>
   </section>`;
