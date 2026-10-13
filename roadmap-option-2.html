@@ -39,7 +39,7 @@
   .legend i.lg-gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
 
   /* ---------- Gantt: one column per week ---------- */
-  .gantt { --label: 300px; --weeks: 27; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .gantt { --label: 300px; --weeks: 25; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
   .g-row { display: grid; grid-template-columns: var(--label) 1fr; min-height: 44px; border-top: 1px solid var(--line); }
   .g-row:first-child { border-top: 0; }
   .g-label { padding: 10px 18px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: var(--ink-2); border-right: 1px solid var(--line); background: #fff; }
@@ -166,22 +166,22 @@
 <script>
 // ---------- Data: one entry per step. Weeks are 1-based and inclusive. ----------
 const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
-const WEEKS = 27;
+const WEEKS = 25;
 
 const phases = [
   { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Quatre étapes, l\'une après l\'autre. On comprend, on valide le robot, puis on développe.', items: [
-    { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 2, jh: [4, 6],
+    { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1, jh: [1.5, 1.5],
       out: ['Interviews de l\'accueil, de l\'équipe de Madagascar et de Michael', 'Le parcours réel d\'arrivée et de départ d\'un client', 'Les fonctions attendues du robot d\'accueil, par ordre de priorité', 'Les logiciels en place : réservation, Salto, Greg'],
       mes: ['Les questions les plus posées au comptoir', 'Les moments où l\'accueil est vide'] },
-    { id: 'e2', n: 'Étape 2', name: 'Valider Temi', from: 3, to: 6, jh: [8, 12],
-      out: ['Démos chez les fournisseurs (Génération Robots, Leobotics)', 'SAV, robot de remplacement et prix d\'une location de 3 mois', 'La liste du développement à faire sur Temi', 'Une preuve de concept : un premier écran d\'accueil sur le robot'],
+    { id: 'e2', n: 'Étape 2', name: 'Valider Temi', from: 2, to: 4, jh: [2, 3],
+      out: ['Démos chez les fournisseurs (Génération Robots, Leobotics)', 'SAV, robot de remplacement et prix d\'une location de 3 mois', 'Validation technique : SDK, visio, ce qu\'il faut développer', 'Contrat de location ou d\'achat prêt à signer'],
       mes: ['Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'],
       risk: '<b>Si Temi ne passe pas</b> : on repart sur les autres candidats du benchmark (GreetingBot, Awabot).' },
-    { id: 'e3', n: 'Étape 3', name: 'Check-in et check-out automatiques', from: 8, to: 14, jh: [25, 35],
+    { id: 'e3', n: 'Étape 3', name: 'Check-in et check-out automatiques', from: 6, to: 12, jh: [25, 35],
       out: ['Le client retrouve sa réservation sur Temi et reçoit son code d\'appartement', 'Au départ, il le dit à Temi, et l\'appartement passe « à nettoyer »', 'En français et en anglais', 'Le socle minimal : serveur, comptes, logs'],
       mes: ['Part des arrivées et des départs faits avec Temi', 'Temps gagné par l\'accueil'],
       note: 'Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.' },
-    { id: 'e4', n: 'Étape 4', name: 'Madagascar prend la main', from: 16, to: 22, jh: [25, 35],
+    { id: 'e4', n: 'Étape 4', name: 'Madagascar prend la main', from: 14, to: 20, jh: [25, 35],
       out: ['Visio entre Temi et l\'équipe de Madagascar', 'Envoyer Temi vers un point, parler, reprendre un check-in bloqué', 'Greg prévenu de chaque arrivée et de chaque départ', 'Test de latence réel depuis Madagascar'],
       mes: ['Prises en main par jour', 'Check-ins débloqués à distance'],
       risk: '<b>Greg</b> : on ne connaît pas encore son API. Réponse attendue à l\'étape 1.',
@@ -189,13 +189,16 @@ const phases = [
   ]},
 ];
 
-const gates = [{ w: 3, l: 'Besoin validé' }, { w: 7, l: 'Go Temi' }, { w: 15, l: 'Bilan' }, { w: 23, l: 'Bilan P1' }];
-const milestones = [{ w: 23, l: 'Accueil en service · M5', c: 'var(--navy)', end: true }];
+const gates = [{ w: 2, l: 'Besoin validé' }, { w: 5, l: 'Go Temi' }, { w: 13, l: 'Bilan' }, { w: 21, l: 'Bilan P1' }];
+const milestones = [{ w: 21, l: 'Accueil en service · M5', c: 'var(--navy)', end: true }];
 
 // ---------- Gantt ----------
 const pct = w => `${((w - 1) / WEEKS) * 100}%`;
 const span = (a, b) => `left:${pct(a)};width:${((b - a + 1) / WEEKS) * 100}%`;
-const jh = r => `${r[0]}–${r[1]} j/h`;
+const num = n => String(n).replace('.', ',');
+const range = r => r[0] === r[1] ? num(r[0]) : `${num(r[0])}–${num(r[1])}`;
+const jh = r => `${range(r)} j/h`;
+const weeks = i => i.from === i.to ? `S${i.from}` : `S${i.from}–S${i.to}`;
 const g = document.getElementById('gantt');
 let html = '<div class="grid-bg"></div>';
 const row = (label, track, cls = '') => `<div class="g-row ${cls}"><div class="g-label">${label}</div><div class="g-track">${track}</div></div>`;
@@ -213,7 +216,7 @@ phases.forEach(p => {
   p.items.forEach(it => {
     d += .08;
     html += row(`${it.name}<small>${it.n}</small>`,
-      `<a href="#${it.id}" class="bar" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${it.n} · ${it.name} · S${it.from}–S${it.to} · ${jh(it.jh)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}">${jh(it.jh)} <span>· S${it.from}–${it.to}</span></span>`);
+      `<a href="#${it.id}" class="bar" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${it.n} · ${it.name} · S${it.from}–S${it.to} · ${jh(it.jh)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}">${jh(it.jh)} <span>· ${weeks(it)}</span></span>`);
   });
 });
 
@@ -236,13 +239,13 @@ ph.innerHTML = phases.map(p => {
     <div class="phase-side">
       <span class="prio" style="--c:${c}">${p.prio}</span>
       <h3>${p.title}</h3><p>${p.text}</p>
-      <p class="sum"><b>${lo}–${hi} j/h</b> · semaines ${from} à ${to}</p>
+      <p class="sum"><b>${range([lo, hi])} j/h</b> · semaines ${from} à ${to}</p>
     </div>
     <div class="cards">${p.items.map(it => `
       <article class="card" id="${it.id}" style="--c:${c};--soft:${soft}">
-        <div class="card-top"><span class="n">${it.n.toUpperCase()}</span><span class="w">S${it.from}–S${it.to} · ${it.to - it.from + 1} sem.</span></div>
+        <div class="card-top"><span class="n">${it.n.toUpperCase()}</span><span class="w">${weeks(it)} · ${it.to - it.from + 1} sem.</span></div>
         <h4>${it.name}</h4>
-        <div class="jh">${it.jh[0]}–${it.jh[1]} <small>j/h</small></div>
+        <div class="jh">${range(it.jh)} <small>j/h</small></div>
         <div class="blk out"><small>À la fin de l'étape</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
         <div class="blk mes"><small>On mesure</small><ul>${it.mes.map(x => `<li>${x}</li>`).join('')}</ul></div>
         ${it.note ? `<p class="blk" style="font-size:14px;color:var(--muted);line-height:1.4">${it.note}</p>` : ''}
@@ -267,9 +270,9 @@ const pilotLo = Math.round(lo * .1), pilotHi = Math.round(hi * .1);
 const max = hi + pilotHi;
 document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th>Semaines</th><th>j/h</th></tr>
-  ${steps.map(i => `<tr><td><span class="cum" style="width:${i.jh[1] / max * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}</td><td>S${i.from}–S${i.to}</td><td>${i.jh[0]}–${i.jh[1]}</td></tr>`).join('')}
-  <tr><td><span class="cum" style="width:${pilotHi / max * 240}px;--c:var(--faint)"></span>Pilotage et déplacements (≈ 10 %)</td><td>tout du long</td><td>${pilotLo}–${pilotHi}</td></tr>
-  <tr class="total"><td>Total P1 accueil</td><td>≈ 5 mois</td><td>≈ ${lo + pilotLo}–${hi + pilotHi}</td></tr>`;
+  ${steps.map(i => `<tr><td><span class="cum" style="width:${i.jh[1] / max * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}</td><td>${weeks(i)}</td><td>${range(i.jh)}</td></tr>`).join('')}
+  <tr><td><span class="cum" style="width:${pilotHi / max * 240}px;--c:var(--faint)"></span>Pilotage et déplacements (≈ 10 %)</td><td>tout du long</td><td>${range([pilotLo, pilotHi])}</td></tr>
+  <tr class="total"><td>Total P1 accueil</td><td>≈ 5 mois</td><td>≈ ${range([Math.round(lo + pilotLo), Math.round(hi + pilotHi)])}</td></tr>`;
 </script>
 </body>
 </html>
