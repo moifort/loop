@@ -43,7 +43,7 @@
   .g-row { display: grid; grid-template-columns: var(--label) 1fr; min-height: 44px; border-top: 1px solid var(--line); }
   .g-row:first-child { border-top: 0; }
   .g-label { padding: 10px 18px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: var(--ink-2); border-right: 1px solid var(--line); background: #fff; }
-  /* Step tag, same as the floor tags of the mockup */
+  /* Split tag, same as the floor and room tags of the mockup: dark priority, light step */
   .tags { margin-left: auto; display: inline-flex; flex: none; height: 20px; border-radius: 3px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(31,35,40,.08); }
   .tag-lvl, .tag-room { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; font-size: 11px; line-height: 20px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .tag-lvl { background: #3a4150; color: #fff; }
@@ -233,7 +233,7 @@ phases.forEach(p => {
   html += row(`<span class="prio" style="--c:${c}">${p.prio}</span>${p.title}`, '', 'g-group');
   p.items.forEach(it => {
     d += .08;
-    html += row(`${it.name}<span class="tags"><span class="tag-lvl">${it.n}</span></span>`,
+    html += row(`${it.name}<span class="tags"><span class="tag-lvl">${p.prio}</span><span class="tag-room">${it.n}</span></span>`,
       `<a href="#${it.id}" class="bar" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${it.n} · ${it.name} · S${it.from}–S${it.to} · ${jh(it.jh)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}">${jh(it.jh)} <span>· ${weeks(it)}</span></span>`);
   });
 });
