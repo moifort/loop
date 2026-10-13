@@ -39,7 +39,7 @@
   .legend i.lg-gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
 
   /* ---------- Gantt: one column per week ---------- */
-  .gantt { --label: 300px; --weeks: 28; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .gantt { --label: 300px; --weeks: 27; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
   .g-row { display: grid; grid-template-columns: var(--label) 1fr; min-height: 44px; border-top: 1px solid var(--line); }
   .g-row:first-child { border-top: 0; }
   .g-label { padding: 10px 18px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: var(--ink-2); border-right: 1px solid var(--line); background: #fff; }
@@ -177,7 +177,7 @@
 <script>
 // ---------- Data: one entry per step. Weeks are 1-based and inclusive. ----------
 const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
-const WEEKS = 28;
+const WEEKS = 27;
 
 const phases = [
   { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre. On comprend, on valide le robot, on le teste sur place, puis on développe.', items: [
@@ -189,16 +189,16 @@ const phases = [
       mes: ['Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'],
       note: '2 jours de travail, mais 3 semaines au calendrier : trouver un créneau chez le fournisseur, puis faire venir le robot.',
       risk: '<b>Point bloquant</b> : si Temi ne passe pas, on repart sur un autre robot du benchmark (GreetingBot, Awabot). Ça coûte quelques jours et décale tout le planning.', block: true },
-    { id: 'e3', n: 'Étape 3', name: 'Temi à l\'accueil, sans développement', from: 6, to: 7, jh: [5, 6.5],
+    { id: 'e3', n: 'Étape 3', name: 'Temi à l\'accueil, sans développement', from: 6, to: 6, jh: [5, 6.5],
       out: ['Temi installé dans le hall avec sa base et 2 ou 3 points de passage', 'Une question à l\'écran et deux gros boutons 👍 / 👎', 'Madagascar appelle Temi avec l\'appli native et parle aux clients', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs', 'Entretiens avec l\'agent d\'accueil, Madagascar et Michael'],
       mes: ['Part de 👍 et de 👎', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar'],
       note: 'Rien n\'est branché et rien n\'est enregistré. Les réponses décident de ce qu\'on développe à l\'étape 4.',
       risk: '<b>Point bloquant : avoir le robot</b>. Prêt de démo ou location courte à demander dès l\'étape 2, sinon 2 à 4 semaines de livraison. Si Temi tarde, on démarre par le ménage : un Roborock Saros s\'achète tout de suite.', block: true },
-    { id: 'e4', n: 'Étape 4', name: 'Check-in et check-out automatiques', from: 9, to: 15, jh: [25, 35],
+    { id: 'e4', n: 'Étape 4', name: 'Check-in et check-out automatiques', from: 8, to: 14, jh: [25, 35],
       out: ['Le client retrouve sa réservation sur Temi et reçoit son code d\'appartement', 'Au départ, il le dit à Temi, et l\'appartement passe « à nettoyer »', 'En français et en anglais', 'Le socle minimal : serveur, comptes, logs'],
       mes: ['Part des arrivées et des départs faits avec Temi', 'Temps gagné par l\'accueil'],
       note: 'Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.' },
-    { id: 'e5', n: 'Étape 5', name: 'Madagascar prend la main', from: 17, to: 23, jh: [25, 35],
+    { id: 'e5', n: 'Étape 5', name: 'Madagascar prend la main', from: 16, to: 22, jh: [25, 35],
       out: ['Visio entre Temi et l\'équipe de Madagascar', 'Envoyer Temi vers un point, parler, reprendre un check-in bloqué', 'Greg prévenu de chaque arrivée et de chaque départ', 'Test de latence réel depuis Madagascar'],
       mes: ['Prises en main par jour', 'Check-ins débloqués à distance'],
       risk: '<b>Greg</b> : on ne connaît pas encore son API. Réponse attendue à l\'étape 1.',
@@ -207,8 +207,8 @@ const phases = [
 ];
 
 // up/down keeps neighbouring labels apart, left puts the label before its diamond
-const gates = [{ w: 2, l: 'Cadrage validé', up: true }, { w: 5, l: '⚠ Go / no go robot', block: true, left: true }, { w: 6, l: '⚠ Robot livré ?', block: true, up: true }, { w: 8, l: 'Bilan terrain' }, { w: 16, l: 'Bilan', up: true }, { w: 24, l: 'Bilan P1' }];
-const milestones = [{ w: 24, l: 'Accueil en service · M6', c: 'var(--navy)', end: true }];
+const gates = [{ w: 2, l: 'Cadrage validé', up: true }, { w: 5, l: '⚠ Go / no go robot', block: true, left: true }, { w: 6, l: '⚠ Robot livré ?', block: true, up: true }, { w: 7, l: 'Bilan terrain' }, { w: 15, l: 'Bilan', up: true }, { w: 23, l: 'Bilan P1' }];
+const milestones = [{ w: 23, l: 'Accueil en service · M6', c: 'var(--navy)', end: true }];
 
 // ---------- Gantt ----------
 const pct = w => `${((w - 1) / WEEKS) * 100}%`;
@@ -290,7 +290,7 @@ document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th>Semaines</th><th>j/h</th></tr>
   ${steps.map(i => `<tr><td><span class="cum" style="width:${i.jh[1] / max * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}</td><td>${weeks(i)}</td><td>${range(i.jh)}</td></tr>`).join('')}
   <tr><td><span class="cum" style="width:${pilotHi / max * 240}px;--c:var(--faint)"></span>Pilotage et déplacements (≈ 10 %)</td><td>tout du long</td><td>${range([pilotLo, pilotHi])}</td></tr>
-  <tr class="total"><td>Total P1 accueil</td><td>≈ 5,5 mois</td><td>≈ ${range([Math.round(lo + pilotLo), Math.round(hi + pilotHi)])}</td></tr>`;
+  <tr class="total"><td>Total P1 accueil</td><td>≈ 5 mois</td><td>≈ ${range([Math.round(lo + pilotLo), Math.round(hi + pilotHi)])}</td></tr>`;
 </script>
 </body>
 </html>
