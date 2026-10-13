@@ -43,7 +43,11 @@
   .g-row { display: grid; grid-template-columns: var(--label) 1fr; min-height: 44px; border-top: 1px solid var(--line); }
   .g-row:first-child { border-top: 0; }
   .g-label { padding: 10px 18px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: var(--ink-2); border-right: 1px solid var(--line); background: #fff; }
-  .g-label small { margin-left: auto; flex-shrink: 0; white-space: nowrap; padding: 2px 8px; border-radius: 999px; background: var(--navy-soft); color: var(--navy); font-size: 12px; font-weight: 700; }
+  /* Step tag, same as the floor tags of the mockup */
+  .tags { margin-left: auto; display: inline-flex; flex: none; height: 20px; border-radius: 3px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(31,35,40,.08); }
+  .tag-lvl, .tag-room { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; font-size: 11px; line-height: 20px; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .tag-lvl { background: #3a4150; color: #fff; }
+  .tag-room { background: #eef0f3; color: #1f2328; }
   .g-track { position: relative; }
   .g-group .g-label { background: var(--bg); font-size: 13px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); min-height: 34px; padding: 6px 18px; }
   .g-group .g-track { background: var(--bg); }
@@ -201,7 +205,8 @@ const phases = [
   ]},
 ];
 
-const gates = [{ w: 2, l: 'Cadrage validé' }, { w: 5, l: '⚠ Go / no go robot', block: true }, { w: 6, l: '⚠ Robot livré ?', block: true }, { w: 8, l: 'Bilan terrain' }, { w: 16, l: 'Bilan' }, { w: 24, l: 'Bilan P1' }];
+// up/down keeps neighbouring labels apart, left puts the label before its diamond
+const gates = [{ w: 2, l: 'Cadrage validé', up: true }, { w: 5, l: '⚠ Go / no go robot', block: true, left: true }, { w: 6, l: '⚠ Robot livré ?', block: true, up: true }, { w: 8, l: 'Bilan terrain' }, { w: 16, l: 'Bilan', up: true }, { w: 24, l: 'Bilan P1' }];
 const milestones = [{ w: 24, l: 'Accueil en service · M6', c: 'var(--navy)', end: true }];
 
 // ---------- Gantt ----------
@@ -227,13 +232,13 @@ phases.forEach(p => {
   html += row(`<span class="prio" style="--c:${c}">${p.prio}</span>${p.title}`, '', 'g-group');
   p.items.forEach(it => {
     d += .08;
-    html += row(`${it.name}<small>${it.n}</small>`,
+    html += row(`${it.name}<span class="tags"><span class="tag-lvl">${it.n}</span></span>`,
       `<a href="#${it.id}" class="bar" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${it.n} · ${it.name} · S${it.from}–S${it.to} · ${jh(it.jh)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}">${jh(it.jh)} <span>· ${weeks(it)}</span></span>`);
   });
 });
 
 html += row('Décisions', '', 'g-group');
-html += row('Bilan avec le client', '<div style="height:64px"></div>' + gates.map((x, i) => `<i class="gate${x.block ? ' block' : ''}" style="left:${pct(x.w)}"></i><span class="gate-l${x.block ? ' block' : ''}" style="left:${pct(x.w)};top:${i % 2 ? 84 : 16}%">${x.l}</span>`).join(''));
+html += row('Bilan avec le client', '<div style="height:64px"></div>' + gates.map(x => `<i class="gate${x.block ? ' block' : ''}" style="left:${pct(x.w)}"></i><span class="gate-l${x.block ? ' block' : ''}" style="left:${pct(x.w)};top:${x.up ? 16 : 84}%${x.left ? ';margin-left:-14px;transform:translate(-100%,-50%)' : ''}">${x.l}</span>`).join(''));
 
 g.innerHTML = html;
 
