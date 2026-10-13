@@ -39,11 +39,11 @@
   .legend i.lg-gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
 
   /* ---------- Gantt: one column per week ---------- */
-  .gantt { --label: 300px; --weeks: 25; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+  .gantt { --label: 300px; --weeks: 28; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
   .g-row { display: grid; grid-template-columns: var(--label) 1fr; min-height: 44px; border-top: 1px solid var(--line); }
   .g-row:first-child { border-top: 0; }
   .g-label { padding: 10px 18px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: var(--ink-2); border-right: 1px solid var(--line); background: #fff; }
-  .g-label small { font-weight: 500; color: var(--muted); font-size: 13px; }
+  .g-label small { margin-left: auto; flex-shrink: 0; white-space: nowrap; padding: 2px 8px; border-radius: 999px; background: var(--navy-soft); color: var(--navy); font-size: 12px; font-weight: 700; }
   .g-track { position: relative; }
   .g-group .g-label { background: var(--bg); font-size: 13px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); min-height: 34px; padding: 6px 18px; }
   .g-group .g-track { background: var(--bg); }
@@ -162,6 +162,7 @@
   <div class="notes">
     <div class="note" style="--c:var(--navy)"><b>Pourquoi c'est moins que les 80–105 j/h de départ</b><p>Le premier chiffrage mettait tout dans une seule itération : un socle complet, une console web, le bouton panique et une certification de logiciel de réservation. Ici, le bouton panique part avec la sécurité, la console reste minimale, et on lit les réservations à travers ce qui existe déjà.</p></div>
     <div class="note" style="--c:var(--amber)"><b>Ce qu'on ne sait pas encore</b><p>Le logiciel de réservation de Quartier Libre, et s'il a une API. Si Greg peut nous donner les réservations, ce qui éviterait de brancher ce logiciel. La pièce d'identité et le paiement au check-in : +15 à 25 j/h s'il faut les gérer.</p></div>
+    <div class="note" style="--c:var(--red)"><b>Si on n'a pas Temi à temps</b><p>On ne reste pas bloqué : on avance le ménage. Un Roborock Saros s'achète en magasin et se teste dans un appartement la semaine même, pendant qu'on attend Temi.</p></div>
     <div class="note" style="--c:var(--grey)"><b>Plus tard, chiffré une fois l'accueil en service</b><p>La sécurité de nuit avec Temi et le bouton panique. Le Piaggio Kilo. Le Roborock Saros. La vue de tout l'immeuble.</p></div>
   </div>
 </div>
@@ -172,31 +173,36 @@
 <script>
 // ---------- Data: one entry per step. Weeks are 1-based and inclusive. ----------
 const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
-const WEEKS = 25;
+const WEEKS = 28;
 
 const phases = [
-  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Quatre étapes, l\'une après l\'autre. On comprend, on valide le robot, puis on développe.', items: [
+  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre. On comprend, on valide le robot, on le teste sur place, puis on développe.', items: [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1, jh: [1.5, 1.5],
       out: ['Interviews de l\'accueil, de l\'équipe de Madagascar et de Michael', 'Le parcours réel d\'arrivée et de départ d\'un client', 'Les fonctions attendues du robot d\'accueil, par ordre de priorité', 'Les logiciels en place : réservation, Salto, Greg'],
       mes: ['Les questions les plus posées au comptoir', 'Les moments où l\'accueil est vide'] },
     { id: 'e2', n: 'Étape 2', name: 'Valider Temi', from: 2, to: 4, jh: [2, 3],
-      out: ['Démos chez les fournisseurs (Génération Robots, Leobotics)', 'SAV, robot de remplacement et prix d\'une location de 3 mois', 'Validation technique : SDK, visio, ce qu\'il faut développer', 'Contrat de location ou d\'achat prêt à signer'],
+      out: ['Démos chez les fournisseurs (Génération Robots, Leobotics)', 'SAV, robot de remplacement et prix d\'une location de 3 mois', 'Validation technique : SDK, visio, ce qu\'il faut développer', 'Contrat de location ou d\'achat prêt à signer', 'Un robot prêté ou loué pour l\'étape 3'],
       mes: ['Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'],
       risk: '<b>Point bloquant</b> : si Temi ne passe pas, on repart sur un autre robot du benchmark (GreetingBot, Awabot). Ça coûte quelques jours et décale tout le planning.', block: true },
-    { id: 'e3', n: 'Étape 3', name: 'Check-in et check-out automatiques', from: 6, to: 12, jh: [25, 35],
+    { id: 'e3', n: 'Étape 3', name: 'Temi à l\'accueil, sans développement', from: 6, to: 7, jh: [5, 6.5],
+      out: ['Temi installé dans le hall avec sa base et 2 ou 3 points de passage', 'Une question à l\'écran et deux gros boutons 👍 / 👎', 'Madagascar appelle Temi avec l\'appli native et parle aux clients', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs', 'Entretiens avec l\'agent d\'accueil, Madagascar et Michael'],
+      mes: ['Part de 👍 et de 👎', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar'],
+      note: 'Rien n\'est branché et rien n\'est enregistré. Les réponses décident de ce qu\'on développe à l\'étape 4.',
+      risk: '<b>Point bloquant : avoir le robot</b>. Prêt de démo ou location courte à demander dès l\'étape 2, sinon 2 à 4 semaines de livraison. Si Temi tarde, on démarre par le ménage : un Roborock Saros s\'achète tout de suite.', block: true },
+    { id: 'e4', n: 'Étape 4', name: 'Check-in et check-out automatiques', from: 9, to: 15, jh: [25, 35],
       out: ['Le client retrouve sa réservation sur Temi et reçoit son code d\'appartement', 'Au départ, il le dit à Temi, et l\'appartement passe « à nettoyer »', 'En français et en anglais', 'Le socle minimal : serveur, comptes, logs'],
       mes: ['Part des arrivées et des départs faits avec Temi', 'Temps gagné par l\'accueil'],
       note: 'Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.' },
-    { id: 'e4', n: 'Étape 4', name: 'Madagascar prend la main', from: 14, to: 20, jh: [25, 35],
+    { id: 'e5', n: 'Étape 5', name: 'Madagascar prend la main', from: 17, to: 23, jh: [25, 35],
       out: ['Visio entre Temi et l\'équipe de Madagascar', 'Envoyer Temi vers un point, parler, reprendre un check-in bloqué', 'Greg prévenu de chaque arrivée et de chaque départ', 'Test de latence réel depuis Madagascar'],
       mes: ['Prises en main par jour', 'Check-ins débloqués à distance'],
       risk: '<b>Greg</b> : on ne connaît pas encore son API. Réponse attendue à l\'étape 1.',
-      note: 'En attendant, la visio native de Temi peut servir dès l\'étape 3, sans développement.' },
+      note: 'La visio native de Temi a déjà été testée à l\'étape 3 : on sait ce qu\'il manque.' },
   ]},
 ];
 
-const gates = [{ w: 2, l: 'Cadrage validé' }, { w: 5, l: '⚠ Go / no go robot', block: true }, { w: 13, l: 'Bilan' }, { w: 21, l: 'Bilan P1' }];
-const milestones = [{ w: 21, l: 'Accueil en service · M5', c: 'var(--navy)', end: true }];
+const gates = [{ w: 2, l: 'Cadrage validé' }, { w: 5, l: '⚠ Go / no go robot', block: true }, { w: 6, l: '⚠ Robot livré ?', block: true }, { w: 8, l: 'Bilan terrain' }, { w: 16, l: 'Bilan' }, { w: 24, l: 'Bilan P1' }];
+const milestones = [{ w: 24, l: 'Accueil en service · M6', c: 'var(--navy)', end: true }];
 
 // ---------- Gantt ----------
 const pct = w => `${((w - 1) / WEEKS) * 100}%`;
@@ -278,7 +284,7 @@ document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th>Semaines</th><th>j/h</th></tr>
   ${steps.map(i => `<tr><td><span class="cum" style="width:${i.jh[1] / max * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}</td><td>${weeks(i)}</td><td>${range(i.jh)}</td></tr>`).join('')}
   <tr><td><span class="cum" style="width:${pilotHi / max * 240}px;--c:var(--faint)"></span>Pilotage et déplacements (≈ 10 %)</td><td>tout du long</td><td>${range([pilotLo, pilotHi])}</td></tr>
-  <tr class="total"><td>Total P1 accueil</td><td>≈ 5 mois</td><td>≈ ${range([Math.round(lo + pilotLo), Math.round(hi + pilotHi)])}</td></tr>`;
+  <tr class="total"><td>Total P1 accueil</td><td>≈ 5,5 mois</td><td>≈ ${range([Math.round(lo + pilotLo), Math.round(hi + pilotHi)])}</td></tr>`;
 </script>
 </body>
 </html>
