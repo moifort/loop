@@ -319,7 +319,7 @@ const gates = [
   { w: 4, l: 'Bilan', t: 'Bilan téléopération', tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
   { w: 5, l: 'Bilan P1', t: 'Bilan P1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. Rien n\'est prêt pour la production : on décide avec le client vers où on part.', end: true },
 ];
-const milestones = [{ w: 5, l: 'Fin des tests', c: 'var(--navy)', end: true }];
+const milestones = [];
 
 // ---------- Gantt ----------
 const pct = w => `${((w - 1) / WEEKS) * 100}%`;
