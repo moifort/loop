@@ -207,7 +207,7 @@
 <div class="gantt-scroll"><div class="gantt" id="gantt"></div></div>
 
 <h2>Le détail des étapes</h2>
-<p class="h2-sub">Les étapes se suivent : chacune dépend de ce qu'on a appris à la précédente. Les j/h ne comptent pas l'achat ni la location du robot.</p>
+<p class="h2-sub">Les étapes se suivent : chacune dépend de ce qu'on a appris à la précédente.</p>
 
 <div id="phases"></div>
 
@@ -218,8 +218,8 @@
   <table id="totals"></table>
   <div class="notes">
     <div class="note" style="--c:var(--navy)"><b>Pourquoi la téléopération avant le check-in automatique</b><p>Un humain à distance fait tout : check-in, check-out, et toutes les questions des clients. Un check-in automatique ne fait que ça. La téléopération apporte donc plus, plus vite, et montre ce qu'il vaut la peine d'automatiser ensuite.</p></div>
-    <div class="note" style="--c:var(--navy)"><b>Pourquoi c'est moins que les 80–105 j/h de départ</b><p>Le premier chiffrage mettait tout dans une seule itération : un socle complet, une console web, le bouton panique et une certification de logiciel de réservation. Ici, le bouton panique part avec la sécurité, la console reste minimale, et on lit les réservations à travers ce qui existe déjà.</p></div>
-    <div class="note" style="--c:var(--amber)"><b>Ce qu'on ne sait pas encore</b><p>Le logiciel de réservation de Quartier Libre, et s'il a une API. Si Greg peut nous donner les réservations, ce qui éviterait de brancher ce logiciel. La pièce d'identité et le paiement au check-in : +15 à 25 j/h s'il faut les gérer.</p></div>
+    <div class="note" style="--c:var(--navy)"><b>Pourquoi c'est moins que le premier chiffrage</b><p>Le premier chiffrage mettait tout dans une seule itération : un socle complet, une console web, le bouton panique et une certification de logiciel de réservation. Ici, le bouton panique part avec la sécurité, la console reste minimale, et on lit les réservations à travers ce qui existe déjà.</p></div>
+    <div class="note" style="--c:var(--amber)"><b>Ce qu'on ne sait pas encore</b><p>Le logiciel de réservation de Quartier Libre, et s'il a une API. Si Greg peut nous donner les réservations, ce qui éviterait de brancher ce logiciel. La pièce d'identité et le paiement au check-in : quelques semaines de plus s'il faut les gérer.</p></div>
     <div class="note" style="--c:var(--red)"><b>Si on n'a pas Temi à temps</b><p>On ne reste pas bloqué : on avance le ménage. Un Roborock Saros s'achète en magasin et se teste dans un appartement la semaine même, pendant qu'on attend Temi.</p></div>
     <div class="note" style="--c:var(--grey)"><b>Plus tard, chiffré après le bilan P1</b><p>Le Piaggio Kilo. Le Roborock Saros. La vue de tout l'immeuble.</p></div>
   </div>
@@ -273,30 +273,30 @@
 </div>
 
 <script>
-// ---------- Data: one entry per step. Weeks are 1-based and inclusive. ----------
+// ---------- Data: one entry per step. Weeks are 1-based and inclusive, durations are approximate. ----------
 const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
 const WEEKS = 12;
 
 const phases = [
   { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre. On comprend, on valide le robot, on le teste sur place, puis on prototype la téléopération et le check-in.', items: [
-    { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1, jh: [2, 3],
+    { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1,
       out: ['Visite sur site et interviews : l\'accueil, l\'équipe de Madagascar et Michael', 'Le parcours réel d\'arrivée et de départ d\'un client', 'Les fonctions attendues du robot d\'accueil, par ordre de priorité', 'Les logiciels en place : réservation, Salto, Greg', 'Le cadrage du premier sprint, rédigé', 'En parallèle : fournisseurs contactés, comment commander, location du robot possible ou pas'],
       mes: ['Les questions les plus posées au comptoir', 'Les moments où l\'accueil est vide'] },
-    { id: 'e2', n: 'Étape 2', name: 'Validation du robot', from: 2, to: 4, jh: [2, 2],
-      out: ['1 jour chez le fournisseur : démo, validation technique, SAV, tarifs', 'Récupérer le robot : prêt, location ou achat, et livraison', 'Contrat prêt à signer'],
+    { id: 'e2', n: 'Étape 2', name: 'Validation du robot', from: 2, to: 4,
+      out: ['Visite chez le fournisseur : démo, validation technique, SAV, tarifs', 'Récupérer le robot : prêt, location ou achat, et livraison', 'Contrat prêt à signer'],
       mes: ['Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'],
-      note: '2 jours de travail, mais 3 semaines au calendrier : trouver un créneau chez le fournisseur, puis faire venir le robot.',
-      risk: '<b>Point bloquant</b> : si Temi ne passe pas, on repart sur un autre robot du benchmark (GreetingBot, Awabot). Ça coûte quelques jours et décale tout le planning.', block: true },
-    { id: 'e3', n: 'Étape 3', name: 'Test grandeur nature', from: 5, to: 5, jh: [5, 6.5],
+      note: '3 semaines au calendrier : trouver un créneau chez le fournisseur, puis faire venir le robot.',
+      risk: '<b>Point bloquant</b> : si Temi ne passe pas, on repart sur un autre robot du benchmark (GreetingBot, Awabot). Ça décale tout le planning.', block: true },
+    { id: 'e3', n: 'Étape 3', name: 'Test grandeur nature', from: 5, to: 5,
       out: ['Temi installé dans le hall avec sa base et 2 ou 3 points de passage', 'Une question à l\'écran et deux gros boutons 👍 / 👎', 'Madagascar appelle Temi avec l\'appli native et parle aux clients', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs', 'Entretiens avec l\'agent d\'accueil, Madagascar et Michael'],
       mes: ['Part de 👍 et de 👎', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar'],
       note: 'Rien n\'est branché et rien n\'est enregistré. Les réponses décident de ce qu\'on développe à l\'étape 4.',
       risk: '<b>Point bloquant : avoir le robot</b>. Prêt de démo ou location courte à demander dès l\'étape 1, sinon 2 à 4 semaines de livraison. Si Temi tarde, on démarre par le ménage : un Roborock Saros s\'achète tout de suite.', block: true },
-    { id: 'e4', n: 'Étape 4', name: 'Téléopération', from: 6, to: 6, jh: [3, 3],
-      out: ['1 jour : on branche l\'outil de téléopération et on teste en local avec Madagascar', '1 à 2 jours : test grandeur nature, Madagascar accueille les clients à travers Temi', 'Check-in, check-out et questions des clients faits à distance, avec les outils de l\'appart-hôtel'],
+    { id: 'e4', n: 'Étape 4', name: 'Téléopération', from: 6, to: 6,
+      out: ['D\'abord : on branche l\'outil de téléopération et on teste en local avec Madagascar', 'Ensuite : test grandeur nature, Madagascar accueille les clients à travers Temi', 'Check-in, check-out et questions des clients faits à distance, avec les outils de l\'appart-hôtel'],
       mes: ['Prises en main par jour', 'Les questions les plus posées à distance', 'Latence ressentie par l\'opérateur'],
-      note: 'On part des outils natifs de Temi testés à l\'étape 3. 3 jours de travail sur une semaine.' },
-    { id: 'e5', n: 'Étape 5', name: 'Check-in et check-out automatiques', from: 7, to: 7, jh: [2, 3],
+      note: 'On part des outils natifs de Temi testés à l\'étape 3.' },
+    { id: 'e5', n: 'Étape 5', name: 'Check-in et check-out automatiques', from: 7, to: 7,
       out: ['Le client retrouve sa réservation sur Temi et reçoit son code d\'appartement', 'Au départ, il le dit à Temi, et l\'appartement passe « à nettoyer »', 'En français et en anglais', 'L\'opérateur ne reprend la main que si ça bloque'],
       mes: ['Part des arrivées et des départs faits sans opérateur', 'Temps gagné par l\'accueil et par Madagascar'],
       note: 'On automatise ce que les opérateurs ont fait le plus souvent à l\'étape 4. Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.' },
@@ -316,9 +316,8 @@ const milestones = [{ w: 8, l: 'Fin des tests · M2', c: 'var(--navy)', end: tru
 // ---------- Gantt ----------
 const pct = w => `${((w - 1) / WEEKS) * 100}%`;
 const span = (a, b) => `left:${pct(a)};width:${((b - a + 1) / WEEKS) * 100}%`;
-const num = n => String(n).replace('.', ',');
-const range = r => r[0] === r[1] ? num(r[0]) : `${num(r[0])}–${num(r[1])}`;
-const jh = r => `${range(r)} j/h`;
+const len = i => i.to - i.from + 1;
+const dur = n => `${n} semaine${n > 1 ? 's' : ''}`;
 const weeks = i => i.from === i.to ? `S${i.from}` : `S${i.from}–S${i.to}`;
 const g = document.getElementById('gantt');
 let html = '<div class="grid-bg"></div>';
@@ -355,19 +354,18 @@ g.insertAdjacentHTML('beforeend', `<div style="position:absolute;top:0;bottom:0;
 const ph = document.getElementById('phases');
 ph.innerHTML = phases.map(p => {
   const [c, soft] = C[p.color];
-  const lo = p.items.reduce((s, i) => s + i.jh[0], 0), hi = p.items.reduce((s, i) => s + i.jh[1], 0);
   const from = Math.min(...p.items.map(i => i.from)), to = Math.max(...p.items.map(i => i.to));
   return `<section class="phase">
     <div class="phase-side">
       <span class="prio" style="--c:${c}">${p.prio}</span>
       <h3>${p.title}</h3><p>${p.text}</p>
-      <p class="sum"><b>${range([lo, hi])} j/h</b> · semaines ${from} à ${to}</p>
+      <p class="sum"><b>${dur(to - from + 1)}</b> · S${from} à S${to}</p>
     </div>
     <div class="cards">${p.items.map(it => `
       <article class="card" id="${it.id}" style="--c:${c};--soft:${soft}">
-        <div class="card-top"><span class="n">${it.n.toUpperCase()}</span><span class="w">${weeks(it)} · ${it.to - it.from + 1} sem.</span></div>
+        <div class="card-top"><span class="n">${it.n.toUpperCase()}</span><span class="w">${weeks(it)}</span></div>
         <h4>${it.name}</h4>
-        <div class="jh">${range(it.jh)} <small>j/h</small></div>
+        <div class="jh">${len(it)} <small>semaine${len(it) > 1 ? 's' : ''}</small></div>
         <div class="blk out"><small>À la fin de l'étape</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
         <div class="blk mes"><small>On mesure</small><ul>${it.mes.map(x => `<li>${x}</li>`).join('')}</ul></div>
         ${it.note ? `<p class="blk" style="font-size:14px;color:var(--muted);line-height:1.4">${it.note}</p>` : ''}
@@ -385,16 +383,13 @@ function flash() {
   if (el && el.classList.contains('card')) { el.classList.add('flash'); setTimeout(() => el.classList.remove('flash'), 1800); }
 }
 
-// ---------- Totals, with each step's share as a small bar ----------
+// ---------- Totals, with each step's length as a small bar ----------
 const steps = phases.flatMap(p => p.items);
-const lo = steps.reduce((s, i) => s + i.jh[0], 0), hi = steps.reduce((s, i) => s + i.jh[1], 0);
-const pilotLo = Math.round(lo * .1), pilotHi = Math.round(hi * .1);
-const max = hi + pilotHi;
+const last = Math.max(...steps.map(i => i.to));
 document.getElementById('totals').innerHTML = `
-  <tr><th>Étapes</th><th>Semaines</th><th>j/h</th></tr>
-  ${steps.map(i => `<tr><td><span class="cum" style="width:${i.jh[1] / max * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}</td><td>${weeks(i)}</td><td>${range(i.jh)}</td></tr>`).join('')}
-  <tr><td><span class="cum" style="width:${pilotHi / max * 240}px;--c:var(--faint)"></span>Pilotage et déplacements (≈ 10 %)</td><td>tout du long</td><td>${range([pilotLo, pilotHi])}</td></tr>
-  <tr class="total"><td>Total P1 accueil</td><td>≈ 2 mois</td><td>≈ ${range([Math.round(lo + pilotLo), Math.round(hi + pilotHi)])}</td></tr>`;
+  <tr><th>Étapes</th><th>Semaines</th><th>Durée</th></tr>
+  ${steps.map(i => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}</td><td>${weeks(i)}</td><td>${dur(len(i))}</td></tr>`).join('')}
+  <tr class="total"><td>Total P1 accueil</td><td>S1–S${last}</td><td>≈ ${dur(last)}</td></tr>`;
 </script>
 </body>
 </html>
