@@ -293,7 +293,7 @@ const phases = [
       doc: ['Document de cadrage du premier sprint', 'Roadmap révisée'],
       mes: ['Les questions les plus posées au comptoir', 'Les moments où l\'accueil est vide'] },
     { id: 'e2', n: 'Étape 2', name: 'Test grandeur nature', from: 2, to: 2,
-      pre: ['Le robot est choisi et reçu', 'Le document de cadrage est validé par le client'],
+      pre: ['Le robot est reçu', 'Le document de cadrage est validé par le client'],
       out: ['Temi installé dans un appart-hôtel de test, dans le hall, avec sa base et 2 ou 3 points de passage', 'Une question à l\'écran et deux gros boutons 👍 / 👎', 'Madagascar appelle Temi avec l\'appli native et parle aux clients', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs', 'Entretiens avec l\'agent d\'accueil, Madagascar et Michael'],
       doc: ['Compte rendu du test : retours des clients, de l\'accueil et de Madagascar', 'Recommandation go ou pas go sur Temi'],
       mes: ['Part de 👍 et de 👎', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar', 'Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'],
@@ -315,7 +315,7 @@ const phases = [
 // One word under each diamond (above with up), the detail shows on hover. end opens the detail to the left.
 // Blocking decisions put their word above, unless below.
 const gates = [
-  { w: 2, l: 'Robot', t: 'Cadrage et robot', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place. Le document de cadrage et la roadmap révisée. Le robot est-il choisi et reçu ? Sinon, l\'étape 2 ne démarre pas.', block: true, below: true },
+  { w: 2, l: 'Robot', t: 'Cadrage et robot', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place. Le document de cadrage et la roadmap révisée. Le robot est-il reçu ? Sinon, l\'étape 2 ne démarre pas.', block: true, below: true },
   { w: 3, l: 'Go / no go', t: 'Go / no go robot', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant le test. Temi répond-il au besoin ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
   { w: 4, l: 'Bilan', t: 'Bilan téléopération', tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
   { w: 5, l: 'Bilan P1', t: 'Bilan P1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. Rien n\'est prêt pour la production : on décide avec le client vers où on part.', end: true },
