@@ -73,14 +73,14 @@
   .bar.soft { background: var(--soft); color: var(--c); box-shadow: inset 0 0 0 1px var(--c); }
   .bar.dash { background: repeating-linear-gradient(135deg, var(--soft) 0 6px, #fff 6px 12px); color: var(--c); box-shadow: inset 0 0 0 1px var(--c); }
   .ms.end span { left: auto; right: 6px; }
-  .bar-l { position: absolute; top: 50%; transform: translateY(-50%); margin-left: 10px; z-index: 1; font-size: 13px; font-weight: 700; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .bar-l { position: absolute; top: 50%; transform: translateY(-50%); margin-left: 6px; padding: 0 4px; background: #fff; z-index: 1; font-size: 13px; font-weight: 700; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .bar-l span { color: var(--muted); font-weight: 500; }
   @keyframes grow { from { transform: scaleX(0); opacity: 0; } to { transform: none; opacity: 1; } }
 
   /* Decision: a diamond, one word centred under it, the detail on hover or tap */
   .gate-w { position: absolute; top: 0; bottom: 0; width: 0; z-index: 7; cursor: help; outline: none; }
   .gate { position: absolute; top: 50%; left: 0; width: 16px; height: 16px; margin: -8px 0 0 -8px; background: var(--ink); transform: rotate(45deg); border-radius: 3px; box-shadow: 0 0 0 3px #fff; transition: transform .2s; }
-  .gate-l { position: absolute; top: calc(50% + 16px); left: 0; transform: translateX(-50%); font-size: 12px; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
+  .gate-l { position: absolute; top: calc(50% + 16px); left: 0; transform: translateX(-50%); font-size: 12px; font-weight: 700; color: var(--ink-2); white-space: nowrap; background: #fff; padding: 0 4px; }
   .gate-w:hover .gate, .gate-w:focus .gate { transform: rotate(45deg) scale(1.2); }
 
   /* Blocking decision: red diamond, red word above it, red line across the chart */
@@ -95,7 +95,7 @@
 
   /* Milestones: a vertical line across the whole chart */
   .ms { position: absolute; top: 0; bottom: 0; z-index: 3; width: 0; border-left: 2px dashed var(--c); pointer-events: none; }
-  .ms.block { z-index: 1; border-left-width: 2px; }
+  .ms.block { z-index: 0; }
   .ms span { position: absolute; top: 52px; left: 6px; white-space: nowrap; font-size: 12px; font-weight: 800; color: #fff; background: var(--c); padding: 3px 8px; border-radius: 999px; }
 
   /* ---------- Iteration cards ---------- */
@@ -297,9 +297,9 @@ html += row('Bilan avec le client', '<div style="height:64px"></div>' + gates.ma
 
 g.innerHTML = html;
 
-// Milestone lines span every row, positioned over the track area
+// Milestone and decision lines span every row, positioned over the track area
 g.insertAdjacentHTML('beforeend', `<div style="position:absolute;top:0;bottom:0;left:var(--label);right:0;pointer-events:none">${
-  gates.filter(x => x.block).map(x => `<div class="ms block" style="left:${pct(x.w)};--c:var(--red)"></div>`).join('') +
+  gates.filter(x => !milestones.some(m => m.w === x.w)).map(x => `<div class="ms block" style="left:${pct(x.w)};--c:${x.block ? 'var(--red)' : 'var(--ink-2)'}"></div>`).join('') +
   milestones.map(m => `<div class="ms${m.end ? ' end' : ''}" style="left:${pct(m.w)};--c:${m.c}"><span>${m.l}</span></div>`).join('')}</div>`);
 
 // ---------- Step cards ----------
