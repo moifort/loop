@@ -212,7 +212,7 @@
 <div id="phases"></div>
 
 <h2>Le total</h2>
-<p class="h2-sub">Les fourchettes se resserreront après l'étape 1, quand on saura quels logiciels utilise Quartier Libre et ce que Greg sait faire.</p>
+<p class="h2-sub">Les durées se préciseront après l'étape 1, quand on saura quels logiciels utilise Quartier Libre et ce que Greg sait faire.</p>
 
 <div class="totals">
   <table id="totals"></table>
@@ -226,10 +226,10 @@
 </div>
 
 <h2>Après le bilan P1</h2>
-<p class="h2-sub">Ce qu'on a à la fin de l'étape 5, et ce qu'on n'a pas.</p>
+<p class="h2-sub">Ce qu'on a à la fin de l'étape 4, et ce qu'on n'a pas.</p>
 <div class="callout">
   <b>Rien n'est prêt pour la production.</b>
-  <p>Les cinq étapes servent à tester, pas à construire un produit. La téléopération et le check-in sont des prototypes : ils montrent que ça marche, ils ne tournent pas seuls tous les jours.</p>
+  <p>Les quatre étapes servent à tester, pas à construire un produit. La téléopération et le check-in sont des prototypes : ils montrent que ça marche, ils ne tournent pas seuls tous les jours.</p>
   <p>Le bilan P1 sert à décider avec le client vers où on part.</p>
 </div>
 
@@ -244,7 +244,7 @@
   </div>
   <div class="cards">
     <article class="card" style="--c:var(--grey);--soft:var(--grey-soft)">
-      <div class="card-top"><span class="n">ÉTAPE 6</span><span class="w">à chiffrer</span></div>
+      <div class="card-top"><span class="n">ÉTAPE 5</span><span class="w">à chiffrer</span></div>
       <h4>Application compagnon</h4>
       <div class="blk out"><small>À la fin de l'étape</small><ul>
         <li>Une petite application pour l'agent d'accueil, avec un bouton « j'ai un problème »</li>
@@ -255,7 +255,7 @@
       <p class="risk"><b>Temi ne fait pas de ronde</b>. Il ne passe pas les portes et reste dans sa zone, le hall. C'est une vigie à l'accueil, pas un vigile qui patrouille.</p>
     </article>
     <article class="card" style="--c:var(--grey);--soft:var(--grey-soft)">
-      <div class="card-top"><span class="n">ÉTAPE 7</span><span class="w">à chiffrer</span></div>
+      <div class="card-top"><span class="n">ÉTAPE 6</span><span class="w">à chiffrer</span></div>
       <h4>Test grandeur nature</h4>
       <div class="blk out"><small>À la fin de l'étape</small><ul>
         <li>Tester en réel comment Temi réagit quand l'agent appuie sur le bouton</li>
@@ -278,38 +278,32 @@ const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
 const WEEKS = 12;
 
 const phases = [
-  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre. On comprend, on valide le robot, on le teste sur place, puis on prototype la téléopération et le check-in.', items: [
+  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Quatre étapes, l\'une après l\'autre. On comprend, on teste le robot sur place, puis on prototype la téléopération et le check-in.', items: [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1,
       out: ['Visite sur site et interviews : l\'accueil, l\'équipe de Madagascar et Michael', 'Le parcours réel d\'arrivée et de départ d\'un client', 'Les fonctions attendues du robot d\'accueil, par ordre de priorité', 'Les logiciels en place : réservation, Salto, Greg', 'Le cadrage du premier sprint, rédigé', 'En parallèle : fournisseurs contactés, comment commander, location du robot possible ou pas'],
       mes: ['Les questions les plus posées au comptoir', 'Les moments où l\'accueil est vide'] },
-    { id: 'e2', n: 'Étape 2', name: 'Validation du robot', from: 2, to: 4,
-      out: ['Visite chez le fournisseur : démo, validation technique, SAV, tarifs', 'Récupérer le robot : prêt, location ou achat, et livraison', 'Contrat prêt à signer'],
-      mes: ['Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'],
-      note: '3 semaines au calendrier : trouver un créneau chez le fournisseur, puis faire venir le robot.',
-      risk: '<b>Point bloquant</b> : si Temi ne passe pas, on repart sur un autre robot du benchmark (GreetingBot, Awabot). Ça décale tout le planning.', block: true },
-    { id: 'e3', n: 'Étape 3', name: 'Test grandeur nature', from: 5, to: 5,
-      out: ['Temi installé dans le hall avec sa base et 2 ou 3 points de passage', 'Une question à l\'écran et deux gros boutons 👍 / 👎', 'Madagascar appelle Temi avec l\'appli native et parle aux clients', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs', 'Entretiens avec l\'agent d\'accueil, Madagascar et Michael'],
-      mes: ['Part de 👍 et de 👎', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar'],
-      note: 'Rien n\'est branché et rien n\'est enregistré. Les réponses décident de ce qu\'on développe à l\'étape 4.',
-      risk: '<b>Point bloquant : avoir le robot</b>. Prêt de démo ou location courte à demander dès l\'étape 1, sinon 2 à 4 semaines de livraison. Si Temi tarde, on démarre par le ménage : un Roborock Saros s\'achète tout de suite.', block: true },
-    { id: 'e4', n: 'Étape 4', name: 'Téléopération', from: 6, to: 6,
+    { id: 'e2', n: 'Étape 2', name: 'Test grandeur nature', from: 2, to: 5,
+      out: ['Réception du robot : prêt, location ou achat', 'Temi installé dans un appart-hôtel de test, dans le hall, avec sa base et 2 ou 3 points de passage', 'Une question à l\'écran et deux gros boutons 👍 / 👎', 'Madagascar appelle Temi avec l\'appli native et parle aux clients', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs', 'Entretiens avec l\'agent d\'accueil, Madagascar et Michael'],
+      mes: ['Part de 👍 et de 👎', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar', 'Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'],
+      note: 'Le temps de faire venir le robot, puis une période de test sur place. Rien n\'est branché et rien n\'est enregistré. Les réponses décident de ce qu\'on développe à l\'étape 3.',
+      risk: '<b>Point bloquant : avoir le robot</b>. Prêt de démo ou location courte à demander dès l\'étape 1, sinon 2 à 4 semaines de livraison. Si Temi ne passe pas, on repart sur un autre robot du benchmark (GreetingBot, Awabot), et tout le planning décale.', block: true },
+    { id: 'e3', n: 'Étape 3', name: 'Téléopération', from: 6, to: 6,
       out: ['D\'abord : on branche l\'outil de téléopération et on teste en local avec Madagascar', 'Ensuite : test grandeur nature, Madagascar accueille les clients à travers Temi', 'Check-in, check-out et questions des clients faits à distance, avec les outils de l\'appart-hôtel'],
       mes: ['Prises en main par jour', 'Les questions les plus posées à distance', 'Latence ressentie par l\'opérateur'],
-      note: 'On part des outils natifs de Temi testés à l\'étape 3.' },
-    { id: 'e5', n: 'Étape 5', name: 'Check-in et check-out automatiques', from: 7, to: 7,
+      note: 'On part des outils natifs de Temi testés à l\'étape 2.' },
+    { id: 'e4', n: 'Étape 4', name: 'Check-in et check-out automatiques', from: 7, to: 7,
       out: ['Le client retrouve sa réservation sur Temi et reçoit son code d\'appartement', 'Au départ, il le dit à Temi, et l\'appartement passe « à nettoyer »', 'En français et en anglais', 'L\'opérateur ne reprend la main que si ça bloque'],
       mes: ['Part des arrivées et des départs faits sans opérateur', 'Temps gagné par l\'accueil et par Madagascar'],
-      note: 'On automatise ce que les opérateurs ont fait le plus souvent à l\'étape 4. Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.' },
+      note: 'On automatise ce que les opérateurs ont fait le plus souvent à l\'étape 3. Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.' },
   ]},
 ];
 
 // One word under each diamond (above with up), the detail shows on hover. end opens the detail to the left.
 const gates = [
   { w: 2, l: 'Cadrage', t: 'Cadrage validé', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place, le cadrage du premier sprint.' },
-  { w: 5, l: 'Go / no go', t: 'Go / no go robot', tip: 'Temi répond-il au besoin ? Le robot est-il livré ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
-  { w: 6, l: 'Terrain', t: 'Bilan terrain', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant la semaine de test. On choisit ce qu\'on développe à l\'étape 4.' },
-  { w: 7, l: 'Bilan', t: 'Bilan téléopération', up: true, tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 5.' },
-  { w: 8, l: 'Bilan P1', t: 'Bilan P1', tip: 'Part des arrivées et des départs faits sans opérateur. Rien n\'est prêt pour la production : on décide avec le client vers où on part.', end: true },
+  { w: 6, l: 'Go / no go', t: 'Go / no go robot', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant le test. Temi répond-il au besoin ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
+  { w: 7, l: 'Bilan', t: 'Bilan téléopération', tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
+  { w: 8, l: 'Bilan P1', t: 'Bilan P1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. Rien n\'est prêt pour la production : on décide avec le client vers où on part.', end: true },
 ];
 const milestones = [{ w: 8, l: 'Fin des tests · M2', c: 'var(--navy)', end: true }];
 
