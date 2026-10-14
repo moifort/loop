@@ -279,8 +279,8 @@ const WEEKS = 12;
 
 const phases = [
   { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre. On comprend, on valide le robot, on le teste sur place, puis on prototype la téléopération et le check-in.', items: [
-    { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1, jh: [1.5, 1.5],
-      out: ['Interviews de l\'accueil, de l\'équipe de Madagascar et de Michael', 'Le parcours réel d\'arrivée et de départ d\'un client', 'Les fonctions attendues du robot d\'accueil, par ordre de priorité', 'Les logiciels en place : réservation, Salto, Greg'],
+    { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1, jh: [2, 3],
+      out: ['Visite sur site et interviews : l\'accueil, l\'équipe de Madagascar et Michael', 'Le parcours réel d\'arrivée et de départ d\'un client', 'Les fonctions attendues du robot d\'accueil, par ordre de priorité', 'Les logiciels en place : réservation, Salto, Greg', 'Le cadrage du premier sprint, rédigé', 'En parallèle : fournisseurs contactés, comment commander, location du robot possible ou pas'],
       mes: ['Les questions les plus posées au comptoir', 'Les moments où l\'accueil est vide'] },
     { id: 'e2', n: 'Étape 2', name: 'Validation du robot', from: 2, to: 4, jh: [2, 2],
       out: ['1 jour chez le fournisseur : démo, validation technique, SAV, tarifs', 'Récupérer le robot : prêt, location ou achat, et livraison', 'Contrat prêt à signer'],
@@ -291,7 +291,7 @@ const phases = [
       out: ['Temi installé dans le hall avec sa base et 2 ou 3 points de passage', 'Une question à l\'écran et deux gros boutons 👍 / 👎', 'Madagascar appelle Temi avec l\'appli native et parle aux clients', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs', 'Entretiens avec l\'agent d\'accueil, Madagascar et Michael'],
       mes: ['Part de 👍 et de 👎', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar'],
       note: 'Rien n\'est branché et rien n\'est enregistré. Les réponses décident de ce qu\'on développe à l\'étape 4.',
-      risk: '<b>Point bloquant : avoir le robot</b>. Prêt de démo ou location courte à demander dès l\'étape 2, sinon 2 à 4 semaines de livraison. Si Temi tarde, on démarre par le ménage : un Roborock Saros s\'achète tout de suite.', block: true },
+      risk: '<b>Point bloquant : avoir le robot</b>. Prêt de démo ou location courte à demander dès l\'étape 1, sinon 2 à 4 semaines de livraison. Si Temi tarde, on démarre par le ménage : un Roborock Saros s\'achète tout de suite.', block: true },
     { id: 'e4', n: 'Étape 4', name: 'Téléopération', from: 6, to: 6, jh: [3, 3],
       out: ['1 jour : on branche l\'outil de téléopération et on teste en local avec Madagascar', '1 à 2 jours : test grandeur nature, Madagascar accueille les clients à travers Temi', 'Check-in, check-out et questions des clients faits à distance, avec les outils de l\'appart-hôtel'],
       mes: ['Prises en main par jour', 'Les questions les plus posées à distance', 'Latence ressentie par l\'opérateur'],
@@ -305,7 +305,7 @@ const phases = [
 
 // One word under each diamond (above with up), the detail shows on hover. end opens the detail to the left.
 const gates = [
-  { w: 2, l: 'Cadrage', t: 'Cadrage validé', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place.' },
+  { w: 2, l: 'Cadrage', t: 'Cadrage validé', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place, le cadrage du premier sprint.' },
   { w: 5, l: 'Go / no go', t: 'Go / no go robot', tip: 'Temi répond-il au besoin ? Le robot est-il livré ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
   { w: 6, l: 'Terrain', t: 'Bilan terrain', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant la semaine de test. On choisit ce qu\'on développe à l\'étape 4.' },
   { w: 7, l: 'Bilan', t: 'Bilan téléopération', up: true, tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 5.' },
