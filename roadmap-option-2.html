@@ -143,6 +143,11 @@
   .note b { display: block; font-size: 17px; margin-bottom: 4px; }
   .note p { font-size: 16px; line-height: 1.45; color: var(--ink-2); }
 
+  /* Callout: what the end of P1 does not give */
+  .callout { border-radius: 14px; background: var(--red-soft); padding: 24px 28px; display: flex; flex-direction: column; gap: 8px; max-width: 980px; }
+  .callout b { font-size: 22px; font-weight: 800; letter-spacing: -.02em; color: #7a1a1d; }
+  .callout p { font-size: 17px; line-height: 1.45; color: #5c1a1d; }
+
   footer { margin-top: 56px; font-size: 14px; color: var(--faint); display: flex; }
   footer span:last-child { margin-left: auto; }
 
@@ -216,9 +221,53 @@
     <div class="note" style="--c:var(--navy)"><b>Pourquoi c'est moins que les 80–105 j/h de départ</b><p>Le premier chiffrage mettait tout dans une seule itération : un socle complet, une console web, le bouton panique et une certification de logiciel de réservation. Ici, le bouton panique part avec la sécurité, la console reste minimale, et on lit les réservations à travers ce qui existe déjà.</p></div>
     <div class="note" style="--c:var(--amber)"><b>Ce qu'on ne sait pas encore</b><p>Le logiciel de réservation de Quartier Libre, et s'il a une API. Si Greg peut nous donner les réservations, ce qui éviterait de brancher ce logiciel. La pièce d'identité et le paiement au check-in : +15 à 25 j/h s'il faut les gérer.</p></div>
     <div class="note" style="--c:var(--red)"><b>Si on n'a pas Temi à temps</b><p>On ne reste pas bloqué : on avance le ménage. Un Roborock Saros s'achète en magasin et se teste dans un appartement la semaine même, pendant qu'on attend Temi.</p></div>
-    <div class="note" style="--c:var(--grey)"><b>Plus tard, chiffré une fois l'accueil en service</b><p>La sécurité de nuit avec Temi et le bouton panique. Le Piaggio Kilo. Le Roborock Saros. La vue de tout l'immeuble.</p></div>
+    <div class="note" style="--c:var(--grey)"><b>Plus tard, chiffré après le bilan P1</b><p>Le Piaggio Kilo. Le Roborock Saros. La vue de tout l'immeuble.</p></div>
   </div>
 </div>
+
+<h2>Après le bilan P1</h2>
+<p class="h2-sub">Ce qu'on a à la fin de l'étape 5, et ce qu'on n'a pas.</p>
+<div class="callout">
+  <b>Rien n'est prêt pour la production.</b>
+  <p>Les cinq étapes servent à tester, pas à construire un produit. La téléopération et le check-in sont des prototypes : ils montrent que ça marche, ils ne tournent pas seuls tous les jours.</p>
+  <p>Le bilan P1 sert à décider avec le client vers où on part.</p>
+</div>
+
+<h2>La suite : P1 vigile</h2>
+<p class="h2-sub">À chiffrer après le bilan P1. On part du principe que le bilan est bon : la téléopération marche, on s'en sert quand il y a un problème à l'accueil.</p>
+<section class="phase">
+  <div class="phase-side">
+    <span class="prio" style="--c:var(--grey)">P1</span>
+    <h3>Vigile</h3>
+    <p>Quand ça se passe mal à l'accueil : enregistrer, appeler la police, calmer la situation.</p>
+    <p class="sum"><b>À chiffrer</b> · après le bilan P1</p>
+  </div>
+  <div class="cards">
+    <article class="card" style="--c:var(--grey);--soft:var(--grey-soft)">
+      <div class="card-top"><span class="n">ÉTAPE 6</span><span class="w">à chiffrer</span></div>
+      <h4>Application compagnon</h4>
+      <div class="blk out"><small>À la fin de l'étape</small><ul>
+        <li>Une petite application pour l'agent d'accueil, avec un bouton « j'ai un problème »</li>
+        <li>Temi vient à l'accueil et enregistre</li>
+        <li>Appeler la police depuis l'application</li>
+        <li>Un opérateur parle à travers Temi pour calmer la situation</li>
+      </ul></div>
+      <p class="risk"><b>Temi ne fait pas de ronde</b>. Il ne passe pas les portes et reste dans sa zone, le hall. C'est une vigie à l'accueil, pas un vigile qui patrouille.</p>
+    </article>
+    <article class="card" style="--c:var(--grey);--soft:var(--grey-soft)">
+      <div class="card-top"><span class="n">ÉTAPE 7</span><span class="w">à chiffrer</span></div>
+      <h4>Test grandeur nature</h4>
+      <div class="blk out"><small>À la fin de l'étape</small><ul>
+        <li>Tester en réel comment Temi réagit quand l'agent appuie sur le bouton</li>
+        <li>Vérifier ce que l'enregistrement montre vraiment</li>
+      </ul></div>
+      <div class="blk mes"><small>On mesure</small><ul>
+        <li>Temps entre l'appui et l'arrivée de Temi</li>
+        <li>Ce qu'en pense l'agent d'accueil</li>
+      </ul></div>
+    </article>
+  </div>
+</section>
 
 <footer><span>Loop × Quartier Libre Collection</span><span>Estimation de travail, à affiner après l'étape 1</span></footer>
 </div>
@@ -229,7 +278,7 @@ const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
 const WEEKS = 12;
 
 const phases = [
-  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre. On comprend, on valide le robot, on le teste sur place, puis on développe.', items: [
+  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre. On comprend, on valide le robot, on le teste sur place, puis on prototype la téléopération et le check-in.', items: [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1, jh: [1.5, 1.5],
       out: ['Interviews de l\'accueil, de l\'équipe de Madagascar et de Michael', 'Le parcours réel d\'arrivée et de départ d\'un client', 'Les fonctions attendues du robot d\'accueil, par ordre de priorité', 'Les logiciels en place : réservation, Salto, Greg'],
       mes: ['Les questions les plus posées au comptoir', 'Les moments où l\'accueil est vide'] },
@@ -260,9 +309,9 @@ const gates = [
   { w: 5, l: 'Go / no go', t: 'Go / no go robot', tip: 'Temi répond-il au besoin ? Le robot est-il livré ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
   { w: 6, l: 'Terrain', t: 'Bilan terrain', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant la semaine de test. On choisit ce qu\'on développe à l\'étape 4.' },
   { w: 7, l: 'Bilan', t: 'Bilan téléopération', up: true, tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 5.' },
-  { w: 8, l: 'Bilan P1', t: 'Bilan P1', tip: 'Part des arrivées et des départs faits sans opérateur. L\'accueil passe en service.', end: true },
+  { w: 8, l: 'Bilan P1', t: 'Bilan P1', tip: 'Part des arrivées et des départs faits sans opérateur. Rien n\'est prêt pour la production : on décide avec le client vers où on part.', end: true },
 ];
-const milestones = [{ w: 8, l: 'Accueil en service · M2', c: 'var(--navy)', end: true }];
+const milestones = [{ w: 8, l: 'Fin des tests · M2', c: 'var(--navy)', end: true }];
 
 // ---------- Gantt ----------
 const pct = w => `${((w - 1) / WEEKS) * 100}%`;
