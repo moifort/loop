@@ -337,7 +337,7 @@ phases.forEach(p => {
   p.items.forEach(it => {
     d += .08;
     html += row(`${it.name}<span class="tags"><span class="tag-lvl">${p.prio}</span><span class="tag-room">${it.n}</span></span>`,
-      `<a href="#${it.id}" class="bar" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${it.n} · ${it.name} · S${it.from}–S${it.to} · ${jh(it.jh)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}">${jh(it.jh)} <span>· ${weeks(it)}</span></span>`);
+      `<a href="#${it.id}" class="bar" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${it.n} · ${it.name} · ${weeks(it)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}"><span>${weeks(it)}</span></span>`);
   });
 });
 
