@@ -265,7 +265,7 @@
     </article>
     <article class="card" style="--c:var(--grey);--soft:var(--grey-soft)">
       <div class="card-top"><span class="n">ÉTAPE 6</span><span class="w">à chiffrer</span></div>
-      <h4>Test grandeur nature</h4>
+      <h4>Test en conditions réelles</h4>
       <div class="blk out"><small>À la fin de l'étape</small><ul>
         <li>Tester en réel comment Temi réagit quand l'agent appuie sur le bouton</li>
         <li>Vérifier ce que l'enregistrement montre vraiment</li>
@@ -291,7 +291,7 @@ const phases = [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1,
       out: ['Sélection du site de test', 'Rencontre avec le fournisseur : démo, prix, location, SAV, pour préparer l\'étape 2', 'Interview de l\'équipe d\'accueil : besoins, difficultés, comment ça se passe sur le terrain', 'Interview de l\'équipe IT : outils et connecteurs logiciels, comment se passerait la téléopération depuis Madagascar', 'Étude du robot Temi : specs, outils hardware et software'],
       doc: ['Document de cadrage', 'Roadmap révisée'] },
-    { id: 'e2', n: 'Étape 2', name: 'Test grandeur nature', from: 2, to: 2,
+    { id: 'e2', n: 'Étape 2', name: 'Test en conditions réelles', from: 2, to: 2,
       pre: ['Le robot est reçu'],
       out: ['Temi installé sur le site de test, dans le hall, avec sa base et 2 ou 3 points de passage', 'Une question à l\'écran et deux gros boutons 👍 / 👎', 'Madagascar appelle Temi avec l\'appli native et parle aux clients', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs', 'Entretiens avec l\'agent d\'accueil, Madagascar et Michael'],
       doc: ['Compte rendu du test : retours des clients, de l\'accueil et de Madagascar', 'Recommandation go ou pas go sur Temi'],
@@ -299,7 +299,7 @@ const phases = [
       note: 'Une semaine de test sur place. Rien n\'est branché et rien n\'est enregistré. Les réponses décident de ce qu\'on développe à l\'étape 3.',
       risk: ['<b>Point bloquant : la réception du robot</b>. Sans prêt de démo ni location courte, la livraison prend 2 à 4 semaines. L\'étape 2 ne démarre pas avant, et tout le planning décale d\'autant.', '<b>Point bloquant : Temi ne passe pas</b>. On repart sur un autre robot du benchmark (GreetingBot, Awabot), et tout le planning décale.'], block: true },
     { id: 'e3', n: 'Étape 3', name: 'Téléopération', from: 3, to: 3,
-      out: ['D\'abord : on branche l\'outil de téléopération et on teste en local avec Madagascar', 'Ensuite : test grandeur nature, Madagascar accueille les clients à travers Temi', 'Check-in, check-out et questions des clients faits à distance, avec les outils de l\'appart-hôtel'],
+      out: ['D\'abord : on branche l\'outil de téléopération et on teste en local avec Madagascar', 'Ensuite : test en conditions réelles, Madagascar accueille les clients à travers Temi', 'Check-in, check-out et questions des clients faits à distance, avec les outils de l\'appart-hôtel'],
       doc: ['Compte rendu de la téléopération : questions posées, latence, ce qu\'il faut automatiser'],
       mes: ['Prises en main par jour', 'Les questions les plus posées à distance', 'Latence ressentie par l\'opérateur'],
       note: 'On part des outils natifs de Temi testés à l\'étape 2.' },
