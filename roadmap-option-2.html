@@ -290,8 +290,7 @@ const phases = [
   { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Quatre étapes, l\'une après l\'autre. On comprend, on teste le robot sur place, puis on prototype la téléopération et le check-in.', items: [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1,
       out: ['Interview de l\'accueil, sur le site de test', 'Interview de l\'équipe IT : les outils utilisés à Madagascar', 'Étude de la suite logicielle de Temi : compatibilités', 'Étude des outils et connecteurs du client pour téléopérer', 'Détail des fonctions hardware et software du robot', 'Rencontre avec le fournisseur et démo du robot', 'Demande de location ou de prêt pour l\'étape 2'],
-      doc: ['Document de cadrage du premier sprint', 'Roadmap révisée'],
-      mes: ['Les questions les plus posées au comptoir', 'Les moments où l\'accueil est vide'] },
+      doc: ['Document de cadrage du premier sprint', 'Roadmap révisée'] },
     { id: 'e2', n: 'Étape 2', name: 'Test grandeur nature', from: 2, to: 2,
       pre: ['Le robot est reçu', 'Le document de cadrage est validé par le client'],
       out: ['Temi installé dans un appart-hôtel de test, dans le hall, avec sa base et 2 ou 3 points de passage', 'Une question à l\'écran et deux gros boutons 👍 / 👎', 'Madagascar appelle Temi avec l\'appli native et parle aux clients', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs', 'Entretiens avec l\'agent d\'accueil, Madagascar et Michael'],
@@ -377,7 +376,7 @@ ph.innerHTML = phases.map(p => {
         ${it.pre ? `<div class="blk pre"><small>Pour démarrer l'étape</small><ul>${it.pre.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
         <div class="blk out"><small>À la fin de l'étape</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
         ${it.doc ? `<div class="blk doc"><small>Remis au client</small><ul>${it.doc.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
-        <div class="blk mes"><small>On mesure</small><ul>${it.mes.map(x => `<li>${x}</li>`).join('')}</ul></div>
+        ${it.mes ? `<div class="blk mes"><small>On mesure</small><ul>${it.mes.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
         ${it.note ? `<p class="blk" style="font-size:14px;color:var(--muted);line-height:1.4">${it.note}</p>` : ''}
         ${[].concat(it.risk || []).map(r => `<p class="risk${it.block ? ' block' : ''}">${r}</p>`).join('')}
       </article>`).join('')}
