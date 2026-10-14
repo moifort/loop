@@ -39,7 +39,7 @@
   .legend i.lg-gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
 
   /* ---------- Gantt: one column per week ---------- */
-  .gantt { --label: 300px; --weeks: 12; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: clip;
+  .gantt { --label: 300px; --weeks: 8; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: clip;
     min-width: calc(var(--label) + var(--weeks) * 34px); }
   /* Small screens: the chart keeps a readable width and scrolls sideways, step names stay pinned on the left */
   .gantt-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -207,7 +207,7 @@
 <div class="gantt-scroll"><div class="gantt" id="gantt"></div></div>
 
 <h2>Le détail des étapes</h2>
-<p class="h2-sub">Les étapes se suivent : chacune dépend de ce qu'on a appris à la précédente. Les j/h ne comptent pas l'achat ni la location du robot.</p>
+<p class="h2-sub">Les étapes 1 et 2 démarrent ensemble, dès le go du projet. Les suivantes se suivent : chacune dépend de ce qu'on a appris à la précédente. Les j/h ne comptent pas l'achat ni la location du robot.</p>
 
 <div id="phases"></div>
 
@@ -275,28 +275,28 @@
 <script>
 // ---------- Data: one entry per step. Weeks are 1-based and inclusive. ----------
 const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
-const WEEKS = 12;
+const WEEKS = 8;
 
 const phases = [
-  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre. On comprend, on valide le robot, on le teste sur place, puis on prototype la téléopération et le check-in.', items: [
+  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes. Les deux premières en même temps, puis l\'une après l\'autre. On comprend, on valide le robot, on le teste sur place, puis on prototype la téléopération et le check-in.', items: [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1, jh: [1.5, 1.5],
       out: ['Interviews de l\'accueil, de l\'équipe de Madagascar et de Michael', 'Le parcours réel d\'arrivée et de départ d\'un client', 'Les fonctions attendues du robot d\'accueil, par ordre de priorité', 'Les logiciels en place : réservation, Salto, Greg'],
       mes: ['Les questions les plus posées au comptoir', 'Les moments où l\'accueil est vide'] },
-    { id: 'e2', n: 'Étape 2', name: 'Validation du robot', from: 2, to: 4, jh: [2, 2],
+    { id: 'e2', n: 'Étape 2', name: 'Validation du robot', from: 1, to: 1, jh: [2, 2],
       out: ['1 jour chez le fournisseur : démo, validation technique, SAV, tarifs', 'Récupérer le robot : prêt, location ou achat, et livraison', 'Contrat prêt à signer'],
       mes: ['Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'],
-      note: '2 jours de travail, mais 3 semaines au calendrier : trouver un créneau chez le fournisseur, puis faire venir le robot.',
+      note: 'Lancée dès le go du projet, en parallèle de l\'étape 1. Le créneau chez le fournisseur et la livraison du robot ne retardent pas la suite.',
       risk: '<b>Point bloquant</b> : si Temi ne passe pas, on repart sur un autre robot du benchmark (GreetingBot, Awabot). Ça coûte quelques jours et décale tout le planning.', block: true },
-    { id: 'e3', n: 'Étape 3', name: 'Test grandeur nature', from: 5, to: 5, jh: [5, 6.5],
+    { id: 'e3', n: 'Étape 3', name: 'Test grandeur nature', from: 2, to: 2, jh: [5, 6.5],
       out: ['Temi installé dans le hall avec sa base et 2 ou 3 points de passage', 'Une question à l\'écran et deux gros boutons 👍 / 👎', 'Madagascar appelle Temi avec l\'appli native et parle aux clients', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs', 'Entretiens avec l\'agent d\'accueil, Madagascar et Michael'],
       mes: ['Part de 👍 et de 👎', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar'],
       note: 'Rien n\'est branché et rien n\'est enregistré. Les réponses décident de ce qu\'on développe à l\'étape 4.',
       risk: '<b>Point bloquant : avoir le robot</b>. Prêt de démo ou location courte à demander dès l\'étape 2, sinon 2 à 4 semaines de livraison. Si Temi tarde, on démarre par le ménage : un Roborock Saros s\'achète tout de suite.', block: true },
-    { id: 'e4', n: 'Étape 4', name: 'Téléopération', from: 6, to: 6, jh: [3, 3],
+    { id: 'e4', n: 'Étape 4', name: 'Téléopération', from: 3, to: 3, jh: [3, 3],
       out: ['1 jour : on branche l\'outil de téléopération et on teste en local avec Madagascar', '1 à 2 jours : test grandeur nature, Madagascar accueille les clients à travers Temi', 'Check-in, check-out et questions des clients faits à distance, avec les outils de l\'appart-hôtel'],
       mes: ['Prises en main par jour', 'Les questions les plus posées à distance', 'Latence ressentie par l\'opérateur'],
       note: 'On part des outils natifs de Temi testés à l\'étape 3. 3 jours de travail sur une semaine.' },
-    { id: 'e5', n: 'Étape 5', name: 'Check-in et check-out automatiques', from: 7, to: 7, jh: [2, 3],
+    { id: 'e5', n: 'Étape 5', name: 'Check-in et check-out automatiques', from: 4, to: 4, jh: [2, 3],
       out: ['Le client retrouve sa réservation sur Temi et reçoit son code d\'appartement', 'Au départ, il le dit à Temi, et l\'appartement passe « à nettoyer »', 'En français et en anglais', 'L\'opérateur ne reprend la main que si ça bloque'],
       mes: ['Part des arrivées et des départs faits sans opérateur', 'Temps gagné par l\'accueil et par Madagascar'],
       note: 'On automatise ce que les opérateurs ont fait le plus souvent à l\'étape 4. Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.' },
@@ -305,13 +305,12 @@ const phases = [
 
 // One word under each diamond (above with up), the detail shows on hover. end opens the detail to the left.
 const gates = [
-  { w: 2, l: 'Cadrage', t: 'Cadrage validé', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place.' },
-  { w: 5, l: 'Go / no go', t: 'Go / no go robot', tip: 'Temi répond-il au besoin ? Le robot est-il livré ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
-  { w: 6, l: 'Terrain', t: 'Bilan terrain', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant la semaine de test. On choisit ce qu\'on développe à l\'étape 4.' },
-  { w: 7, l: 'Bilan', t: 'Bilan téléopération', up: true, tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 5.' },
-  { w: 8, l: 'Bilan P1', t: 'Bilan P1', tip: 'Part des arrivées et des départs faits sans opérateur. Rien n\'est prêt pour la production : on décide avec le client vers où on part.', end: true },
+  { w: 2, l: 'Go / no go', t: 'Cadrage et go / no go robot', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place. Temi répond-il au besoin ? Le robot est-il livré ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
+  { w: 3, l: 'Terrain', t: 'Bilan terrain', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant la semaine de test. On choisit ce qu\'on développe à l\'étape 4.' },
+  { w: 4, l: 'Bilan', t: 'Bilan téléopération', up: true, tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 5.' },
+  { w: 5, l: 'Bilan P1', t: 'Bilan P1', tip: 'Part des arrivées et des départs faits sans opérateur. Rien n\'est prêt pour la production : on décide avec le client vers où on part.', end: true },
 ];
-const milestones = [{ w: 8, l: 'Fin des tests · M2', c: 'var(--navy)', end: true }];
+const milestones = [{ w: 5, l: 'Fin des tests · fin M1', c: 'var(--navy)', end: true }];
 
 // ---------- Gantt ----------
 const pct = w => `${((w - 1) / WEEKS) * 100}%`;
@@ -394,7 +393,7 @@ document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th>Semaines</th><th>j/h</th></tr>
   ${steps.map(i => `<tr><td><span class="cum" style="width:${i.jh[1] / max * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}</td><td>${weeks(i)}</td><td>${range(i.jh)}</td></tr>`).join('')}
   <tr><td><span class="cum" style="width:${pilotHi / max * 240}px;--c:var(--faint)"></span>Pilotage et déplacements (≈ 10 %)</td><td>tout du long</td><td>${range([pilotLo, pilotHi])}</td></tr>
-  <tr class="total"><td>Total P1 accueil</td><td>≈ 2 mois</td><td>≈ ${range([Math.round(lo + pilotLo), Math.round(hi + pilotHi)])}</td></tr>`;
+  <tr class="total"><td>Total P1 accueil</td><td>≈ 1 mois</td><td>≈ ${range([Math.round(lo + pilotLo), Math.round(hi + pilotHi)])}</td></tr>`;
 </script>
 </body>
 </html>
