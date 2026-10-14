@@ -77,14 +77,25 @@
   .bar-l span { color: var(--muted); font-weight: 500; }
   @keyframes grow { from { transform: scaleX(0); opacity: 0; } to { transform: none; opacity: 1; } }
 
-  .gate { position: absolute; top: 50%; z-index: 2; width: 16px; height: 16px; margin: -8px 0 0 -8px; background: var(--ink); transform: rotate(45deg); border-radius: 3px; box-shadow: 0 0 0 3px #fff; }
-  .gate-l { position: absolute; top: 50%; z-index: 2; transform: translateY(-50%); margin-left: 14px; font-size: 12px; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
+  /* Decision: a diamond, one word centred under it, the detail on hover or tap */
+  .gate-w { position: absolute; top: 0; bottom: 0; width: 0; z-index: 7; cursor: help; outline: none; }
+  .gate { position: absolute; top: 50%; left: 0; width: 16px; height: 16px; margin: -8px 0 0 -8px; background: var(--ink); transform: rotate(45deg); border-radius: 3px; box-shadow: 0 0 0 3px #fff; transition: transform .2s; }
+  .gate-l { position: absolute; top: calc(50% + 16px); left: 0; transform: translateX(-50%); font-size: 12px; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
+  .gate-w:hover .gate, .gate-w:focus .gate { transform: rotate(45deg) scale(1.2); }
 
-  .gate.block { background: var(--red); width: 20px; height: 20px; margin: -10px 0 0 -10px; }
-  .gate-l.block { color: var(--red); font-weight: 800; }
+  /* Blocking decision: red diamond, red word above it, red line across the chart */
+  .gate-w.block .gate { background: var(--red); width: 20px; height: 20px; margin: -10px 0 0 -10px; }
+  .gate-w.block .gate-l { top: auto; bottom: calc(50% + 15px); color: #fff; background: var(--red); font-weight: 800; padding: 2px 8px; border-radius: 999px; }
+
+  .tip { position: absolute; bottom: calc(50% + 18px); left: 0; transform: translateX(-50%); width: 270px; padding: 10px 12px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; white-space: normal; box-shadow: 0 10px 30px -10px rgba(18,19,26,.5); opacity: 0; visibility: hidden; transition: opacity .15s; pointer-events: none; }
+  .tip b { display: block; margin-bottom: 2px; }
+  .gate-w.block .tip { bottom: calc(50% + 44px); }
+  .gate-w.end .tip { transform: translateX(calc(-100% + 24px)); }
+  .gate-w:hover .tip, .gate-w:focus .tip { opacity: 1; visibility: visible; }
 
   /* Milestones: a vertical line across the whole chart */
   .ms { position: absolute; top: 0; bottom: 0; z-index: 3; width: 0; border-left: 2px dashed var(--c); pointer-events: none; }
+  .ms.block { z-index: 1; border-left-width: 2px; }
   .ms span { position: absolute; top: 52px; left: 6px; white-space: nowrap; font-size: 12px; font-weight: 800; color: #fff; background: var(--c); padding: 3px 8px; border-radius: 999px; }
 
   /* ---------- Iteration cards ---------- */
@@ -243,8 +254,14 @@ const phases = [
   ]},
 ];
 
-// up/down keeps neighbouring labels apart, left puts the label before its diamond
-const gates = [{ w: 2, l: 'Cadrage validé', up: true }, { w: 5, l: '⚠ Go / no go robot · robot livré ?', block: true, up: true }, { w: 6, l: 'Bilan terrain' }, { w: 13, l: 'Bilan', up: true }, { w: 20, l: 'Bilan P1' }];
+// One word under each diamond, the detail shows on hover. end opens the detail to the left.
+const gates = [
+  { w: 2, l: 'Cadrage', t: 'Cadrage validé', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place.' },
+  { w: 5, l: 'Go / no go', t: 'Go / no go robot', tip: 'Temi répond-il au besoin ? Le robot est-il livré ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
+  { w: 6, l: 'Terrain', t: 'Bilan terrain', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant la semaine de test. On choisit ce qu\'on développe à l\'étape 4.' },
+  { w: 13, l: 'Bilan', t: 'Bilan téléopération', tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 5.' },
+  { w: 20, l: 'Bilan P1', t: 'Bilan P1', tip: 'Part des arrivées et des départs faits sans opérateur. L\'accueil passe en service.', end: true },
+];
 const milestones = [{ w: 20, l: 'Accueil en service · M5', c: 'var(--navy)', end: true }];
 
 // ---------- Gantt ----------
@@ -276,12 +293,13 @@ phases.forEach(p => {
 });
 
 html += row('Décisions', '', 'g-group');
-html += row('Bilan avec le client', '<div style="height:64px"></div>' + gates.map(x => `<i class="gate${x.block ? ' block' : ''}" style="left:${pct(x.w)}"></i><span class="gate-l${x.block ? ' block' : ''}" style="left:${pct(x.w)};top:${x.up ? 16 : 84}%${x.left ? ';margin-left:-14px;transform:translate(-100%,-50%)' : ''}">${x.l}</span>`).join(''));
+html += row('Bilan avec le client', '<div style="height:64px"></div>' + gates.map(x => `<span class="gate-w${x.block ? ' block' : ''}${x.end ? ' end' : ''}" style="left:${pct(x.w)}" tabindex="0"><i class="gate"></i><span class="gate-l">${x.l}</span><span class="tip"><b>${x.t}</b>${x.tip}</span></span>`).join(''));
 
 g.innerHTML = html;
 
 // Milestone lines span every row, positioned over the track area
 g.insertAdjacentHTML('beforeend', `<div style="position:absolute;top:0;bottom:0;left:var(--label);right:0;pointer-events:none">${
+  gates.filter(x => x.block).map(x => `<div class="ms block" style="left:${pct(x.w)};--c:var(--red)"></div>`).join('') +
   milestones.map(m => `<div class="ms${m.end ? ' end' : ''}" style="left:${pct(m.w)};--c:${m.c}"><span>${m.l}</span></div>`).join('')}</div>`);
 
 // ---------- Step cards ----------
