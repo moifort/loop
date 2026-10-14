@@ -39,7 +39,7 @@
   .legend i.lg-gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
 
   /* ---------- Gantt: one column per week ---------- */
-  .gantt { --label: 300px; --weeks: 24; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: clip;
+  .gantt { --label: 300px; --weeks: 18; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: clip;
     min-width: calc(var(--label) + var(--weeks) * 34px); }
   /* Small screens: the chart keeps a readable width and scrolls sideways, step names stay pinned on the left */
   .gantt-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -89,7 +89,8 @@
 
   .tip { position: absolute; bottom: calc(50% + 18px); left: 0; transform: translateX(-50%); width: 270px; padding: 10px 12px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; white-space: normal; box-shadow: 0 10px 30px -10px rgba(18,19,26,.5); opacity: 0; visibility: hidden; transition: opacity .15s; pointer-events: none; }
   .tip b { display: block; margin-bottom: 2px; }
-  .gate-w.block .tip { bottom: calc(50% + 44px); }
+  .gate-w.up .gate-l { top: auto; bottom: calc(50% + 14px); }
+  .gate-w.block .tip, .gate-w.up .tip { bottom: calc(50% + 40px); }
   .gate-w.end .tip { transform: translateX(calc(-100% + 24px)); }
   .gate-w:hover .tip, .gate-w:focus .tip { opacity: 1; visibility: visible; }
 
@@ -225,7 +226,7 @@
 <script>
 // ---------- Data: one entry per step. Weeks are 1-based and inclusive. ----------
 const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
-const WEEKS = 24;
+const WEEKS = 18;
 
 const phases = [
   { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre. On comprend, on valide le robot, on le teste sur place, puis on développe.', items: [
@@ -242,27 +243,26 @@ const phases = [
       mes: ['Part de 👍 et de 👎', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar'],
       note: 'Rien n\'est branché et rien n\'est enregistré. Les réponses décident de ce qu\'on développe à l\'étape 4.',
       risk: '<b>Point bloquant : avoir le robot</b>. Prêt de démo ou location courte à demander dès l\'étape 2, sinon 2 à 4 semaines de livraison. Si Temi tarde, on démarre par le ménage : un Roborock Saros s\'achète tout de suite.', block: true },
-    { id: 'e4', n: 'Étape 4', name: 'Téléopération', from: 6, to: 12, jh: [25, 35],
-      out: ['Un humain accueille à travers Temi : Madagascar, un autre agent d\'accueil, ou nous', 'Check-in, check-out et toutes les questions des clients, à distance, avec les outils de l\'appart-hôtel : logiciel de réservation, Salto, Greg', 'Envoyer Temi vers un point, parler, afficher un écran', 'Greg prévenu de chaque arrivée et de chaque départ', 'Test de latence réel depuis Madagascar'],
+    { id: 'e4', n: 'Étape 4', name: 'Téléopération', from: 6, to: 6, jh: [3, 3],
+      out: ['1 jour : on branche l\'outil de téléopération et on teste en local avec Madagascar', '1 à 2 jours : test grandeur nature, Madagascar accueille les clients à travers Temi', 'Check-in, check-out et questions des clients faits à distance, avec les outils de l\'appart-hôtel'],
       mes: ['Prises en main par jour', 'Les questions les plus posées à distance', 'Latence ressentie par l\'opérateur'],
-      risk: '<b>Greg</b> : on ne connaît pas encore son API. Réponse attendue à l\'étape 1.',
-      note: 'On part des outils natifs de Temi testés à l\'étape 3, et on développe seulement ce qui manque à l\'opérateur.' },
-    { id: 'e5', n: 'Étape 5', name: 'Check-in et check-out automatiques', from: 13, to: 19, jh: [25, 35],
+      note: 'On part des outils natifs de Temi testés à l\'étape 3. 3 jours de travail sur une semaine.' },
+    { id: 'e5', n: 'Étape 5', name: 'Check-in et check-out automatiques', from: 7, to: 13, jh: [25, 35],
       out: ['Le client retrouve sa réservation sur Temi et reçoit son code d\'appartement', 'Au départ, il le dit à Temi, et l\'appartement passe « à nettoyer »', 'En français et en anglais', 'L\'opérateur ne reprend la main que si ça bloque'],
       mes: ['Part des arrivées et des départs faits sans opérateur', 'Temps gagné par l\'accueil et par Madagascar'],
       note: 'On automatise ce que les opérateurs ont fait le plus souvent à l\'étape 4. Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.' },
   ]},
 ];
 
-// One word under each diamond, the detail shows on hover. end opens the detail to the left.
+// One word under each diamond (above with up), the detail shows on hover. end opens the detail to the left.
 const gates = [
   { w: 2, l: 'Cadrage', t: 'Cadrage validé', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place.' },
   { w: 5, l: 'Go / no go', t: 'Go / no go robot', tip: 'Temi répond-il au besoin ? Le robot est-il livré ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
   { w: 6, l: 'Terrain', t: 'Bilan terrain', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant la semaine de test. On choisit ce qu\'on développe à l\'étape 4.' },
-  { w: 13, l: 'Bilan', t: 'Bilan téléopération', tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 5.' },
-  { w: 20, l: 'Bilan P1', t: 'Bilan P1', tip: 'Part des arrivées et des départs faits sans opérateur. L\'accueil passe en service.', end: true },
+  { w: 7, l: 'Bilan', t: 'Bilan téléopération', up: true, tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 5.' },
+  { w: 14, l: 'Bilan P1', t: 'Bilan P1', tip: 'Part des arrivées et des départs faits sans opérateur. L\'accueil passe en service.', end: true },
 ];
-const milestones = [{ w: 20, l: 'Accueil en service · M5', c: 'var(--navy)', end: true }];
+const milestones = [{ w: 14, l: 'Accueil en service · fin M3', c: 'var(--navy)', end: true }];
 
 // ---------- Gantt ----------
 const pct = w => `${((w - 1) / WEEKS) * 100}%`;
@@ -293,7 +293,7 @@ phases.forEach(p => {
 });
 
 html += row('Décisions', '', 'g-group');
-html += row('Bilan avec le client', '<div style="height:64px"></div>' + gates.map(x => `<span class="gate-w${x.block ? ' block' : ''}${x.end ? ' end' : ''}" style="left:${pct(x.w)}" tabindex="0"><i class="gate"></i><span class="gate-l">${x.l}</span><span class="tip"><b>${x.t}</b>${x.tip}</span></span>`).join(''));
+html += row('Bilan avec le client', '<div style="height:64px"></div>' + gates.map(x => `<span class="gate-w${x.block ? ' block' : ''}${x.up ? ' up' : ''}${x.end ? ' end' : ''}" style="left:${pct(x.w)}" tabindex="0"><i class="gate"></i><span class="gate-l">${x.l}</span><span class="tip"><b>${x.t}</b>${x.tip}</span></span>`).join(''));
 
 g.innerHTML = html;
 
@@ -345,7 +345,7 @@ document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th>Semaines</th><th>j/h</th></tr>
   ${steps.map(i => `<tr><td><span class="cum" style="width:${i.jh[1] / max * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}</td><td>${weeks(i)}</td><td>${range(i.jh)}</td></tr>`).join('')}
   <tr><td><span class="cum" style="width:${pilotHi / max * 240}px;--c:var(--faint)"></span>Pilotage et déplacements (≈ 10 %)</td><td>tout du long</td><td>${range([pilotLo, pilotHi])}</td></tr>
-  <tr class="total"><td>Total P1 accueil</td><td>≈ 4,5 mois</td><td>≈ ${range([Math.round(lo + pilotLo), Math.round(hi + pilotHi)])}</td></tr>`;
+  <tr class="total"><td>Total P1 accueil</td><td>≈ 3 mois</td><td>≈ ${range([Math.round(lo + pilotLo), Math.round(hi + pilotHi)])}</td></tr>`;
 </script>
 </body>
 </html>
