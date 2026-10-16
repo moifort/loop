@@ -312,7 +312,7 @@
   .soft .lead { font-size: 24px; }
   .soft .lead b { color: #fff; font-weight: 600; }
 
-  /* Hub map: robots on the left, Loop in the centre, the hotel's tools on the right */
+  /* Hub map: Greg.ai in the centre, the hotel's tools on the left, Loop among them */
   .hubmap { position: relative; width: 968px; height: 574px; margin-top: -76px; scale: .88; transform-origin: right center; }
   .hubmap .wires { position: absolute; left: 0; top: 0; width: 968px; height: 760px; overflow: visible; }
   .wires .base { fill: none; stroke: #2b3250; stroke-width: 2; }
@@ -714,41 +714,34 @@
   <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2 · En plus des robots</div></div>
   <div class="soft" data-s="0">
     <div class="sx">
-      <span class="eyebrow rise">Tableau de bord</span>
-      <h1 class="rise" style="--d:.1s">Le robot fait 20 %<br>du travail.<em>Le tableau de bord fait les 80&nbsp;% restants.</em></h1>
-      <p class="lead rise" style="--d:.3s">Seul, un robot fait une tâche quand on appuie. <b>Branché sur le tableau de bord, il sait quand la faire.</b> C'est pour ça qu'on a choisi des robots avec des API ouvertes, faciles à connecter au tableau de bord.</p>
+      <span class="eyebrow rise">Loop × Greg.ai</span>
+      <h1 class="rise" style="--d:.1s">Greg.ai pilote l'hôtel.<em>Loop lui branche les robots.</em></h1>
+      <p class="lead rise" style="--d:.3s">Greg.ai est déjà relié à Mews, Salto et Otis. <b>Loop s'y branche de la même façon : Greg voit les robots et leur confie des tâches.</b> C'est pour ça qu'on a choisi des robots avec des API ouvertes.</p>
     </div>
-    <div class="hubmap rise" style="--d:.25s">
+    <div class="hubmap rise" style="--d:.25s;left:60px">
       <svg class="wires" viewBox="0 0 968 760">
-        <path class="base" d="M220,150 C310,150 300,330 384,330"/>
-        <path class="base" d="M220,330 L384,330"/>
-        <path class="base" d="M220,510 C310,510 300,330 384,330"/>
-        <path class="base" d="M584,330 C670,330 660,120 748,120"/>
-        <path class="base" d="M584,330 C670,330 660,260 748,260"/>
-        <path class="base" d="M584,330 C670,330 660,400 748,400"/>
-        <path class="base" d="M584,330 C670,330 660,540 748,540"/>
-        <!-- Scenario 1: Temi sees a guest leave, Greg is told, the cleaning robot starts -->
-        <path class="flow s1" d="M220,150 C310,150 300,330 384,330"/>
-        <path class="flow s1" d="M584,330 C670,330 660,120 748,120"/>
-        <path class="flow s1" d="M384,330 C300,330 310,510 220,510"/>
-        <!-- Scenario 2: Kilo leaves at check-in and calls the lift -->
-        <path class="flow s2" d="M220,330 L384,330"/>
-        <path class="flow s2" d="M584,330 C670,330 660,260 748,260"/>
-        <path class="flow s2" d="M584,330 C670,330 660,540 748,540"/>
-        <!-- Scenario 3: the cleaning robot checks the booking and the lock before starting -->
-        <path class="flow s3" d="M220,510 C310,510 300,330 384,330"/>
-        <path class="flow s3" d="M584,330 C670,330 660,260 748,260"/>
-        <path class="flow s3" d="M584,330 C670,330 660,400 748,400"/>
+        <path class="base" d="M330,120 C470,120 460,330 600,330"/>
+        <path class="base" d="M330,260 C470,260 460,330 600,330"/>
+        <path class="base" d="M330,400 C470,400 460,330 600,330"/>
+        <path class="base" d="M330,540 C470,540 460,330 600,330"/>
+        <!-- Scenario 1: Mews records a check-out, Greg asks Loop to send the Dreame -->
+        <path class="flow s1" d="M330,260 C470,260 460,330 600,330"/>
+        <path class="flow s1" d="M600,330 C460,330 470,120 330,120"/>
+        <!-- Scenario 2: a check-in in Mews, Greg asks Loop for the Kilo and Otis for the lift -->
+        <path class="flow s2" d="M330,260 C470,260 460,330 600,330"/>
+        <path class="flow s2" d="M600,330 C460,330 470,120 330,120"/>
+        <path class="flow s2" d="M600,330 C460,330 470,540 330,540"/>
+        <!-- Scenario 3: Loop asks before cleaning, Greg checks the booking in Mews and the lock in Salto -->
+        <path class="flow s3" d="M330,120 C470,120 460,330 600,330"/>
+        <path class="flow s3" d="M600,330 C460,330 470,260 330,260"/>
+        <path class="flow s3" d="M600,330 C460,330 470,400 330,400"/>
       </svg>
-      <div class="nd s1" style="left:0;top:150px;--c:#4f6bd8"><span class="ni"><svg><use href="#i-bot"/></svg></span><div><b>Temi</b><small>Accueil · sécurité</small></div></div>
-      <div class="nd s2" style="left:0;top:330px;--c:var(--violet)"><span class="ni"><svg><use href="#i-luggage"/></svg></span><div><b>Piaggio Kilo</b><small>Bagages</small></div></div>
-      <div class="nd s1 s3" style="left:0;top:510px;--c:var(--sky)"><span class="ni"><svg><use href="#i-brush"/></svg></span><div><b>Dreame</b><small>Ménage · sécurité</small></div></div>
-      <div class="hub"><span class="wave"></span><span class="wave"></span><span class="ring"></span><span class="core"><svg viewBox="0 0 512 512"><!-- Loop mark without its square background --><path d="M338 176 A118 118 0 1 1 188 166" fill="none" stroke="#fff" stroke-width="46" stroke-linecap="round"/><path d="M170 100 L264 112 L211 190 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><circle cx="256" cy="262" r="25" fill="#fff"/></svg></span></div>
-      <div class="hub-lbl"><b>Tableau de bord</b><small>Planning · règles · alertes</small></div>
-      <div class="nd s1" style="left:748px;top:120px;--c:#6f97ff"><span class="ni" style="background:#3a3d4a"><svg><use href="#i-sparkles"/></svg></span><div><b>Greg</b><small>IA d'opérations</small></div></div>
-      <div class="nd s2 s3" style="left:748px;top:260px;--c:#e9ecf5"><span class="ni" style="background:#fff;color:#111">M</span><div><b>Mews</b><small>Réservations</small></div></div>
-      <div class="nd s3" style="left:748px;top:400px;--c:#ff4d6a"><span class="ni" style="background:#e4002b">S</span><div><b>Salto</b><small>Serrures</small></div></div>
-      <div class="nd s2" style="left:748px;top:540px;--c:#4d7fe0"><span class="ni" style="background:#1b3f8f">O</span><div><b>Otis</b><small>Ascenseurs</small></div></div>
+      <div class="nd s1 s2 s3" style="left:60px;top:120px;width:270px;--c:#1f5bff"><span class="ni" style="background:none"><svg style="width:40px;height:40px"><use href="#loop-mark"/></svg></span><div><b>Loop</b><small>Temi · Kilo · Dreame</small></div></div>
+      <div class="nd s1 s2 s3" style="left:60px;top:260px;width:270px;--c:#e9ecf5"><span class="ni" style="background:#fff;color:#111">M</span><div><b>Mews</b><small>Réservations</small></div></div>
+      <div class="nd s3" style="left:60px;top:400px;width:270px;--c:#ff4d6a"><span class="ni" style="background:#e4002b">S</span><div><b>Salto</b><small>Serrures</small></div></div>
+      <div class="nd s2" style="left:60px;top:540px;width:270px;--c:#4d7fe0"><span class="ni" style="background:#1b3f8f">O</span><div><b>Otis</b><small>Ascenseurs</small></div></div>
+      <div class="hub" style="left:600px"><span class="wave"></span><span class="wave"></span><span class="ring"></span><span class="core" style="background:radial-gradient(circle at 35% 30%, #5d6275, #3a3d4a 55%, #22242d)"><svg style="width:110px;height:110px;color:#fff"><use href="#i-sparkles"/></svg></span></div>
+      <div class="hub-lbl" style="left:550px"><b>Greg.ai</b><small>IA d'opérations de l'hôtel</small></div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
