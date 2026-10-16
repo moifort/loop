@@ -443,6 +443,10 @@
   .bud-p { display: flex; align-items: baseline; gap: 14px; margin: 4px 0 12px; }
   .bud-p b { font-size: 60px; font-weight: 800; letter-spacing: -.04em; line-height: 1; color: var(--ink); }
   .opt.best .bud-p b { color: var(--loop); }
+  /* A single budget: one full-width card, the lines kept to a readable width */
+  .bud-solo { grid-template-columns: 1fr; }
+  .bud-solo .opt { padding-left: 96px; padding-right: 96px; }
+  .bud-solo :is(.bud-l, .bud-x, .bud-t) { max-width: 1100px; }
   .bud-p span { font-size: 21px; color: var(--muted); font-weight: 600; }
   .bud-l { list-style: none; border-bottom: 1px solid rgba(18,19,26,.1); }
   .bud-l li { display: flex; justify-content: space-between; gap: 24px; padding: 7px 0; border-top: 1px solid rgba(18,19,26,.1); font-size: 19px; color: var(--ink-2); }
@@ -574,9 +578,9 @@
   <div class="bld rise" style="--d:.15s"><img src="assets/quartier-libre-collection-logo.jpg" alt="Quartier Libre Collection"></div>
   <!-- Each entry is pinned on a floor of the building: --y is the pin height, --px its x on the slide -->
   <div class="toc-i rise" style="--d:.3s;--y:320px;--px:1330px"><span class="toc-n">1</span><div class="toc-t"><b>Les robots</b><p>Les robots, et leur mise en place.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
-  <div class="toc-i rise" style="--d:.45s;--y:490px;--px:1500px"><span class="toc-n">2</span><div class="toc-t"><b>Le tableau de bord</b><p>Un seul écran pour tout piloter, branché sur Greg.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
-  <div class="toc-i rise" style="--d:.6s;--y:660px;--px:1400px"><span class="toc-n">3</span><div class="toc-t"><b>La roadmap</b><p>On s'occupe de tout.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
-  <div class="toc-i rise" style="--d:.75s;--y:830px;--px:1560px"><span class="toc-n">4</span><div class="toc-t"><b>Le budget</b><p>Ce que coûte le pilote, et ce qu'il rapporte.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
+  <div class="toc-i rise" style="--d:.45s;--y:490px;--px:1500px"><span class="toc-n">2</span><div class="toc-t"><b>La roadmap</b><p>On s'occupe de tout.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
+  <div class="toc-i rise" style="--d:.6s;--y:660px;--px:1400px"><span class="toc-n">3</span><div class="toc-t"><b>Le budget</b><p>Ce que coûte le pilote, et ce qu'il rapporte.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
+  <div class="toc-i rise" style="--d:.75s;--y:830px;--px:1560px"><span class="toc-n">4</span><div class="toc-t"><b>Pour aller plus loin</b><p>Le tableau de bord, branché sur Greg.ai.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
@@ -702,16 +706,97 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection · P3 · Ménage · choix du robot</span><span class="n"></span></div>
 </section>
 
+<!-- ======================= Part 2 · Roadmap: small iterations by client priority ======================= -->
 <section class="slide divider" data-scene="divider">
   <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2</div></div>
   <span class="big rise">2</span>
-  <h1 class="rise" style="--d:.15s">Le tableau de bord</h1>
-  <p class="rise" style="--d:.3s">Un seul écran pour tout piloter, branché sur Greg.</p>
+  <h1 class="rise" style="--d:.15s">La roadmap</h1>
+  <p class="rise" style="--d:.3s">On s'occupe de tout.</p>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<section class="slide" data-scene="roadmap">
+  <div class="wip">WIP</div>
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2 · Roadmap</div></div>
+  <div class="road2">
+    <h1 class="rise">Les robots,<br><em>dans l'ordre de vos priorités.</em></h1>
+    <div class="stairs" style="grid-template-columns:repeat(6, 1fr)">
+      <div class="stp pop" data-at="300" style="--i:0"><span class="sn">0</span><h4>Écouter</h4><p>Interviews à Saint-Georges : réception, ménage, maintenance, Madagascar.</p></div>
+      <div class="stp pop" data-at="650" style="--i:1"><span class="sn">1</span><span class="st" style="background:var(--navy)">P1</span><h4>Temi</h4><p>Installé avec son appli : accueil et visio depuis Madagascar.</p></div>
+      <div class="stp pop" data-at="1000" style="--i:2"><span class="sn">2</span><span class="st" style="background:var(--violet)">P2</span><h4>Piaggio Kilo</h4><p>Testé avec l'équipe, puis au quotidien.</p></div>
+      <div class="stp pop" data-at="1350" style="--i:3"><span class="sn">3</span><span class="st" style="background:var(--navy)">P1</span><h4>Sécurité</h4><p>Le Temi surveille l'entrée la nuit, suivi depuis Madagascar.</p></div>
+      <div class="stp pop" data-at="1700" style="--i:4"><span class="sn">4</span><span class="st" style="background:var(--sky)">P3</span><h4>Dreame</h4><p>Le ménage le jour, la ronde des étages la nuit.</p></div>
+      <div class="stp pop" data-at="2050" style="--i:5"><span class="sn">5</span><h4>Bilan</h4><p>On mesure, puis on décide de la suite.</p></div>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= Part 3 · Budget: cost and savings ======================= -->
+<section class="slide divider" data-scene="divider">
+  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3</div></div>
+  <span class="big rise">3</span>
+  <h1 class="rise" style="--d:.15s">Le budget</h1>
+  <p class="rise" style="--d:.3s">Ce que coûte le pilote, et ce qu'il rapporte.</p>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= Budget · pilot cost, robots included ======================= -->
+<section class="slide" data-scene="budget">
+  <div class="wip">WIP</div>
+  <div class="opts-w budget">
+    <h1 class="rise">Le budget du pilote,<br><em>robots compris.</em></h1>
+    <div class="opts bud-solo">
+      <div class="opt rise" style="--d:.2s">
+        <span class="ol">Le pilote</span>
+        <h3>Les robots, installés et suivis</h3>
+        <div class="bud-p"><b>18 750 €</b><span>HT · 25 jours-homme à 750 €</span></div>
+        <ul class="bud-l">
+          <li><span>Écouter : interviews à Saint-Georges</span><b>3 j</b></li>
+          <li><span>Temi : installation, accueil, visio</span><b>6 j</b></li>
+          <li><span>Piaggio Kilo : tests avec l'équipe</span><b>4 j</b></li>
+          <li><span>Sécurité : le Temi à l'entrée, le Dreame aux étages</span><b>3 j</b></li>
+          <li><span>Dreame : cartes, rondes et formation</span><b>4 j</b></li>
+          <li><span>Suivi des fournisseurs et bilan</span><b>5 j</b></li>
+        </ul>
+        <div class="bud-x"><span>+ Robots : Temi, Piaggio Kilo, 2 Dreame, PACO</span><b>23 175 €</b></div>
+        <div class="bud-t">Total du pilote<b>41 925 € HT</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= ROI · the money the robots save ======================= -->
+<section class="slide" data-scene="roi">
+  <div class="roi2">
+    <h1 class="rise">Ce que les robots<br><em>font économiser.</em></h1>
+    <div class="roi-solo rise" style="--d:.2s">
+      <div class="roi-g"><div><small>Économisé par an, par immeuble</small><b>≈ 42 000 €</b></div></div>
+      <div>
+        <ul class="roi-l">
+          <li><span>Accueil</span><i>Check-in, check-out et questions : 1 h 30 libérée par jour × 25 €</i><b>14 000 €</b></li>
+          <li><span>Ménage</span><i>8 % d'heures de ménage en moins × 230 000 €*</i><b>18 000 €</b></li>
+          <li><span>Sécurité</span><i>2 incidents évités par an × 5 000 €**</i><b>10 000 €</b></li>
+        </ul>
+        <p class="roi-n">* 1 M€ de ménage par an pour 130 appartements, ramené à un immeuble de 30 appartements comme Saint-Georges.<br>** 2 incidents par an, selon vous. 5 000 € : notre estimation du coût moyen d'un incident (dégâts, geste commercial).</p>
+      </div>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= Part 4 · Going further: the dashboard ======================= -->
+<section class="slide divider" data-scene="divider">
+  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 4</div></div>
+  <span class="big rise">4</span>
+  <h1 class="rise" style="--d:.15s">Pour aller plus loin</h1>
+  <p class="rise" style="--d:.3s">Le tableau de bord, branché sur Greg.ai. Les robots restent les mêmes.</p>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
 <section class="slide dark" data-scene="soft">
-  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2 · En plus des robots</div></div>
+  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 4 · Pour aller plus loin</div></div>
   <div class="soft" data-s="0">
     <div class="sx">
       <span class="eyebrow rise">Loop × Greg.ai</span>
@@ -944,60 +1029,15 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<!-- ======================= Part 3 · Roadmap: small iterations by client priority ======================= -->
-<section class="slide divider" data-scene="divider">
-  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3</div></div>
-  <span class="big rise">3</span>
-  <h1 class="rise" style="--d:.15s">La roadmap</h1>
-  <p class="rise" style="--d:.3s">On s'occupe de tout.</p>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
-</section>
-
-<section class="slide" data-scene="roadmap">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Deux options</div></div>
-  <div class="opts-w">
-    <h1 class="rise">Deux façons d'avancer,<br><em>avec les mêmes robots.</em></h1>
-    <div class="opts">
-      <div class="opt rise" style="--d:.2s">
-        <span class="ol">Option 1</span>
-        <h3>Les robots seuls</h3>
-        <p class="os">Ce que vous nous avez demandé.</p>
-        <ul class="seen">
-          <li class="ok">Rapide à lancer, peu de risque.</li>
-          <li class="ok">Chaque robot marche avec son appli.</li>
-          <li class="ko">Une appli par robot : les équipes jonglent.</li>
-          <li class="ko">Rien n'est relié à Greg, Mews ou Salto.</li>
-        </ul>
-      </div>
-      <div class="opt best rise" style="--d:.35s">
-        <span class="ol">Option 2</span>
-        <h3>Les robots + tableau de bord</h3>
-        <p class="os">Ce qu'on vous propose en plus.</p>
-        <ul class="seen">
-          <li class="ok">Tout sur un seul écran.</li>
-          <li class="ok">Greg s'interface avec notre tableau de bord.</li>
-          <li class="ok">Madagascar voit et reprend tout à distance.</li>
-          <li class="ko">Plus long : on avance par petites étapes.</li>
-        </ul>
-      </div>
-    </div>
-    <div class="rule rise" style="--d:.5s"><svg><use href="#i-check"/></svg>On peut commencer par l'option 1 et passer à l'option 2 ensuite : les robots restent les mêmes.</div>
-  </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
-</section>
-
-<section class="slide" data-scene="roadmap">
-  <div class="wip">WIP</div>
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Option 1</div></div>
-  <div class="road2">
-    <h1 class="rise">Option 1 : les robots seuls,<br><em>dans l'ordre de vos priorités.</em></h1>
-    <div class="stairs" style="grid-template-columns:repeat(6, 1fr)">
-      <div class="stp pop" data-at="300" style="--i:0"><span class="sn">0</span><h4>Écouter</h4><p>Interviews à Saint-Georges : réception, ménage, maintenance, Madagascar.</p></div>
-      <div class="stp pop" data-at="650" style="--i:1"><span class="sn">1</span><span class="st" style="background:var(--navy)">P1</span><h4>Temi</h4><p>Installé avec son appli : accueil et visio depuis Madagascar.</p></div>
-      <div class="stp pop" data-at="1000" style="--i:2"><span class="sn">2</span><span class="st" style="background:var(--violet)">P2</span><h4>Piaggio Kilo</h4><p>Testé avec l'équipe, puis au quotidien.</p></div>
-      <div class="stp pop" data-at="1350" style="--i:3"><span class="sn">3</span><span class="st" style="background:var(--navy)">P1</span><h4>Sécurité</h4><p>Le Temi surveille l'entrée la nuit, suivi depuis Madagascar.</p></div>
-      <div class="stp pop" data-at="1700" style="--i:4"><span class="sn">4</span><span class="st" style="background:var(--sky)">P3</span><h4>Dreame</h4><p>Le ménage le jour, la ronde des étages la nuit.</p></div>
-      <div class="stp pop" data-at="2050" style="--i:5"><span class="sn">5</span><h4>Bilan</h4><p>On mesure, puis on décide de la suite.</p></div>
+<!-- ======================= Why the dashboard · it is what lets Quartier Libre scale ======================= -->
+<section class="slide" data-scene="why">
+  <div class="roi2">
+    <h1 class="rise">Pourquoi le tableau de bord :<br><em>il permet de passer à l'échelle.</em></h1>
+    <div class="why-l rise" style="--d:.2s">
+      <div class="key"><b>Passer à l'échelle</b><span>Le tableau de bord se paie une seule fois. Chaque nouvel immeuble s'y branche avec très peu d'adaptations : <strong>son coût s'amortit sur les 9 immeubles</strong>, les 5 actuels et les 4 en projet. Et une seule personne à Madagascar les suit tous, sur un seul écran.</span></div>
+      <div><b>Tout mesurer, tout tracer</b><span>Les heures gagnées, pour décider du déploiement sur des chiffres. Qui a vu quelle vidéo, qui a levé quelle alerte, pour la CNIL et en cas d'incident.</span></div>
+      <div><b>Ne pas dépendre d'un fabricant</b><span>Un robot déçoit, une marque disparaît : on le remplace sans refaire les process ni perdre l'historique.</span></div>
+      <div><b>Un seul outil à apprendre</b><span>Chaque nouvel employé apprend un outil, pas trois applis, dans chacun des 9 immeubles. Avec le turnover de l'hôtellerie, c'est du temps de formation gagné à chaque arrivée.</span></div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -1005,9 +1045,9 @@
 
 <section class="slide" data-scene="roadmap">
   <div class="wip">WIP</div>
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 3 · Option 2</div></div>
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 4 · Roadmap</div></div>
   <div class="road2">
-    <h1 class="rise">Option 2 : les robots + tableau de bord,<br><em>par petites étapes.</em></h1>
+    <h1 class="rise">Avec le tableau de bord,<br><em>par petites étapes.</em></h1>
     <div class="stairs">
       <div class="stp pop" data-at="300" style="--i:0"><span class="sn">0</span><h4>Écouter</h4><p>Interviews à Saint-Georges : réception, ménage, maintenance, Madagascar.</p></div>
       <div class="stp pop" data-at="650" style="--i:1"><span class="sn">1</span><span class="st" style="background:var(--navy)">P1</span><h4>Temi, version de base</h4><p>Plateforme minimale, sans 3D : check-in, check-out, bouton panique.</p></div>
@@ -1022,39 +1062,15 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<!-- ======================= Part 4 · Budget: cost, savings, why the dashboard, brand ======================= -->
-<section class="slide divider" data-scene="divider">
-  <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 4</div></div>
-  <span class="big rise">4</span>
-  <h1 class="rise" style="--d:.15s">Le budget</h1>
-  <p class="rise" style="--d:.3s">Ce que coûte le pilote, et ce qu'il rapporte.</p>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
-</section>
-
-<!-- ======================= Budget · pilot cost per option, robots excluded ======================= -->
+<!-- ======================= Part 4 · Budget with the dashboard, robots included ======================= -->
 <section class="slide" data-scene="budget">
   <div class="wip">WIP</div>
   <div class="opts-w budget">
-    <h1 class="rise">Le budget du pilote,<br><em>robots compris.</em></h1>
-    <div class="opts">
-      <div class="opt rise" style="--d:.2s">
-        <span class="ol">Option 1</span>
-        <h3>Les robots seuls</h3>
-        <div class="bud-p"><b>18 750 €</b><span>HT · 25 jours-homme à 750 €</span></div>
-        <ul class="bud-l">
-          <li><span>Écouter : interviews à Saint-Georges</span><b>3 j</b></li>
-          <li><span>Temi : installation, accueil, visio</span><b>6 j</b></li>
-          <li><span>Piaggio Kilo : tests avec l'équipe</span><b>4 j</b></li>
-          <li><span>Sécurité : le Temi à l'entrée, le Dreame aux étages</span><b>3 j</b></li>
-          <li><span>Dreame : cartes, rondes et formation</span><b>4 j</b></li>
-          <li><span>Suivi des fournisseurs et bilan</span><b>5 j</b></li>
-        </ul>
-        <div class="bud-x"><span>+ Robots : Temi, Piaggio Kilo, 2 Dreame, PACO</span><b>23 175 €</b></div>
-        <div class="bud-t">Total du pilote<b>41 925 € HT</b></div>
-      </div>
+    <h1 class="rise">Le budget avec le tableau de bord,<br><em>robots compris.</em></h1>
+    <div class="opts bud-solo">
       <div class="opt best rise" style="--d:.35s">
-        <span class="ol">Option 2</span>
-        <h3>Les robots + tableau de bord</h3>
+        <span class="ol">Avec le tableau de bord</span>
+        <h3>Les robots, branchés sur le tableau de bord</h3>
         <div class="bud-p"><b>57 000 €</b><span>HT · 76 jours-homme à 750 €</span></div>
         <ul class="bud-l">
           <li><span>Écouter : interviews à Saint-Georges</span><b>3 j</b></li>
@@ -1069,39 +1085,6 @@
         <div class="bud-x"><span>+ Robots : Temi, Piaggio Kilo, 2 Dreame, PACO</span><b>23 175 €</b></div>
         <div class="bud-t">Total du pilote<b>80 175 € HT</b></div>
       </div>
-    </div>
-  </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
-</section>
-
-<!-- ======================= ROI · the money the robots save, the same with either option ======================= -->
-<section class="slide" data-scene="roi">
-  <div class="roi2">
-    <h1 class="rise">Ce que les robots font économiser,<br><em>avec l'une ou l'autre option.</em></h1>
-    <div class="roi-solo rise" style="--d:.2s">
-      <div class="roi-g"><div><small>Économisé par an, par immeuble</small><b>≈ 42 000 €</b></div></div>
-      <div>
-        <ul class="roi-l">
-          <li><span>Accueil</span><i>Check-in, check-out et questions : 1 h 30 libérée par jour × 25 €</i><b>14 000 €</b></li>
-          <li><span>Ménage</span><i>8 % d'heures de ménage en moins × 230 000 €*</i><b>18 000 €</b></li>
-          <li><span>Sécurité</span><i>2 incidents évités par an × 5 000 €**</i><b>10 000 €</b></li>
-        </ul>
-        <p class="roi-n">* 1 M€ de ménage par an pour 130 appartements, ramené à un immeuble de 30 appartements comme Saint-Georges.<br>** 2 incidents par an, selon vous. 5 000 € : notre estimation du coût moyen d'un incident (dégâts, geste commercial).</p>
-      </div>
-    </div>
-  </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
-</section>
-
-<!-- ======================= Why the dashboard · it is what lets Quartier Libre scale ======================= -->
-<section class="slide" data-scene="why">
-  <div class="roi2">
-    <h1 class="rise">Pourquoi le tableau de bord :<br><em>il permet de passer à l'échelle.</em></h1>
-    <div class="why-l rise" style="--d:.2s">
-      <div class="key"><b>Passer à l'échelle</b><span>Le tableau de bord se paie une seule fois. Chaque nouvel immeuble s'y branche avec très peu d'adaptations : <strong>son coût s'amortit sur les 9 immeubles</strong>, les 5 actuels et les 4 en projet. Et une seule personne à Madagascar les suit tous, sur un seul écran.</span></div>
-      <div><b>Tout mesurer, tout tracer</b><span>Les heures gagnées, pour décider du déploiement sur des chiffres. Qui a vu quelle vidéo, qui a levé quelle alerte, pour la CNIL et en cas d'incident.</span></div>
-      <div><b>Ne pas dépendre d'un fabricant</b><span>Un robot déçoit, une marque disparaît : on le remplace sans refaire les process ni perdre l'historique.</span></div>
-      <div><b>Un seul outil à apprendre</b><span>Chaque nouvel employé apprend un outil, pas trois applis, dans chacun des 9 immeubles. Avec le turnover de l'hôtellerie, c'est du temps de formation gagné à chaque arrivée.</span></div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
