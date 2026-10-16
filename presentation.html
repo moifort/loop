@@ -509,6 +509,9 @@
   .pk-alt small { font-size: 16px; color: var(--muted); }
   .pk-alt p { font-size: 18px; line-height: 1.4; color: var(--ink-2); }
   .pk-note { font-size: 22px; font-weight: 600; color: var(--ink); }
+  /* Price source footnote: top band of the robots slide, bottom of the robot hero */
+  .src-n { position: absolute; z-index: 6; font-size: 16px; color: var(--muted); }
+  .pk-hero .src-n { position: static; max-width: 520px; font-size: 15px; line-height: 1.45; }
 
   /* Mockup page with the companion app as a small phone over its top right corner */
   .duo-shot { position: relative; }
@@ -624,11 +627,12 @@
 
 <section class="slide full" data-scene="robots">
   <div class="strips">
-    <div class="strip rise" style="--d:0.05s;--tint:#eef1fa"><div class="simg"><img src="https://www.generationrobots.com/20457-large_default/temi-3-service-robot.jpg" alt=""></div><div class="sid"><div class="btags"><span class="btag" style="background:var(--navy)">P1 · Accueil</span><span class="btag" style="background:#2a2f63">P1 · Sécurité</span></div><b>Temi 3</b></div><p>Répond aux clients au comptoir. Madagascar prend la main en visio. La nuit, il surveille l'entrée.</p><span class="sprice">8 175 € HT</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
+    <div class="strip rise" style="--d:0.05s;--tint:#eef1fa"><div class="simg"><img src="https://www.generationrobots.com/20457-large_default/temi-3-service-robot.jpg" alt=""></div><div class="sid"><div class="btags"><span class="btag" style="background:var(--navy)">P1 · Accueil</span><span class="btag" style="background:#2a2f63">P1 · Sécurité</span></div><b>Temi 3</b></div><p>Répond aux clients au comptoir. Madagascar prend la main en visio. La nuit, il surveille l'entrée.</p><span class="sprice">8 175 € HT*</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
     <div class="strip rise" style="--d:0.15s;--tint:#f3effd"><div class="simg"><img src="https://a.storyblok.com/f/255103/660x440/fdbd3f4063/kilo_gallery_side_mobile.webp/m/1200x0/filters:quality(85)" alt=""></div><div class="sid"><span class="btag" style="background:var(--violet)">P2 · Bagages</span><b>Piaggio Kilo</b></div><p>Porte 130 kg. Suit le client à l'aller, revient seul.</p><span class="sprice">Sur devis</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
     <div class="strip rise" style="--d:0.25s;--tint:#e9f6fd"><div class="simg"><img src="https://www.inside-digital.de/img/dreame-l40s-pro-ultra-in-station.webp" alt="" style="filter:brightness(1.07)"></div><div class="sid"><div class="btags"><span class="btag" style="background:var(--sky)">P3 · Ménage</span><span class="btag" style="background:#2a2f63">P1 · Sécurité</span></div><b>Dreame L40s Pro Ultra</b></div><p>Aspire et lave, pièce par pièce. La nuit, surveille les étages, caméra allumée.</p><span class="sprice">≈ 500 € HT</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
     <div class="strip rise" style="--d:0.35s;--tint:#fdf1ea"><div class="simg photo"><img src="https://lescompanions.com/wp-content/uploads/2024/12/PXL_20240528_1615560902.jpg" alt=""></div><div class="sid"><span class="btag" style="background:#c2410c">P3 · Peinture</span><b>PACO</b></div><p>Peint murs et plafonds avec le peintre. D'abord une journée d'essai.</p><span class="sprice">≈ 2 000 € / jour</span><span class="chip a"><span class="dot"></span>À tester</span></div>
   </div>
+  <p class="src-n" style="top:34px;right:96px">* Prix public de Generation Robots, revendeur en France : 9 810 € TTC, applications incluses. Relevé en octobre 2026.</p>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
@@ -637,8 +641,9 @@
     <div class="pk-hero" style="--tint:#eef1fa">
       <div class="btags rise"><span class="btag" style="background:var(--navy)">P1 · Accueil</span><span class="btag" style="background:#2a2f63">P1 · Sécurité</span></div>
       <b class="name rise" style="--d:.1s">Temi 3</b>
-      <div class="meta rise" style="--d:.2s"><span class="price">8 175 € HT</span><span class="chip g stamp pop" data-at="3600"><span class="dot"></span>Retenu</span></div>
+      <div class="meta rise" style="--d:.2s"><span class="price">8 175 € HT*</span><span class="chip g stamp pop" data-at="3600"><span class="dot"></span>Retenu</span></div>
       <p class="specs rise" style="--d:.25s">1 m · 12 kg · écran tactile 13,3 pouces · environ 8 h d'autonomie</p>
+      <p class="src-n rise" style="--d:.3s">* Prix public de Generation Robots, revendeur en France : 9 810 € TTC, applications incluses. Relevé en octobre 2026.</p>
       <div class="img"><img src="https://www.generationrobots.com/20650-large_default/temi-3-service-robot.jpg" alt="Temi 3"></div>
     </div>
     <div class="pk-body">
