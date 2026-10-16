@@ -1011,7 +1011,7 @@
   <button class="nav-btn active" data-view="building" title="Bâtiment"><i data-icon="building-2" data-size="20" data-sw="1.75"></i></button>
   <div class="nav-sep" role="separator"></div>
   <button class="nav-btn" data-view="accueil" title="Temi · Accueil"><i data-icon="bot" data-size="20" data-sw="1.75"></i></button>
-  <button class="nav-btn" data-view="kilo" title="Kilo · Bagages"><i data-icon="luggage" data-size="20" data-sw="1.75"></i></button>
+  <button class="nav-btn" data-view="kilo" title="T300 · Bagages"><i data-icon="luggage" data-size="20" data-sw="1.75"></i></button>
   <button class="nav-btn" data-view="menage" title="Robots de ménage"><i data-icon="brush-cleaning" data-size="20" data-sw="1.75"></i></button>
   <button class="nav-btn" data-view="vigie" title="Vigie · sécurité"><i data-icon="shield" data-size="20" data-sw="1.75"></i></button>
   <div class="nav-sep" role="separator"></div>
@@ -1075,8 +1075,8 @@
       <div class="card-h"><h3 id="temi-title">Robot d'accueil</h3><div class="right" id="temi-head-right"></div></div>
       <div class="temi" id="temi"></div>
     </div>
-    <!-- Luggage cart (Piaggio Kilo): live position on its corridor, current errand, actions -->
-    <div class="card" id="kilo-card" role="link" tabindex="0" title="Ouvrir la fiche du Kilo">
+    <!-- Luggage cart (Pudu T300): live position on its corridor, current errand, actions -->
+    <div class="card" id="kilo-card" role="link" tabindex="0" title="Ouvrir la fiche du T300">
       <div class="card-h"><h3 id="kilo-title"></h3><div class="right" id="kilo-head-right"></div></div>
       <div class="kilo" id="kilo"></div>
     </div>
@@ -1254,7 +1254,7 @@
 
 </div>
 
-<!-- Luggage cart sheet (Piaggio Kilo): where it is, current errand, day, stats, upkeep, logbook -->
+<!-- Luggage cart sheet (Pudu T300): where it is, current errand, day, stats, upkeep, logbook -->
 <div class="wrap" id="view-kilo" hidden>
 
   <div class="card rf-head" id="kf-head"></div>
@@ -1491,7 +1491,7 @@ document.querySelectorAll('i[data-icon]').forEach(el => {
 
 // =====================================================================
 // Data — Quartier Libre Saint-Georges, RDC + 5 levels (mansard on top),
-// one cleaning robot per level, a greeter robot at the reception and a luggage cart (Piaggio Kilo).
+// one cleaning robot per level, a greeter robot at the reception and a luggage cart (Pudu T300).
 // Plan units: footprint is W x D (x to the right, y to the back).
 // =====================================================================
 const W = 12, D = 6;
@@ -1552,7 +1552,7 @@ const FLOORS = [
     robot: { name: 'CLN-2D84', state: 'run', pct: 86, bat: 81, at: [4, 3], next: 'Fin estimée 12 h 10' },
     // Luggage cart: the guest walks it from the lift to the apartment (motor assist), it drives back alone.
     // The object moves to the floor the cart is on (see moveToFloor). Demo starts on É2, heading to 204 with M. Bernard.
-    porter: { name: 'KILO-3B8D', state: 'deliver', loaded: true, bat: 74, trips: 9, at: [4, 3.05],
+    porter: { name: 'T300-3B8D', state: 'deliver', loaded: true, bat: 74, trips: 9, at: [4, 3.05],
       guests: [{ name: 'M. Bernard', bags: 2, apt: '204', floor: 2 }, { name: 'Mme Okafor', bags: 3, apt: '402', floor: 4 }, { name: 'M. Garcia', bags: 2, apt: '502', floor: 5 }], guest: 0 } },
   { id: 1, label: 'É1', name: 'App. 101–107', occupied: ['103', '106'], area: 610, occ: 86, layout: apartmentLevel(1),
     robot: { name: 'CLN-7B19', state: 'run', pct: 64, bat: 58, at: [4, 3], next: 'Fin estimée 13 h 40' } },
@@ -1779,7 +1779,7 @@ const alarmPhase = () => `animation-delay:-${Math.round(performance.now() % 1000
 const alarmRobot = ([cx, cy], glyph) =>
   `<circle class="alarm-ring" cx="${cx}" cy="${cy}" style="${alarmPhase()}"/><g class="robot-alarm" style="${alarmPhase()}">${glyph}</g>`;
 
-// Piaggio Kilo as a luxury-hotel bellman cart: rectangular platform on four wheels, two brass posts joined
+// Pudu T300 as a luxury-hotel bellman cart: rectangular platform on four wheels, two brass posts joined
 // by an arch at the back, suitcases on the deck while it carries a guest's luggage.
 // Seen from +x/+y, so only the top, front (y2) and right (x2) faces of each box are drawn.
 const BRASS = '#c8a96a';
@@ -2350,7 +2350,7 @@ function renderRows() {
       ${nextCell(f.greeter.next, 'accueil')}</tr>`);
     if (f.porter) { const p = f.porter; special.push(`<tr ${rowAttrs(f, p.name)}><td><div class="rb"><span class="rb-ic" style="background:var(--bagages)">${TILE_BAGAGES}</span><div><span class="nm-row"><b>${p.name}</b>${batteryIcon(p.bat)}</span>${porterPlace(f)}</div></div></td>
       <td>${porterChip(p)}</td>
-      <td><span class="muted">${p.trips} trajets bagages · Piaggio Kilo</span></td>
+      <td><span class="muted">${p.trips} trajets bagages · Pudu T300</span></td>
       ${nextCell(porterNext(p, f), 'kilo')}</tr>`); }
     const r = f.robot, st = STATE[r.state];
     rows.push(`<tr ${rowAttrs(f, r.name, r.state === 'blocked')}>
@@ -3379,9 +3379,9 @@ document.getElementById('view-robot').addEventListener('click', sheetAction);
 document.getElementById('rf-banner').addEventListener('click', sheetAction);
 
 // =====================================================================
-// Luggage cart sheet — KILO-3B8D (Piaggio Kilo), floor 2 corridor.
+// Luggage cart sheet — T300-3B8D (Pudu T300), floor 2 corridor.
 // =====================================================================
-const KILO_INFO = { model: 'Piaggio Kilo', serial: 'PFF-K1-0412', since: 'août 2026', fw: '2.3.1', hours: 214, payload: '130 kg',
+const KILO_INFO = { model: 'Pudu T300, version levage', serial: 'PD-T300-0412', since: 'août 2026', fw: '2.3.1', hours: 214, payload: '300 kg',
   base: 'Bagagerie, RDC', autonomy: '7 h',
   // Trips per day over the week (today live), average minutes per trip
   week: [14, 17, 12, 19, 16, 21, 0], perTrip: '6 min',
@@ -3390,7 +3390,7 @@ const KILO_INFO = { model: 'Piaggio Kilo', serial: 'PFF-K1-0412', since: 'août 
     { d: '30 sept.', k: 'maint', who: 'Karim (maintenance)', txt: 'Capteurs avant nettoyés, plateau resserré.' },
     { d: '24 sept.', k: 'incident', who: 'Automatique', txt: 'Arrêt de sécurité : enfant devant le chariot au RDC. Reprise seule après 20 s.' },
     { d: '15 sept.', k: 'update', who: 'Automatique', txt: 'Mise à jour 2.3.1 : vitesse plafonnée à 3 km/h dans les couloirs.' },
-    { d: '28 août', k: 'review', who: 'Technicien Piaggio', txt: 'Mise en service : cartographie du RDC et de l\'É2, appel de l\'ascenseur testé.' },
+    { d: '28 août', k: 'review', who: 'Technicien Pudu', txt: 'Mise en service : cartographie du RDC et de l\'É2, appel de l\'ascenseur testé.' },
   ] };
 // Today's runs (simulated hours): done ones feed the timeline and the log, later check-ins are planned.
 const KILO_DAY = [
@@ -3551,9 +3551,9 @@ const GEVENTS = [
   gev(0.4, 'act', 'accueil.guest_file.updated', 'Fiche de <b>Mme Lefèvre</b> complétée sur la vue Accueil : facture à établir au nom de Lefèvre Conseil SARL.', { guest: 'Mme Lefèvre', invoice_to: 'Lefèvre Conseil SARL', siret: '812 345 678 00021' }),
   gev(0.5, 'in', 'greg.guest.context', 'Greg retrouve la réservation de <b>Mme Lefèvre</b> et le SIRET de sa société dans le PMS.', { reservation: 'QL-SG-48213', apartment: '402', siret: '812 345 678 00021' }),
   gev(0.7, 'out', 'temi.human_requested', '<b>TEMI-4F2A</b> : Mme Lefèvre demande un humain (facture au nom de sa société).', { robot: 'TEMI-4F2A', guest: 'Mme Lefèvre', intent: 'invoice.company_name', lang: 'fr' }),
-  gev(3, 'out', 'kilo.trip.started', '<b>KILO-3B8D</b> part de la bagagerie avec M. Bernard, 2 valises vers l\'app. 204.', { robot: 'KILO-3B8D', guest: 'M. Bernard', bags: 2, to: { floor: 2, apartment: '204' } }),
-  gev(3.1, 'act', 'kilo.reserve', '<b>KILO-3B8D</b> réservé pour M. Bernard, rendez-vous à la bagagerie.', { robot: 'KILO-3B8D', meet_at: 'bagagerie' }),
-  gev(3.3, 'in', 'greg.kilo.dispatch', 'Greg envoie le Kilo : check-in de <b>M. Bernard</b> confirmé dans le PMS, 2 valises déclarées.', { guest: 'M. Bernard', apartment: '204', bags: 2, source: 'pms.checkin' }),
+  gev(3, 'out', 'kilo.trip.started', '<b>T300-3B8D</b> part de la bagagerie avec M. Bernard, 2 valises vers l\'app. 204.', { robot: 'T300-3B8D', guest: 'M. Bernard', bags: 2, to: { floor: 2, apartment: '204' } }),
+  gev(3.1, 'act', 'kilo.reserve', '<b>T300-3B8D</b> réservé pour M. Bernard, rendez-vous à la bagagerie.', { robot: 'T300-3B8D', meet_at: 'bagagerie' }),
+  gev(3.3, 'in', 'greg.kilo.dispatch', 'Greg envoie le T300 : check-in de <b>M. Bernard</b> confirmé dans le PMS, 2 valises déclarées.', { guest: 'M. Bernard', apartment: '204', bags: 2, source: 'pms.checkin' }),
   gev(8, 'in', 'greg.cleaning.start', 'Greg demande le ménage de l\'<b>app. 306</b>.', { apartment: '306', priority: 'normal' },
     { status: 'refused', why: 'App. 306 occupé par M. Okafor jusqu\'au 5 oct. : Loop ne lance jamais un robot dans un appartement occupé.' }),
   gev(13.2, 'out', 'cleaning.scheduled', 'Ménage de l\'app. 203 planifié, prêt vers <b>12 h 55</b>.', { apartment: '203', robot: 'CLN-2D84', eta: '12:55' }),
@@ -3580,8 +3580,8 @@ const GLIVE = [
          ['act', 'status.reply', 'Réponse envoyée à Greg : app. 207 prêt vers <b>12 h 10</b>.', { apartment: '207', eta: '12:10' }]],
   () => [['out', 'temi.question_answered', '<b>TEMI-4F2A</b> a répondu seul : « Où est la bagagerie ? »', { robot: 'TEMI-4F2A', lang: 'en' }]],
   () => [['out', 'robot.docked', '<b>CLN-0A3E</b> est à sa base, réservoir plein dans 25 min.', { robot: 'CLN-0A3E' }]],
-  () => [['in', 'greg.kilo.recall', 'Greg rappelle le Kilo à la bagagerie après le check-in de M. Bernard.', { robot: 'KILO-3B8D' }],
-         ['act', 'kilo.route', '<b>KILO-3B8D</b> reprogrammé : retour à la bagagerie.', { robot: 'KILO-3B8D', to: 'bagagerie' }]],
+  () => [['in', 'greg.kilo.recall', 'Greg rappelle le T300 à la bagagerie après le check-in de M. Bernard.', { robot: 'T300-3B8D' }],
+         ['act', 'kilo.route', '<b>T300-3B8D</b> reprogrammé : retour à la bagagerie.', { robot: 'T300-3B8D', to: 'bagagerie' }]],
 ];
 let gLive = 0;
 // Errors and rejects: refused or unknown commands, retried webhooks, plus link incidents
@@ -3609,7 +3609,7 @@ function gregErrors() {
 // Capabilities Greg holds on the platform. Locked ones stay with humans.
 const GPERMS = [
   { k: 'clean', on: true, t: 'Lancer et reprogrammer le ménage', d: 'Jamais dans un appartement occupé' },
-  { k: 'kilo', on: true, t: 'Envoyer le Kilo', d: 'Bagagerie ↔ étages, à la demande ou au check-in' },
+  { k: 'kilo', on: true, t: 'Envoyer le T300', d: 'Bagagerie ↔ étages, à la demande ou au check-in' },
   { k: 'temi', on: true, t: 'Parler à travers Temi', d: 'Annonces et réponses aux clients, FR et EN' },
   { k: 'read', on: true, t: 'Lire l\'état des robots et des appartements', d: 'Avancement, batteries, alertes' },
   { k: 'video', on: false, lock: true, t: 'Voir les flux vidéo', d: 'RGPD : réservé aux opérateurs humains' },
@@ -3647,7 +3647,7 @@ function gPayload(e) {
 const gregOutSpans = () => GREG.outs.map(o => [o.a, o.b]).concat(GREG.downAt ? [[simH(GREG.downAt), simH(Date.now())]] : []);
 // What stops working while a connector is paused, shown in the degraded-mode strip
 const CONN_IMPACT = {
-  mews: 'Les arrivées et départs ne remontent plus : pas de ménage lancé au départ, pas de Kilo à l\'arrivée.',
+  mews: 'Les arrivées et départs ne remontent plus : pas de ménage lancé au départ, pas de T300 à l\'arrivée.',
   salto: 'Plus de badges pour les robots ni de codes générés pendant une visio.',
   whatsapp: 'L\'équipe sur place ne reçoit plus les alertes.',
   cams: 'La Vigie ne reçoit plus les mouvements détectés par les caméras.',
@@ -3917,13 +3917,13 @@ const CONNS = [
       { k: 'sites', t: 'Établissements liés', d: 'Un établissement Mews par immeuble' },
       { k: 'sw', t: 'Recevoir les arrivées et les départs', d: 'En temps réel, par webhook', on: true },
       { k: 'sw', t: 'Marquer l\'appartement « prêt » dans Mews', d: 'Dès que le robot et le contrôle ont fini', on: true },
-      { k: 'sw', t: 'Envoyer le Kilo à l\'arrivée', d: 'Quand le client déclare des valises', on: true },
+      { k: 'sw', t: 'Envoyer le T300 à l\'arrivée', d: 'Quand le client déclare des valises', on: true },
       { k: 'sel', t: 'Synchronisation complète', v: 'Toutes les 2 min', opts: ['Toutes les 2 min', 'Toutes les 5 min', 'Toutes les 15 min'] },
       { k: 'val', t: 'Compte de service', v: 'loop@quartierlibre.fr', d: 'Accès en lecture + statut des appartements' },
       { k: 'sw', t: 'Modifier une facture', d: 'Réservé à la réception', on: false, lock: true },
     ],
     events: [[1, 'in', 'reservation.checked_in', '<b>Mme Okafor</b> enregistrée, app. 402.', 'OP'], [2, 'in', 'reservation.checked_in', '<b>M. Bernard</b> enregistré, app. 204, 2 valises déclarées.'],
-      [2.1, 'act', 'kilo.reserve', 'KILO-3B8D envoyé à la bagagerie pour M. Bernard.'], [9, 'in', 'reservation.checked_out', '<b>M. Rossi</b> a quitté l\'app. 12.', 'MA'],
+      [2.1, 'act', 'kilo.reserve', 'T300-3B8D envoyé à la bagagerie pour M. Bernard.'], [9, 'in', 'reservation.checked_out', '<b>M. Rossi</b> a quitté l\'app. 12.', 'MA'],
       [13.4, 'out', 'room.ready', 'App. 203 signalé <b>prêt</b> dans Mews.'], [14, 'in', 'reservation.checked_out', '<b>Mme Haddad</b> a quitté l\'app. 203, facture soldée.'],
       [38, 'out', 'room.ready', 'Synchro lente : Mews a répondu en 1,8 s, rattrapé sans perte.', 'MD', 'warn'], [47, 'in', 'reservation.created', 'Nouvelle réservation : app. 305, du 6 au 9 oct.']],
     live: [['in', 'reservation.updated', 'Réservation de <b>M. Garcia</b> : arrivée avancée à 15 h.', 'SG'], ['out', 'room.status', 'État des appartements envoyé à Mews.', 'CA'], ['in', 'reservation.checked_in', '<b>Mme Lindqvist</b> enregistrée, app. 8.', 'MA']] },
@@ -3972,9 +3972,9 @@ const CONNS = [
       { k: 'val', t: 'Passerelle', v: 'Otis API · locale', d: 'Une par immeuble' },
       { k: 'sw', t: 'Bloquer la cabine', d: 'Jamais : les clients restent prioritaires', on: false, lock: true },
     ],
-    events: [[2.4, 'in', 'lift.arrived', 'Arrivée à l\'É2 avec <b>KILO-3B8D</b>.'], [3.2, 'out', 'lift.call', 'Appel au RDC pour <b>KILO-3B8D</b> et M. Bernard, vers l\'É2.'],
+    events: [[2.4, 'in', 'lift.arrived', 'Arrivée à l\'É2 avec <b>T300-3B8D</b>.'], [3.2, 'out', 'lift.call', 'Appel au RDC pour <b>T300-3B8D</b> et M. Bernard, vers l\'É2.'],
       [21, 'out', 'lift.call', 'Appel à l\'É3 pour <b>CLN-4A21</b>, vers l\'É4.', 'OP'], [190, 'in', 'gateway.restart', 'Passerelle redémarrée par Otis : coupure de 4 min, 2 trajets décalés.', 'SG', 'err']],
-    live: [['out', 'lift.call', 'Appel à l\'É2 pour <b>KILO-3B8D</b>, retour au RDC.', 'SG'], ['in', 'lift.arrived', 'Cabine au RDC.', 'OP']] },
+    live: [['out', 'lift.call', 'Appel à l\'É2 pour <b>T300-3B8D</b>, retour au RDC.', 'SG'], ['in', 'lift.arrived', 'Cabine au RDC.', 'OP']] },
   { id: 'gtb', name: 'GTB Saint-Georges', cat: 'Bâtiment', mono: 'G', color: '#64748b', state: 'setup', short: 'GTB', sub: 'Chauffage, clim, éclairage, présence', sites: ['SG'],
     setupNote: 'Installée au 9ᵉ mais jamais activée. Une fois connectée, la vigie voit les détecteurs de présence de chaque étage et Loop peut éteindre la lumière derrière les robots.',
     opts: [
