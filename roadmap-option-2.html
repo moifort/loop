@@ -27,8 +27,8 @@
   .brand span { color: var(--muted); font-weight: 500; font-size: 16px; letter-spacing: 0; margin-left: 8px; white-space: nowrap; }
   h1 { font-size: 52px; line-height: 1.05; font-weight: 800; letter-spacing: -.04em; }
   header > div { flex: 1; }
-  /* Reading note under the title */
-  .boxes { margin-top: 24px; }
+  /* Reading notes under the title */
+  .boxes { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
   .box { display: flex; gap: 14px; padding: 18px 20px; border-radius: 12px; background: var(--navy-soft); }
   .box .ico { font-size: 22px; line-height: 1.2; }
   .box b { display: block; font-size: 17px; margin-bottom: 6px; }
@@ -216,6 +216,8 @@
     <div class="boxes">
       <div class="box"><span class="ico">💡</span><div><b>Comment lire cette roadmap</b>
         <p>On avance par étapes courtes. À la fin de chacune, on fait le bilan avec vous et on décide de la suite. Les premières étapes sont donc détaillées. Les suivantes dépendent de ces bilans : elles donnent la direction. C'est pour cela qu'on ne rentre pas dans le détail des tâches d'après.</p></div></div>
+      <div class="box"><span class="ico">🧳</span><div><b>Et le chariot à bagages ?</b>
+        <p>C'était la priorité 2. On a une idée de produit, mais il n'est pas encore en vente en France. Les autres qu'on a vus ne sont pas assez professionnels pour un hôtel. On ne le met donc pas dans cette roadmap.</p></div></div>
     </div>
   </div>
 </header>
