@@ -26,6 +26,9 @@
   /* ---------- Sidebar ---------- */
   .nav { grid-row: 1 / 3; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 8px 0; gap: 4px; }
   /* Michael's avatar: drop assets/michael.jpg and set it as background-image */
+  /* Loop logo at the top of the nav, above the user */
+  .nav-logo { width: 38px; height: 38px; margin: 4px 0 8px; }
+  .nav-logo svg { display: block; width: 100%; height: 100%; }
   .me { width: 38px; height: 38px; border-radius: 50%; margin: 2px 0 14px; background: linear-gradient(135deg, #2b3a67, #5b6fa8) center / cover; color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 14px; box-shadow: 0 0 0 2px var(--panel), 0 0 0 3px var(--border); }
   .nav-btn { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; color: var(--muted); position: relative; }
   .nav-btn:hover { background: var(--panel-2); color: var(--text); }
@@ -1007,6 +1010,7 @@
 <body>
 
 <nav class="nav">
+  <div class="nav-logo" title="Loop"><svg viewBox="0 0 512 512" aria-label="Loop"><rect width="512" height="512" rx="104" fill="#1f5bff"/><path d="M338 176 A118 118 0 1 1 188 166" fill="none" stroke="#fff" stroke-width="46" stroke-linecap="round"/><path d="M170 100 L264 112 L211 190 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><circle cx="256" cy="262" r="25" fill="#12131a"/></svg></div>
   <div class="me" title="Michael — CEO">M</div>
   <button class="nav-btn active" data-view="building" title="Bâtiment"><i data-icon="building-2" data-size="20" data-sw="1.75"></i></button>
   <div class="nav-sep" role="separator"></div>
