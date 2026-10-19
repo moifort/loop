@@ -125,6 +125,10 @@
   .card h4 { font-size: 21px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
   .card .jh { font-size: 30px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .card .jh small { font-size: 15px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+  /* Effort when a step spreads over more weeks than it costs, explained on hover */
+  .card .effort { position: relative; display: inline-block; margin-left: 10px; padding: 3px 9px; border-radius: 6px; background: var(--soft); color: var(--c); font-size: 14px; font-weight: 700; letter-spacing: 0; vertical-align: 5px; cursor: help; }
+  .card .effort::after { content: attr(data-tip); position: absolute; top: calc(100% + 8px); left: 0; z-index: 10; width: 290px; padding: 10px 12px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; white-space: normal; box-shadow: 0 10px 30px -10px rgba(18,19,26,.5); opacity: 0; visibility: hidden; transition: opacity .15s; pointer-events: none; }
+  .card .effort:hover::after, .card .effort:focus::after { opacity: 1; visibility: visible; }
   .blk small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
   .blk ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
   .blk li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.4; color: var(--ink-2); }
@@ -246,7 +250,7 @@
 
 <h2>Conclusion</h2>
 <div class="callout">
-  <b>Au bout de 8 semaines, on a un POC, pas un produit.</b>
+  <b>Au bout de 9 semaines, on a un POC, pas un produit.</b>
   <p>Temi a tourné à l'accueil d'un site de test, piloté depuis Madagascar quand il le faut. On sait ce qui marche, ce qui manque, et ce que ça demande. Rien n'est prêt pour tous vos immeubles.</p>
   <p>C'est le but de cette première itération : apprendre vite, sur le terrain, pour décider ensemble de la suite.</p>
 </div>
@@ -261,40 +265,41 @@ const WEEKS = 22;
 
 const phases = [
   { title: 'Accueil', prio: 'P1.1', color: 'p1', sub: 'Un POC (proof of concept, la preuve que ça marche) : un robot dans le hall, piloté depuis Madagascar quand il le faut, pour accueillir les clients sans ajouter de personnel.', items: [
-    { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', conf: 90, from: 1, to: 1,
+    { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', conf: 90, from: 1, to: 2, effort: 7,
+      effortTip: 'Les interviews dépendent des plannings de vos équipes. On vient une demi-journée par-ci, une demi-journée par-là, pas à temps plein. L\'étape s\'étale sur 2 semaines, mais ne coûte pas plus de 7 jours-homme.',
       out: ['Sélection du site de test', 'Rencontre avec le fournisseur : démo, prix, location, SAV, pour préparer l\'étape 2', 'Interview de l\'équipe IT : outils et connecteurs logiciels, comment se passerait la téléopération depuis Madagascar', 'Étude du robot Temi : specs, outils hardware et software'],
       doc: ['Document de cadrage', 'Roadmap révisée'] },
-    { id: 'e2', n: 'Étape 2', name: 'Test en conditions réelles', conf: 85, from: 2, to: 2,
+    { id: 'e2', n: 'Étape 2', name: 'Test en conditions réelles', conf: 85, from: 3, to: 3,
       pre: ['Le robot est reçu'],
       out: ['Temi installé sur le site de test, dans le hall, avec sa base et 2 ou 3 points de passage', 'Une application très simple sur Temi : une question ouverte aux clients, par exemple « Que pensez-vous du robot ? »', 'Si Temi a une appli native pour téléopérer : un test avec un opérateur dans une salle à côté, puis un test avec un opérateur à Madagascar', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs'],
       doc: ['Compte rendu'],
       mes: ['Développer sur Temi : accès, outils, ce qu\'il est possible de faire ou non', 'Les retours des clients sur le robot', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar', 'Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'] },
-    { id: 'e3', n: 'Étape 3', name: 'Téléopération', conf: 80, from: 3, to: 4,
+    { id: 'e3', n: 'Étape 3', name: 'Téléopération', conf: 80, from: 4, to: 5,
       pre: ['L\'étape 2 est validée : Temi répond au besoin', 'Un opérateur à Madagascar a réussi à le piloter'],
       out: ['Semaine 1 : un logiciel très simple autour de l\'appli native de Temi, pour qu\'un téléopérateur reprenne la main', 'Semaine 1 : un test plus poussé avec un téléopérateur, sur le site de test', 'Semaine 2 : mise en production, Temi tourne une semaine en autonomie à l\'accueil'],
       doc: ['Compte rendu de l\'essai en conditions réelles : la téléopération par les opérateurs de Madagascar'],
       mes: ['Prises en main par jour', 'Les questions les plus posées à distance', 'Les retours des téléopérateurs et des clients'] },
-    { id: 'e4', n: 'Étape 4', name: 'Check-in et check-out automatiques', conf: 80, from: 5, to: 5, opt: true,
+    { id: 'e4', n: 'Étape 4', name: 'Check-in et check-out automatiques', conf: 80, from: 6, to: 6, opt: true,
       out: ['Jours 1 et 2 : une application Android basique, embarquée sur Temi', 'Le client fait son check-in et son check-out sur Temi, à partir de sa réservation', 'Premiers branchements avec les outils de l\'appart-hôtel', 'Jours 3 à 5 : test en conditions réelles, en français et en anglais', 'L\'opérateur ne reprend la main que si ça bloque'],
       doc: ['Bilan P1.1 : ce qui marche, ce qui manque pour la production, la suite proposée'],
       mes: ['Statistiques des arrivées et des départs faits sans opérateur', 'Temps gagné par l\'accueil et par Madagascar'] },
-    { id: 'e5', n: 'Étape 5', name: 'Connecteur Greg AI', conf: 80, icon: 'assets/greg-ai-icon.png', from: 6, to: 6, opt: true,
+    { id: 'e5', n: 'Étape 5', name: 'Connecteur Greg AI', conf: 80, icon: 'assets/greg-ai-icon.png', from: 7, to: 7, opt: true,
       out: ['Une couche d\'abstraction du robot, pour intégrer plus simplement les outils du client : Greg AI, PMS (logiciel de gestion hôtelière), etc.', 'Les statistiques du robot, et ses pannes', 'Les statistiques de check-in et de check-out', 'Des actions déclenchées par Greg AI, et des actions envoyées à Greg AI'] },
   ]},
   { title: 'Vigile', prio: 'P1.2', color: 'p1', items: [
-    { id: 'v1', n: 'Étape 6', name: 'Mode vigile', conf: 65, from: 7, to: 8,
+    { id: 'v1', n: 'Étape 6', name: 'Mode vigile', conf: 65, from: 8, to: 9,
       pre: ['Le bilan P1.1 est bon : l\'accueil et la téléopération sont validés'],
       out: ['Une application compagnon pour l\'agent d\'accueil, avec un bouton qui déclenche l\'alerte', 'Au plus simple : à l\'alerte, un téléopérateur prend la main sur Temi', 'Un mode vigile qui enregistre la vidéo et la conserve pour s\'en servir ensuite', 'Un test en conditions réelles'],
       doc: ['Le protocole pour récupérer les vidéos', 'Compte rendu du test'],
       mes: ['Temps entre l\'appui sur le bouton et la prise en main', 'Ce que les vidéos montrent vraiment', 'Ce qu\'en pense l\'agent d\'accueil'] },
   ]},
   { title: 'Nettoyage', prio: 'P2', color: 'p2', sub: 'Des robots de nettoyage grand public, un par étage. Ils assistent le personnel de ménage et peuvent aussi jouer un rôle de vigile.', items: [
-    { id: 'n1', n: 'Étape 7', name: 'Robots de nettoyage', conf: 40, from: 9, to: 13,
+    { id: 'n1', n: 'Étape 7', name: 'Robots de nettoyage', conf: 40, from: 10, to: 14,
       out: ['Un robot de nettoyage grand public par étage', 'Il assiste le personnel de ménage dans ses tâches', 'Il peut aussi jouer un rôle de vigile'],
       note: 'On ne détaille pas plus pour l\'instant : le contenu dépendra des bilans précédents.' },
   ]},
   { title: 'Production', prio: 'P3', color: 'p3', sub: 'D\'abord un site, puis les autres.', items: [
-    { id: 'pr1', n: 'Étape 8', name: 'Un site en production, puis plusieurs', conf: 20, from: 14, to: 19.5,
+    { id: 'pr1', n: 'Étape 8', name: 'Un site en production, puis plusieurs', conf: 20, from: 15, to: 20.5,
       out: ['Tout est testé et rodé sur un site : ça tourne bien, sans bug', 'Une fois que ça tourne, on déploie sur plusieurs sites'] },
   ]},
 ];
@@ -302,12 +307,12 @@ const phases = [
 // One word under each diamond (above with up), the detail shows on hover. end opens the detail to the left.
 // Blocking decisions put their word above, unless below.
 const gates = [
-  { w: 2, l: 'Robot', t: 'Cadrage et robot', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place. Le document de cadrage et la roadmap révisée. Le robot est-il reçu ? Sinon, l\'étape 2 ne démarre pas.', block: true, below: true },
-  { w: 3, l: 'Go / no go', t: 'Go / no go robot', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant le test. Temi répond-il au besoin ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
-  { w: 5, l: 'Bilan', t: 'Bilan téléopération', tip: 'Temi tourne à l\'accueil depuis une semaine. Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
-  { w: 7, l: 'Bilan P1.1', t: 'Bilan P1.1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. Un POC, pas un produit : on décide avec le client de la suite.' },
-  { w: 9, l: 'Bilan P1.2', t: 'Bilan P1.2', tip: 'Ce que le mode vigile a donné sur le terrain. On décide si on passe au nettoyage.' },
-  { w: 14, l: 'Bilan P2', t: 'Bilan P2', up: true, tip: 'Ce que les robots de nettoyage ont donné, étage par étage. On décide si on passe à la production.' },
+  { w: 3, l: 'Robot', t: 'Cadrage et robot', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place. Le document de cadrage et la roadmap révisée. Le robot est-il reçu ? Sinon, l\'étape 2 ne démarre pas.', block: true, below: true },
+  { w: 4, l: 'Go / no go', t: 'Go / no go robot', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant le test. Temi répond-il au besoin ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
+  { w: 6, l: 'Bilan', t: 'Bilan téléopération', tip: 'Temi tourne à l\'accueil depuis une semaine. Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
+  { w: 8, l: 'Bilan P1.1', t: 'Bilan P1.1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. Un POC, pas un produit : on décide avec le client de la suite.' },
+  { w: 10, l: 'Bilan P1.2', t: 'Bilan P1.2', tip: 'Ce que le mode vigile a donné sur le terrain. On décide si on passe au nettoyage.' },
+  { w: 15, l: 'Bilan P2', t: 'Bilan P2', up: true, tip: 'Ce que les robots de nettoyage ont donné, étage par étage. On décide si on passe à la production.' },
 ];
 const milestones = [];
 
@@ -364,7 +369,7 @@ ph.innerHTML = phases.map(p => {
       <article class="card" id="${it.id}" style="--c:${c};--soft:${soft}">
         <div class="card-top">${solo(p) ? '' : `<span class="n">${it.n.toUpperCase()}</span>`}${it.opt ? '<span class="opt">Optionnelle</span>' : ''}<span class="w">${weeks(it)}</span></div>
         <h4>${it.icon ? `<img class="h4-icon" src="${it.icon}" alt="">` : ''}${it.name}</h4>
-        <div class="jh">${num(len(it))} <small>semaine${len(it) >= 2 ? 's' : ''}</small></div>
+        <div class="jh">${num(len(it))} <small>semaine${len(it) >= 2 ? 's' : ''}</small>${it.effort ? `<span class="effort" tabindex="0" data-tip="${it.effortTip}">${it.effort} jours-homme max</span>` : ''}</div>
         ${it.pre ? `<div class="blk pre"><small>Pour démarrer l'étape</small><ul>${it.pre.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
         <div class="blk out"><small>À la fin de l'étape</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
         ${it.doc ? `<div class="blk doc"><small>Remis au client</small><ul>${it.doc.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
