@@ -159,7 +159,10 @@
   tr.sub td { color: var(--muted); font-size: 15px; }
   tr.subtotal td { font-weight: 700; background: var(--bg); }
   /* Confidence badge: green when close, amber, then red when far */
-  .conf { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; margin-right: 12px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: help; vertical-align: 1px; }
+  .conf { position: relative; display: inline-flex; align-items: center; height: 20px; padding: 0 6px; margin-right: 12px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: help; vertical-align: 1px; outline: none; }
+  /* Drawn tooltip, same look as the decision tips: the native title does not show everywhere */
+  .conf::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 8px); right: 0; z-index: 10; width: 270px; padding: 10px 12px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; text-align: left; white-space: normal; box-shadow: 0 10px 30px -10px rgba(18,19,26,.5); opacity: 0; visibility: hidden; transition: opacity .15s; pointer-events: none; }
+  .conf:hover::after, .conf:focus::after { opacity: 1; visibility: visible; }
   .conf.hi { background: var(--green-soft); color: #17784a; }
   .conf.mid { background: var(--amber-soft); color: #8a5a00; }
   .conf.lo { background: var(--red-soft); color: #9b2226; }
@@ -247,7 +250,7 @@
 <div id="phases"></div>
 
 <h2>Le total</h2>
-<p class="h2-sub">Les durées se préciseront après l'étape 1, quand on saura quels logiciels utilise Quartier Libre et ce que Greg AI sait faire. Le pourcentage est notre confiance dans chaque durée : passez la souris dessus pour le détail.</p>
+<p class="h2-sub">Les durées se préciseront après l'étape 1, quand on saura quels logiciels utilise Quartier Libre et ce que Greg AI sait faire. Le pourcentage est notre confiance dans le temps estimé : passez la souris dessus pour le détail.</p>
 
 <div class="totals">
   <table id="totals"></table>
@@ -398,7 +401,7 @@ const last = Math.max(...phases.flatMap(p => p.items.map(i => i.to)));
 // Confidence: a small badge before the duration, explained on hover
 const conf = i => {
   const lvl = i.conf >= 75 ? 'hi' : i.conf >= 50 ? 'mid' : 'lo';
-  return `<span class="conf ${lvl}" title="Taux de confiance : ${i.conf} %. Plus une étape est proche, plus on est sûr de sa durée. Plus elle est loin, plus elle dépend des bilans d'avant.">${i.conf} %</span>`;
+  return `<span class="conf ${lvl}" tabindex="0" data-tip="Confiance dans le temps estimé : ${i.conf} %. Plus une étape est proche, plus on est sûr de sa durée. Plus elle est loin, plus elle dépend des bilans d'avant.">${i.conf} %</span>`;
 };
 const stepRow = (i, c, prio, solo) => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:${c}"></span>${solo ? '' : `${i.n} · `}${i.name}</td><td class="tg"><span class="prio" style="--c:${c}">${prio}</span>${i.opt ? '<span class="opt">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${conf(i)}<span class="d">${dur(len(i))}</span></td></tr>`;
 // One block per priority: P1.1 and P1.2 go together under P1. A block of one step needs no subtotal.
