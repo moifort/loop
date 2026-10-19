@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Loop × Quartier Libre — roadmap itérative</title>
 <style>
-  /* Same palette as the deck: Loop blue, client priorities P1 navy, P2 violet, P3 sky */
+  /* Same palette as the deck: Loop blue, client priorities P1 navy, P2 violet. P3 production is grey here, not estimated yet */
   :root {
     --loop: #1f5bff; --loop-50: #eef3ff; --loop-100: #dce6ff;
     --ink: #12131a; --ink-2: #3a3d4a; --muted: #6b7080; --faint: #b8bec6;
@@ -47,7 +47,7 @@
   .legend i.lg-gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
 
   /* ---------- Gantt: one column per week ---------- */
-  .gantt { --label: 300px; --weeks: 26; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: clip;
+  .gantt { --label: 300px; --weeks: 22; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: clip;
     min-width: calc(var(--label) + var(--weeks) * 34px); }
   /* Small screens: the chart keeps a readable width and scrolls sideways, step names stay pinned on the left */
   .gantt-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -232,8 +232,7 @@
 <div class="legend">
   <span><i style="--c:var(--navy)"></i>P1.1 · Accueil, P1.2 · Vigile</span>
   <span><i style="--c:var(--violet)"></i>P2 · Nettoyage</span>
-  <span><i style="--c:var(--sky)"></i>P3 · Plateforme</span>
-  <span><i style="--c:var(--grey)"></i>P4 · Production</span>
+  <span><i style="--c:var(--grey)"></i>P3 · Production</span>
   <span><i class="dash" style="--c:var(--navy)"></i>Étape optionnelle</span>
   <span><i class="tbc" style="--c:var(--grey)"></i>À chiffrer</span>
   <span><i class="lg-gate"></i>Bilan et décision avec le client</span>
@@ -265,8 +264,8 @@
 
 <script>
 // ---------- Data: one entry per step. Weeks are 1-based and inclusive, durations are approximate. ----------
-const C = { p1: ['var(--navy)', 'var(--navy-soft)'], p2: ['var(--violet)', 'var(--violet-soft)'], p3: ['var(--sky)', 'var(--sky-soft)'], p4: ['var(--grey)', 'var(--grey-soft)'] };
-const WEEKS = 26;
+const C = { p1: ['var(--navy)', 'var(--navy-soft)'], p2: ['var(--violet)', 'var(--violet-soft)'], p3: ['var(--grey)', 'var(--grey-soft)'] };
+const WEEKS = 22;
 
 const phases = [
   { title: 'Accueil', prio: 'P1.1', color: 'p1', sub: 'Un POC (proof of concept, la preuve que ça marche) : un robot dans le hall, piloté depuis Madagascar quand il le faut, pour accueillir les clients sans ajouter de personnel.', items: [
@@ -302,12 +301,8 @@ const phases = [
       out: ['Un robot de nettoyage grand public par étage', 'Il assiste le personnel de ménage dans ses tâches', 'Il peut aussi jouer un rôle de vigile'],
       note: 'Même durée que P1.1 et P1.2 réunies. On ne détaille pas plus pour l\'instant : le contenu dépendra des bilans précédents.' },
   ]},
-  { title: 'Plateforme', prio: 'P3', color: 'p3', tbc: true, sub: 'Une plateforme au-dessus des robots et des outils du client, pour toute l\'équipe.', items: [
-    { id: 'pf1', n: 'Étape 8', name: 'Plateforme Loop', from: 17, to: 20, tbc: true,
-      out: ['Une couche d\'abstraction au-dessus des outils du client, comme Greg AI', 'Une interconnexion avec ses autres outils', 'Des fonctionnalités pour chaque métier : accueil, ménage, techniciens, IT, managers', 'Remonter des informations, lancer des actions'] },
-  ]},
-  { title: 'Production', prio: 'P4', color: 'p4', tbc: true, sub: 'D\'abord un site, puis les autres.', items: [
-    { id: 'pr1', n: 'Étape 9', name: 'Un site en production, puis plusieurs', from: 21, to: 24, tbc: true,
+  { title: 'Production', prio: 'P3', color: 'p3', tbc: true, sub: 'D\'abord un site, puis les autres.', items: [
+    { id: 'pr1', n: 'Étape 8', name: 'Un site en production, puis plusieurs', from: 17, to: 20, tbc: true,
       out: ['Tout est testé et rodé sur un site : ça tourne bien, sans bug', 'Une fois que ça tourne, on déploie sur plusieurs sites'] },
   ]},
 ];
@@ -320,7 +315,7 @@ const gates = [
   { w: 5, l: 'Bilan', t: 'Bilan téléopération', tip: 'Temi tourne à l\'accueil depuis une semaine. Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
   { w: 7, l: 'Bilan P1.1', t: 'Bilan P1.1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. Un POC, pas un produit : on décide avec le client de la suite.' },
   { w: 9, l: 'Bilan P1.2', t: 'Bilan P1.2', tip: 'Ce que le mode vigile a donné sur le terrain. On décide si on passe au nettoyage.' },
-  { w: 17, l: 'Bilan P2', t: 'Bilan P2', up: true, tip: 'Ce que les robots de nettoyage ont donné, étage par étage. On chiffre la plateforme et la production.' },
+  { w: 17, l: 'Bilan P2', t: 'Bilan P2', up: true, tip: 'Ce que les robots de nettoyage ont donné, étage par étage. On chiffre la production.' },
 ];
 const milestones = [];
 
