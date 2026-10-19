@@ -126,7 +126,7 @@
   .card .jh { font-size: 30px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .card .jh small { font-size: 15px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
   /* Effort when a step spreads over more weeks than it costs, explained on hover */
-  .card .effort { position: relative; display: inline-block; margin-left: 10px; padding: 3px 9px; border-radius: 6px; background: var(--soft); color: var(--c); font-size: 14px; font-weight: 700; letter-spacing: 0; vertical-align: 5px; cursor: help; }
+  .card .effort { position: relative; display: inline-block; margin-left: 10px; padding: 3px 9px; border-radius: 6px; background: var(--soft); color: var(--c); font-size: 14px; font-weight: 700; letter-spacing: 0; vertical-align: baseline; cursor: help; }
   .card .effort::after { content: attr(data-tip); position: absolute; top: calc(100% + 8px); left: 0; z-index: 10; width: 290px; padding: 10px 12px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; white-space: normal; box-shadow: 0 10px 30px -10px rgba(18,19,26,.5); opacity: 0; visibility: hidden; transition: opacity .15s; pointer-events: none; }
   .card .effort:hover::after, .card .effort:focus::after { opacity: 1; visibility: visible; }
   .blk small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
