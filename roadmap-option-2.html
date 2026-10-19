@@ -109,6 +109,7 @@
   .phase-side { padding: 28px 28px 28px 0; display: flex; flex-direction: column; gap: 10px; }
   .phase-side .prio { height: 26px; font-size: 13px; padding: 0 10px; }
   .phase-side h3 { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
+  .phase-side .phase-sub { font-size: 17px; line-height: 1.45; color: var(--ink-2); }
   .phase-side .sum { margin-top: 6px; font-size: 15px; color: var(--muted); }
   .phase-side .sum b { color: var(--ink); font-variant-numeric: tabular-nums; }
   .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 0; border-left: 1px solid var(--line); }
@@ -246,7 +247,7 @@ const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
 const WEEKS = 9;
 
 const phases = [
-  { title: 'Accueil', prio: 'P1.1', color: 'p1', items: [
+  { title: 'Accueil', prio: 'P1.1', color: 'p1', sub: 'Un robot dans le hall, piloté depuis Madagascar quand il le faut, pour accueillir les clients sans ajouter de personnel.', items: [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1,
       out: ['Sélection du site de test', 'Rencontre avec le fournisseur : démo, prix, location, SAV, pour préparer l\'étape 2', 'Interview de l\'équipe IT : outils et connecteurs logiciels, comment se passerait la téléopération depuis Madagascar', 'Étude du robot Temi : specs, outils hardware et software'],
       doc: ['Document de cadrage', 'Roadmap révisée'] },
@@ -330,7 +331,7 @@ ph.innerHTML = phases.map(p => {
   const from = Math.min(...p.items.map(i => i.from)), to = Math.max(...p.items.map(i => i.to));
   return `<section class="phase">
     <div class="phase-side">
-      <h3><span class="prio" style="--c:${c}">${p.prio}</span>${p.title}</h3>
+      <h3><span class="prio" style="--c:${c}">${p.prio}</span>${p.title}</h3>${p.sub ? `<p class="phase-sub">${p.sub}</p>` : ''}
       <p class="sum"><b>${dur(to - from + 1)}</b> · S${from} à S${Math.ceil(to)}</p>
     </div>
     <div class="cards">${p.items.map(it => `
