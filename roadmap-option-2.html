@@ -236,7 +236,7 @@
 </div>
 
 <h2>Après le bilan P1</h2>
-<p class="h2-sub">Ce qu'on a à la fin de l'étape 4, et ce qu'on n'a pas.</p>
+<p class="h2-sub">Ce qu'on a à la fin de l'étape 5, et ce qu'on n'a pas.</p>
 <div class="callout">
   <b>La téléopération est en production. Le reste, non.</b>
   <p>Temi tourne à l'accueil depuis l'étape 3, et un opérateur à Madagascar reprend la main quand il le faut. Le check-in automatique, s'il est fait, reste un prototype : il montre que ça marche, il ne tourne pas seul tous les jours.</p>
@@ -254,7 +254,7 @@
   </div>
   <div class="cards">
     <article class="card" style="--c:var(--grey);--soft:var(--grey-soft)">
-      <div class="card-top"><span class="n">ÉTAPE 5</span><span class="w">à chiffrer</span></div>
+      <div class="card-top"><span class="n">ÉTAPE 6</span><span class="w">à chiffrer</span></div>
       <h4>Application compagnon</h4>
       <div class="blk out"><small>À la fin de l'étape</small><ul>
         <li>Une petite application pour l'agent d'accueil, avec un bouton « j'ai un problème »</li>
@@ -265,7 +265,7 @@
       <p class="risk"><b>Temi ne fait pas de ronde</b>. Il ne passe pas les portes et reste dans sa zone, le hall. C'est une vigie à l'accueil, pas un vigile qui patrouille.</p>
     </article>
     <article class="card" style="--c:var(--grey);--soft:var(--grey-soft)">
-      <div class="card-top"><span class="n">ÉTAPE 6</span><span class="w">à chiffrer</span></div>
+      <div class="card-top"><span class="n">ÉTAPE 7</span><span class="w">à chiffrer</span></div>
       <h4>Test en conditions réelles</h4>
       <div class="blk out"><small>À la fin de l'étape</small><ul>
         <li>Tester en réel comment Temi réagit quand l'agent appuie sur le bouton</li>
@@ -288,7 +288,7 @@ const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
 const WEEKS = 8;
 
 const phases = [
-  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Quatre étapes, l\'une après l\'autre, la dernière en option. On comprend, on teste le robot sur place, on met la téléopération en production, puis, en option, on prototype le check-in.', items: [
+  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre, les deux dernières en option. On comprend, on teste le robot sur place, on met la téléopération en production, puis, en option, on prototype le check-in et un premier connecteur Greg.', items: [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1,
       out: ['Sélection du site de test', 'Rencontre avec le fournisseur : démo, prix, location, SAV, pour préparer l\'étape 2', 'Interview de l\'équipe IT : outils et connecteurs logiciels, comment se passerait la téléopération depuis Madagascar', 'Étude du robot Temi : specs, outils hardware et software'],
       doc: ['Document de cadrage', 'Roadmap révisée'] },
@@ -309,6 +309,9 @@ const phases = [
       mes: ['Part des arrivées et des départs faits sans opérateur', 'Temps gagné par l\'accueil et par Madagascar'],
       note: 'Étape optionnelle, proposée en plus : un développement logiciel branché à l\'IT de l\'appart-hôtel. Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.',
       risk: ['<b>À trancher</b> : passer par un connecteur Greg, ou se brancher directement sur les outils de l\'appart-hôtel.'] },
+    { id: 'e5', n: 'Étape 5', name: 'Connecteur Greg', from: 6, to: 6, opt: true,
+      out: ['Les fondations d\'une application qui envoie des informations à Greg, pour ses analytics', 'Les statistiques du robot, et ses pannes', 'Les statistiques de check-in et de check-out', 'Des actions déclenchées par Greg, et des actions envoyées à Greg', 'Les débuts de la plateforme Loop : une couche commune au-dessus des robots, quelle que soit leur marque'],
+      note: 'Étape optionnelle, si le client est intéressé. Les informations et les actions sont à cadrer avec lui.' },
   ]},
 ];
 
@@ -318,7 +321,7 @@ const gates = [
   { w: 2, l: 'Robot', t: 'Cadrage et robot', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place. Le document de cadrage et la roadmap révisée. Le robot est-il reçu ? Sinon, l\'étape 2 ne démarre pas.', block: true, below: true },
   { w: 3, l: 'Go / no go', t: 'Go / no go robot', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant le test. Temi répond-il au besoin ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
   { w: 5, l: 'Bilan', t: 'Bilan téléopération', tip: 'Temi est en production depuis une semaine. Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
-  { w: 6, l: 'Bilan P1', t: 'Bilan P1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. La téléopération tourne en production, le check-in reste un prototype : on décide avec le client vers où on part.', end: true },
+  { w: 7, l: 'Bilan P1', t: 'Bilan P1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. La téléopération tourne en production, le check-in reste un prototype : on décide avec le client vers où on part.', end: true },
 ];
 const milestones = [];
 
