@@ -26,7 +26,14 @@
   .brand svg { width: 30px; height: 30px; }
   .brand span { color: var(--muted); font-weight: 500; font-size: 16px; letter-spacing: 0; margin-left: 8px; white-space: nowrap; }
   h1 { font-size: 52px; line-height: 1.05; font-weight: 800; letter-spacing: -.04em; }
-  .intro { margin-top: 18px; max-width: 780px; font-size: 18px; line-height: 1.55; color: var(--ink-2); }
+  header > div { flex: 1; }
+  /* Reading notes under the title: a tip in blue, a warning in amber */
+  .boxes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+  .box { display: flex; gap: 14px; padding: 18px 20px; border-radius: 12px; background: var(--navy-soft); }
+  .box.warn { background: var(--amber-soft); }
+  .box .ico { font-size: 22px; line-height: 1.2; }
+  .box b { display: block; font-size: 17px; margin-bottom: 6px; }
+  .box p { font-size: 15px; line-height: 1.55; color: var(--ink-2); }
 
 
   h2 { font-size: 30px; font-weight: 800; letter-spacing: -.03em; margin: 52px 0 6px; }
@@ -162,6 +169,7 @@
 
   /* ---------- Smaller screens ---------- */
   @media (max-width: 1100px) {
+    .boxes { grid-template-columns: 1fr; }
     .wrap { padding: 40px 32px 64px; }
     .gantt { --label: 230px; }
     .g-label { padding: 8px 12px; font-size: 14px; }
@@ -203,10 +211,16 @@
       loop <span>× Quartier Libre Collection · Document de travail</span>
     </div>
     <h1>Roadmap.</h1>
-    <p class="intro">Plus une étape est proche, plus elle est détaillée.<br>
-      Les premières disent précisément comment on travaille et ce qu'on met en place.<br>
-      Après chaque bilan avec vous, on peut arrêter ou changer de cap.<br>
-      Plus loin, les étapes donnent la direction, pas le détail : elles dépendront de ce qu'on aura appris.</p>
+    <div class="boxes">
+      <div class="box"><span class="ico">💡</span><div><b>Comment lire cette roadmap</b>
+        <p>Plus une étape est proche, plus elle est détaillée.<br>
+        Le P1.1 montre notre façon de travailler : comment on aborde le sujet, ce qu'on teste, ce qu'on vous remet.<br>
+        Après chaque bilan avec vous, on peut arrêter ou changer de cap.<br>
+        Plus loin, les étapes donnent la direction, pas le détail : elles dépendront de ce qu'on aura appris.</p></div></div>
+      <div class="box warn"><span class="ico">⚠️</span><div><b>Pas encore prêt pour la production</b>
+        <p>Aujourd'hui, on ne peut pas vous proposer une solution prête pour la production et déployable dans tous vos immeubles.<br>
+        Avant d'en arriver là, il faut tester sur place et avoir beaucoup de retours : des clients, de l'accueil et de Madagascar.</p></div></div>
+    </div>
   </div>
 </header>
 
