@@ -6,9 +6,10 @@
 <title>Loop — Quartier Libre Saint-Georges</title>
 <style>
   :root {
-    --bg: #f4f5f6; --panel: #ffffff; --panel-2: #f9fafb; --border: #e4e6ea;
+    /* Loop brand theme: blue-tinted surfaces, the brand blue for accents and the nav */
+    --bg: #e9effd; --panel: #ffffff; --panel-2: #f4f7ff; --border: #dce4f6;
     --text: #1f2328; --muted: #7d8590; --faint: #b8bec6;
-    --blue: #006fff; --blue-soft: #e6f0ff;
+    --blue: #1f5bff; --blue-soft: #e6eeff; --nav: #1f5bff; --nav-2: #1748d6;
     --green: #22a861; --green-soft: #e7f6ee; --amber: #f0a020; --amber-soft: #fff4e0;
     --red: #e5484d; --red-soft: #fdecec; --gray: #a0a7b0;
     --accueil: #1e3a8a; --menage: #0ea5e9; --bagages: #7c3aed; --menage-soft: #e2f4fc; --occ: #3b82f6;
@@ -24,20 +25,20 @@
   button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; text-align: left; }
 
   /* ---------- Sidebar ---------- */
-  .nav { grid-row: 1 / 3; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 8px 0; gap: 4px; }
-  /* Michael's avatar: drop assets/michael.jpg and set it as background-image */
+  .nav { grid-row: 1 / 3; background: linear-gradient(180deg, var(--nav), var(--nav-2)); border-right: 0; display: flex; flex-direction: column; align-items: center; padding: 8px 0; gap: 4px; }
   /* Loop logo at the top of the nav, above the user */
   .nav-logo { width: 38px; height: 38px; margin: 4px 0 8px; }
   .nav-logo svg { display: block; width: 100%; height: 100%; }
+  /* Michael's avatar: drop assets/michael.jpg and set it as background-image */
   .me { width: 38px; height: 38px; border-radius: 50%; margin: 2px 0 14px; background: linear-gradient(135deg, #2b3a67, #5b6fa8) center / cover; color: #fff; display: grid; place-items: center; font-weight: 600; font-size: 14px; box-shadow: 0 0 0 2px var(--panel), 0 0 0 3px var(--border); }
-  .nav-btn { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; color: var(--muted); position: relative; }
-  .nav-btn:hover { background: var(--panel-2); color: var(--text); }
-  .nav-btn.active { background: var(--blue-soft); color: var(--blue); }
-  .nav-btn .badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--red); border: 2px solid var(--panel); }
+  .nav-btn { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; color: rgba(255,255,255,.72); position: relative; }
+  .nav-btn:hover { background: rgba(255,255,255,.14); color: #fff; }
+  .nav-btn.active { background: rgba(255,255,255,.22); color: #fff; }
+  .nav-btn .badge { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--red); border: 2px solid var(--nav); }
   .nav-spacer { flex: 1; }
   /* Connector link indicator on the GregAi nav button: green when live, amber when paused */
-  .nav-btn .conn { position: absolute; top: 7px; right: 7px; width: 9px; height: 9px; border-radius: 50%; background: var(--green); border: 2px solid var(--panel); }
-  .nav-btn.active .conn { border-color: var(--blue-soft); }
+  .nav-btn .conn { position: absolute; top: 7px; right: 7px; width: 9px; height: 9px; border-radius: 50%; background: var(--green); border: 2px solid var(--nav); }
+  .nav-btn.active .conn { border-color: #4a7bff; }
   .nav-btn .conn[data-state="paused"] { background: var(--amber); }
   .nav-btn .conn::after { content: ''; position: absolute; inset: -2px; border-radius: 50%; background: inherit; animation: greg-ping 2s ease-out infinite; }
   .nav-btn .conn[data-state="paused"]::after { animation: none; }
@@ -63,10 +64,10 @@
   .greg-down .acts { display: flex; gap: 8px; flex-wrap: wrap; }
   @media (prefers-reduced-motion: reduce) { .nav-btn .conn[data-state="down"] { animation: none; } }
   @media (prefers-reduced-motion: reduce) { .nav-btn .conn::after { animation: none; } }
-  .nav-sep { width: 24px; height: 1px; background: var(--border); margin: 6px 0; flex: none; }
+  .nav-sep { width: 24px; height: 1px; background: rgba(255,255,255,.25); margin: 6px 0; flex: none; }
 
   /* ---------- Header: one size, one colour ---------- */
-  .top { background: var(--panel); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; gap: 8px; font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; }
+  .top { background: var(--panel-2); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; gap: 8px; font-size: 13px; font-weight: 500; color: var(--text); white-space: nowrap; }
   .top .sep { color: var(--faint); font-weight: 400; }
   .top button { display: inline-flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 8px; font-weight: 500; }
   .top button:hover { background: var(--panel-2); }
@@ -906,7 +907,7 @@
   @media (prefers-reduced-motion: reduce) { .greg-dot::after { animation: none; } }
 
   /* ---------- Greg AI view ---------- */
-  .greg-av { width: 52px; height: 52px; border-radius: 14px; flex: none; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #0f172a, #1e3a8a 60%, #006fff); box-shadow: 0 4px 14px rgba(0,111,255,.25); }
+  .greg-av { width: 52px; height: 52px; border-radius: 14px; flex: none; display: grid; place-items: center; color: #fff; background: linear-gradient(135deg, #0f172a, #1e3a8a 60%, #1f5bff); box-shadow: 0 4px 14px rgba(31,91,255,.25); }
   .greg-av.sm { width: 22px; height: 22px; border-radius: 6px; box-shadow: none; }
   .greg-conn { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--border); padding-top: 12px; }
   .greg-conn > div { padding: 0 14px; border-left: 1px solid var(--border); min-width: 0; }
@@ -1010,7 +1011,7 @@
 <body>
 
 <nav class="nav">
-  <div class="nav-logo" title="Loop"><svg viewBox="0 0 512 512" aria-label="Loop"><rect width="512" height="512" rx="104" fill="#1f5bff"/><path d="M338 176 A118 118 0 1 1 188 166" fill="none" stroke="#fff" stroke-width="46" stroke-linecap="round"/><path d="M170 100 L264 112 L211 190 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/><circle cx="256" cy="262" r="25" fill="#12131a"/></svg></div>
+  <div class="nav-logo" title="Loop"><svg viewBox="0 0 512 512" aria-label="Loop"><rect width="512" height="512" rx="104" fill="#fff"/><path d="M338 176 A118 118 0 1 1 188 166" fill="none" stroke="#1f5bff" stroke-width="46" stroke-linecap="round"/><path d="M170 100 L264 112 L211 190 Z" fill="#1f5bff" stroke="#1f5bff" stroke-width="10" stroke-linejoin="round"/><circle cx="256" cy="262" r="25" fill="#12131a"/></svg></div>
   <div class="me" title="Michael — CEO">M</div>
   <button class="nav-btn active" data-view="building" title="Bâtiment"><i data-icon="building-2" data-size="20" data-sw="1.75"></i></button>
   <div class="nav-sep" role="separator"></div>
@@ -1132,7 +1133,7 @@
     <div class="cov-wrap" id="acc-cov"></div>
     <div class="legend">
       <span><i class="sw" style="background:#22a861"></i>Réceptionniste au poste</span>
-      <span><i class="sw" style="background:#006fff"></i>Robot seul</span>
+      <span><i class="sw" style="background:#1f5bff"></i>Robot seul</span>
       <span><i class="sw" style="background:#1e3a8a"></i>Pris en main depuis Madagascar</span>
       <span><i class="sw" style="background:#22a861;opacity:.3"></i>Prévu</span>
     </div>
@@ -2628,7 +2629,7 @@ const TOPQ = [['Wi-Fi', 6], ['Bagagerie', 5], ['Heure de check-out', 4], ['Taxi,
 const COV_PLAN = [[7, 8, 'robot'], [8, 10.5, 'desk'], [10.5, 10.6, 'remote'], [10.6, 10.8, 'robot'], [10.8, 13, 'desk'],
   [13, 13.4, 'robot'], [13.4, 13.5, 'remote'], [13.5, 13.8, 'robot'], [13.8, 19, 'desk'], [19, 23, 'robot']];
 // Reception page runs on the app's primary blue: the robot alone in primary, operator takeovers in midnight blue
-const COV_COLOR = { desk: '#22a861', robot: '#006fff', remote: '#1e3a8a' };
+const COV_COLOR = { desk: '#22a861', robot: '#1f5bff', remote: '#1e3a8a' };
 const DAY0 = 7, DAY1 = 23;
 function coverage() {
   const now = simH(Date.now()), away = simH(ACC.awayAt), segs = [];
@@ -2812,7 +2813,7 @@ function renderPosMap() {
       ? `<g class="spot" data-go="${p.id}"><title>${p.where}</title><rect x="${x - 9}" y="${y - 9}" width="18" height="18" rx="5" fill="#e7f6ee" stroke="#9fd8b9"/><g transform="translate(${x - 6},${y - 6}) scale(.5)" fill="none" stroke="#22a861" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${LUCIDE['zap']}</g></g>`
       : `<g class="spot" data-go="${p.id}"><title>${p.where}</title><circle cx="${x}" cy="${y}" r="5" fill="#e6f0ff" stroke="#b3d1ff"/></g>`;
   });
-  const rc = ACC.panicAt ? '#e5484d' : '#006fff';
+  const rc = ACC.panicAt ? '#e5484d' : '#1f5bff';
   s += ACC.panicAt
     ? `<g id="pos-robot"><circle class="alarm-ring" style="${alarmPhase()}"/><circle class="robot-alarm" r="7" fill="${rc}" stroke="#fff" stroke-width="2.5" style="${alarmPhase()}"/></g>`
     : `<g id="pos-robot"><circle class="pulse" r="6" fill="${rc}"/><circle r="7" fill="${rc}" stroke="#fff" stroke-width="2.5"/></g>`;
@@ -3096,7 +3097,7 @@ function renderMenage() {
   // Fitness-style rings: one per figure, minimal (ring + value + one muted line)
   setHTML('men-kpis', [
     ['Robots en ménage', `${run}/${fs.length}`, `${blocked} bloqué · ${charging} en charge`, run / fs.length, '#0ea5e9', 'brush-cleaning'],
-    ['Avancement', `${progress} %`, 'tous étages', progress / 100, '#006fff', 'gauge'],
+    ['Avancement', `${progress} %`, 'tous étages', progress / 100, '#1f5bff', 'gauge'],
     ['Espaces prêts', `${ready}/${total}`, 'hors occupés', ready / total, '#22a861', 'check'],
     ['Temps libéré', '3 h 40', 'objectif 5 h', 220 / 300, '#1e3a8a', 'clock'],
   ].map(([l, v, sub, k, col, ic]) => `<div class="kpi kpi-ring">${ring(k, col, ic)}<div><small>${l}</small><b>${v}</b><span>${sub}</span></div></div>`).join(''));
@@ -3723,7 +3724,7 @@ function renderGreg() {
       </div>
     </div>
     <div class="kpis">${[
-      ['Envoyés à Greg', GREG.sent, '99,6 % livrés du 1ᵉʳ coup', .996, '#006fff', 'arrow-up-right'],
+      ['Envoyés à Greg', GREG.sent, '99,6 % livrés du 1ᵉʳ coup', .996, '#1f5bff', 'arrow-up-right'],
       ['Commandes de Greg', GREG.recv, `${GREG.recv - GREG.refused} exécutées · ${GREG.refused} refusées`, (GREG.recv - GREG.refused) / GREG.recv, '#0f766e', 'arrow-down-left'],
       ['Latence', paused || down ? '—' : `${GREG.ms} ms`, down ? 'Greg ne répond plus' : 'moyenne du jour 180 ms', paused || down ? 0 : 1 - Math.min(GREG.ms, 1000) / 1000, down ? '#e5484d' : '#22a861', 'gauge'],
       ['Disponibilité', `${(98.7 - GREG.outs.length * 0.1).toFixed(1).replace('.', ',')} %`, `${1 + GREG.outs.length + (down ? 1 : 0)} coupures aujourd'hui`, .987 - GREG.outs.length * .001, '#1e3a8a', 'shield-check'],
@@ -3740,8 +3741,8 @@ function renderGreg() {
   setHTML('greg-chain-sub', 'Départ de Mme Haddad · app. 203');
   setHTML('greg-chain', [
     ['#1e3a8a', 'bot', t(14.5), 'Temi la voit partir', 'Hall : Mme Haddad sort avec 2 valises, reconnue à 94 %.'],
-    ['#006fff', 'arrow-up-right', t(14.4), 'Loop prévient Greg', '<code>guest.checkout_detected</code> livré en 120 ms.'],
-    ['linear-gradient(135deg,#0f172a,#1e3a8a 60%,#006fff)', 'sparkles', t(13.8), 'Greg vérifie', 'PMS : facture soldée. Salto : code révoqué. Prochaine arrivée 16 h.'],
+    ['#1f5bff', 'arrow-up-right', t(14.4), 'Loop prévient Greg', '<code>guest.checkout_detected</code> livré en 120 ms.'],
+    ['linear-gradient(135deg,#0f172a,#1e3a8a 60%,#1f5bff)', 'sparkles', t(13.8), 'Greg vérifie', 'PMS : facture soldée. Salto : code révoqué. Prochaine arrivée 16 h.'],
     ['#0f766e', 'arrow-down-left', t(13.6), 'Greg demande le ménage', 'App. 203 en priorité haute, avant l\'arrivée de 16 h.'],
     ['#0ea5e9', 'brush-cleaning', t(13.3), 'CLN-2D84 s\'en charge', 'Ajouté à sa tournée après le 207 : prêt vers 12 h 55.'],
   ].map(([bg, ic, at, b, p]) => `<div class="chain-step"><span class="node" style="background:${bg}">${icon(ic, 17)}</span><time>${at}</time><b>${b}</b><p>${p}</p></div>`).join(''));
