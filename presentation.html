@@ -88,18 +88,15 @@
 
   /* ---------- App window: the mockup's visual language at slide scale ---------- */
   .win { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 24px; box-shadow: 0 30px 80px -20px rgba(18,19,26,.25), 0 8px 24px rgba(18,19,26,.06); overflow: hidden; }
-  .win-bar { height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 22px; border-bottom: 1px solid var(--line); background: #fafbfc; font-size: 17px; font-weight: 600; color: var(--ink-2); }
+  /* Brand-blue title bar with the Loop logo in the middle: every app screen reads as Loop at a glance */
+  .win-bar { position: relative; height: 56px; display: flex; align-items: center; gap: 12px; padding: 0 22px; background: linear-gradient(90deg, var(--loop-600), var(--loop)); font-size: 17px; font-weight: 600; color: #fff; }
   .win-bar .dots { display: flex; gap: 8px; margin-right: 8px; }
-  .win-bar .dots i { width: 12px; height: 12px; border-radius: 50%; background: #e3e5ea; }
-  .win-bar .crumb { color: var(--faint); font-weight: 400; }
-  /* Loop logo in the window bar: every app screen in the deck reads as Loop at a glance */
-  .win-bar .wb-logo { display: flex; align-items: center; gap: 10px; font-family: Fredoka, "Nunito", -apple-system, sans-serif; font-size: 26px; font-weight: 600; line-height: 1; letter-spacing: .01em; color: var(--loop); }
-  .win-bar .wb-logo svg { width: 32px; height: 32px; }
-  .dark .win-bar .wb-logo { color: #8fb0ff; }
+  .win-bar .dots i { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,.35); }
+  .win-bar .wb-logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 10px; font-family: Fredoka, "Nunito", -apple-system, sans-serif; font-size: 27px; font-weight: 600; line-height: 1; letter-spacing: .01em; color: #fff; }
+  .win-bar .wb-logo svg { width: 32px; height: 32px; filter: drop-shadow(0 2px 6px rgba(10,30,110,.35)); }
   .win-bar .r { margin-left: auto; display: flex; gap: 10px; align-items: center; }
   .dark .win { background: #151a2e; border-color: #262d47; box-shadow: 0 30px 80px -20px rgba(0,0,0,.6); }
-  .dark .win-bar { background: #12172a; border-color: #262d47; color: #c8cee0; }
-  .dark .win-bar .dots i { background: #2b3250; }
+  .dark .win-bar { color: #fff; }
 
   .chip { display: inline-flex; align-items: center; gap: 7px; height: 30px; padding: 0 13px; border-radius: 999px; font-size: 15px; font-weight: 600; white-space: nowrap; }
   .chip.g { background: var(--green-soft); color: #137a44; }
@@ -539,6 +536,13 @@
       <path d="M170 100 L264 112 L211 190 Z" fill="#fff" stroke="#fff" stroke-width="10" stroke-linejoin="round"/>
       <circle cx="256" cy="262" r="25" fill="#12131a"/>
     </symbol>
+    <!-- White tile version of the mark, for the brand-blue window bars -->
+    <symbol id="loop-mark-w" viewBox="0 0 512 512">
+      <rect width="512" height="512" rx="104" fill="#fff"/>
+      <path d="M338 176 A118 118 0 1 1 188 166" fill="none" stroke="#1f5bff" stroke-width="46" stroke-linecap="round"/>
+      <path d="M170 100 L264 112 L211 190 Z" fill="#1f5bff" stroke="#1f5bff" stroke-width="10" stroke-linejoin="round"/>
+      <circle cx="256" cy="262" r="25" fill="#12131a"/>
+    </symbol>
     <symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></symbol>
     <symbol id="i-luggage" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 20a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2"/><path d="M8 18V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v14"/><path d="M10 20h4"/><circle cx="16" cy="20" r="2"/><circle cx="8" cy="20" r="2"/></symbol>
     <symbol id="i-brush" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 22-1-4"/><path d="M19 14a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2h-3a1 1 0 0 1-1-1V4a2 2 0 0 0-4 0v5a1 1 0 0 1-1 1H6a2 2 0 0 0-2 2v1a1 1 0 0 0 1 1"/><path d="M19 14H5l-1.973 6.767A1 1 0 0 0 4 22h16a1 1 0 0 0 .973-1.233z"/><path d="m8 22 1-4"/></symbol>
@@ -857,7 +861,7 @@
     </div>
     <div class="shot rise" style="--d:.2s">
       <div class="win">
-        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark"/></svg>loop</span><span class="crumb">/ Quartier Libre Collection / Saint-Georges</span></div>
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
         <iframe data-src="building-overview.html" title="Maquette Loop" tabindex="-1"></iframe>
       </div>
       <div class="hot pop" data-at="600" data-off="7400" style="left:350px;top:118px"><span class="pin"></span><span class="lbl">Le ménage, étage par étage</span></div>
@@ -890,7 +894,7 @@
     <div class="duo-shot rise" style="--d:.2s">
       <div class="app-shot">
         <div class="win">
-          <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark"/></svg>loop</span><span class="crumb">/ Accueil / TEMI-4F2A</span></div>
+          <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
           <iframe class="app" data-src="building-overview.html#accueil" title="Maquette Loop · Accueil" tabindex="-1"></iframe>
         </div>
       </div>
@@ -916,7 +920,7 @@
     </div>
     <div class="app-shot rise" style="--d:.2s">
       <div class="win">
-        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark"/></svg>loop</span><span class="crumb">/ Saint-Georges / Accueil / TEMI-4F2A</span></div>
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
         <iframe class="app" data-src="building-overview.html#accueil" title="Maquette Loop · Accueil" tabindex="-1"></iframe>
       </div>
       <svg class="cursor" id="pan-cur"><use href="#i-cursor"/></svg>
@@ -946,7 +950,7 @@
     </div>
     <div class="app-shot rise" style="--d:.2s">
       <div class="win">
-        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark"/></svg>loop</span><span class="crumb">/ Saint-Georges / Vigie</span></div>
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
         <iframe class="app" data-src="building-overview.html#vigie" title="Maquette Loop" tabindex="-1"></iframe>
       </div>
       <svg class="cursor" id="vig-cur"><use href="#i-cursor"/></svg>
@@ -971,7 +975,7 @@
     </div>
     <div class="app-shot rise" style="--d:.2s">
       <div class="win">
-        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark"/></svg>loop</span><span class="crumb">/ Bagages / T300-3B8D</span></div>
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
         <iframe class="app" data-src="building-overview.html#kilo" title="Maquette Loop · chariot à bagages" tabindex="-1"></iframe>
       </div>
     </div>
@@ -1000,7 +1004,7 @@
     <div class="duo-shot rise" style="--d:.2s">
       <div class="app-shot">
         <div class="win">
-          <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark"/></svg>loop</span><span class="crumb">/ Robots / CLN-2D84</span></div>
+          <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
           <iframe class="app" data-src="building-overview.html#robot/CLN-2D84" title="Maquette Loop · fiche du robot CLN-2D84" tabindex="-1"></iframe>
         </div>
       </div>
@@ -1031,7 +1035,7 @@
     </div>
     <div class="app-shot rise" style="--d:.2s">
       <div class="win">
-        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark"/></svg>loop</span><span class="crumb">/ Connecteurs / GregAi</span></div>
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
         <iframe class="app" data-src="building-overview.html#greg" title="Maquette Loop · Connecteurs" tabindex="-1"></iframe>
       </div>
       <svg class="cursor" id="dg-cur"><use href="#i-cursor"/></svg>
