@@ -39,7 +39,7 @@
   .legend i.lg-gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
 
   /* ---------- Gantt: one column per week ---------- */
-  .gantt { --label: 300px; --weeks: 8; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: clip;
+  .gantt { --label: 300px; --weeks: 9; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: clip;
     min-width: calc(var(--label) + var(--weeks) * 34px); }
   /* Small screens: the chart keeps a readable width and scrolls sideways, step names stay pinned on the left */
   .gantt-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -207,6 +207,7 @@
 
 <div class="legend">
   <span><i style="--c:var(--navy)"></i>P1 · Accueil</span>
+  <span><i style="--c:var(--violet)"></i>P1.2 · Vigile</span>
   <span><i class="dash" style="--c:var(--navy)"></i>Étape optionnelle</span>
   <span><i class="lg-gate"></i>Bilan et décision avec le client</span>
   <span><i class="lg-gate" style="background:var(--red)"></i>Décision bloquante : peut décaler tout le planning</span>
@@ -239,8 +240,8 @@
 
 <script>
 // ---------- Data: one entry per step. Weeks are 1-based and inclusive, durations are approximate. ----------
-const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
-const WEEKS = 8;
+const C = { p1: ['var(--navy)', 'var(--navy-soft)'], p12: ['var(--violet)', 'var(--violet-soft)'] };
+const WEEKS = 9;
 
 const phases = [
   { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre, les deux dernières en option. On comprend, on teste le robot sur place, on met la téléopération en production, puis, en option, on prototype le check-in et un premier connecteur Greg AI.', items: [
@@ -267,6 +268,13 @@ const phases = [
     { id: 'e5', n: 'Étape 5', name: 'Connecteur Greg AI', icon: 'assets/greg-ai-icon.png', from: 6, to: 6, opt: true,
       out: ['Les fondations d\'une application qui envoie des informations à Greg AI, pour ses analytics', 'Les statistiques du robot, et ses pannes', 'Les statistiques de check-in et de check-out', 'Des actions déclenchées par Greg AI, et des actions envoyées à Greg AI'] },
   ]},
+  { title: 'Vigile', prio: 'P1.2', color: 'p12', text: 'Une étape, une fois l\'accueil validé au bilan P1. Quand ça se passe mal à l\'accueil, l\'agent appuie sur un bouton et Temi passe en mode vigile.', items: [
+    { id: 'v1', n: 'Étape 6', name: 'Mode vigile', from: 7, to: 7.5,
+      pre: ['Le bilan P1 est bon : l\'accueil et la téléopération sont validés'],
+      out: ['Une application sur l\'iPhone de l\'agent d\'accueil, avec un bouton qui déclenche l\'alerte', 'Au plus simple : à l\'alerte, un téléopérateur prend la main sur Temi', 'Un mode vigile qui enregistre la vidéo et la conserve pour s\'en servir ensuite', 'Un test en conditions réelles'],
+      doc: ['Le protocole pour récupérer les vidéos', 'Compte rendu du test'],
+      mes: ['Temps entre l\'appui sur le bouton et la prise en main', 'Ce que les vidéos montrent vraiment', 'Ce qu\'en pense l\'agent d\'accueil'] },
+  ]},
 ];
 
 // One word under each diamond (above with up), the detail shows on hover. end opens the detail to the left.
@@ -283,15 +291,16 @@ const milestones = [];
 const pct = w => `${((w - 1) / WEEKS) * 100}%`;
 const span = (a, b) => `left:${pct(a)};width:${((b - a + 1) / WEEKS) * 100}%`;
 const len = i => i.to - i.from + 1;
-const dur = n => `${n} semaine${n > 1 ? 's' : ''}`;
-const weeks = i => i.from === i.to ? `S${i.from}` : `S${i.from}–S${i.to}`;
+const num = n => String(n).replace('.', ',');
+const dur = n => `${num(n)} semaine${n >= 2 ? 's' : ''}`;
+const weeks = i => i.from === Math.ceil(i.to) ? `S${i.from}` : `S${i.from}–S${Math.ceil(i.to)}`;
 const g = document.getElementById('gantt');
 let html = '<div class="grid-bg"></div>';
 const row = (label, track, cls = '') => `<div class="g-row ${cls}"><div class="g-label">${label}</div><div class="g-track">${track}</div></div>`;
 
-// Month header: 4.33 weeks per month
+// Month header: 4.33 weeks per month, no label in the last half week where it would be cut
 html += '<div class="g-row g-head"><div class="g-label">Semaines</div><div class="g-track"><div class="months">';
-for (let m = 0; m * 4.333 < WEEKS; m++) html += `<span style="left:${(m * 4.333 / WEEKS) * 100}%">M${m + 1}</span>`;
+for (let m = 0; m * 4.333 < WEEKS - .5; m++) html += `<span style="left:${(m * 4.333 / WEEKS) * 100}%">M${m + 1}</span>`;
 html += '</div></div></div>';
 
 let d = .15;
@@ -324,13 +333,13 @@ ph.innerHTML = phases.map(p => {
     <div class="phase-side">
       <span class="prio" style="--c:${c}">${p.prio}</span>
       <h3>${p.title}</h3><p>${p.text}</p>
-      <p class="sum"><b>${dur(to - from + 1)}</b> · S${from} à S${to}</p>
+      <p class="sum"><b>${dur(to - from + 1)}</b> · S${from} à S${Math.ceil(to)}</p>
     </div>
     <div class="cards">${p.items.map(it => `
       <article class="card" id="${it.id}" style="--c:${c};--soft:${soft}">
         <div class="card-top"><span class="n">${it.n.toUpperCase()}</span>${it.opt ? '<span class="opt">Optionnelle</span>' : ''}<span class="w">${weeks(it)}</span></div>
         <h4>${it.icon ? `<img class="h4-icon" src="${it.icon}" alt="">` : ''}${it.name}</h4>
-        <div class="jh">${len(it)} <small>semaine${len(it) > 1 ? 's' : ''}</small></div>
+        <div class="jh">${num(len(it))} <small>semaine${len(it) >= 2 ? 's' : ''}</small></div>
         ${it.pre ? `<div class="blk pre"><small>Pour démarrer l'étape</small><ul>${it.pre.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
         <div class="blk out"><small>À la fin de l'étape</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
         ${it.doc ? `<div class="blk doc"><small>Remis au client</small><ul>${it.doc.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
@@ -351,12 +360,12 @@ function flash() {
 }
 
 // ---------- Totals, with each step's length as a small bar ----------
-const steps = phases.flatMap(p => p.items);
+const steps = phases.flatMap(p => p.items.map(i => ({ ...i, c: C[p.color][0] })));
 const last = Math.max(...steps.map(i => i.to));
 document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th>Semaines</th><th>Durée</th></tr>
-  ${steps.map(i => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}${i.opt ? '<span class="opt" style="--c:var(--navy)">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${dur(len(i))}</td></tr>`).join('')}
-  <tr class="total"><td>Total P1 accueil</td><td>S1–S${last}</td><td>≈ ${dur(last)}</td></tr>`;
+  ${steps.map(i => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:${i.c}"></span>${i.n} · ${i.name}${i.opt ? '<span class="opt" style="--c:var(--navy)">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${dur(len(i))}</td></tr>`).join('')}
+  <tr class="total"><td>Total</td><td>S1–S${Math.ceil(last)}</td><td>≈ ${dur(last)}</td></tr>`;
 </script>
 </body>
 </html>
