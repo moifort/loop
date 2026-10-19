@@ -123,8 +123,8 @@
   .card-top { display: flex; align-items: baseline; gap: 10px; }
   .card-top .n { font-size: 14px; font-weight: 800; color: var(--c); letter-spacing: .04em; }
   .card-top .w { margin-left: auto; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .g-icon { width: 16px; height: 16px; margin-right: 6px; border-radius: 4px; flex: none; }
-  .card h4 .h4-icon { width: 24px; height: 24px; margin-right: 8px; vertical-align: -4px; border-radius: 4px; }
+  .g-icon { width: 16px; height: 16px; margin-left: 6px; border-radius: 4px; vertical-align: -3px; }
+  .card h4 .h4-icon { width: 24px; height: 24px; margin-left: 8px; vertical-align: -4px; border-radius: 4px; }
   .card h4 { font-size: 21px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
   .card .jh { font-size: 30px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .card .jh small { font-size: 15px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
@@ -289,7 +289,7 @@ const phases = [
       out: ['On stabilise l\'application au maximum', 'Temi tourne 1 à 2 semaines à l\'accueil, avec un support disponible le plus possible', 'On corrige ce qui casse et on améliore', 'Une supervision simple : robot en ligne, en charge ou en panne, prises en main par jour'],
       doc: ['Bilan de stabilité : les chiffres de la stabilisation, comparés aux seuils'],
       mes: ['Pannes par semaine, et temps pour repartir', 'Prises en main par jour', 'Combien de robots un opérateur peut suivre'] },
-    { id: 's3', n: 'Étape 5', name: 'Plateforme de gestion de la flotte', conf: 60, icon: 'assets/loop-icon.svg', from: 9.5, to: 9.5, effort: 5,
+    { id: 's3', n: 'Étape 5', name: 'Plateforme de gestion d\'une flotte de robots', conf: 60, icon: 'assets/loop-icon.svg', from: 9.5, to: 9.5, effort: 5,
       pre: ['Le site de test a tenu ses seuils pendant la stabilisation'],
       out: ['La plateforme Loop pour gérer la flotte de robots : une suite d\'outils, et un accès par rôle : assistance, téléopérateur, manager, technicien, IT', 'SAV : signaler un problème et suivre sa résolution', 'Maintenance : état des robots, pannes, interventions', 'Statistiques : prises en main, arrivées et départs, pannes', 'Un premier connecteur pour Greg AI'],
       doc: ['Les accès à la plateforme, pour chaque rôle'] },
@@ -358,7 +358,7 @@ phases.forEach(p => {
   html += row(p.title, '', 'g-group');
   p.items.forEach(it => {
     d += .08;
-    html += row(`${it.icon ? `<img class="g-icon" src="${it.icon}" alt="">` : ''}${it.name}${solo(p) ? '' : `<span class="tags"><span class="tag-room">${it.n}</span></span>`}`,
+    html += row(`<span>${it.name}${it.icon ? `<img class="g-icon" src="${it.icon}" alt="">` : ''}</span>${solo(p) ? '' : `<span class="tags"><span class="tag-room">${it.n}</span></span>`}`,
       `<a href="#${it.id}" class="bar${it.opt ? ' dash' : ''}" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${solo(p) ? '' : `${it.n} · `}${it.name} · ${weeks(it)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}"><span>${weeks(it)}${it.opt ? ' · optionnelle' : ''}</span></span>`);
   });
 });
@@ -386,7 +386,7 @@ ph.innerHTML = phases.map(p => {
     <div class="cards">${p.items.map(it => `
       <article class="card" id="${it.id}" style="--c:${c};--soft:${soft}">
         <div class="card-top">${solo(p) ? '' : `<span class="n">${it.n.toUpperCase()}</span>`}${it.opt ? '<span class="opt">Optionnelle</span>' : ''}<span class="w">${weeks(it)}</span></div>
-        <h4>${it.icon ? `<img class="h4-icon" src="${it.icon}" alt="">` : ''}${it.name}</h4>
+        <h4>${it.name}${it.icon ? `<img class="h4-icon" src="${it.icon}" alt="">` : ''}</h4>
         <div class="jh">${num(len(it))} <small>semaine${len(it) >= 2 ? 's' : ''}</small>${it.effort ? `<span class="effort" tabindex="0" data-tip="${it.effortTip || `L'étape s'étale sur ${dur(len(it))}, mais ne coûte pas plus de ${it.effort} jours-homme.`}">${it.effort} j/h</span>` : ''}</div>
         ${it.pre ? `<div class="blk pre"><small>Pour démarrer l'étape</small><ul>${it.pre.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
         <div class="blk out"><small>À la fin de l'étape</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
