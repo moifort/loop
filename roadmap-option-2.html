@@ -126,10 +126,9 @@
   .card .jh { font-size: 30px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .card .jh small { font-size: 15px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
   /* Effort when a step spreads over more weeks than it costs, explained on hover */
-  .card .effort { position: relative; display: inline-block; margin-left: 10px; padding: 3px 9px; border-radius: 6px; background: var(--soft); color: var(--c); font-size: 14px; font-weight: 700; letter-spacing: 0; vertical-align: baseline; }
-  .card .effort[data-tip] { cursor: help; }
+  .card .effort { position: relative; display: inline-block; margin-left: 10px; padding: 3px 9px; border-radius: 6px; background: var(--soft); color: var(--c); font-size: 14px; font-weight: 700; letter-spacing: 0; vertical-align: baseline; cursor: help; }
   .card .effort::after { content: attr(data-tip); position: absolute; top: calc(100% + 8px); left: 0; z-index: 10; width: 290px; padding: 10px 12px; border-radius: 10px; background: var(--ink); color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; white-space: normal; box-shadow: 0 10px 30px -10px rgba(18,19,26,.5); opacity: 0; visibility: hidden; transition: opacity .15s; pointer-events: none; }
-  .card .effort[data-tip]:hover::after, .card .effort[data-tip]:focus::after { opacity: 1; visibility: visible; }
+  .card .effort:hover::after, .card .effort:focus::after { opacity: 1; visibility: visible; }
   .blk small { display: block; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
   .blk ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
   .blk li { position: relative; padding-left: 20px; font-size: 15px; line-height: 1.4; color: var(--ink-2); }
@@ -271,6 +270,7 @@ const phases = [
       out: ['Sélection du site de test', 'Rencontre avec le fournisseur : démo, prix, location, SAV, pour préparer l\'étape 2', 'Interview de l\'équipe IT : outils et connecteurs logiciels, comment se passerait la téléopération depuis Madagascar', 'Étude du robot Temi : specs, outils hardware et software'],
       doc: ['Document de cadrage', 'Roadmap révisée'] },
     { id: 'e2', n: 'Étape 2', name: 'Test en conditions réelles', conf: 85, from: 3, to: 3.5, effort: 7,
+      effortTip: 'Le test suit les arrivées et les départs des clients. On est sur place 3 à 4 demi-journées, aux bons moments, pas à temps plein. L\'étape s\'étale sur 1,5 semaine, mais ne coûte pas plus de 7 jours-homme.',
       pre: ['Le robot est reçu'],
       out: ['Temi installé sur le site de test, dans le hall, avec sa base et 2 ou 3 points de passage', 'Une application très simple sur Temi : une question ouverte aux clients, par exemple « Que pensez-vous du robot ? »', 'Si Temi a une appli native pour téléopérer : un test avec un opérateur dans une salle à côté, puis un test avec un opérateur à Madagascar', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs'],
       doc: ['Compte rendu'],
@@ -370,7 +370,7 @@ ph.innerHTML = phases.map(p => {
       <article class="card" id="${it.id}" style="--c:${c};--soft:${soft}">
         <div class="card-top">${solo(p) ? '' : `<span class="n">${it.n.toUpperCase()}</span>`}${it.opt ? '<span class="opt">Optionnelle</span>' : ''}<span class="w">${weeks(it)}</span></div>
         <h4>${it.icon ? `<img class="h4-icon" src="${it.icon}" alt="">` : ''}${it.name}</h4>
-        <div class="jh">${num(len(it))} <small>semaine${len(it) >= 2 ? 's' : ''}</small>${it.effort ? `<span class="effort"${it.effortTip ? ` tabindex="0" data-tip="${it.effortTip}"` : ''}>${it.effort} j/h</span>` : ''}</div>
+        <div class="jh">${num(len(it))} <small>semaine${len(it) >= 2 ? 's' : ''}</small>${it.effort ? `<span class="effort" tabindex="0" data-tip="${it.effortTip || `L'étape s'étale sur ${dur(len(it))}, mais ne coûte pas plus de ${it.effort} jours-homme.`}">${it.effort} j/h</span>` : ''}</div>
         ${it.pre ? `<div class="blk pre"><small>Pour démarrer l'étape</small><ul>${it.pre.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
         <div class="blk out"><small>À la fin de l'étape</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
         ${it.doc ? `<div class="blk doc"><small>Remis au client</small><ul>${it.doc.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
