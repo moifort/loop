@@ -56,6 +56,8 @@
   .g-label { position: sticky; left: 0; z-index: 5; padding: 10px 18px; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: var(--ink-2); border-right: 1px solid var(--line); background: #fff; }
   /* Labels: every tag on the page shares this shape, small radius and a solid colour */
   .prio, .opt, .gate-l, .ms span { display: inline-flex; align-items: center; justify-content: center; height: 20px; padding: 0 6px; border-radius: 4px; font-size: 12px; font-weight: 700; line-height: 1; letter-spacing: .02em; color: #fff; background: var(--c, var(--ink)); white-space: nowrap; }
+  /* Optional steps: the pale blue of the striped bars, navy text */
+  .opt { background: var(--navy-soft); color: var(--navy); }
   /* Split tag, same as the floor and room tags of the mockup: dark priority, light step */
   .tags { margin-left: auto; display: inline-flex; flex: none; height: 20px; border-radius: 4px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(31,35,40,.08); }
   .tag-lvl, .tag-room { display: inline-flex; align-items: center; height: 20px; padding: 0 6px; font-size: 12px; line-height: 20px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -215,7 +217,7 @@
     <h1>Roadmap.</h1>
     <div class="boxes">
       <div class="box"><span class="ico">💡</span><div><b>Comment lire cette roadmap</b>
-        <p>Le P1.1 est détaillé : il montre comment on travaille. Après chaque bilan, on peut arrêter ou changer de cap. Plus loin, on donne la direction, pas le détail : il viendra avec vos retours.</p></div></div>
+        <p>Le début est détaillé : il montre comment on travaille, par itérations très courtes, avec un bilan après chacune. Plus loin, on ne sait pas encore ce qui sera décidé à ces bilans. On donne donc la direction, pas le détail.</p></div></div>
       <div class="box warn"><span class="ico">⚠️</span><div><b>Attention</b>
         <p>Cette roadmap ne va pas jusqu'à la production dans tous vos immeubles. Elle couvre une première itération : on teste sur place, on apprend, puis on décide ensemble de la suite.</p></div></div>
     </div>
