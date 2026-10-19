@@ -156,7 +156,9 @@
   td:nth-child(2), th:nth-child(2) { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; padding-right: 32px; white-space: nowrap; }
   tr.total td { font-weight: 800; font-size: 20px; border-bottom: 0; border-top: 2px solid var(--ink); }
   tr.sub td { color: var(--muted); font-size: 15px; }
-  td .opt { float: right; margin: 1px 32px 0 0; }
+  /* Totals: the priority tag ends the step cell, Optionnelle sits just before it */
+  td .prio { float: right; margin: 1px 32px 0 0; }
+  td .opt { float: right; margin: 1px 8px 0 0; }
   .cum { display: inline-block; height: 8px; border-radius: 4px; background: var(--c); vertical-align: middle; margin-right: 10px; }
 
   /* Callout: what the end of P1.1 does not give */
@@ -369,11 +371,11 @@ function flash() {
 }
 
 // ---------- Totals, with each step's length as a small bar ----------
-const steps = phases.flatMap(p => p.items.map(i => ({ ...i, c: C[p.color][0] })));
+const steps = phases.flatMap(p => p.items.map(i => ({ ...i, c: C[p.color][0], prio: p.prio })));
 const last = Math.max(...steps.map(i => i.to));
 document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th>Semaines</th><th>Durée</th></tr>
-  ${steps.map(i => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:${i.c}"></span>${i.n} · ${i.name}${i.opt ? '<span class="opt" style="--c:var(--navy)">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${dur(len(i))}</td></tr>`).join('')}
+  ${steps.map(i => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:${i.c}"></span>${i.n} · ${i.name}<span class="prio" style="--c:${i.c}">${i.prio}</span>${i.opt ? '<span class="opt" style="--c:var(--navy)">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${dur(len(i))}</td></tr>`).join('')}
   <tr class="total"><td>Total</td><td>S1–S${Math.ceil(last)}</td><td>≈ ${dur(last)}</td></tr>`;
 </script>
 </body>
