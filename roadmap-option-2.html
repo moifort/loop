@@ -288,9 +288,10 @@ const phases = [
       out: ['On stabilise l\'application au maximum', 'Temi tourne 1 à 2 semaines à l\'accueil, avec un support disponible le plus possible', 'On corrige ce qui casse et on améliore', 'Une supervision simple : robot en ligne, en charge ou en panne, prises en main par jour'],
       doc: ['Bilan de stabilité : les chiffres de la stabilisation, comparés aux seuils'],
       mes: ['Pannes par semaine, et temps pour repartir', 'Prises en main par jour', 'Combien de robots un opérateur peut suivre'] },
-    { id: 's2', n: 'Étape 5', name: 'Kit d\'installation', conf: 65, from: 7.5, to: 8.5,
-      out: ['Pendant que Temi tourne : on écrit ce qu\'il faut pour installer un site sans nous', 'Une checklist : réseau, Wi-Fi, base, points de passage, signalétique dans le hall', 'Une configuration par site, sans code : langue, horaires, points de passage', 'Le SAV avec le fournisseur : délai d\'échange, robots de rechange', 'Une formation courte pour l\'accueil et pour Madagascar'],
-      doc: ['Le kit d\'installation', 'Le SAV proposé avec le fournisseur'] },
+    { id: 's2', n: 'Étape 5', name: 'Kit d\'installation', conf: 65, from: 8.5, to: 8.5, effort: '3 à 4',
+      effortTip: 'Le kit se prépare pendant la dernière semaine de stabilisation, à partir de ce qu\'on a appris sur le site de test. L\'étape dure 1 semaine, pour 3 à 4 jours-homme.',
+      out: ['Un kit clé en main pour installer Temi sur un nouveau site', 'Fait pour être suivi par l\'IT, un technicien ou l\'agent d\'accueil, sans nous', 'Une checklist : réseau, Wi-Fi, base, points de passage, signalétique dans le hall', 'Une configuration par site, sans code : langue, horaires, points de passage'],
+      doc: ['Le kit d\'installation'] },
   ]},
   { title: 'Plusieurs sites', prio: 'P1.1', color: 'p1', sub: 'Le même kit, posé sur d\'autres sites, par vagues.', items: [
     { id: 'm1', n: 'Étape 6', name: 'Deux sites de plus', conf: 50, from: 9.5, to: 11.5,
