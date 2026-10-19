@@ -228,7 +228,6 @@
 <div class="totals">
   <table id="totals"></table>
   <div class="notes">
-    <div class="note" style="--c:var(--navy)"><b>Pourquoi la téléopération avant le check-in automatique</b><p>Un humain à distance fait tout : check-in, check-out, et toutes les questions des clients. Un check-in automatique ne fait que ça. La téléopération apporte donc plus, plus vite, et montre ce qu'il vaut la peine d'automatiser ensuite.</p></div>
     <div class="note" style="--c:var(--navy)"><b>Pourquoi c'est moins que le premier chiffrage</b><p>Le premier chiffrage mettait tout dans une seule itération : un socle complet, une console web, le bouton panique et une certification de logiciel de réservation. Ici, le bouton panique part avec la sécurité, la console reste minimale, et on lit les réservations à travers ce qui existe déjà.</p></div>
     <div class="note" style="--c:var(--amber)"><b>Ce qu'on ne sait pas encore</b><p>Le logiciel de réservation de Quartier Libre, et s'il a une API. Si Greg peut nous donner les réservations, ce qui éviterait de brancher ce logiciel. La pièce d'identité et le paiement au check-in : quelques semaines de plus s'il faut les gérer.</p></div>
     <div class="note" style="--c:var(--red)"><b>Si on n'a pas Temi à temps</b><p>On ne reste pas bloqué : on avance le ménage. Un Roborock Saros s'achète en magasin et se teste dans un appartement la semaine même, pendant qu'on attend Temi.</p></div>
@@ -239,13 +238,13 @@
 <h2>Après le bilan P1</h2>
 <p class="h2-sub">Ce qu'on a à la fin de l'étape 4, et ce qu'on n'a pas.</p>
 <div class="callout">
-  <b>Rien n'est prêt pour la production.</b>
-  <p>Les quatre étapes servent à tester, pas à construire un produit. La téléopération et le check-in sont des prototypes : ils montrent que ça marche, ils ne tournent pas seuls tous les jours.</p>
+  <b>La téléopération est en production. Le reste, non.</b>
+  <p>Temi tourne à l'accueil depuis l'étape 3, et un opérateur à Madagascar reprend la main quand il le faut. Le check-in automatique, s'il est fait, reste un prototype : il montre que ça marche, il ne tourne pas seul tous les jours.</p>
   <p>Le bilan P1 sert à décider avec le client vers où on part.</p>
 </div>
 
 <h2>La suite : P1 vigile</h2>
-<p class="h2-sub">À chiffrer après le bilan P1. On part du principe que le bilan est bon : la téléopération marche, on s'en sert quand il y a un problème à l'accueil.</p>
+<p class="h2-sub">À chiffrer après le bilan P1. On part du principe que le bilan est bon : la téléopération tourne en production, on s'en sert aussi quand il y a un problème à l'accueil.</p>
 <section class="phase">
   <div class="phase-side">
     <span class="prio" style="--c:var(--grey)">P1</span>
@@ -289,7 +288,7 @@ const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
 const WEEKS = 8;
 
 const phases = [
-  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Quatre étapes, l\'une après l\'autre, la dernière en option. On comprend, on teste le robot sur place, puis on prototype la téléopération et le check-in.', items: [
+  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Quatre étapes, l\'une après l\'autre, la dernière en option. On comprend, on teste le robot sur place, on met la téléopération en production, puis, en option, on prototype le check-in.', items: [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1,
       out: ['Sélection du site de test', 'Rencontre avec le fournisseur : démo, prix, location, SAV, pour préparer l\'étape 2', 'Interview de l\'équipe IT : outils et connecteurs logiciels, comment se passerait la téléopération depuis Madagascar', 'Étude du robot Temi : specs, outils hardware et software'],
       doc: ['Document de cadrage', 'Roadmap révisée'] },
@@ -298,12 +297,13 @@ const phases = [
       out: ['Temi installé sur le site de test, dans le hall, avec sa base et 2 ou 3 points de passage', 'Une application très simple sur Temi : une question ouverte aux clients, par exemple « Que pensez-vous du robot ? »', 'Si Temi a une appli native pour téléopérer : un test avec un opérateur dans une salle à côté, puis un test avec un opérateur à Madagascar', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs'],
       doc: ['Compte rendu'],
       mes: ['Développer sur Temi : accès, outils, ce qu\'il est possible de faire ou non', 'Les retours des clients sur le robot', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar', 'Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'] },
-    { id: 'e3', n: 'Étape 3', name: 'Téléopération', from: 3, to: 3,
-      out: ['Développement pour rendre le logiciel de téléopération de Madagascar compatible avec Temi', 'Premières expériences sur site, avec un assistant à côté du robot'],
+    { id: 'e3', n: 'Étape 3', name: 'Téléopération', from: 3, to: 4,
+      pre: ['L\'étape 2 est validée : Temi répond au besoin', 'Un opérateur à Madagascar a réussi à le piloter'],
+      out: ['Semaine 1 : un logiciel très simple autour de l\'appli native de Temi, pour qu\'un téléopérateur reprenne la main', 'Semaine 1 : un test plus poussé avec un téléopérateur, sur le site de test', 'Semaine 2 : mise en production, Temi tourne en autonomie à l\'accueil'],
       doc: ['Compte rendu de la téléopération : questions posées, latence, ce qu\'il faut automatiser'],
       mes: ['Prises en main par jour', 'Les questions les plus posées à distance', 'Latence ressentie par l\'opérateur'],
-      note: 'On part du logiciel de téléopération déjà utilisé à Madagascar.' },
-    { id: 'e4', n: 'Étape 4', name: 'Check-in et check-out automatiques', from: 4, to: 4, opt: true,
+      note: 'Pourquoi la téléopération et pas un check-in automatique ? Un téléopérateur peut tout faire : check-in, check-out, aide, besoin d\'informations. Il règle tous les problèmes sans qu\'on ait développé chaque fonctionnalité.' },
+    { id: 'e4', n: 'Étape 4', name: 'Check-in et check-out automatiques', from: 5, to: 5, opt: true,
       out: ['Le client retrouve sa réservation sur Temi et reçoit son code d\'appartement', 'Au départ, il le dit à Temi, et l\'appartement passe « à nettoyer »', 'En français et en anglais', 'L\'opérateur ne reprend la main que si ça bloque'],
       doc: ['Bilan P1 : ce qui marche, ce qui manque pour la production, la suite proposée'],
       mes: ['Part des arrivées et des départs faits sans opérateur', 'Temps gagné par l\'accueil et par Madagascar'],
@@ -316,8 +316,8 @@ const phases = [
 const gates = [
   { w: 2, l: 'Robot', t: 'Cadrage et robot', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place. Le document de cadrage et la roadmap révisée. Le robot est-il reçu ? Sinon, l\'étape 2 ne démarre pas.', block: true, below: true },
   { w: 3, l: 'Go / no go', t: 'Go / no go robot', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant le test. Temi répond-il au besoin ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
-  { w: 4, l: 'Bilan', t: 'Bilan téléopération', tip: 'Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
-  { w: 5, l: 'Bilan P1', t: 'Bilan P1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. Rien n\'est prêt pour la production : on décide avec le client vers où on part.', end: true },
+  { w: 5, l: 'Bilan', t: 'Bilan téléopération', tip: 'Temi est en production depuis une semaine. Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
+  { w: 6, l: 'Bilan P1', t: 'Bilan P1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. La téléopération tourne en production, le check-in reste un prototype : on décide avec le client vers où on part.', end: true },
 ];
 const milestones = [];
 
