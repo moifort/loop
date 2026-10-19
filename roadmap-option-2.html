@@ -162,6 +162,8 @@
   tr.sub td { color: var(--muted); font-size: 15px; }
   tr.subtotal td { font-weight: 700; background: var(--bg); }
   tr.subtotal td:first-child { padding-left: 12px; }
+  /* A thicker line separates the priorities */
+  tbody.grp tr:first-child td { border-top: 2px solid var(--ink-2); }
   /* Totals: the priority tag ends the step cell, Optionnelle sits just before it */
   td .prio { float: right; margin: 1px 32px 0 0; }
   td .opt { float: right; margin: 1px 8px 0 0; }
@@ -397,13 +399,23 @@ function flash() {
 const estimated = phases.filter(p => !p.tbc);
 const last = Math.max(...estimated.flatMap(p => p.items.map(i => i.to)));
 const stepRow = (i, c, prio) => `<tr><td><span class="cum" style="width:${i.tbc ? 0 : len(i) / last * 240}px;--c:${c}"></span>${i.n} · ${i.name}<span class="prio" style="--c:${c}">${prio}</span>${i.opt ? '<span class="opt" style="--c:var(--navy)">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${i.tbc ? 'à chiffrer' : dur(len(i))}</td></tr>`;
-const subRow = p => {
-  const from = Math.min(...p.items.map(i => i.from)), to = Math.max(...p.items.map(i => i.to));
-  return `<tr class="subtotal"><td>Sous-total ${p.prio} · ${p.title}</td><td>${p.tbc ? 'à chiffrer' : `S${from}–S${Math.ceil(to)}`}</td><td>${p.tbc ? 'à chiffrer' : dur(to - from + 1)}</td></tr>`;
+// One block per priority: P1.1 and P1.2 go together under P1. A block of one step needs no subtotal.
+const groups = [];
+phases.forEach(p => {
+  const key = p.prio.split('.')[0];
+  let grp = groups.find(x => x.key === key);
+  if (!grp) groups.push(grp = { key, titles: [], tbc: p.tbc, items: [] });
+  grp.titles.push(p.title);
+  grp.items.push(...p.items.map(i => ({ ...i, c: C[p.color][0], prio: p.prio })));
+});
+const subRow = g => {
+  const from = Math.min(...g.items.map(i => i.from)), to = Math.max(...g.items.map(i => i.to));
+  const title = g.titles.map((t, k) => k ? t.toLowerCase() : t).join(' et ');
+  return `<tr class="subtotal"><td>Sous-total ${g.key} · ${title}</td><td>${g.tbc ? 'à chiffrer' : `S${from}–S${Math.ceil(to)}`}</td><td>${g.tbc ? 'à chiffrer' : dur(to - from + 1)}</td></tr>`;
 };
 document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th>Semaines</th><th>Durée</th></tr>
-  ${phases.map(p => p.items.map(i => stepRow(i, C[p.color][0], p.prio)).join('') + subRow(p)).join('')}
+  ${groups.map(g => `<tbody class="grp">${g.items.map(i => stepRow(i, i.c, i.prio)).join('')}${g.items.length > 1 ? subRow(g) : ''}</tbody>`).join('')}
   <tr class="total"><td>Total</td><td>S1–S${Math.ceil(last)}</td><td>≈ ${dur(last)}, puis à chiffrer</td></tr>`;
 </script>
 </body>
