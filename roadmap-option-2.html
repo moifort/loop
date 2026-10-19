@@ -151,7 +151,7 @@
   td .opt { float: right; margin: 1px 32px 0 0; }
   .cum { display: inline-block; height: 8px; border-radius: 4px; background: var(--c); vertical-align: middle; margin-right: 10px; }
 
-  /* Callout: what the end of P1 does not give */
+  /* Callout: what the end of P1.1 does not give */
   .callout { border-radius: 14px; background: var(--red-soft); padding: 24px 28px; display: flex; flex-direction: column; gap: 8px; max-width: 980px; }
   .callout b { font-size: 22px; font-weight: 800; letter-spacing: -.02em; color: #7a1a1d; }
   .callout p { font-size: 17px; line-height: 1.45; color: #5c1a1d; }
@@ -206,8 +206,7 @@
 </header>
 
 <div class="legend">
-  <span><i style="--c:var(--navy)"></i>P1 · Accueil</span>
-  <span><i style="--c:var(--violet)"></i>P1.2 · Vigile</span>
+  <span><i style="--c:var(--navy)"></i>P1.1 · Accueil, P1.2 · Vigile</span>
   <span><i class="dash" style="--c:var(--navy)"></i>Étape optionnelle</span>
   <span><i class="lg-gate"></i>Bilan et décision avec le client</span>
   <span><i class="lg-gate" style="background:var(--red)"></i>Décision bloquante : peut décaler tout le planning</span>
@@ -227,12 +226,12 @@
   <table id="totals"></table>
 </div>
 
-<h2>Après le bilan P1</h2>
+<h2>Après le bilan P1.1</h2>
 <p class="h2-sub">Ce qu'on a à la fin de l'étape 5, et ce qu'on n'a pas.</p>
 <div class="callout">
   <b>La téléopération est en production. Le reste, non.</b>
   <p>Temi tourne à l'accueil depuis l'étape 3, et un opérateur à Madagascar reprend la main quand il le faut. Le check-in automatique, s'il est fait, reste un prototype : il montre que ça marche, il ne tourne pas seul tous les jours.</p>
-  <p>Le bilan P1 sert à décider avec le client vers où on part.</p>
+  <p>Le bilan P1.1 sert à décider avec le client vers où on part.</p>
 </div>
 
 <footer><span>Loop × Quartier Libre Collection</span><span>Estimation de travail, à affiner après l'étape 1</span></footer>
@@ -240,11 +239,11 @@
 
 <script>
 // ---------- Data: one entry per step. Weeks are 1-based and inclusive, durations are approximate. ----------
-const C = { p1: ['var(--navy)', 'var(--navy-soft)'], p12: ['var(--violet)', 'var(--violet-soft)'] };
+const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
 const WEEKS = 9;
 
 const phases = [
-  { title: 'Accueil', prio: 'P1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre, les deux dernières en option. On comprend, on teste le robot sur place, on met la téléopération en production, puis, en option, on prototype le check-in et un premier connecteur Greg AI.', items: [
+  { title: 'Accueil', prio: 'P1.1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre, les deux dernières en option. On comprend, on teste le robot sur place, on met la téléopération en production, puis, en option, on prototype le check-in et un premier connecteur Greg AI.', items: [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1,
       out: ['Sélection du site de test', 'Rencontre avec le fournisseur : démo, prix, location, SAV, pour préparer l\'étape 2', 'Interview de l\'équipe IT : outils et connecteurs logiciels, comment se passerait la téléopération depuis Madagascar', 'Étude du robot Temi : specs, outils hardware et software'],
       doc: ['Document de cadrage', 'Roadmap révisée'] },
@@ -261,16 +260,16 @@ const phases = [
       note: 'Pourquoi la téléopération et pas un check-in automatique ? Un téléopérateur peut tout faire : check-in, check-out, aide, besoin d\'informations. Il règle tous les problèmes sans qu\'on ait développé chaque fonctionnalité.' },
     { id: 'e4', n: 'Étape 4', name: 'Check-in et check-out automatiques', from: 5, to: 5, opt: true,
       out: ['Jours 1 et 2 : une application Android basique, embarquée sur Temi', 'Le client fait son check-in et son check-out sur Temi, à partir de sa réservation', 'Premiers branchements avec les outils de l\'appart-hôtel', 'Jours 3 à 5 : test en conditions réelles, en français et en anglais', 'L\'opérateur ne reprend la main que si ça bloque'],
-      doc: ['Bilan P1 : ce qui marche, ce qui manque pour la production, la suite proposée'],
+      doc: ['Bilan P1.1 : ce qui marche, ce qui manque pour la production, la suite proposée'],
       mes: ['Part des arrivées et des départs faits sans opérateur', 'Temps gagné par l\'accueil et par Madagascar'],
       note: 'Pourquoi : les arrivées et les départs simples se font sans opérateur, et Madagascar garde son temps pour le reste. Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.',
       risk: ['<b>À trancher</b> : passer par un connecteur Greg AI, ou se brancher directement sur les outils de l\'appart-hôtel.'] },
     { id: 'e5', n: 'Étape 5', name: 'Connecteur Greg AI', icon: 'assets/greg-ai-icon.png', from: 6, to: 6, opt: true,
       out: ['Les fondations d\'une application qui envoie des informations à Greg AI, pour ses analytics', 'Les statistiques du robot, et ses pannes', 'Les statistiques de check-in et de check-out', 'Des actions déclenchées par Greg AI, et des actions envoyées à Greg AI'] },
   ]},
-  { title: 'Vigile', prio: 'P1.2', color: 'p12', text: 'Une étape, une fois l\'accueil validé au bilan P1. Quand ça se passe mal à l\'accueil, l\'agent appuie sur un bouton et Temi passe en mode vigile.', items: [
+  { title: 'Vigile', prio: 'P1.2', color: 'p1', text: 'Une étape, une fois l\'accueil validé au bilan P1.1. Quand ça se passe mal à l\'accueil, l\'agent appuie sur un bouton et Temi passe en mode vigile.', items: [
     { id: 'v1', n: 'Étape 6', name: 'Mode vigile', from: 7, to: 7.5,
-      pre: ['Le bilan P1 est bon : l\'accueil et la téléopération sont validés'],
+      pre: ['Le bilan P1.1 est bon : l\'accueil et la téléopération sont validés'],
       out: ['Une application sur l\'iPhone de l\'agent d\'accueil, avec un bouton qui déclenche l\'alerte', 'Au plus simple : à l\'alerte, un téléopérateur prend la main sur Temi', 'Un mode vigile qui enregistre la vidéo et la conserve pour s\'en servir ensuite', 'Un test en conditions réelles'],
       doc: ['Le protocole pour récupérer les vidéos', 'Compte rendu du test'],
       mes: ['Temps entre l\'appui sur le bouton et la prise en main', 'Ce que les vidéos montrent vraiment', 'Ce qu\'en pense l\'agent d\'accueil'] },
@@ -283,7 +282,7 @@ const gates = [
   { w: 2, l: 'Robot', t: 'Cadrage et robot', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place. Le document de cadrage et la roadmap révisée. Le robot est-il reçu ? Sinon, l\'étape 2 ne démarre pas.', block: true, below: true },
   { w: 3, l: 'Go / no go', t: 'Go / no go robot', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant le test. Temi répond-il au besoin ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
   { w: 5, l: 'Bilan', t: 'Bilan téléopération', tip: 'Temi est en production depuis une semaine. Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
-  { w: 7, l: 'Bilan P1', t: 'Bilan P1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. La téléopération tourne en production, le check-in reste un prototype : on décide avec le client vers où on part.', end: true },
+  { w: 7, l: 'Bilan P1.1', t: 'Bilan P1.1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. La téléopération tourne en production, le check-in reste un prototype : on décide avec le client vers où on part.', end: true },
 ];
 const milestones = [];
 
