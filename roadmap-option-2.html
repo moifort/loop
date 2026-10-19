@@ -115,7 +115,7 @@
   .card.flash { background: var(--soft); border-left-color: var(--c); }
   .card-top { display: flex; align-items: baseline; gap: 10px; }
   .card-top .n { font-size: 14px; font-weight: 800; color: var(--c); letter-spacing: .04em; }
-  .card-top .opt { font-size: 12px; font-weight: 700; color: var(--c); border: 1px dashed var(--c); border-radius: 999px; padding: 1px 8px; }
+  .card-top .opt, td .opt { font-size: 12px; font-weight: 700; color: var(--c); border: 1px dashed var(--c); border-radius: 999px; padding: 1px 8px; }
   .card-top .w { margin-left: auto; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .card h4 { font-size: 21px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
   .card .jh { font-size: 30px; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
@@ -146,6 +146,7 @@
   td:nth-child(2), th:nth-child(2) { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; padding-right: 32px; white-space: nowrap; }
   tr.total td { font-weight: 800; font-size: 20px; border-bottom: 0; border-top: 2px solid var(--ink); }
   tr.sub td { color: var(--muted); font-size: 15px; }
+  td .opt { float: right; margin: 2px 32px 0 0; }
   .cum { display: inline-block; height: 8px; border-radius: 4px; background: var(--c); vertical-align: middle; margin-right: 10px; }
 
   /* Callout: what the end of P1 does not give */
@@ -353,7 +354,7 @@ const steps = phases.flatMap(p => p.items);
 const last = Math.max(...steps.map(i => i.to));
 document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th>Semaines</th><th>Durée</th></tr>
-  ${steps.map(i => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}${i.opt ? ' (optionnelle)' : ''}</td><td>${weeks(i)}</td><td>${dur(len(i))}</td></tr>`).join('')}
+  ${steps.map(i => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:var(--navy)"></span>${i.n} · ${i.name}${i.opt ? '<span class="opt" style="--c:var(--navy)">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${dur(len(i))}</td></tr>`).join('')}
   <tr class="total"><td>Total P1 accueil</td><td>S1–S${last}</td><td>≈ ${dur(last)}</td></tr>`;
 </script>
 </body>
