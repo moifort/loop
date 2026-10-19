@@ -43,10 +43,11 @@
   .legend span { display: inline-flex; align-items: center; gap: 8px; }
   .legend i { width: 22px; height: 12px; border-radius: 4px; background: var(--c); }
   .legend i.dash { background: repeating-linear-gradient(135deg, var(--c) 0 4px, transparent 4px 8px); border: 1px solid var(--c); }
+  .legend i.tbc { background: #fff; border: 2px dashed var(--c); box-sizing: border-box; }
   .legend i.lg-gate { width: 11px; height: 11px; margin: 0 3px; align-self: center; border-radius: 2px; transform: rotate(45deg); background: var(--ink); }
 
   /* ---------- Gantt: one column per week ---------- */
-  .gantt { --label: 300px; --weeks: 9; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: clip;
+  .gantt { --label: 300px; --weeks: 26; position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: clip;
     min-width: calc(var(--label) + var(--weeks) * 34px); }
   /* Small screens: the chart keeps a readable width and scrolls sideways, step names stay pinned on the left */
   .gantt-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
@@ -83,6 +84,8 @@
   .bar .jh { margin-left: auto; font-weight: 600; opacity: .85; font-variant-numeric: tabular-nums; }
   .bar.soft { background: var(--soft); color: var(--c); box-shadow: inset 0 0 0 1px var(--c); }
   .bar.dash { background: repeating-linear-gradient(135deg, var(--soft) 0 6px, #fff 6px 12px); color: var(--c); box-shadow: inset 0 0 0 1px var(--c); }
+  /* Not estimated yet: an empty outline */
+  .bar.tbc { background: #fff; color: var(--c); box-shadow: none; border: 2px dashed var(--c); }
   .ms.end span { left: auto; right: 6px; }
   .bar-l { position: absolute; top: 50%; transform: translateY(-50%); margin-left: 6px; padding: 0 4px; background: #fff; z-index: 1; font-size: 13px; font-weight: 700; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .bar-l span { color: var(--muted); font-weight: 500; }
@@ -157,6 +160,8 @@
   td:nth-child(2), th:nth-child(2) { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; padding-right: 32px; white-space: nowrap; }
   tr.total td { font-weight: 800; font-size: 20px; border-bottom: 0; border-top: 2px solid var(--ink); }
   tr.sub td { color: var(--muted); font-size: 15px; }
+  tr.subtotal td { font-weight: 700; background: var(--bg); }
+  tr.subtotal td:first-child { padding-left: 12px; }
   /* Totals: the priority tag ends the step cell, Optionnelle sits just before it */
   td .prio { float: right; margin: 1px 32px 0 0; }
   td .opt { float: right; margin: 1px 8px 0 0; }
@@ -224,7 +229,11 @@
 
 <div class="legend">
   <span><i style="--c:var(--navy)"></i>P1.1 · Accueil, P1.2 · Vigile</span>
+  <span><i style="--c:var(--violet)"></i>P2 · Nettoyage</span>
+  <span><i style="--c:var(--sky)"></i>P3 · Plateforme</span>
+  <span><i style="--c:var(--grey)"></i>P4 · Production</span>
   <span><i class="dash" style="--c:var(--navy)"></i>Étape optionnelle</span>
+  <span><i class="tbc" style="--c:var(--grey)"></i>À chiffrer</span>
   <span><i class="lg-gate"></i>Bilan et décision avec le client</span>
   <span><i class="lg-gate" style="background:var(--red)"></i>Décision bloquante : peut décaler tout le planning</span>
 </div>
@@ -254,8 +263,8 @@
 
 <script>
 // ---------- Data: one entry per step. Weeks are 1-based and inclusive, durations are approximate. ----------
-const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
-const WEEKS = 9;
+const C = { p1: ['var(--navy)', 'var(--navy-soft)'], p2: ['var(--violet)', 'var(--violet-soft)'], p3: ['var(--sky)', 'var(--sky-soft)'], p4: ['var(--grey)', 'var(--grey-soft)'] };
+const WEEKS = 26;
 
 const phases = [
   { title: 'Accueil', prio: 'P1.1', color: 'p1', sub: 'Un POC (proof of concept, la preuve que ça marche) : un robot dans le hall, piloté depuis Madagascar quand il le faut, pour accueillir les clients sans ajouter de personnel.', items: [
@@ -286,6 +295,19 @@ const phases = [
       doc: ['Le protocole pour récupérer les vidéos', 'Compte rendu du test'],
       mes: ['Temps entre l\'appui sur le bouton et la prise en main', 'Ce que les vidéos montrent vraiment', 'Ce qu\'en pense l\'agent d\'accueil'] },
   ]},
+  { title: 'Nettoyage', prio: 'P2', color: 'p2', sub: 'Des robots de nettoyage grand public, un par étage. Ils assistent le personnel de ménage et peuvent aussi jouer un rôle de vigile.', items: [
+    { id: 'n1', n: 'Étape 7', name: 'Robots de nettoyage', from: 9, to: 16,
+      out: ['Un robot de nettoyage grand public par étage', 'Il assiste le personnel de ménage dans ses tâches', 'Il peut aussi jouer un rôle de vigile'],
+      note: 'Même durée que P1.1 et P1.2 réunies. On ne détaille pas plus pour l\'instant : le contenu dépendra des bilans précédents.' },
+  ]},
+  { title: 'Plateforme', prio: 'P3', color: 'p3', tbc: true, sub: 'Une plateforme au-dessus des robots et des outils du client, pour toute l\'équipe.', items: [
+    { id: 'pf1', n: 'Étape 8', name: 'Plateforme Loop', from: 17, to: 20, tbc: true,
+      out: ['Une couche d\'abstraction au-dessus des outils du client, comme Greg AI', 'Une interconnexion avec ses autres outils', 'Des fonctionnalités pour chaque métier : accueil, ménage, techniciens, IT, managers', 'Remonter des informations, lancer des actions'] },
+  ]},
+  { title: 'Production', prio: 'P4', color: 'p4', tbc: true, sub: 'D\'abord un site, puis les autres.', items: [
+    { id: 'pr1', n: 'Étape 9', name: 'Un site en production, puis plusieurs', from: 21, to: 24, tbc: true,
+      out: ['Tout est testé et rodé sur un site : ça tourne bien, sans bug', 'Une fois que ça tourne, on déploie sur plusieurs sites'] },
+  ]},
 ];
 
 // One word under each diamond (above with up), the detail shows on hover. end opens the detail to the left.
@@ -294,7 +316,9 @@ const gates = [
   { w: 2, l: 'Robot', t: 'Cadrage et robot', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place. Le document de cadrage et la roadmap révisée. Le robot est-il reçu ? Sinon, l\'étape 2 ne démarre pas.', block: true, below: true },
   { w: 3, l: 'Go / no go', t: 'Go / no go robot', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant le test. Temi répond-il au besoin ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
   { w: 5, l: 'Bilan', t: 'Bilan téléopération', tip: 'Temi tourne à l\'accueil depuis une semaine. Ce que les opérateurs ont fait le plus souvent à distance. On choisit ce qu\'on automatise à l\'étape 4.' },
-  { w: 7, l: 'Bilan P1.1', t: 'Bilan P1.1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. Un POC, pas un produit : on décide avec le client de la suite.', end: true },
+  { w: 7, l: 'Bilan P1.1', t: 'Bilan P1.1', up: true, tip: 'Part des arrivées et des départs faits sans opérateur. Un POC, pas un produit : on décide avec le client de la suite.' },
+  { w: 9, l: 'Bilan P1.2', t: 'Bilan P1.2', tip: 'Ce que le mode vigile a donné sur le terrain. On décide si on passe au nettoyage.' },
+  { w: 17, l: 'Bilan P2', t: 'Bilan P2', up: true, tip: 'Ce que les robots de nettoyage ont donné, étage par étage. On chiffre la plateforme et la production.' },
 ];
 const milestones = [];
 
@@ -304,12 +328,12 @@ const span = (a, b) => `left:${pct(a)};width:${((b - a + 1) / WEEKS) * 100}%`;
 const len = i => i.to - i.from + 1;
 const num = n => String(n).replace('.', ',');
 const dur = n => `${num(n)} semaine${n >= 2 ? 's' : ''}`;
-const weeks = i => i.from === Math.ceil(i.to) ? `S${i.from}` : `S${i.from}–S${Math.ceil(i.to)}`;
+const weeks = i => i.tbc ? 'à chiffrer' : i.from === Math.ceil(i.to) ? `S${i.from}` : `S${i.from}–S${Math.ceil(i.to)}`;
 const g = document.getElementById('gantt');
 let html = '<div class="grid-bg"></div>';
 const row = (label, track, cls = '') => `<div class="g-row ${cls}"><div class="g-label">${label}</div><div class="g-track">${track}</div></div>`;
 
-// Month header: 4.33 weeks per month, no label in the last half week where it would be cut
+// Month header: 4.33 weeks per month, no label in the last half week where it would be cut. Two spare weeks leave room for the last label
 html += '<div class="g-row g-head"><div class="g-label">Semaines</div><div class="g-track"><div class="months">';
 for (let m = 0; m * 4.333 < WEEKS - .5; m++) html += `<span style="left:${(m * 4.333 / WEEKS) * 100}%">M${m + 1}</span>`;
 html += '</div></div></div>';
@@ -321,7 +345,7 @@ phases.forEach(p => {
   p.items.forEach(it => {
     d += .08;
     html += row(`${it.name}<span class="tags"><span class="tag-lvl">${p.prio}</span><span class="tag-room">${it.n}</span></span>`,
-      `<a href="#${it.id}" class="bar${it.opt ? ' dash' : ''}" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${it.n} · ${it.name} · ${weeks(it)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}"><span>${weeks(it)}${it.opt ? ' · optionnelle' : ''}</span></span>`);
+      `<a href="#${it.id}" class="bar${it.opt ? ' dash' : ''}${it.tbc ? ' tbc' : ''}" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${it.n} · ${it.name} · ${weeks(it)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}"><span>${weeks(it)}${it.opt ? ' · optionnelle' : ''}</span></span>`);
   });
 });
 
@@ -343,13 +367,13 @@ ph.innerHTML = phases.map(p => {
   return `<section class="phase">
     <div class="phase-side">
       <h3><span class="prio" style="--c:${c}">${p.prio}</span>${p.title}</h3>${p.sub ? `<p class="phase-sub">${p.sub}</p>` : ''}
-      <p class="sum"><b>${dur(to - from + 1)}</b> · S${from} à S${Math.ceil(to)}</p>
+      <p class="sum">${p.tbc ? '<b>À chiffrer</b> · après le bilan P2' : `<b>${dur(to - from + 1)}</b> · S${from} à S${Math.ceil(to)}`}</p>
     </div>
     <div class="cards">${p.items.map(it => `
       <article class="card" id="${it.id}" style="--c:${c};--soft:${soft}">
         <div class="card-top"><span class="n">${it.n.toUpperCase()}</span>${it.opt ? '<span class="opt">Optionnelle</span>' : ''}<span class="w">${weeks(it)}</span></div>
         <h4>${it.icon ? `<img class="h4-icon" src="${it.icon}" alt="">` : ''}${it.name}</h4>
-        <div class="jh">${num(len(it))} <small>semaine${len(it) >= 2 ? 's' : ''}</small></div>
+        <div class="jh">${it.tbc ? '<small>à chiffrer</small>' : `${num(len(it))} <small>semaine${len(it) >= 2 ? 's' : ''}</small>`}</div>
         ${it.pre ? `<div class="blk pre"><small>Pour démarrer l'étape</small><ul>${it.pre.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
         <div class="blk out"><small>À la fin de l'étape</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
         ${it.doc ? `<div class="blk doc"><small>Remis au client</small><ul>${it.doc.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
@@ -370,12 +394,17 @@ function flash() {
 }
 
 // ---------- Totals, with each step's length as a small bar ----------
-const steps = phases.flatMap(p => p.items.map(i => ({ ...i, c: C[p.color][0], prio: p.prio })));
-const last = Math.max(...steps.map(i => i.to));
+const estimated = phases.filter(p => !p.tbc);
+const last = Math.max(...estimated.flatMap(p => p.items.map(i => i.to)));
+const stepRow = (i, c, prio) => `<tr><td><span class="cum" style="width:${i.tbc ? 0 : len(i) / last * 240}px;--c:${c}"></span>${i.n} · ${i.name}<span class="prio" style="--c:${c}">${prio}</span>${i.opt ? '<span class="opt" style="--c:var(--navy)">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${i.tbc ? 'à chiffrer' : dur(len(i))}</td></tr>`;
+const subRow = p => {
+  const from = Math.min(...p.items.map(i => i.from)), to = Math.max(...p.items.map(i => i.to));
+  return `<tr class="subtotal"><td>Sous-total ${p.prio} · ${p.title}</td><td>${p.tbc ? 'à chiffrer' : `S${from}–S${Math.ceil(to)}`}</td><td>${p.tbc ? 'à chiffrer' : dur(to - from + 1)}</td></tr>`;
+};
 document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th>Semaines</th><th>Durée</th></tr>
-  ${steps.map(i => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:${i.c}"></span>${i.n} · ${i.name}<span class="prio" style="--c:${i.c}">${i.prio}</span>${i.opt ? '<span class="opt" style="--c:var(--navy)">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${dur(len(i))}</td></tr>`).join('')}
-  <tr class="total"><td>Total</td><td>S1–S${Math.ceil(last)}</td><td>≈ ${dur(last)}</td></tr>`;
+  ${phases.map(p => p.items.map(i => stepRow(i, C[p.color][0], p.prio)).join('') + subRow(p)).join('')}
+  <tr class="total"><td>Total</td><td>S1–S${Math.ceil(last)}</td><td>≈ ${dur(last)}, puis à chiffrer</td></tr>`;
 </script>
 </body>
 </html>
