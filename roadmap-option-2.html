@@ -249,7 +249,7 @@
 
 <h2>Conclusion</h2>
 <div class="callout">
-  <b>Au bout de 5,5 semaines, on a un POC. Au bout de 12,5 semaines, trois sites tournent.</b>
+  <b>Au bout de 6,5 semaines, on a un POC. Au bout de 13,5 semaines, trois sites tournent.</b>
   <p>Le POC valide la téléopération sur un site de test. Ensuite, on ne multiplie pas les robots tout de suite : on stabilise un site, on en tire un kit, et on le pose sur deux autres sites.</p>
   <p>Chaque passage se décide avec vous, sur des chiffres : pannes, prises en main, robots par opérateur.</p>
 </div>
@@ -260,7 +260,7 @@
 <script>
 // ---------- Data: one entry per step. Weeks are 1-based and inclusive, durations are approximate. ----------
 const C = { p1: ['var(--navy)', 'var(--navy-soft)'], p2: ['var(--violet)', 'var(--violet-soft)'], p3: ['var(--grey)', 'var(--grey-soft)'] };
-const WEEKS = 21;
+const WEEKS = 22;
 
 const phases = [
   { title: 'Accueil', prio: 'P1.1', color: 'p1', sub: 'Un POC (proof of concept, la preuve que ça marche) : un robot dans le hall, piloté depuis Madagascar quand il le faut, pour accueillir les clients sans ajouter de personnel.', items: [
@@ -274,29 +274,30 @@ const phases = [
       out: ['Temi installé sur le site de test, dans le hall, avec sa base et 2 ou 3 points de passage', 'Une application très simple sur Temi : une question ouverte aux clients, par exemple « Que pensez-vous du robot ? »', 'Si Temi a une appli native pour téléopérer : un test avec un opérateur dans une salle à côté, puis un test avec un opérateur à Madagascar', 'Nous sur place 3 à 4 demi-journées, aux arrivées et aux départs'],
       doc: ['Compte rendu'],
       mes: ['Développer sur Temi : accès, outils, ce qu\'il est possible de faire ou non', 'Les retours des clients sur le robot', 'Réaction des clients, gêne dans le hall, bruit, son, autonomie réelle', 'Latence ressentie depuis Madagascar', 'Temi répond-il au besoin de l\'étape 1 ? Go ou pas go avec le client'] },
-    { id: 'e3', n: 'Étape 3', name: 'Téléopération', conf: 80, from: 4.5, to: 5.5,
+    { id: 'e3', n: 'Étape 3', name: 'Téléopération', conf: 80, from: 4.5, to: 6.5, effort: 15,
+      effortTip: 'L\'étape s\'étale sur 3 semaines, pour environ 15 jours-homme : le logiciel de téléopération, les tests avec Madagascar, puis le suivi de la semaine en autonomie.',
       pre: ['L\'étape 2 est validée : Temi répond au besoin', 'Un opérateur à Madagascar a réussi à le piloter'],
       out: ['Semaine 1 : un logiciel très simple autour de l\'appli native de Temi, pour qu\'un téléopérateur reprenne la main', 'Semaine 1 : un test plus poussé avec un téléopérateur, sur le site de test', 'Semaine 2 : mise en production, Temi tourne une semaine en autonomie à l\'accueil'],
       doc: ['Compte rendu de l\'essai en conditions réelles : la téléopération par les opérateurs de Madagascar'],
       mes: ['Prises en main par jour', 'Les questions les plus posées à distance', 'Les retours des téléopérateurs et des clients'] },
   ]},
   { title: 'Stabiliser', prio: 'P1.1', color: 'p1', sub: 'Un seul site, sans nous sur place. On vérifie que ça tient avant d\'aller plus loin.', items: [
-    { id: 's1', n: 'Étape 4', name: 'Stabilisation sur le site de test', conf: 70, from: 6.5, to: 9.5,
+    { id: 's1', n: 'Étape 4', name: 'Stabilisation sur le site de test', conf: 70, from: 7.5, to: 10.5,
       pre: ['La téléopération est validée : Madagascar reprend la main sans difficulté', 'Les seuils à tenir sont fixés avec le client'],
       out: ['Temi tourne 4 semaines à l\'accueil, sans nous sur place', 'On corrige ce qui casse : pannes, réseau, bugs', 'Une supervision simple : robot en ligne, en charge ou en panne, prises en main par jour', 'Les mises à jour se font à distance'],
       doc: ['Bilan de stabilité : les chiffres des 4 semaines, comparés aux seuils'],
       mes: ['Pannes par semaine, et temps pour repartir', 'Prises en main par jour', 'Combien de robots un opérateur peut suivre'] },
-    { id: 's2', n: 'Étape 5', name: 'Kit d\'installation', conf: 65, from: 8.5, to: 9.5,
+    { id: 's2', n: 'Étape 5', name: 'Kit d\'installation', conf: 65, from: 9.5, to: 10.5,
       out: ['Pendant que Temi tourne : on écrit ce qu\'il faut pour installer un site sans nous', 'Une checklist : réseau, Wi-Fi, base, points de passage, signalétique dans le hall', 'Une configuration par site, sans code : langue, horaires, points de passage', 'Le SAV avec le fournisseur : délai d\'échange, robots de rechange', 'Une formation courte pour l\'accueil et pour Madagascar'],
       doc: ['Le kit d\'installation', 'Le SAV proposé avec le fournisseur'] },
   ]},
   { title: 'Plusieurs sites', prio: 'P1.1', color: 'p1', sub: 'Le même kit, posé sur d\'autres sites, par vagues.', items: [
-    { id: 'm1', n: 'Étape 6', name: 'Deux sites de plus', conf: 50, from: 10.5, to: 12.5,
+    { id: 'm1', n: 'Étape 6', name: 'Deux sites de plus', conf: 50, from: 11.5, to: 13.5,
       pre: ['Le site de test a tenu ses seuils pendant 4 semaines', 'Deux robots de plus sont reçus'],
       out: ['Deux sites choisis différents : un grand, un petit, un hall difficile si possible', 'Installation avec le kit, en une journée par site', 'Madagascar suit les trois robots'],
       doc: ['Compte rendu : temps d\'installation, ce qui a manqué dans le kit'],
       mes: ['Temps d\'installation par site', 'Prises en main par robot et par jour, sur les trois sites', 'Ce qui change d\'un site à l\'autre'] },
-    { id: 'm2', n: 'Étape 7', name: 'Déploiement par vagues', conf: 30, from: 13.5, to: 18.5,
+    { id: 'm2', n: 'Étape 7', name: 'Déploiement par vagues', conf: 30, from: 14.5, to: 19.5,
       out: ['Quelques sites par mois, selon les livraisons du fournisseur et les opérateurs formés à Madagascar', 'Une vague ne part que si la précédente tient ses chiffres'],
       note: 'On ne détaille pas plus pour l\'instant : le rythme dépendra du bilan des sites 2 et 3, et du nombre de sites de Quartier Libre.' },
   ]},
@@ -307,9 +308,9 @@ const phases = [
 const gates = [
   { w: 3, l: 'Robot', t: 'Cadrage et robot', tip: 'Le besoin, le parcours d\'arrivée et de départ, les logiciels en place. Le document de cadrage et la roadmap révisée. Le robot est-il reçu ? Sinon, l\'étape 2 ne démarre pas.', block: true, below: true },
   { w: 4.5, l: 'Go / no go', t: 'Go / no go robot', tip: 'Ce qu\'ont dit les clients, l\'accueil et Madagascar pendant le test. Temi répond-il au besoin ? Si non, on repart sur un autre robot et tout le planning décale.', block: true },
-  { w: 6.5, l: 'Bilan POC', t: 'Bilan téléopération', up: true, tip: 'Temi tourne à l\'accueil depuis une semaine, piloté depuis Madagascar quand il le faut. La téléopération est-elle validée ? On fixe avec le client les seuils à tenir pendant la stabilisation.' },
-  { w: 10.5, l: 'Stable ?', t: 'Bilan de stabilité', tip: 'Les chiffres des 4 semaines : pannes, prises en main, robots par opérateur. Les seuils sont tenus ? Sinon, on ne passe pas à d\'autres sites.', block: true },
-  { w: 13.5, l: 'Bilan 3 sites', t: 'Bilan des sites 2 et 3', up: true, tip: 'Le kit a-t-il tenu ? Temps d\'installation, prises en main sur les trois sites. On fixe le rythme des vagues avec le client.' },
+  { w: 7.5, l: 'Bilan POC', t: 'Bilan téléopération', up: true, tip: 'Temi tourne à l\'accueil depuis une semaine, piloté depuis Madagascar quand il le faut. La téléopération est-elle validée ? On fixe avec le client les seuils à tenir pendant la stabilisation.' },
+  { w: 11.5, l: 'Stable ?', t: 'Bilan de stabilité', tip: 'Les chiffres des 4 semaines : pannes, prises en main, robots par opérateur. Les seuils sont tenus ? Sinon, on ne passe pas à d\'autres sites.', block: true },
+  { w: 14.5, l: 'Bilan 3 sites', t: 'Bilan des sites 2 et 3', up: true, tip: 'Le kit a-t-il tenu ? Temps d\'installation, prises en main sur les trois sites. On fixe le rythme des vagues avec le client.' },
 ];
 const milestones = [];
 
