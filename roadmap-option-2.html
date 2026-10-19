@@ -27,6 +27,9 @@
   .brand span { color: var(--muted); font-weight: 500; font-size: 16px; letter-spacing: 0; margin-left: 8px; white-space: nowrap; }
   h1 { font-size: 52px; line-height: 1.05; font-weight: 800; letter-spacing: -.04em; }
   header > div { flex: 1; }
+  .intro { max-width: 900px; margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+  .intro p { font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+  .intro b { color: var(--ink); }
 
 
   h2 { font-size: 30px; font-weight: 800; letter-spacing: -.03em; margin: 52px 0 6px; }
@@ -223,11 +226,16 @@
       loop <span>× Quartier Libre Collection · Document de travail</span>
     </div>
     <h1>Roadmap.</h1>
+    <div class="intro">
+      <p><b>On se concentre sur une seule priorité : le robot d'accueil.</b></p>
+      <p>C'est pour nous le robot le plus fiable. Il existe, il tourne, il n'est pas trop cher. Il répond à beaucoup de vos besoins, et c'est là qu'on vous apporte le plus de valeur aujourd'hui.</p>
+      <p>On ne fait pas un POC par priorité. Le chariot à bagages, la sécurité et le nettoyage sont mis de côté.</p>
+      <p>L'objectif : mener le robot d'accueil jusqu'au bout, prêt pour la production sur tous vos sites. Une seule solution, de bout en bout, sans se disperser.</p>
+    </div>
   </div>
 </header>
 
 <div class="legend">
-  <span><i style="--c:var(--navy)"></i>P1.1 · Accueil</span>
   <span><i class="lg-gate"></i>Bilan et décision avec le client</span>
   <span><i class="lg-gate" style="background:var(--red)"></i>Décision bloquante : peut décaler tout le planning</span>
 </div>
@@ -332,10 +340,10 @@ html += '</div></div></div>';
 let d = .15;
 phases.forEach(p => {
   const [c, soft] = C[p.color];
-  html += row(`<span class="prio" style="--c:${c}">${p.prio}</span>${p.title}`, '', 'g-group');
+  html += row(p.title, '', 'g-group');
   p.items.forEach(it => {
     d += .08;
-    html += row(`${it.name}<span class="tags"><span class="tag-lvl">${p.prio}</span>${solo(p) ? '' : `<span class="tag-room">${it.n}</span>`}</span>`,
+    html += row(`${it.name}${solo(p) ? '' : `<span class="tags"><span class="tag-room">${it.n}</span></span>`}`,
       `<a href="#${it.id}" class="bar${it.opt ? ' dash' : ''}" style="${span(it.from, it.to)};--c:${c};--soft:${soft};--d:${d}s" title="${solo(p) ? '' : `${it.n} · `}${it.name} · ${weeks(it)}"></a><span class="bar-l" style="left:${pct(it.to + 1)}"><span>${weeks(it)}${it.opt ? ' · optionnelle' : ''}</span></span>`);
   });
 });
@@ -357,7 +365,7 @@ ph.innerHTML = phases.map(p => {
   const from = Math.min(...p.items.map(i => i.from)), to = Math.max(...p.items.map(i => i.to));
   return `<section class="phase">
     <div class="phase-side">
-      <h3><span class="prio" style="--c:${c}">${p.prio}</span>${p.title}</h3>${p.sub ? `<p class="phase-sub">${p.sub}</p>` : ''}
+      <h3>${p.title}</h3>${p.sub ? `<p class="phase-sub">${p.sub}</p>` : ''}
       <p class="sum"><b>${dur(to - from + 1)}</b> · S${Math.floor(from)} à S${Math.ceil(to)}</p>
     </div>
     <div class="cards">${p.items.map(it => `
@@ -391,7 +399,7 @@ const conf = i => {
   const lvl = i.conf >= 75 ? 'hi' : i.conf >= 50 ? 'mid' : 'lo';
   return `<span class="conf ${lvl}" tabindex="0" data-tip="Confiance dans le temps estimé : ${i.conf} %. Plus une étape est proche, plus on est sûr de sa durée. Plus elle est loin, plus elle dépend des bilans d'avant.">${i.conf} %</span>`;
 };
-const stepRow = (i, c, prio, solo) => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:${c}"></span>${solo ? '' : `${i.n} · `}${i.name}</td><td class="tg"><span class="prio" style="--c:${c}">${prio}</span>${i.opt ? '<span class="opt">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${conf(i)}<span class="d">${dur(len(i))}</span></td></tr>`;
+const stepRow = (i, c, prio, solo) => `<tr><td><span class="cum" style="width:${len(i) / last * 240}px;--c:${c}"></span>${solo ? '' : `${i.n} · `}${i.name}</td><td class="tg">${i.opt ? '<span class="opt">Optionnelle</span>' : ''}</td><td>${weeks(i)}</td><td>${conf(i)}<span class="d">${dur(len(i))}</span></td></tr>`;
 // One block per priority: P1.1 and P1.2 go together under P1. A block of one step, or a single block, needs no subtotal.
 const groups = [];
 phases.forEach(p => {
@@ -403,7 +411,7 @@ phases.forEach(p => {
 const subRow = g => {
   const from = Math.min(...g.items.map(i => i.from)), to = Math.max(...g.items.map(i => i.to));
   const c = g.items[0].c;
-  return `<tr class="subtotal"><td><span class="cum" style="width:${(to - from + 1) / last * 240}px;--c:${c}"></span>Sous-total</td><td class="tg"><span class="prio" style="--c:${c}">${g.key}</span></td><td>S${Math.floor(from)}–S${Math.ceil(to)}</td><td>${dur(to - from + 1)}</td></tr>`;
+  return `<tr class="subtotal"><td><span class="cum" style="width:${(to - from + 1) / last * 240}px;--c:${c}"></span>Sous-total</td><td class="tg"></td><td>S${Math.floor(from)}–S${Math.ceil(to)}</td><td>${dur(to - from + 1)}</td></tr>`;
 };
 document.getElementById('totals').innerHTML = `
   <tr><th>Étapes</th><th class="tg"></th><th>Semaines</th><th>Durée</th></tr>
