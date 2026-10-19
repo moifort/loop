@@ -106,9 +106,8 @@
   .phase { display: grid; grid-template-columns: 300px 1fr; gap: 0; border-top: 1px solid var(--line); }
   .phase:last-of-type { border-bottom: 1px solid var(--line); }
   .phase-side { padding: 28px 28px 28px 0; display: flex; flex-direction: column; gap: 10px; }
-  .phase-side .prio { align-self: flex-start; height: 26px; font-size: 13px; padding: 0 10px; }
-  .phase-side h3 { font-size: 26px; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
-  .phase-side p { font-size: 16px; line-height: 1.45; color: var(--ink-2); }
+  .phase-side .prio { height: 26px; font-size: 13px; padding: 0 10px; }
+  .phase-side h3 { display: flex; align-items: center; gap: 12px; font-size: 26px; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; }
   .phase-side .sum { margin-top: 6px; font-size: 15px; color: var(--muted); }
   .phase-side .sum b { color: var(--ink); font-variant-numeric: tabular-nums; }
   .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 0; border-left: 1px solid var(--line); }
@@ -215,7 +214,6 @@
 <div class="gantt-scroll"><div class="gantt" id="gantt"></div></div>
 
 <h2>Le détail des étapes</h2>
-<p class="h2-sub">Les étapes se suivent : chacune dépend de ce qu'on a appris à la précédente.</p>
 
 <div id="phases"></div>
 
@@ -243,7 +241,7 @@ const C = { p1: ['var(--navy)', 'var(--navy-soft)'] };
 const WEEKS = 9;
 
 const phases = [
-  { title: 'Accueil', prio: 'P1.1', color: 'p1', text: 'Cinq étapes, l\'une après l\'autre, les deux dernières en option. On comprend, on teste le robot sur place, on met la téléopération en production, puis, en option, on prototype le check-in et un premier connecteur Greg AI.', items: [
+  { title: 'Accueil', prio: 'P1.1', color: 'p1', items: [
     { id: 'e1', n: 'Étape 1', name: 'Interviews et besoin', from: 1, to: 1,
       out: ['Sélection du site de test', 'Rencontre avec le fournisseur : démo, prix, location, SAV, pour préparer l\'étape 2', 'Interview de l\'équipe IT : outils et connecteurs logiciels, comment se passerait la téléopération depuis Madagascar', 'Étude du robot Temi : specs, outils hardware et software'],
       doc: ['Document de cadrage', 'Roadmap révisée'] },
@@ -264,7 +262,7 @@ const phases = [
     { id: 'e5', n: 'Étape 5', name: 'Connecteur Greg AI', icon: 'assets/greg-ai-icon.png', from: 6, to: 6, opt: true,
       out: ['Les fondations d\'une application qui envoie des informations à Greg AI, pour ses analytics', 'Les statistiques du robot, et ses pannes', 'Les statistiques de check-in et de check-out', 'Des actions déclenchées par Greg AI, et des actions envoyées à Greg AI'] },
   ]},
-  { title: 'Vigile', prio: 'P1.2', color: 'p1', text: 'Une étape, une fois l\'accueil validé au bilan P1.1. Quand ça se passe mal à l\'accueil, l\'agent appuie sur un bouton et Temi passe en mode vigile.', items: [
+  { title: 'Vigile', prio: 'P1.2', color: 'p1', items: [
     { id: 'v1', n: 'Étape 6', name: 'Mode vigile', from: 7, to: 7.5,
       pre: ['Le bilan P1.1 est bon : l\'accueil et la téléopération sont validés'],
       out: ['Une application sur l\'iPhone de l\'agent d\'accueil, avec un bouton qui déclenche l\'alerte', 'Au plus simple : à l\'alerte, un téléopérateur prend la main sur Temi', 'Un mode vigile qui enregistre la vidéo et la conserve pour s\'en servir ensuite', 'Un test en conditions réelles'],
@@ -327,8 +325,7 @@ ph.innerHTML = phases.map(p => {
   const from = Math.min(...p.items.map(i => i.from)), to = Math.max(...p.items.map(i => i.to));
   return `<section class="phase">
     <div class="phase-side">
-      <span class="prio" style="--c:${c}">${p.prio}</span>
-      <h3>${p.title}</h3><p>${p.text}</p>
+      <h3><span class="prio" style="--c:${c}">${p.prio}</span>${p.title}</h3>
       <p class="sum"><b>${dur(to - from + 1)}</b> · S${from} à S${Math.ceil(to)}</p>
     </div>
     <div class="cards">${p.items.map(it => `
