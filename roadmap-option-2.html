@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Loop × Quartier Libre — Option 2, roadmap itérative</title>
+<title>Loop × Quartier Libre — roadmap itérative</title>
 <style>
   /* Same palette as the deck: Loop blue, client priorities P1 navy, P2 violet, P3 sky */
   :root {
@@ -204,7 +204,7 @@
       <svg viewBox="0 0 40 40"><rect width="40" height="40" rx="11" fill="#1f5bff"/><path d="M13 12v16h14" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
       loop <span>× Quartier Libre Collection · Document de travail</span>
     </div>
-    <h1>Option 2 · P1 : l'accueil.</h1>
+    <h1>P1 : l'accueil.</h1>
   </div>
 </header>
 
@@ -307,11 +307,11 @@ const phases = [
       out: ['Jours 1 et 2 : une application Android basique, embarquée sur Temi', 'Le client fait son check-in et son check-out sur Temi, à partir de sa réservation', 'Premiers branchements avec les outils de l\'appart-hôtel', 'Jours 3 à 5 : test en conditions réelles, en français et en anglais', 'L\'opérateur ne reprend la main que si ça bloque'],
       doc: ['Bilan P1 : ce qui marche, ce qui manque pour la production, la suite proposée'],
       mes: ['Part des arrivées et des départs faits sans opérateur', 'Temps gagné par l\'accueil et par Madagascar'],
-      note: 'Étape optionnelle, proposée en plus : un développement logiciel branché à l\'IT de l\'appart-hôtel. Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.',
+      note: 'Pourquoi : les arrivées et les départs simples se font sans opérateur, et Madagascar garde son temps pour le reste. Le check-out répond aussi à une demande de Michael : savoir quand un client quitte l\'appartement.',
       risk: ['<b>À trancher</b> : passer par un connecteur Greg, ou se brancher directement sur les outils de l\'appart-hôtel.'] },
     { id: 'e5', n: 'Étape 5', name: 'Connecteur Greg', from: 6, to: 6, opt: true,
       out: ['Les fondations d\'une application qui envoie des informations à Greg, pour ses analytics', 'Les statistiques du robot, et ses pannes', 'Les statistiques de check-in et de check-out', 'Des actions déclenchées par Greg, et des actions envoyées à Greg', 'Les débuts de la plateforme Loop : une couche commune au-dessus des robots, quelle que soit leur marque'],
-      note: 'Étape optionnelle, si le client est intéressé. Les informations et les actions sont à cadrer avec lui.' },
+      note: 'Pourquoi : Greg reçoit les chiffres du robot dans ses analytics, et Loop gère tous les robots de la même façon, quelle que soit leur marque. Les informations et les actions sont à cadrer avec le client, s\'il est intéressé.' },
   ]},
 ];
 
