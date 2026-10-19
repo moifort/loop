@@ -204,6 +204,10 @@
   /* ============ 5 · Panic: the live mockup, driven by the scene ============ */
   .app-shot { position: relative; height: 774px; }
   .app-shot .win { position: absolute; inset: 0; }
+  /* "L'app Loop" tag centred above each Loop screen, so the client knows what they are looking at */
+  .loop-tag { position: absolute; left: 0; right: 0; bottom: calc(100% + 22px); display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 18px; font-weight: 700; color: var(--ink); letter-spacing: -.01em; pointer-events: none; }
+  .loop-tag svg { width: 44px; height: 44px; }
+  .dark .loop-tag { color: #fff; }
   /* Rendered at 1180 px wide (the mockup is responsive) so it reads at slide scale: 1016 / 1180 */
   iframe.app { position: absolute; left: 0; top: 56px; width: 1180px; height: 834px; border: 0; transform-origin: 0 0; background: var(--bg); pointer-events: none; }
 
@@ -848,6 +852,7 @@
       </div>
     </div>
     <div class="shot rise" style="--d:.2s">
+      <div class="loop-tag"><svg><use href="#loop-mark"/></svg><span>L'app Loop</span></div>
       <div class="win">
         <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Quartier Libre Collection / Saint-Georges</span></div>
         <iframe data-src="building-overview.html" title="Maquette Loop" tabindex="-1"></iframe>
@@ -881,6 +886,7 @@
     </div>
     <div class="duo-shot rise" style="--d:.2s">
       <div class="app-shot">
+        <div class="loop-tag"><svg><use href="#loop-mark"/></svg><span>L'app Loop</span></div>
         <div class="win">
           <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Accueil / TEMI-4F2A</span></div>
           <iframe class="app" data-src="building-overview.html#accueil" title="Maquette Loop · Accueil" tabindex="-1"></iframe>
@@ -907,6 +913,7 @@
       </ul>
     </div>
     <div class="app-shot rise" style="--d:.2s">
+      <div class="loop-tag"><svg><use href="#loop-mark"/></svg><span>L'app Loop</span></div>
       <div class="win">
         <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Saint-Georges / Accueil / TEMI-4F2A</span></div>
         <iframe class="app" data-src="building-overview.html#accueil" title="Maquette Loop · Accueil" tabindex="-1"></iframe>
@@ -937,6 +944,7 @@
       </div>
     </div>
     <div class="app-shot rise" style="--d:.2s">
+      <div class="loop-tag"><svg><use href="#loop-mark"/></svg><span>L'app Loop</span></div>
       <div class="win">
         <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Saint-Georges / Vigie</span></div>
         <iframe class="app" data-src="building-overview.html#vigie" title="Maquette Loop" tabindex="-1"></iframe>
@@ -962,6 +970,7 @@
       </div>
     </div>
     <div class="app-shot rise" style="--d:.2s">
+      <div class="loop-tag"><svg><use href="#loop-mark"/></svg><span>L'app Loop</span></div>
       <div class="win">
         <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Bagages / T300-3B8D</span></div>
         <iframe class="app" data-src="building-overview.html#kilo" title="Maquette Loop · chariot à bagages" tabindex="-1"></iframe>
@@ -991,6 +1000,7 @@
     </div>
     <div class="duo-shot rise" style="--d:.2s">
       <div class="app-shot">
+        <div class="loop-tag"><svg><use href="#loop-mark"/></svg><span>L'app Loop</span></div>
         <div class="win">
           <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Robots / CLN-2D84</span></div>
           <iframe class="app" data-src="building-overview.html#robot/CLN-2D84" title="Maquette Loop · fiche du robot CLN-2D84" tabindex="-1"></iframe>
@@ -1022,6 +1032,7 @@
       </div>
     </div>
     <div class="app-shot rise" style="--d:.2s">
+      <div class="loop-tag"><svg><use href="#loop-mark"/></svg><span>L'app Loop</span></div>
       <div class="win">
         <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span>loop.app <span class="crumb">/ Connecteurs / GregAi</span></div>
         <iframe class="app" data-src="building-overview.html#greg" title="Maquette Loop · Connecteurs" tabindex="-1"></iframe>
