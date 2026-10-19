@@ -369,7 +369,7 @@ ph.innerHTML = phases.map(p => {
       <article class="card" id="${it.id}" style="--c:${c};--soft:${soft}">
         <div class="card-top">${solo(p) ? '' : `<span class="n">${it.n.toUpperCase()}</span>`}${it.opt ? '<span class="opt">Optionnelle</span>' : ''}<span class="w">${weeks(it)}</span></div>
         <h4>${it.icon ? `<img class="h4-icon" src="${it.icon}" alt="">` : ''}${it.name}</h4>
-        <div class="jh">${num(len(it))} <small>semaine${len(it) >= 2 ? 's' : ''}</small>${it.effort ? `<span class="effort" tabindex="0" data-tip="${it.effortTip}">${it.effort} jours-homme max</span>` : ''}</div>
+        <div class="jh">${num(len(it))} <small>semaine${len(it) >= 2 ? 's' : ''}</small>${it.effort ? `<span class="effort" tabindex="0" data-tip="${it.effortTip}">${it.effort} j/h</span>` : ''}</div>
         ${it.pre ? `<div class="blk pre"><small>Pour démarrer l'étape</small><ul>${it.pre.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
         <div class="blk out"><small>À la fin de l'étape</small><ul>${it.out.map(x => `<li>${x}</li>`).join('')}</ul></div>
         ${it.doc ? `<div class="blk doc"><small>Remis au client</small><ul>${it.doc.map(x => `<li>${x}</li>`).join('')}</ul></div>` : ''}
