@@ -139,7 +139,6 @@
   .risk.block b { color: #7a1a1d; }
 
   /* ---------- Totals ---------- */
-  .totals { display: grid; grid-template-columns: 1.3fr 1fr; gap: 64px; align-items: start; }
   table { width: 100%; border-collapse: collapse; font-size: 17px; }
   td, th { padding: 12px 0; border-bottom: 1px solid var(--line); text-align: left; }
   th { font-size: 13px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); }
@@ -148,10 +147,6 @@
   tr.total td { font-weight: 800; font-size: 20px; border-bottom: 0; border-top: 2px solid var(--ink); }
   tr.sub td { color: var(--muted); font-size: 15px; }
   .cum { display: inline-block; height: 8px; border-radius: 4px; background: var(--c); vertical-align: middle; margin-right: 10px; }
-  .notes { display: flex; flex-direction: column; gap: 18px; }
-  .note { border-left: 3px solid var(--c, var(--loop)); padding: 4px 0 4px 18px; }
-  .note b { display: block; font-size: 17px; margin-bottom: 4px; }
-  .note p { font-size: 16px; line-height: 1.45; color: var(--ink-2); }
 
   /* Callout: what the end of P1 does not give */
   .callout { border-radius: 14px; background: var(--red-soft); padding: 24px 28px; display: flex; flex-direction: column; gap: 8px; max-width: 980px; }
@@ -170,7 +165,6 @@
     .phase { grid-template-columns: 1fr; }
     .phase-side { padding: 28px 0 8px; }
     .cards { border-left: 0; }
-    .totals { grid-template-columns: 1fr; gap: 40px; }
   }
   @media (max-width: 640px) {
     .wrap { padding: 28px 18px 48px; }
@@ -227,12 +221,6 @@
 
 <div class="totals">
   <table id="totals"></table>
-  <div class="notes">
-    <div class="note" style="--c:var(--navy)"><b>Pourquoi c'est moins que le premier chiffrage</b><p>Le premier chiffrage mettait tout dans une seule itération : un socle complet, une console web, le bouton panique et une certification de logiciel de réservation. Ici, le bouton panique part avec la sécurité, la console reste minimale, et on lit les réservations à travers ce qui existe déjà.</p></div>
-    <div class="note" style="--c:var(--amber)"><b>Ce qu'on ne sait pas encore</b><p>Le logiciel de réservation de Quartier Libre, et s'il a une API. Si Greg peut nous donner les réservations, ce qui éviterait de brancher ce logiciel. La pièce d'identité et le paiement au check-in : quelques semaines de plus s'il faut les gérer.</p></div>
-    <div class="note" style="--c:var(--red)"><b>Si on n'a pas Temi à temps</b><p>On ne reste pas bloqué : on avance le ménage. Un Roborock Saros s'achète en magasin et se teste dans un appartement la semaine même, pendant qu'on attend Temi.</p></div>
-    <div class="note" style="--c:var(--grey)"><b>Plus tard, chiffré après le bilan P1</b><p>Le Piaggio Kilo. Le Roborock Saros. La vue de tout l'immeuble.</p></div>
-  </div>
 </div>
 
 <h2>Après le bilan P1</h2>
