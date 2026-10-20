@@ -890,14 +890,11 @@
         <div class="kpi"><b><span data-count="100">0</span>&nbsp;%</b><span>d'accueil couvert, 7 h – 23 h</span></div>
       </div>
     </div>
-    <div class="duo-shot rise" style="--d:.2s">
-      <div class="app-shot">
-        <div class="win">
-          <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
-          <iframe class="app" data-src="building-overview.html#accueil" title="Maquette Loop · Accueil" tabindex="-1"></iframe>
-        </div>
+    <div class="app-shot rise" style="--d:.2s">
+      <div class="win">
+        <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
+        <iframe class="app" data-src="building-overview.html#accueil" title="Maquette Loop · Accueil" tabindex="-1"></iframe>
       </div>
-      <div class="iph"><img id="acc-shot" src="assets/ios/deck/reception.jpg" alt="App compagnon · Accueil et sécurité"></div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -1226,13 +1223,12 @@ const SCENES = {
 
   accueil: {
     dur: 12000,
-    once(s) { loadFrame(s.querySelector('iframe.app')); new Image().src = 'assets/ios/deck/reception-remote.jpg'; },
+    once(s) { loadFrame(s.querySelector('iframe.app')); },
     reset(s) {
       const w = appWin(s); if (w) { if (w.eval('ACC.mode') === 'remote') w.runAccAction('release'); w.showView('accueil'); }
-      $('acc-shot').src = 'assets/ios/deck/reception.jpg';
     },
-    // A guest asks for a human; a Madagascar operator takes over: the mockup and the iPhone both show their card
-    run(s) { at(4500, () => { appWin(s)?.runAccAction('take'); $('acc-shot').src = 'assets/ios/deck/reception-remote.jpg'; }); },
+    // A guest asks for a human; a Madagascar operator takes over and the mockup shows their card
+    run(s) { at(4500, () => appWin(s)?.runAccAction('take')); },
   },
 
   // The real reception view: the cursor presses the mockup's own panic button, calls 17, then lifts the alert
