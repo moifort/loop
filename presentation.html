@@ -816,7 +816,7 @@
     <div class="sx">
       <span class="eyebrow rise">Loop × Greg.ai</span>
       <h1 class="rise" style="--d:.1s">Greg.ai pilote l'hôtel.<em>Loop lui branche les robots.</em></h1>
-      <p class="lead rise" style="--d:.3s">Greg.ai est déjà relié à Mews, Salto et Otis. <b>Loop s'y branche de la même façon : Greg voit les robots et leur confie des tâches.</b> C'est pour ça qu'on a choisi des robots avec des API ouvertes.</p>
+      <p class="lead rise" style="--d:.3s">Greg.ai est déjà relié à Slack, Gmail et WhatsApp. <b>Loop s'y branche de la même façon : Greg voit les robots et leur confie des tâches.</b> C'est pour ça qu'on a choisi des robots avec des API ouvertes.</p>
     </div>
     <div class="hubmap rise" style="--d:.25s;left:60px">
       <svg class="wires" viewBox="0 0 968 760">
@@ -824,22 +824,21 @@
         <path class="base" d="M330,260 C470,260 460,330 600,330"/>
         <path class="base" d="M330,400 C470,400 460,330 600,330"/>
         <path class="base" d="M330,540 C470,540 460,330 600,330"/>
-        <!-- Scenario 1: Mews records a check-out, Greg asks Loop to send the Dreame -->
-        <path class="flow s1" d="M330,260 C470,260 460,330 600,330"/>
+        <!-- Scenario 1: a guest asks for help with luggage on WhatsApp, Greg asks Loop to send the T300 -->
+        <path class="flow s1" d="M330,540 C470,540 460,330 600,330"/>
         <path class="flow s1" d="M600,330 C460,330 470,120 330,120"/>
-        <!-- Scenario 2: a check-in in Mews, Greg asks Loop for the T300 and Otis for the lift -->
-        <path class="flow s2" d="M330,260 C470,260 460,330 600,330"/>
-        <path class="flow s2" d="M600,330 C460,330 470,120 330,120"/>
-        <path class="flow s2" d="M600,330 C460,330 470,540 330,540"/>
-        <!-- Scenario 3: Loop asks before cleaning, Greg checks the booking in Mews and the lock in Salto -->
-        <path class="flow s3" d="M330,120 C470,120 460,330 600,330"/>
+        <!-- Scenario 2: the Temi reports an incident through Loop, Greg alerts the team on Slack -->
+        <path class="flow s2" d="M330,120 C470,120 460,330 600,330"/>
+        <path class="flow s2" d="M600,330 C460,330 470,260 330,260"/>
+        <!-- Scenario 3: a guest e-mails an arrival time, Greg plans the welcome in Loop and tells the team on Slack -->
+        <path class="flow s3" d="M330,400 C470,400 460,330 600,330"/>
         <path class="flow s3" d="M600,330 C460,330 470,260 330,260"/>
-        <path class="flow s3" d="M600,330 C460,330 470,400 330,400"/>
+        <path class="flow s3" d="M600,330 C460,330 470,120 330,120"/>
       </svg>
       <div class="nd s1 s2 s3" style="left:60px;top:120px;width:270px;--c:#1f5bff"><span class="ni" style="background:none"><svg style="width:40px;height:40px"><use href="#loop-mark"/></svg></span><div><b>Loop</b><small>Temi · T300 · Dreame</small></div></div>
-      <div class="nd s1 s2 s3" style="left:60px;top:260px;width:270px;--c:#e9ecf5"><span class="ni" style="background:#fff;color:#111">M</span><div><b>Mews</b><small>Réservations</small></div></div>
-      <div class="nd s3" style="left:60px;top:400px;width:270px;--c:#ff4d6a"><span class="ni" style="background:#e4002b">S</span><div><b>Salto</b><small>Serrures</small></div></div>
-      <div class="nd s2" style="left:60px;top:540px;width:270px;--c:#4d7fe0"><span class="ni" style="background:#1b3f8f">O</span><div><b>Otis</b><small>Ascenseurs</small></div></div>
+      <div class="nd s2 s3" style="left:60px;top:260px;width:270px;--c:#b06ab3"><span class="ni" style="background:#4a154b">S</span><div><b>Slack</b><small>L'équipe</small></div></div>
+      <div class="nd s3" style="left:60px;top:400px;width:270px;--c:#ea4335"><span class="ni" style="background:#fff;color:#ea4335">M</span><div><b>Gmail</b><small>E-mails des clients</small></div></div>
+      <div class="nd s1" style="left:60px;top:540px;width:270px;--c:#25d366"><span class="ni" style="background:#25d366">W</span><div><b>WhatsApp</b><small>Messages des clients</small></div></div>
       <div class="hub" style="left:600px"><span class="wave"></span><span class="wave"></span><span class="ring"></span><span class="core" style="background:radial-gradient(circle at 35% 30%, #5d6275, #3a3d4a 55%, #22242d)"><svg style="width:110px;height:110px;color:#fff"><use href="#i-sparkles"/></svg></span></div>
       <div class="hub-lbl" style="left:550px"><b>Greg.ai</b><small>IA d'opérations de l'hôtel</small></div>
     </div>
