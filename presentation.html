@@ -467,15 +467,25 @@
   .roi-solo .roi-l span { font-size: 26px; }
   .roi-solo .roi-l i { font-size: 22px; }
   .roi-solo .roi-l b { font-size: 28px; }
-  .why-l { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; background: #eef3ff; }
-  .why-l > div { display: flex; flex-direction: column; justify-content: center; gap: 12px; padding: 40px 72px 40px 96px; border-bottom: 1px solid rgba(18,19,26,.06); }
-  .why-l > div:nth-child(even) { padding: 40px 96px 40px 72px; border-left: 1px solid rgba(18,19,26,.06); }
-  .why-l b { font-size: 36px; letter-spacing: -.03em; line-height: 1.1; color: var(--ink); }
-  .why-l span { font-size: 21px; line-height: 1.5; color: var(--ink-2); max-width: 720px; }
-  .why-l .key { background: var(--loop); }
-  .why-l .key b, .why-l .key span { color: #fff; }
-  .why-l span strong { font-weight: 800; color: var(--ink); }
-  .why-l .key span strong { color: #fff; }
+  /* Why Loop: one idea, the robot fleet. The fleet adds up on the left, what Loop does with it on the right */
+  .fleet { flex: 1; display: grid; grid-template-columns: 620px 1fr; gap: 110px; align-items: center; padding: 0 96px 40px; background: var(--loop); color: #fff; }
+  .fl-row { display: flex; align-items: baseline; gap: 26px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.22); }
+  .fl-row:first-child { border-top: 0; }
+  .fl-row b { min-width: 130px; font-size: 76px; font-weight: 800; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .fl-row span { font-size: 28px; font-weight: 600; color: rgba(255,255,255,.82); }
+  .fl-row.one { margin-top: 8px; padding-top: 20px; border-top: 4px solid #fff; }
+  .fl-row.one span { color: #fff; }
+  .fl-note { margin-top: 18px; font-size: 16px; line-height: 1.5; color: rgba(255,255,255,.72); }
+  .fl-l { display: flex; flex-direction: column; gap: 30px; }
+  .fl-l ul { list-style: none; display: flex; flex-direction: column; gap: 28px; }
+  .fl-l li, .fl-next { display: grid; grid-template-columns: 44px 1fr; gap: 22px; align-items: start; }
+  .fl-l li i, .fl-next i { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.16); display: grid; place-items: center; }
+  .fl-l i svg { width: 24px; height: 24px; }
+  .fl-l li b, .fl-next b { display: block; font-size: 30px; letter-spacing: -.02em; line-height: 1.2; }
+  .fl-l li span, .fl-next span { display: block; margin-top: 6px; font-size: 21px; line-height: 1.45; color: rgba(255,255,255,.82); }
+  .fl-next { padding-top: 28px; border-top: 1px solid rgba(255,255,255,.22); }
+  .fl-next i { background: none; border: 2px dashed rgba(255,255,255,.5); }
+  [data-scene="why"] .s-foot { color: rgba(255,255,255,.7); }
   /* ============ Robot choice (P1–P3): same language as the robots slide, tinted hero band and hairline rows ============ */
   .pk { position: absolute; inset: 0; display: grid; grid-template-columns: 720px 1fr; }
   .pk-hero { position: relative; overflow: hidden; background: var(--tint); display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding: 104px 72px 0 96px; }
@@ -983,15 +993,28 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<!-- ======================= Why the dashboard · it is what lets Quartier Libre scale ======================= -->
+<!-- ======================= Why Loop · one platform to manage the whole robot fleet ======================= -->
 <section class="slide" data-scene="why">
   <div class="roi2">
-    <h1 class="rise">Pourquoi Loop ?<br><em>Il permet de passer à l'échelle.</em></h1>
-    <div class="why-l rise" style="--d:.2s">
-      <div class="key"><b>Passer à l'échelle</b><span>Le tableau de bord se paie une seule fois. Chaque nouvel immeuble s'y branche avec très peu d'adaptations : <strong>son coût s'amortit sur les 9 immeubles</strong>, les 5 actuels et les 4 en projet. Et une seule personne, à distance, les suit tous, sur un seul écran.</span></div>
-      <div><b>Un outil de plus pour Greg.ai</b><span>Greg.ai travaille déjà avec Slack, Gmail et WhatsApp. Loop devient un outil de plus : Greg.ai demande, Loop fait faire au bon robot. Comme pour ses autres outils, Greg.ai n'a pas à connaître chaque marque.</span></div>
-      <div><b>Tout tracer, sans dépendre d'une marque</b><span>Les heures gagnées et chaque alerte restent dans le tableau de bord : on décide sur des chiffres, et on répond à la CNIL. Un robot déçoit, une marque disparaît : on le remplace sans perdre l'historique.</span></div>
-      <div><b>Un seul outil à apprendre</b><span>Chaque nouvel employé apprend un outil, pas trois applis, dans chacun des 9 immeubles. Avec le turnover de l'hôtellerie, c'est du temps de formation gagné à chaque arrivée.</span></div>
+    <h1 class="rise">Pourquoi Loop ?<br><em>Pour gérer toute votre flotte de robots.</em></h1>
+    <div class="fleet rise" style="--d:.2s">
+      <div>
+        <div class="fl-row"><b data-count="9">0</b><span>immeubles, dont 4 en projet</span></div>
+        <div class="fl-row"><b data-count="36">0</b><span>robots*</span></div>
+        <div class="fl-row"><b data-count="3">0</b><span>marques : Temi, Pudu, Dreame</span></div>
+        <div class="fl-row one"><b>1</b><span>seul écran</span></div>
+        <p class="fl-note">* 4 robots par immeuble, comme à Saint-Georges : un Temi, un Pudu T300 et deux Dreame.</p>
+      </div>
+      <div class="fl-l">
+        <span class="eyebrow" style="--c:#fff;color:var(--loop)">Gestion de flotte</span>
+        <ul>
+          <li class="rise" style="--d:.35s"><i><svg><use href="#i-check"/></svg></i><div><b>Chaque robot en direct.</b><span>Où il est, sa batterie, sa tâche, quelle que soit sa marque.</span></div></li>
+          <li class="rise" style="--d:.45s"><i><svg><use href="#i-check"/></svg></i><div><b>Une seule personne suit toute la flotte.</b><span>À distance, sur les 9 immeubles : chaque alerte arrive au même endroit.</span></div></li>
+          <li class="rise" style="--d:.55s"><i><svg><use href="#i-check"/></svg></i><div><b>Chaque nouvel immeuble s'y branche.</b><span>Avec très peu d'adaptations. Loop se paie une fois et s'amortit sur toute la flotte.</span></div></li>
+          <li class="rise" style="--d:.65s"><i><svg><use href="#i-check"/></svg></i><div><b>Une marque déçoit ? On la remplace.</b><span>Même écran, même historique : l'équipe ne réapprend rien.</span></div></li>
+        </ul>
+        <div class="fl-next rise" style="--d:.8s"><i><svg><use href="#i-plug"/></svg></i><div><b>Et demain, la domotique.</b><span>Serrures, chauffage et éclairage rejoignent le même écran.</span></div></div>
+      </div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
