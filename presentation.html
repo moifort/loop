@@ -581,7 +581,7 @@
   <div class="toc-i rise" style="--d:.3s;--y:320px;--px:1330px"><span class="toc-n">1</span><div class="toc-t"><b>Les robots</b><p>Les robots, et leur mise en place.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
   <div class="toc-i rise" style="--d:.45s;--y:490px;--px:1500px"><span class="toc-n">2</span><div class="toc-t"><b>La roadmap</b><p>L'intégration des robots, clé en main, par nos soins.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
   <div class="toc-i rise" style="--d:.6s;--y:660px;--px:1400px"><span class="toc-n">3</span><div class="toc-t"><b>Le budget</b><p>Ce que coûte le pilote, et ce qu'il peut rapporter.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
-  <div class="toc-i rise" style="--d:.75s;--y:830px;--px:1560px"><span class="toc-n">4</span><div class="toc-t"><b>Pour aller plus loin</b><p>Connecter Loop à Greg.ai, pour passer à l'échelle.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
+  <div class="toc-i rise" style="--d:.75s;--y:830px;--px:1560px"><span class="toc-n">4</span><div class="toc-t"><b>Pour aller plus loin</b><p>Loop, pour gérer toute votre flotte de robots.</p></div><span class="toc-l"></span><span class="toc-pin"></span></div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
@@ -783,7 +783,7 @@
   <div class="s-head"><div class="brand" style="color:#fff"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 4</div></div>
   <span class="big rise">4</span>
   <h1 class="rise" style="--d:.15s">Pour aller plus loin</h1>
-  <p class="rise" style="--d:.3s">Connecter Loop à Greg.ai, pour passer à l'échelle.</p>
+  <p class="rise" style="--d:.3s">Loop, pour gérer toute votre flotte de robots.</p>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
@@ -992,10 +992,34 @@
       <ul>
         <li class="rise" style="--d:.35s"><i><svg><use href="#i-check"/></svg></i><div><b>Chaque robot en direct.</b><span>Où il est, sa batterie, sa tâche, quelle que soit sa marque.</span></div></li>
         <li class="rise" style="--d:.45s"><i><svg><use href="#i-check"/></svg></i><div><b>Une seule personne suit toute la flotte.</b><span>À distance, sur les 9 immeubles : chaque alerte arrive au même endroit.</span></div></li>
-        <li class="rise" style="--d:.55s"><i><svg><use href="#i-check"/></svg></i><div><b>Chaque nouvel immeuble s'y branche.</b><span>Avec très peu d'adaptations. Loop se paie une fois et s'amortit sur toute la flotte.</span></div></li>
+        <li class="rise" style="--d:.55s"><i><svg><use href="#i-check"/></svg></i><div><b>Chaque nouvel immeuble s'y branche.</b><span>Avec très peu d'adaptations, des 5 immeubles actuels aux 4 en projet.</span></div></li>
         <li class="rise" style="--d:.65s"><i><svg><use href="#i-check"/></svg></i><div><b>Une marque déçoit ? On la remplace.</b><span>Même écran, même historique : l'équipe ne réapprend rien.</span></div></li>
       </ul>
       <div class="fl-next rise" style="--d:.8s"><i><svg><use href="#i-plug"/></svg></i><div><b>Loop s'intègre à votre domotique.</b><span>Vos immeubles sont déjà équipés : Loop se branche à la gestion en place, sans rien remplacer.</span></div></div>
+    </div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= Next steps · back to the pilot, the decision to take ======================= -->
+<section class="slide end" data-scene="next">
+  <div class="needs">
+    <div class="top-txt">
+      <h1 class="rise" style="--d:.1s">Et maintenant ?<br><em>Trois étapes pour lancer le pilote.</em></h1>
+    </div>
+    <div class="prio">
+      <div class="pcard rise" style="--d:.2s;--tint:#f3f6ff;--c:var(--loop)">
+        <div class="head"><span class="rank">1</span><h3>Valider le pilote</h3></div>
+        <p>Le périmètre et le budget, ensemble.</p>
+      </div>
+      <div class="pcard rise" style="--d:.35s;--tint:#e9efff;--c:var(--loop)">
+        <div class="head"><span class="rank">2</span><h3>Commander les robots</h3></div>
+        <p>Un Temi, un Pudu T300 et deux Dreame, livrés à Saint-Georges.</p>
+      </div>
+      <div class="pcard rise" style="--d:.5s;--tint:#dfe8ff;--c:var(--loop)">
+        <div class="head"><span class="rank">3</span><h3>Démarrer</h3></div>
+        <p>À Saint-Georges : on écoute les équipes, puis on installe le Temi à l'accueil.</p>
+      </div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -1020,11 +1044,11 @@ addEventListener('resize', fit);
 fit();
 
 slides.forEach((s, i) => { const n = s.querySelector('.s-foot .n'); if (n) n.textContent = `${String(i + 1).padStart(2, '0')} / ${slides.length}`; });
-// Every slide after a divider carries a reminder of its part, taken from the divider itself
+// Every slide after a divider carries a reminder of its part, taken from the divider itself (not the closing slide)
 let part = null;
 slides.forEach(s => {
   if (s.classList.contains('divider')) { part = { n: s.querySelector('.big').textContent, t: s.querySelector('h1').textContent }; return; }
-  if (!part) return;
+  if (!part || s.classList.contains('end')) return;
   const tag = document.createElement('div');
   tag.className = 'part-tag';
   tag.innerHTML = `<span class="pn">${part.n}</span>${part.t}`;
