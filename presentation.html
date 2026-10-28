@@ -467,24 +467,15 @@
   .roi-solo .roi-l span { font-size: 26px; }
   .roi-solo .roi-l i { font-size: 22px; }
   .roi-solo .roi-l b { font-size: 28px; }
-  /* Why Loop: one idea, the robot fleet. The fleet adds up on the left, what Loop does with it on the right */
-  .fleet { flex: 1; display: grid; grid-template-columns: 620px 1fr; gap: 110px; align-items: center; padding: 0 96px 40px; background: var(--loop); color: #fff; }
-  .fl-row { display: flex; align-items: baseline; gap: 26px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.22); }
-  .fl-row:first-child { border-top: 0; }
-  .fl-row b { min-width: 130px; font-size: 76px; font-weight: 800; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
-  .fl-row span { font-size: 28px; font-weight: 600; color: rgba(255,255,255,.82); }
-  .fl-row.one { margin-top: 8px; padding-top: 20px; border-top: 4px solid #fff; }
-  .fl-row.one span { color: #fff; }
-  .fl-note { margin-top: 18px; font-size: 16px; line-height: 1.5; color: rgba(255,255,255,.72); }
-  .fl-l { display: flex; flex-direction: column; gap: 30px; }
-  .fl-l ul { list-style: none; display: flex; flex-direction: column; gap: 28px; }
-  .fl-l li, .fl-next { display: grid; grid-template-columns: 44px 1fr; gap: 22px; align-items: start; }
-  .fl-l li i, .fl-next i { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,.16); display: grid; place-items: center; }
-  .fl-l i svg { width: 24px; height: 24px; }
-  .fl-l li b, .fl-next b { display: block; font-size: 30px; letter-spacing: -.02em; line-height: 1.2; }
-  .fl-l li span, .fl-next span { display: block; margin-top: 6px; font-size: 21px; line-height: 1.45; color: rgba(255,255,255,.82); }
-  .fl-next { padding-top: 28px; border-top: 1px solid rgba(255,255,255,.22); }
-  .fl-next i { background: none; border: 2px dashed rgba(255,255,255,.5); }
+  /* Why Loop: one idea, the robot fleet. Four points two by two, then how it fits the buildings' home automation */
+  .fleet { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 40px; padding: 0 96px 56px; background: var(--loop); color: #fff; }
+  .fleet ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 48px 96px; }
+  .fleet li, .fl-next { display: grid; grid-template-columns: 52px 1fr; gap: 24px; align-items: start; }
+  .fleet li i, .fl-next i { width: 52px; height: 52px; border-radius: 50%; background: rgba(255,255,255,.16); display: grid; place-items: center; }
+  .fleet i svg { width: 28px; height: 28px; }
+  .fleet li b, .fl-next b { display: block; font-size: 36px; letter-spacing: -.025em; line-height: 1.15; }
+  .fleet li span, .fl-next span { display: block; margin-top: 8px; font-size: 23px; line-height: 1.45; color: rgba(255,255,255,.82); }
+  .fl-next { padding-top: 40px; border-top: 1px solid rgba(255,255,255,.22); }
   [data-scene="why"] .s-foot { color: rgba(255,255,255,.7); }
   /* ============ Robot choice (P1–P3): same language as the robots slide, tinted hero band and hairline rows ============ */
   .pk { position: absolute; inset: 0; display: grid; grid-template-columns: 720px 1fr; }
@@ -998,23 +989,14 @@
   <div class="roi2">
     <h1 class="rise">Pourquoi Loop ?<br><em>Pour gérer toute votre flotte de robots.</em></h1>
     <div class="fleet rise" style="--d:.2s">
-      <div>
-        <div class="fl-row"><b data-count="9">0</b><span>immeubles, dont 4 en projet</span></div>
-        <div class="fl-row"><b data-count="36">0</b><span>robots*</span></div>
-        <div class="fl-row"><b data-count="3">0</b><span>marques : Temi, Pudu, Dreame</span></div>
-        <div class="fl-row one"><b>1</b><span>seul écran</span></div>
-        <p class="fl-note">* 4 robots par immeuble, comme à Saint-Georges : un Temi, un Pudu T300 et deux Dreame.</p>
-      </div>
-      <div class="fl-l">
-        <span class="eyebrow" style="--c:#fff;color:var(--loop)">Gestion de flotte</span>
-        <ul>
-          <li class="rise" style="--d:.35s"><i><svg><use href="#i-check"/></svg></i><div><b>Chaque robot en direct.</b><span>Où il est, sa batterie, sa tâche, quelle que soit sa marque.</span></div></li>
-          <li class="rise" style="--d:.45s"><i><svg><use href="#i-check"/></svg></i><div><b>Une seule personne suit toute la flotte.</b><span>À distance, sur les 9 immeubles : chaque alerte arrive au même endroit.</span></div></li>
-          <li class="rise" style="--d:.55s"><i><svg><use href="#i-check"/></svg></i><div><b>Chaque nouvel immeuble s'y branche.</b><span>Avec très peu d'adaptations. Loop se paie une fois et s'amortit sur toute la flotte.</span></div></li>
-          <li class="rise" style="--d:.65s"><i><svg><use href="#i-check"/></svg></i><div><b>Une marque déçoit ? On la remplace.</b><span>Même écran, même historique : l'équipe ne réapprend rien.</span></div></li>
-        </ul>
-        <div class="fl-next rise" style="--d:.8s"><i><svg><use href="#i-plug"/></svg></i><div><b>Et demain, la domotique.</b><span>Serrures, chauffage et éclairage rejoignent le même écran.</span></div></div>
-      </div>
+      <span class="eyebrow" style="--c:#fff;color:var(--loop)">Gestion de flotte</span>
+      <ul>
+        <li class="rise" style="--d:.35s"><i><svg><use href="#i-check"/></svg></i><div><b>Chaque robot en direct.</b><span>Où il est, sa batterie, sa tâche, quelle que soit sa marque.</span></div></li>
+        <li class="rise" style="--d:.45s"><i><svg><use href="#i-check"/></svg></i><div><b>Une seule personne suit toute la flotte.</b><span>À distance, sur les 9 immeubles : chaque alerte arrive au même endroit.</span></div></li>
+        <li class="rise" style="--d:.55s"><i><svg><use href="#i-check"/></svg></i><div><b>Chaque nouvel immeuble s'y branche.</b><span>Avec très peu d'adaptations. Loop se paie une fois et s'amortit sur toute la flotte.</span></div></li>
+        <li class="rise" style="--d:.65s"><i><svg><use href="#i-check"/></svg></i><div><b>Une marque déçoit ? On la remplace.</b><span>Même écran, même historique : l'équipe ne réapprend rien.</span></div></li>
+      </ul>
+      <div class="fl-next rise" style="--d:.8s"><i><svg><use href="#i-plug"/></svg></i><div><b>Loop s'intègre à votre domotique.</b><span>Vos immeubles sont déjà équipés : Loop se branche à la gestion en place, sans rien remplacer.</span></div></div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
