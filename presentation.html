@@ -338,7 +338,8 @@
   .kimg img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
   .keep .kh { align-items: center; }
   /* Robots retained: three full-bleed strips, the robot large on the left */
-  .full .s-foot { display: none; }
+  .full .s-foot { left: auto; bottom: 28px; }
+  .full .s-foot > span:first-child { display: none; }
   .strips { position: absolute; inset: 84px 0 0; display: grid; grid-template-rows: repeat(3, 1fr); }
   .btags { display: flex; gap: 8px; }
   .strip { display: grid; grid-template-columns: 520px 440px 1fr 230px 150px; align-items: center; gap: 40px; padding-right: 96px; background: var(--tint); border-bottom: 1px solid rgba(18,19,26,.06); overflow: hidden; }
