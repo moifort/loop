@@ -159,7 +159,7 @@
   /* One full-bleed tinted column per priority, the key figures on hairlines below */
   .needs { position: absolute; inset: 0; display: flex; flex-direction: column; }
   .needs .top-txt { display: flex; flex-direction: column; gap: 22px; padding: 88px 96px 72px; }
-  .prio { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); }
+  .prio { flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); }
   .pcard { padding: 225px 40px 0; display: flex; flex-direction: column; align-items: flex-start; gap: 22px; background: var(--tint); border-right: 1px solid rgba(18,19,26,.06); }
   .pcard .head { display: flex; align-items: center; gap: 20px; min-height: 104px; }
   .pcard:first-child { padding-left: 96px; }
@@ -167,7 +167,6 @@
   .pcard:nth-child(1) { --tint: #eef1fa; --c: var(--navy); }
   .pcard:nth-child(2) { --tint: #f3effd; --c: var(--violet); }
   .pcard:nth-child(3) { --tint: #e9f6fd; --c: var(--sky); }
-  .pcard:nth-child(4) { --tint: #fdf1ea; --c: #c2410c; }
   .pcard .rank { flex: none; color: #fff; background: var(--c); font-size: 34px; font-weight: 800; letter-spacing: .06em; border-radius: 999px; padding: 10px 30px; }
   .pcard h3 { font-size: 44px; letter-spacing: -.03em; line-height: 1.05; }
   .pcard p { font-size: 26px; line-height: 1.45; color: var(--ink-2); }
@@ -347,17 +346,15 @@
   .kimg { width: 110px; height: 110px; flex: none; border-radius: 16px; background: #f3f4f7; display: grid; place-items: center; padding: 8px; }
   .kimg img { max-width: 100%; max-height: 100%; object-fit: contain; mix-blend-mode: multiply; }
   .keep .kh { align-items: center; }
-  /* Robots retained: five full-bleed strips, the robot large on the left */
+  /* Robots retained: three full-bleed strips, the robot large on the left */
   .full .s-foot { display: none; }
-  .strips { position: absolute; inset: 84px 0 0; display: grid; grid-template-rows: repeat(4, 1fr); }
+  .strips { position: absolute; inset: 84px 0 0; display: grid; grid-template-rows: repeat(3, 1fr); }
   .btags { display: flex; gap: 8px; }
   .strip { display: grid; grid-template-columns: 520px 440px 1fr 230px 150px; align-items: center; gap: 40px; padding-right: 96px; background: var(--tint); border-bottom: 1px solid rgba(18,19,26,.06); overflow: hidden; }
   .simg { height: 214px; display: flex; align-items: flex-end; justify-content: center; gap: 0; padding: 14px 40px 12px; }
   .simg img { height: 100%; min-width: 0; max-width: 100%; object-fit: contain; object-position: bottom; mix-blend-mode: multiply; }
   .simg.duo img { max-width: 50%; }
   .simg.duo img + img { height: 55%; }
-  .simg.photo { padding: 0; }
-  .simg.photo img { width: 100%; max-width: none; object-fit: cover; object-position: center; mix-blend-mode: normal; }
   .slide.active .simg img { animation: robot-in .9s var(--ease) both; animation-delay: calc(var(--d, 0s) + .15s); }
   @keyframes robot-in { from { opacity: 0; transform: translateX(-40px) scale(.96); } }
   .sid { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
@@ -619,10 +616,6 @@
         <div class="head"><span class="rank">P3</span><h3>Ménage</h3></div>
         <p>Objectif +30 % de productivité avec le duo humain et robot, sur une équipe interne.</p>
       </div>
-      <div class="pcard rise" style="--d:.6s">
-        <div class="head"><span class="rank">P3</span><h3>Peinture</h3></div>
-        <p>Ce qui coûte, c'est le temps. Si un robot divise le coût par 3, vous repeignez 3 fois plus souvent.</p>
-      </div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -642,7 +635,6 @@
     <div class="strip rise" style="--d:0.05s;--tint:#eef1fa"><div class="simg"><img src="https://www.generationrobots.com/20457-large_default/temi-3-service-robot.jpg" alt=""></div><div class="sid"><div class="btags"><span class="btag" style="background:var(--navy)">P1 · Accueil</span><span class="btag" style="background:#2a2f63">P1 · Sécurité</span></div><b>Temi 3</b></div><p>Répond aux clients au comptoir. Madagascar prend la main en visio. La nuit, il surveille l'entrée.</p><span class="sprice">8 175 € HT*</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
     <div class="strip rise" style="--d:0.15s;--tint:#f3effd"><div class="simg"><img src="https://www.auto-id247.com/media/8b/be/2a/1753955018/PUDU-T300-schwarz-01.webp?ts=1753955018" alt=""></div><div class="sid"><span class="btag" style="background:var(--violet)">P2 · Bagages</span><b>Pudu T300</b></div><p>Porte 300 kg. Soulève un chariot aux couleurs de l'hôtel, monte et revient seul.</p><span class="sprice">Dès 17 500 € HT**</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
     <div class="strip rise" style="--d:0.25s;--tint:#e9f6fd"><div class="simg"><img src="https://www.inside-digital.de/img/dreame-l40s-pro-ultra-in-station.webp" alt="" style="filter:brightness(1.07)"></div><div class="sid"><div class="btags"><span class="btag" style="background:var(--sky)">P3 · Ménage</span><span class="btag" style="background:#2a2f63">P1 · Sécurité</span></div><b>Dreame L40s Pro Ultra</b></div><p>Aspire et lave, pièce par pièce. La nuit, surveille les étages, caméra allumée.</p><span class="sprice">≈ 500 € HT</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
-    <div class="strip rise" style="--d:0.35s;--tint:#fdf1ea"><div class="simg photo"><img src="https://lescompanions.com/wp-content/uploads/2024/12/PXL_20240528_1615560902.jpg" alt=""></div><div class="sid"><span class="btag" style="background:#c2410c">P3 · Peinture</span><b>PACO</b></div><p>Peint murs et plafonds avec le peintre. D'abord une journée d'essai.</p><span class="sprice">≈ 2 000 € / jour</span><span class="chip a"><span class="dot"></span>À tester</span></div>
   </div>
   <p class="src-n" style="top:20px;right:96px;text-align:right">* Prix public de Generation Robots, revendeur en France, applications incluses. Relevé en octobre 2026.<br>** Prix public de Leobotics, revendeur en France : à partir de 17 500 €, version standard. Version levage et chariot habillé sur devis.</p>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -774,8 +766,8 @@
           <li><span>Dreame : cartes, rondes et formation</span><b>4 j</b></li>
           <li><span>Suivi des fournisseurs et bilan</span><b>5 j</b></li>
         </ul>
-        <div class="bud-x"><span>+ Robots : Temi, Pudu T300, 2 Dreame, PACO, hors habillage du chariot</span><b>28 675 €</b></div>
-        <div class="bud-t">Total du pilote<b>47 425 € HT</b></div>
+        <div class="bud-x"><span>+ Robots : Temi, Pudu T300, 2 Dreame, hors habillage du chariot</span><b>26 675 €</b></div>
+        <div class="bud-t">Total du pilote<b>45 425 € HT</b></div>
       </div>
     </div>
   </div>
