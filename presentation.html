@@ -268,7 +268,6 @@
   .pct { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
   /* ============ 10 · Reliability ============ */
-  .rails-t { display: block; font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
   .dg .win-body { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; min-height: 430px; }
   .dg .win { transition: box-shadow .3s; }
   .dg .frame { position: absolute; inset: 0; border: 8px solid transparent; border-image: repeating-linear-gradient(-45deg, #f0a020 0 12px, #f7c35f 12px 24px) 8; border-radius: 24px; opacity: 0; transition: opacity .4s; pointer-events: none; z-index: 5; }
@@ -286,14 +285,6 @@
   .qi .s { margin-left: auto; font-size: 14px; color: var(--muted); }
   .dg .sum { display: flex; gap: 12px; align-items: center; font-size: 19px; color: var(--muted); }
   .dg .sum b { color: var(--ink); font-size: 28px; font-variant-numeric: tabular-nums; }
-  .rails { display: flex; flex-direction: column; border-bottom: 1px solid var(--line); margin-top: 10px; }
-  .rail-row { display: grid; grid-template-columns: 30px 1fr; gap: 16px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
-  .rail-row .ri { display: grid; place-items: center; }
-  .rail-row .ri.ok { color: var(--green); }
-  .rail-row .ri.lock { color: var(--red); }
-  .rail-row .ri svg { width: 26px; height: 26px; }
-  .rail-row h5 { font-size: 21px; }
-  .rail-row p { font-size: 16px; color: var(--muted); margin-top: 2px; }
 
   /* ============ Section dividers ============ */
   .divider { background: var(--loop); color: #fff; }
@@ -516,10 +507,6 @@
   .pk-hero .src-n { position: static; max-width: 520px; font-size: 15px; line-height: 1.45; }
 
   /* Mockup page with the companion app as a small phone over its top right corner */
-  .duo-shot { position: relative; }
-  .duo-shot .app-shot { height: 700px; margin-right: 130px; }
-  .duo-shot .iph { position: absolute; z-index: 6; right: -36px; top: -76px; width: 190px; padding: 6px; border-radius: 34px; }
-  .duo-shot .iph img { border-radius: 28px; }
 </style>
 </head>
 <body>
@@ -656,10 +643,7 @@
       <div class="pk-alts">
         <div class="pk-alt pop" data-at="600"><span class="th"><img src="https://salesmotion.de/assets/greetingbot-nova-cut.webp" alt=""><span class="x">✕</span></span><div><b>GreetingBot Nova</b><small>≈ 27 000 € en location</small></div><p>Imposant pour le hall.</p></div>
         <div class="pk-alt pop" data-at="1050"><span class="th"><img src="https://www.generationrobots.com/20192-large_default/robot-de-service-greetingbot-mini.jpg" alt=""><span class="x">✕</span></span><div><b>GreetingBot Mini</b><small>5 512 € HT</small></div><p>Trop petit pour le hall.</p></div>
-        <div class="pk-alt pop" data-at="1500"><span class="th"><img src="https://storage.googleapis.com/bucket-two-leobotics/product/robot-reception-inbot-technology-padbot-p3-capte-danse-guidage-prevention-de-collisions-1.webp" alt=""><span class="x">✕</span></span><div><b>PadBot P3</b><small>Sur devis</small></div><p>Même format que Temi, mais pas de revendeur en France.</p></div>
-        <div class="pk-alt pop" data-at="1950"><span class="th"><img src="https://telepresence.awabot.com/wp-content/uploads/2018/06/4.png" alt=""><span class="x">✕</span></span><div><b>Awabot Pro</b><small>Sur devis</small></div><p>Téléprésence seulement, pas d'autonomie.</p></div>
-        <div class="pk-alt pop" data-at="2400"><span class="th ph"><img src="https://cdn.prod.website-files.com/66b323f041094f01cd836ea9/6704f8bd30c84ba34f884c46_Furhat%20Research.png" alt=""><span class="x">✕</span></span><div><b>Furhat</b><small>30 000 €</small></div><p>Un comptoir qui parle, sans mobilité.</p></div>
-        <div class="pk-alt pop" data-at="2850"><span class="th"><img src="https://escadrone.com/wp-content/uploads/2025/10/Robot-humanoide-Unitree-G1.png" alt=""><span class="x">✕</span></span><div><b>Humanoïdes (Unitree G1, ARI)</b><small>22 500 € et plus</small></div><p>Pas prêts : encore téléopérés, et chers.</p></div>
+        <div class="pk-alt pop" data-at="1500"><span class="th"><img src="https://escadrone.com/wp-content/uploads/2025/10/Robot-humanoide-Unitree-G1.png" alt=""><span class="x">✕</span></span><div><b>Humanoïdes (Unitree G1, ARI)</b><small>22 500 € et plus</small></div><p>Pas prêts : encore téléopérés, et chers.</p></div>
       </div></div>
     </div>
   </div>
@@ -683,7 +667,6 @@
         <div class="pk-alt pop" data-at="600"><span class="th ph"><img src="https://a.storyblok.com/f/255103/660x440/fdbd3f4063/kilo_gallery_side_mobile.webp/m/1200x0/filters:quality(85)" alt=""><span class="x">✕</span></span><div><b>Piaggio Kilo</b><small>Sur devis</small></div><p>Pas encore disponible en Europe, seulement sur devis.</p></div>
         <div class="pk-alt pop" data-at="1050"><span class="th ph"><img src="https://cdn.pudutech.com/official-website/flashbot_new/s1-h5-1.webp" alt=""><span class="x">✕</span></span><div><b>Pudu FlashBot</b><small>Sur devis</small></div><p>Ne porte pas assez lourd : pas fait pour des valises.</p></div>
         <div class="pk-alt pop" data-at="1500"><span class="th"><img src="https://www.effidence.com/wp-content/uploads/2022/06/Effibot-HD-detoure-1170x660.png.webp" alt=""><span class="x">✕</span></span><div><b>EffiBOT, TwinswHeel</b><small>Sur devis</small></div><p>Pensés pour les entrepôts, à habiller et à sécuriser.</p></div>
-        <div class="pk-alt pop" data-at="1950"><span class="th ph"><img src="https://www.swissinfo.ch/content/wp-content/uploads/sites/13/2021/10/7b3cd6bd17a56f176fd7f574871c1f2b-image_20211022phf9151-data.jpg?ver=6293c0e6" alt=""><span class="x">✕</span></span><div><b>Robi (CarPostal)</b><small>Projet pilote</small></div><p>Bonne référence en Suisse, mais pas à vendre.</p></div>
       </div></div>
     </div>
   </div>
@@ -829,8 +812,8 @@
       </svg>
       <div class="nd s1 s2 s3" style="left:60px;top:120px;width:270px;--c:#1f5bff"><span class="ni" style="background:none"><svg style="width:40px;height:40px"><use href="#loop-mark"/></svg></span><div><b>Loop</b><small>Temi · T300 · Dreame</small></div></div>
       <div class="nd s2 s3" style="left:60px;top:260px;width:270px;--c:#b06ab3"><span class="ni" style="background:#4a154b">S</span><div><b>Slack</b><small>L'équipe</small></div></div>
-      <div class="nd s3" style="left:60px;top:400px;width:270px;--c:#ea4335"><span class="ni" style="background:#fff;color:#ea4335">M</span><div><b>Gmail</b><small>E-mails des clients</small></div></div>
-      <div class="nd s1" style="left:60px;top:540px;width:270px;--c:#25d366"><span class="ni" style="background:#25d366">W</span><div><b>WhatsApp</b><small>Messages des clients</small></div></div>
+      <div class="nd s3" style="left:60px;top:400px;width:270px;--c:#ea4335"><span class="ni" style="background:#fff"><svg viewBox="52 42 88 66" style="width:26px;height:20px"><path fill="#4285f4" d="M58 108h14V74L52 59v43c0 3.32 2.69 6 6 6"/><path fill="#34a853" d="M120 108h14c3.32 0 6-2.69 6-6V59l-20 15"/><path fill="#fbbc04" d="M120 48v26l20-15v-8c0-7.42-8.47-11.65-14.4-7.2"/><path fill="#ea4335" d="M72 74V48l24 18 24-18v26L96 92"/><path fill="#c5221f" d="M52 51v8l20 15V48l-5.6-4.2c-5.94-4.45-14.4-.22-14.4 7.2"/></svg></span><div><b>Gmail</b><small>E-mails des clients</small></div></div>
+      <div class="nd s1" style="left:60px;top:540px;width:270px;--c:#25d366"><span class="ni" style="background:#25d366"><svg viewBox="0 0 24 24" style="width:24px;height:24px" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></span><div><b>WhatsApp</b><small>Messages des clients</small></div></div>
       <div class="hub" style="left:600px"><span class="wave"></span><span class="wave"></span><span class="ring"></span><span class="core" style="background:radial-gradient(circle at 35% 30%, #5d6275, #3a3d4a 55%, #22242d)"><svg style="width:110px;height:110px;color:#fff"><use href="#i-sparkles"/></svg></span></div>
       <div class="hub-lbl" style="left:550px"><b>Greg.ai</b><small>IA d'opérations de l'hôtel</small></div>
     </div>
@@ -989,44 +972,11 @@
         <div class="kpi"><b>3 h 40</b><span>gagnées pour l'équipe</span></div>
       </div>
     </div>
-    <div class="duo-shot rise" style="--d:.2s">
-      <div class="app-shot">
-        <div class="win">
-          <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
-          <iframe class="app" data-src="building-overview.html#robot/CLN-2D84" title="Maquette Loop · fiche du robot CLN-2D84" tabindex="-1"></iframe>
-        </div>
-      </div>
-      <div class="iph"><img id="men-shot" src="assets/ios/deck/menage-0.jpg" alt="App compagnon · Mes appartements"></div>
-    </div>
-  </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
-</section>
-
-<!-- ======================= 10 · Reliability & guard rails ======================= -->
-<section class="slide" data-scene="fiab">
-  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Fiabilité · garde-fous · RGPD</div></div>
-  <div class="feat" style="--txt:860px">
-    <div class="txt">
-      <h1 class="rise" style="--d:.1s">Loop ne répond plus ?<br><em>Rien ne se perd.</em></h1>
-      <p class="lead rise" style="--d:.2s">Les robots continuent de travailler. Le tableau de bord garde les événements en file et les rejoue dans l'ordre au retour de Greg.</p>
-      <div class="rise" style="--d:.3s">
-        <small class="rails-t">Garde-fous</small>
-        <div class="rails">
-          <div class="rail-row"><span class="ri ok"><svg><use href="#i-check"/></svg></span><div><h5>Lancer et reprogrammer le ménage</h5><p>Jamais dans un appartement occupé</p></div></div>
-          <div class="rail-row"><span class="ri ok"><svg><use href="#i-check"/></svg></span><div><h5>Envoyer le Pudu T300</h5><p>À la demande ou au check-in</p></div></div>
-          <div class="rail-row"><span class="ri ok"><svg><use href="#i-check"/></svg></span><div><h5>Parler à travers Temi</h5><p>Annonces et réponses aux clients</p></div></div>
-          <div class="rail-row"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Voir les flux vidéo</h5><p>RGPD : réservé aux opérateurs, jamais à l'IA</p></div></div>
-          <div class="rail-row"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Déclencher ou lever la panique</h5><p>Toujours une décision humaine</p></div></div>
-          <div class="rail-row"><span class="ri lock"><svg><use href="#i-lock"/></svg></span><div><h5>Filmer dans un appartement</h5><p>Les caméras des robots restent dans les couloirs et les parties communes</p></div></div>
-        </div>
-      </div>
-    </div>
     <div class="app-shot rise" style="--d:.2s">
       <div class="win">
         <div class="win-bar"><span class="dots"><i></i><i></i><i></i></span><span class="wb-logo"><svg><use href="#loop-mark-w"/></svg>loop</span></div>
-        <iframe class="app" data-src="building-overview.html#greg" title="Maquette Loop · Connecteurs" tabindex="-1"></iframe>
+        <iframe class="app" data-src="building-overview.html#robot/CLN-2D84" title="Maquette Loop · fiche du robot CLN-2D84" tabindex="-1"></iframe>
       </div>
-      <svg class="cursor" id="dg-cur"><use href="#i-cursor"/></svg>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
@@ -1294,43 +1244,7 @@ const SCENES = {
 
   menage: {
     dur: 12000,
-    once(s) {
-      loadFrame(s.querySelector('iframe.app'));
-      // Real companion-app screenshots, one per step of the story: preload them so the swaps never flash
-      [0, 1, 2, 3, 4].forEach(n => { new Image().src = `assets/ios/deck/menage-${n}.jpg`; });
-    },
-    reset() { $('men-shot').src = 'assets/ios/deck/menage-0.jpg'; },
-    // App. 203: departure, Inès badges in, the robot starts on its own, ready; then app. 306 is occupied: no robot
-    run() {
-      [[900, 1], [1700, 2], [7600, 3], [9800, 4]].forEach(([ms, n]) => at(ms, () => { $('men-shot').src = `assets/ios/deck/menage-${n}.jpg`; }));
-    },
-  },
-
-  // The mockup's connectors view: pause GregAi, open the degraded-mode explanation, then resume and replay
-  fiab: {
-    dur: 13000,
     once(s) { loadFrame(s.querySelector('iframe.app')); },
-    reset(s) {
-      const w = s.querySelector('iframe.app').contentWindow;
-      if (w?.showView) {
-        const g = w.eval('GREG');
-        if (g.state === 'paused') w.gregResume();
-        g.popOpen = false; w.showView('greg'); w.renderGregNav();
-      }
-      const c = $('dg-cur'); c.className = 'cursor'; c.style.transition = 'none'; c.style.left = '600px'; c.style.top = '480px'; c.offsetWidth; c.style.transition = '';
-    },
-    run(s) {
-      const c = $('dg-cur'), f = s.querySelector('iframe.app'), q = sel => f.contentDocument?.querySelector(sel);
-      const press = (sel, ms) => {
-        at(ms, () => { const el = q(sel); if (el) { c.classList.add('on'); pointInFrame(c, f, el); } });
-        at(ms + 1000, () => { const el = q(sel); if (el) { click(c); el.click(); } });
-      };
-      // GregAi is already paused when the scene starts: the cursor only opens the degraded mode, then resumes
-      at(300, () => q('#view-greg [data-g="pause"]')?.click());
-      press('#deg-btn', 1800);
-      press('#greg-down [data-g="resume"]', 9000);
-      at(10600, () => c.classList.remove('on'));
-    },
   },
 
   divider: {},
