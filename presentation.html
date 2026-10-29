@@ -385,16 +385,39 @@
 
   /* ============ Part 3 · Roadmap ============ */
   .road2 { position: absolute; inset: 116px 96px 92px; display: flex; flex-direction: column; gap: 36px; }
-  /* Roadmap as a timeline: a numbered dot per step joined to the next by a line, the step below it */
-  .stairs { flex: 1; display: grid; grid-template-columns: repeat(8, 1fr); align-content: center; align-items: start; }
-  .stp { position: relative; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; padding-right: 28px; }
-  .stp::before { content: ''; position: absolute; left: 68px; right: 0; top: 32px; height: 4px; border-radius: 2px; background: var(--loop-100); }
-  .stp:last-child::before { display: none; }
-  .stp .sn { position: relative; z-index: 1; width: 68px; height: 68px; border-radius: 50%; background: var(--loop); color: #fff; display: grid; place-items: center; font-size: 30px; font-weight: 800; margin-bottom: 16px; }
-  .stp:first-child .sn, .stp:last-child .sn { background: #fff; color: var(--loop); border: 4px solid var(--loop); }
-  .stp .st { color: #fff; font-size: 14px; font-weight: 800; letter-spacing: .04em; border-radius: 999px; padding: 3px 11px; }
-  .stp h4 { font-size: 28px; letter-spacing: -.02em; line-height: 1.15; }
-  .stp p { font-size: 20px; line-height: 1.45; color: var(--muted); }
+  /* Roadmap Gantt: one row per phase, a bar per step placed by week (--a to --b, 1-based, inclusive) over 22 weeks */
+  .gantt { position: relative; display: flex; flex-direction: column; --lbl: 380px; }
+  .gantt .gr { display: grid; grid-template-columns: var(--lbl) 1fr; align-items: center; min-height: 118px; border-top: 1px solid var(--line); }
+  .gantt .gr.hd { min-height: 40px; border-top: 0; }
+  .gantt .gl { display: flex; flex-direction: column; gap: 4px; padding-right: 28px; }
+  .gantt .gl b { font-size: 26px; letter-spacing: -.02em; }
+  .gantt .gl small { font-size: 17px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .gantt .gt { position: relative; height: 100%; min-height: inherit; }
+  .gantt .mo { position: absolute; bottom: 8px; left: calc((var(--w) - 1) / 22 * 100%); font-size: 16px; font-weight: 700; color: var(--muted); }
+  .gbar { position: absolute; top: 50%; height: 54px; margin-top: -27px; left: calc((var(--a) - 1) / 22 * 100%); width: calc((var(--b) - var(--a) + 1) / 22 * 100% - 4px); border-radius: 10px; background: var(--c, var(--navy)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; transform-origin: left center; }
+  .gbar.l1 { margin-top: -48px; height: 42px; } .gbar.l2 { margin-top: 6px; height: 42px; }
+  .gbar.pop { transform: scaleX(.2); } .gbar.pop.on { transform: none; }
+  /* Client decisions: a diamond per review, red when it can hold up the whole plan; the line crosses every row */
+  .gate { position: absolute; top: 0; bottom: 0; left: calc((var(--w) - 1) / 22 * 100%); width: 0; }
+  .gate::before { content: ''; position: absolute; top: 0; bottom: 70px; left: -1px; border-left: 2px dashed var(--c, var(--ink-2)); opacity: .3; }
+  .gate i { position: absolute; bottom: 70px; left: -11px; width: 22px; height: 22px; background: var(--c, var(--ink-2)); transform: rotate(45deg); border-radius: 3px; }
+  .gate span { position: absolute; bottom: 30px; left: 0; transform: translateX(-50%); white-space: nowrap; font-size: 17px; font-weight: 700; color: var(--c, var(--ink-2)); }
+  .gate.up span { bottom: 104px; }
+  .gate.blk { --c: var(--red); }
+  .gkey { display: flex; gap: 36px; font-size: 18px; color: var(--muted); }
+  .gkey span { display: inline-flex; align-items: center; gap: 10px; }
+  .gkey i { width: 14px; height: 14px; transform: rotate(45deg); border-radius: 2px; background: var(--c); }
+  /* Steps detail: one column per phase, one card per step */
+  .steps4 { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 8px; }
+  .sph { display: flex; flex-direction: column; gap: 20px; }
+  .sph > header { display: flex; flex-direction: column; gap: 4px; padding-bottom: 14px; border-bottom: 4px solid var(--c, var(--navy)); }
+  .sph > header b { font-size: 32px; letter-spacing: -.02em; }
+  .sph > header small { font-size: 19px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .sc { display: grid; grid-template-columns: 52px 1fr; gap: 8px 16px; padding: 24px 24px 26px; border-radius: 16px; background: #f3f5fa; }
+  .sc .sn { grid-row: span 2; width: 52px; height: 52px; border-radius: 50%; background: var(--c, var(--navy)); color: #fff; display: grid; place-items: center; font-size: 23px; font-weight: 800; }
+  .sc h4 { font-size: 25px; line-height: 1.2; letter-spacing: -.01em; display: flex; flex-direction: column; gap: 2px; }
+  .sc h4 small { order: -1; font-size: 16px; font-weight: 700; letter-spacing: .02em; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .sc p { font-size: 21px; line-height: 1.4; color: var(--ink-2); }
   .rule { display: flex; align-items: center; gap: 14px; border-top: 1px solid var(--line); padding-top: 26px; font-size: 23px; font-weight: 600; }
   .rule svg { width: 28px; height: 28px; color: var(--green); flex: none; }
 
@@ -707,21 +730,41 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
+<!-- ======================= Roadmap · one priority, from POC to every site ======================= -->
 <section class="slide" data-scene="roadmap">
-  <div class="wip">WIP</div>
   <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2 · Roadmap</div></div>
   <div class="road2">
-    <h1 class="rise">Les robots,<br><em>dans l'ordre de vos priorités.</em></h1>
-    <div class="stairs" style="grid-template-columns:repeat(6, 1fr)">
-      <div class="stp pop" data-at="300" style="--i:0"><span class="sn">0</span><h4>Écouter</h4><p>Interviews à Saint-Georges : réception, ménage et maintenance.</p></div>
-      <div class="stp pop" data-at="650" style="--i:1"><span class="sn">1</span><span class="st" style="background:var(--navy)">P1</span><h4>Temi</h4><p>Installé avec son appli : accueil et visio à distance.</p></div>
-      <div class="stp pop" data-at="1000" style="--i:2"><span class="sn">2</span><span class="st" style="background:var(--violet)">P2</span><h4>Pudu T300</h4><p>Chariot habillé, testé avec l'équipe, puis au quotidien.</p></div>
-      <div class="stp pop" data-at="1350" style="--i:3"><span class="sn">3</span><span class="st" style="background:var(--navy)">P1</span><h4>Sécurité</h4><p>Le Temi surveille l'entrée la nuit, suivi à distance.</p></div>
-      <div class="stp pop" data-at="1700" style="--i:4"><span class="sn">4</span><span class="st" style="background:var(--sky)">P3</span><h4>Dreame</h4><p>Le ménage le jour, la ronde des étages la nuit.</p></div>
-      <div class="stp pop" data-at="2050" style="--i:5"><span class="sn">5</span><h4>Bilan</h4><p>On mesure, puis on décide de la suite.</p></div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:60px">
+      <h1 class="rise">Une seule priorité,<br><em>l'accueil, jusqu'au bout.</em></h1>
+      <p class="lead rise" style="--d:.15s;max-width:760px;font-size:23px">Temi d'abord : le plus fiable, le plus simple à installer, et pas trop cher. Le chariot, la sécurité et le ménage viendront après.</p>
+    </div>
+    <div class="gantt">
+      <div class="gr hd"><div class="gl"><small>≈ 22 semaines, environ 5 mois</small></div><div class="gt"><span class="mo" style="--w:1.000">M1</span><span class="mo" style="--w:5.333">M2</span><span class="mo" style="--w:9.666">M3</span><span class="mo" style="--w:13.999">M4</span><span class="mo" style="--w:18.332">M5</span></div></div>
+      <div class="gr"><div class="gl"><b>Le POC à l'accueil</b><small>6,5 semaines · S1 à S7</small></div><div class="gt"><span class="gbar pop " data-at="300" style="--a:1;--b:2;--c:var(--navy)">1</span><span class="gbar pop " data-at="480" style="--a:3;--b:3.5;--c:var(--navy)">2</span><span class="gbar pop " data-at="660" style="--a:4.5;--b:6.5;--c:var(--navy)">3</span></div></div>
+      <div class="gr"><div class="gl"><b>Stabiliser</b><small>4 semaines · S7 à S11</small></div><div class="gt"><span class="gbar pop " data-at="840" style="--a:7.5;--b:8.5;--c:#2f55c7">4</span><span class="gbar pop " data-at="1020" style="--a:9.5;--b:9.5;--c:#2f55c7">5</span><span class="gbar pop " data-at="1200" style="--a:10.5;--b:10.5;--c:#2f55c7">6</span></div></div>
+      <div class="gr"><div class="gl"><b>Premier site</b><small>2 semaines · S11 à S13</small></div><div class="gt"><span class="gbar pop l1" data-at="1380" style="--a:11.5;--b:11.5;--c:var(--loop)">7</span><span class="gbar pop l2" data-at="1560" style="--a:11.5;--b:12.5;--c:var(--loop)">8</span></div></div>
+      <div class="gr"><div class="gl"><b>Tous les sites</b><small>9 semaines · S13 à S22</small></div><div class="gt"><span class="gbar pop " data-at="1740" style="--a:13.5;--b:15.5;--c:#5b8cff">9</span><span class="gbar pop " data-at="1920" style="--a:16.5;--b:21.5;--c:#5b8cff">10</span></div></div>
+      <div class="gr" style="min-height:140px"><div class="gl"><b>Bilans avec vous</b><small>On décide ensemble de la suite</small></div><div class="gt"></div></div>
+      <div style="position:absolute;top:40px;bottom:0;left:var(--lbl);right:0;pointer-events:none"><div style="position:absolute;inset:0"><span class="gate pop blk" data-at="2300" style="--w:3"><i></i><span>Robot reçu</span></span><span class="gate pop blk up" data-at="2450" style="--w:4.5"><i></i><span>Go / no go</span></span><span class="gate pop" data-at="2600" style="--w:7.5"><i></i><span>Bilan POC</span></span><span class="gate pop blk" data-at="2750" style="--w:9.5"><i></i><span>Stable ?</span></span><span class="gate pop blk up" data-at="2900" style="--w:11.5"><i></i><span>Go / no go</span></span><span class="gate pop" data-at="3050" style="--w:13.5"><i></i><span>Bilan site 1</span></span><span class="gate pop up" data-at="3200" style="--w:16.5"><i></i><span>Bilans sites 2 et 3</span></span></div></div>
+    </div>
+    <div class="gkey rise" style="--d:.3s"><span style="--c:var(--red)"><i></i>Décision bloquante : un non décale tout le planning</span><span style="--c:var(--ink-2)"><i></i>Bilan : on corrige avant d'aller plus loin</span></div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection · Durées à affiner après l'étape 1</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= Roadmap · the ten steps ======================= -->
+<section class="slide" data-scene="roadmap">
+  <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2 · Roadmap</div></div>
+  <div class="road2">
+    <h1 class="rise">Dix étapes,<br><em>du premier entretien à tous les sites.</em></h1>
+    <div class="steps4">
+      <div class="sph" style="--c:var(--navy)"><header class="rise" style="--d:0.1s"><b>Le POC à l'accueil</b><small>6,5 semaines · S1 à S7</small></header><div class="sc pop" data-at="300"><span class="sn">1</span><h4>Interviews et besoin<small>S1–S2</small></h4><p>Le site de test, vos équipes, l'IT et le fournisseur.</p></div><div class="sc pop" data-at="500"><span class="sn">2</span><h4>Test en conditions réelles<small>S3–S4</small></h4><p>Temi dans le hall. Les clients donnent leur avis.</p></div><div class="sc pop" data-at="700"><span class="sn">3</span><h4>Téléopération<small>S4–S7</small></h4><p>Madagascar prend la main. Temi tourne une semaine seul.</p></div></div>
+      <div class="sph" style="--c:#2f55c7"><header class="rise" style="--d:0.2s"><b>Stabiliser</b><small>4 semaines · S7 à S11</small></header><div class="sc pop" data-at="900"><span class="sn">4</span><h4>Stabilisation<small>S7–S9</small></h4><p>Un support disponible. On corrige ce qui casse.</p></div><div class="sc pop" data-at="1100"><span class="sn">5</span><h4>Plateforme Loop<small>S9–S10</small></h4><p>SAV, maintenance, statistiques, un premier lien avec Greg AI.</p></div><div class="sc pop" data-at="1300"><span class="sn">6</span><h4>Kit d'installation<small>S10–S11</small></h4><p>Pour installer Temi sur un nouveau site, sans nous.</p></div></div>
+      <div class="sph" style="--c:var(--loop)"><header class="rise" style="--d:0.3s"><b>Premier site</b><small>2 semaines · S11 à S13</small></header><div class="sc pop" data-at="1500"><span class="sn">7</span><h4>Le kit sur le site n°1<small>S11–S12</small></h4><p>Installé par l'IT ou l'accueil. On corrige ce qui a bloqué.</p></div><div class="sc pop" data-at="1700"><span class="sn">8</span><h4>Retours sur la plateforme<small>S11–S13</small></h4><p>Ce qu'en disent vos équipes. On corrige et on stabilise.</p></div></div>
+      <div class="sph" style="--c:#5b8cff"><header class="rise" style="--d:0.4s"><b>Tous les sites</b><small>9 semaines · S13 à S22</small></header><div class="sc pop" data-at="1900"><span class="sn">9</span><h4>Deux sites de plus<small>S13–S16</small></h4><p>Un grand, un petit. Une journée d'installation par site.</p></div><div class="sc pop" data-at="2100"><span class="sn">10</span><h4>Déploiement par vagues<small>S16–S22</small></h4><p>Quelques sites par mois. Une vague part si la précédente tient.</p></div></div>
     </div>
   </div>
-  <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection · Durées à affiner après l'étape 1</span><span class="n"></span></div>
 </section>
 
 <!-- ======================= Part 3 · Budget: cost and savings ======================= -->
