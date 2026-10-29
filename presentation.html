@@ -524,11 +524,12 @@
   .pk-seen li.ko::before { content: '✕'; color: var(--red); }
   /* P2 cart in the corridor: story on the tinted band, illustration filling the right */
   .cart { position: absolute; inset: 0; display: grid; grid-template-columns: 720px 1fr; }
-  .cart-txt { background: #f3effd; display: flex; flex-direction: column; justify-content: center; gap: 28px; padding: 96px 72px 96px 96px; }
+  .cart-txt { background: var(--tint, #f3effd); display: flex; flex-direction: column; justify-content: center; gap: 28px; padding: 96px 72px 96px 96px; }
   .cart-txt .btag { align-self: flex-start; }
   .cart-txt h1 { font-size: 60px; letter-spacing: -.04em; line-height: 1.05; }
   .cart-txt .kstep { opacity: 1; grid-template-columns: 48px 1fr; gap: 20px; padding: 20px 0; }
-  .cart-txt .kstep .n { width: 48px; height: 48px; font-size: 21px; background: var(--violet); color: #fff; }
+  .cart-txt .kstep .n { width: 48px; height: 48px; font-size: 21px; background: var(--c, var(--violet)); color: #fff; }
+  .cart-txt .btags { display: flex; gap: 8px; }
   .cart-txt .kstep h5 { font-size: 26px; letter-spacing: -.015em; }
   .cart-txt .kstep p { font-size: 20px; margin-top: 4px; }
   .cart-txt .src-n { position: static; font-size: 15px; color: var(--muted); }
@@ -690,6 +691,25 @@
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection · P1 · Accueil · choix du robot</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= P1 · Alternative: a humanoid at the reception desk ======================= -->
+<section class="slide full" data-scene="cart">
+  <div class="cart" style="--tint:#eef1fa;--c:var(--navy)">
+    <div class="cart-txt">
+      <div class="btags rise"><span class="btag" style="background:var(--navy)">P1 · Accueil</span><span class="btag" style="background:#2a2f63">Alternative</span></div>
+      <h1 class="rise" style="--d:.1s">Un humanoïde<br><em>à côté de l'hôtesse.</em></h1>
+      <div class="ksteps rise" style="--d:.2s">
+        <div class="kstep"><span class="n">1</span><div><h5>L'AgiBot A3 se tient derrière le comptoir</h5><p>1,73 m, la taille d'une personne.</p></div></div>
+        <div class="kstep"><span class="n">2</span><div><h5>Il salue le client et répond à ses questions</h5><p>À la voix, avec des gestes.</p></div></div>
+        <div class="kstep"><span class="n">3</span><div><h5>L'hôtesse garde le check-in</h5><p>Le robot accueille, elle s'occupe du client.</p></div></div>
+        <div class="kstep"><span class="n">4</span><div><h5>Pour une étape suivante</h5><p>Les humanoïdes restent chers et encore peu autonomes.</p></div></div>
+      </div>
+      <p class="src-n rise" style="--d:.3s">Illustration : photo de l'accueil de Quartier Libre Opéra, robot ajouté.</p>
+    </div>
+    <div class="cart-img rise" style="--d:.15s"><img src="assets/deck/a3-accueil.jpg" alt="AgiBot A3 derrière le comptoir d'accueil, à côté de l'hôtesse" style="object-position:30% 50%"></div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection · P1 · Accueil · alternative</span><span class="n"></span></div>
 </section>
 
 <section class="slide full" data-scene="pick">
