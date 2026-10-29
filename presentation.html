@@ -522,6 +522,18 @@
   .pk-seen li { position: relative; padding-left: 30px; font-size: 21px; line-height: 1.4; color: var(--ink-2); }
   .pk-seen li::before { content: '✓'; position: absolute; left: 0; top: 0; font-weight: 800; color: var(--green); }
   .pk-seen li.ko::before { content: '✕'; color: var(--red); }
+  /* P2 cart in the corridor: story on the tinted band, illustration filling the right */
+  .cart { position: absolute; inset: 0; display: grid; grid-template-columns: 720px 1fr; }
+  .cart-txt { background: #f3effd; display: flex; flex-direction: column; justify-content: center; gap: 28px; padding: 96px 72px 96px 96px; }
+  .cart-txt .btag { align-self: flex-start; }
+  .cart-txt h1 { font-size: 60px; letter-spacing: -.04em; line-height: 1.05; }
+  .cart-txt .kstep { opacity: 1; grid-template-columns: 48px 1fr; gap: 20px; padding: 20px 0; }
+  .cart-txt .kstep .n { width: 48px; height: 48px; font-size: 21px; background: var(--violet); color: #fff; }
+  .cart-txt .kstep h5 { font-size: 26px; letter-spacing: -.015em; }
+  .cart-txt .kstep p { font-size: 20px; margin-top: 4px; }
+  .cart-txt .src-n { position: static; font-size: 15px; color: var(--muted); }
+  .cart-img { position: relative; overflow: hidden; }
+  .cart-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 48% 50%; }
   .pk-alts { border-top: 1px solid var(--line); }
   .pk-alt { display: grid; grid-template-columns: 96px 290px 1fr; gap: 24px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
   .pk-alt .th { position: relative; width: 96px; height: 72px; display: grid; place-items: center; }
@@ -701,6 +713,25 @@
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection · P2 · Bagages · choix du robot</span><span class="n"></span></div>
+</section>
+
+<!-- ======================= P2 · Luggage cart left at the room door ======================= -->
+<section class="slide full" data-scene="cart">
+  <div class="cart">
+    <div class="cart-txt">
+      <span class="btag rise" style="background:var(--violet)">P2 · Bagages</span>
+      <h1 class="rise" style="--d:.1s">Le chariot attend<br><em>devant la chambre.</em></h1>
+      <div class="ksteps rise" style="--d:.2s">
+        <div class="kstep"><span class="n">1</span><div><h5>Le Pudu T300 se glisse sous le chariot</h5><p>Il le soulève et le monte à l'étage.</p></div></div>
+        <div class="kstep"><span class="n">2</span><div><h5>Il le pose contre le mur, à côté de la porte</h5><p>Le passage reste libre dans le couloir.</p></div></div>
+        <div class="kstep"><span class="n">3</span><div><h5>Le client y met ses valises</h5><p>Quand il veut, sans attendre personne.</p></div></div>
+        <div class="kstep"><span class="n">4</span><div><h5>Le Pudu T300 revient le chercher</h5><p>Il ramène le chariot à la bagagerie.</p></div></div>
+      </div>
+      <p class="src-n rise" style="--d:.3s">Illustration : couloir dans le style de Quartier Libre Opéra.</p>
+    </div>
+    <div class="cart-img rise" style="--d:.15s"><img src="assets/deck/t300-chariot-couloir.jpg" alt="Pudu T300 sous un chariot à bagages, contre le mur d'un couloir"></div>
+  </div>
+  <div class="s-foot"><span>Loop × Quartier Libre Collection · P2 · Bagages</span><span class="n"></span></div>
 </section>
 
 <section class="slide full" data-scene="pick">
