@@ -387,7 +387,7 @@
   .road2 { position: absolute; inset: 116px 96px 92px; display: flex; flex-direction: column; gap: 36px; }
   /* Roadmap Gantt: one row per phase, a bar per step placed by week (--a to --b, 1-based, inclusive) over 22 weeks */
   .gantt { position: relative; display: flex; flex-direction: column; --lbl: 380px; }
-  .gantt .gr { display: grid; grid-template-columns: var(--lbl) 1fr; align-items: center; min-height: 118px; border-top: 1px solid var(--line); }
+  .gantt .gr { display: grid; grid-template-columns: var(--lbl) 1fr; align-items: center; min-height: 108px; border-top: 1px solid var(--line); }
   .gantt .gr.hd { min-height: 40px; border-top: 0; }
   .gantt .gl { display: flex; flex-direction: column; gap: 4px; padding-right: 28px; }
   .gantt .gl b { font-size: 26px; letter-spacing: -.02em; }
@@ -406,6 +406,11 @@
   .gkey { display: flex; gap: 36px; font-size: 18px; color: var(--muted); }
   .gkey span { display: inline-flex; align-items: center; gap: 10px; }
   .gkey i { width: 14px; height: 14px; transform: rotate(45deg); border-radius: 2px; background: var(--c); }
+  /* Roadmap summary next to the title: the black Temi, then the plan in a few lines */
+  .rsum { display: flex; align-items: center; gap: 24px; }
+  .rsum .rimg { flex: none; width: 96px; height: 150px; background: url(https://www.generationrobots.com/20650-large_default/temi-3-service-robot.jpg) 50% 52% / 196px auto no-repeat; }
+  .rsum ul { list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 21px; line-height: 1.35; color: var(--ink-2); }
+  .rsum li.later { color: var(--muted); font-size: 18px; margin-top: 4px; }
   /* Steps detail: one column per phase, one card per step */
   .steps4 { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 8px; }
   .sph { display: flex; flex-direction: column; gap: 20px; }
@@ -735,7 +740,7 @@
   <div class="road2">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:60px">
       <h1 class="rise">Une seule priorité,<br><em>le robot d'accueil, jusqu'au bout.</em></h1>
-      <p class="lead rise" style="--d:.15s;max-width:760px;font-size:23px">Temi d'abord : le plus fiable, le plus simple à installer, et pas trop cher. Le chariot, la sécurité et le ménage viendront après.</p>
+      <div class="rsum rise" style="--d:.15s"><span class="rimg" role="img" aria-label="Temi 3"></span><ul><li><b>Temi d'abord</b> : un site de test, piloté depuis Madagascar si besoin.</li><li>On le fiabilise, puis un premier site l'installe seul.</li><li>Ensuite, les autres sites, petit à petit.</li><li class="later">Le chariot, la sécurité et le ménage viendront après.</li></ul></div>
     </div>
     <div class="gantt">
       <div class="gr hd"><div class="gl"><small>≈ 22 semaines, environ 5 mois</small></div><div class="gt"><span class="mo" style="--w:1.000">M1</span><span class="mo" style="--w:5.333">M2</span><span class="mo" style="--w:9.666">M3</span><span class="mo" style="--w:13.999">M4</span><span class="mo" style="--w:18.332">M5</span></div></div>
@@ -743,7 +748,7 @@
       <div class="gr"><div class="gl"><b>Fiabilisation sur un site</b><small>4 semaines · S7 à S11</small></div><div class="gt"><span class="gbar pop" data-at="550" style="--a:7.5;--b:10.5;--c:#2f55c7">3 phases</span></div></div>
       <div class="gr"><div class="gl"><b>Premier site en autonomie</b><small>2 semaines · S11 à S13</small></div><div class="gt"><span class="gbar pop" data-at="800" style="--a:11.5;--b:12.5;--c:var(--loop)">2 phases</span></div></div>
       <div class="gr"><div class="gl"><b>Déploiement progressif</b><small>9 semaines · S13 à S22</small></div><div class="gt"><span class="gbar pop" data-at="1050" style="--a:13.5;--b:21.5;--c:#5b8cff">X phases</span></div></div>
-      <div class="gr" style="min-height:140px"><div class="gl"><b>Bilans avec vous</b><small>On décide ensemble de la suite</small></div><div class="gt"></div></div>
+      <div class="gr" style="min-height:130px"><div class="gl"><b>Bilans avec vous</b><small>On décide ensemble de la suite</small></div><div class="gt"></div></div>
       <div style="position:absolute;top:40px;bottom:0;left:var(--lbl);right:0;pointer-events:none"><div style="position:absolute;inset:0"><span class="gate pop blk" data-at="2300" style="--w:3"><i></i><span>Robot reçu</span></span><span class="gate pop blk up" data-at="2450" style="--w:4.5"><i></i><span>Go / no go</span></span><span class="gate pop" data-at="2600" style="--w:7.5"><i></i><span>Preuve faite ?</span></span><span class="gate pop blk" data-at="2750" style="--w:9.5"><i></i><span>Stable ?</span></span><span class="gate pop blk up" data-at="2900" style="--w:11.5"><i></i><span>Go / no go</span></span><span class="gate pop" data-at="3050" style="--w:13.5"><i></i><span>Bilan site 1</span></span><span class="gate pop up" data-at="3200" style="--w:16.5"><i></i><span>Bilans sites 2 et 3</span></span></div></div>
     </div>
     <div class="gkey rise" style="--d:.3s"><span style="--c:var(--red)"><i></i>Décision bloquante : un non décale tout le planning</span><span style="--c:var(--ink-2)"><i></i>Bilan : on corrige avant d'aller plus loin</span></div>
