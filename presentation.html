@@ -395,7 +395,6 @@
   .gantt .gt { position: relative; height: 100%; min-height: inherit; }
   .gantt .mo { position: absolute; bottom: 8px; left: calc((var(--w) - 1) / 22 * 100%); font-size: 16px; font-weight: 700; color: var(--muted); }
   .gbar { position: absolute; top: 50%; height: 54px; margin-top: -27px; left: calc((var(--a) - 1) / 22 * 100%); width: calc((var(--b) - var(--a) + 1) / 22 * 100% - 4px); border-radius: 10px; background: var(--c, var(--navy)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; transform-origin: left center; }
-  .gbar.l1 { margin-top: -48px; height: 42px; } .gbar.l2 { margin-top: 6px; height: 42px; }
   .gbar.pop { transform: scaleX(.2); } .gbar.pop.on { transform: none; }
   /* Client decisions: a diamond per review, red when it can hold up the whole plan; the line crosses every row */
   .gate { position: absolute; top: 0; bottom: 0; left: calc((var(--w) - 1) / 22 * 100%); width: 0; }
@@ -740,10 +739,10 @@
     </div>
     <div class="gantt">
       <div class="gr hd"><div class="gl"><small>≈ 22 semaines, environ 5 mois</small></div><div class="gt"><span class="mo" style="--w:1.000">M1</span><span class="mo" style="--w:5.333">M2</span><span class="mo" style="--w:9.666">M3</span><span class="mo" style="--w:13.999">M4</span><span class="mo" style="--w:18.332">M5</span></div></div>
-      <div class="gr"><div class="gl"><b>Essai à l'accueil</b><small>6,5 semaines · S1 à S7</small></div><div class="gt"><span class="gbar pop " data-at="300" style="--a:1;--b:6.5;--c:var(--navy)">Étapes 1 à 3</span></div></div>
-      <div class="gr"><div class="gl"><b>Stabiliser</b><small>4 semaines · S7 à S11</small></div><div class="gt"><span class="gbar pop " data-at="840" style="--a:7.5;--b:8.5;--c:#2f55c7">4</span><span class="gbar pop " data-at="1020" style="--a:9.5;--b:9.5;--c:#2f55c7">5</span><span class="gbar pop " data-at="1200" style="--a:10.5;--b:10.5;--c:#2f55c7">6</span></div></div>
-      <div class="gr"><div class="gl"><b>Premier site</b><small>2 semaines · S11 à S13</small></div><div class="gt"><span class="gbar pop l1" data-at="1380" style="--a:11.5;--b:11.5;--c:var(--loop)">7</span><span class="gbar pop l2" data-at="1560" style="--a:11.5;--b:12.5;--c:var(--loop)">8</span></div></div>
-      <div class="gr"><div class="gl"><b>Tous les sites</b><small>9 semaines · S13 à S22</small></div><div class="gt"><span class="gbar pop " data-at="1740" style="--a:13.5;--b:15.5;--c:#5b8cff">9</span><span class="gbar pop " data-at="1920" style="--a:16.5;--b:21.5;--c:#5b8cff">10</span></div></div>
+      <div class="gr"><div class="gl"><b>Essai à l'accueil</b><small>6,5 semaines · S1 à S7</small></div><div class="gt"><span class="gbar pop" data-at="300" style="--a:1;--b:6.5;--c:var(--navy)">3 phases</span></div></div>
+      <div class="gr"><div class="gl"><b>Stabiliser</b><small>4 semaines · S7 à S11</small></div><div class="gt"><span class="gbar pop" data-at="550" style="--a:7.5;--b:10.5;--c:#2f55c7">3 phases</span></div></div>
+      <div class="gr"><div class="gl"><b>Premier site</b><small>2 semaines · S11 à S13</small></div><div class="gt"><span class="gbar pop" data-at="800" style="--a:11.5;--b:12.5;--c:var(--loop)">2 phases</span></div></div>
+      <div class="gr"><div class="gl"><b>Tous les sites</b><small>9 semaines · S13 à S22</small></div><div class="gt"><span class="gbar pop" data-at="1050" style="--a:13.5;--b:21.5;--c:#5b8cff">2 phases</span></div></div>
       <div class="gr" style="min-height:140px"><div class="gl"><b>Bilans avec vous</b><small>On décide ensemble de la suite</small></div><div class="gt"></div></div>
       <div style="position:absolute;top:40px;bottom:0;left:var(--lbl);right:0;pointer-events:none"><div style="position:absolute;inset:0"><span class="gate pop blk" data-at="2300" style="--w:3"><i></i><span>Robot reçu</span></span><span class="gate pop blk up" data-at="2450" style="--w:4.5"><i></i><span>Go / no go</span></span><span class="gate pop" data-at="2600" style="--w:7.5"><i></i><span>Bilan de l'essai</span></span><span class="gate pop blk" data-at="2750" style="--w:9.5"><i></i><span>Stable ?</span></span><span class="gate pop blk up" data-at="2900" style="--w:11.5"><i></i><span>Go / no go</span></span><span class="gate pop" data-at="3050" style="--w:13.5"><i></i><span>Bilan site 1</span></span><span class="gate pop up" data-at="3200" style="--w:16.5"><i></i><span>Bilans sites 2 et 3</span></span></div></div>
     </div>
