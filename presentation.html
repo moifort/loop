@@ -554,6 +554,13 @@
 </head>
 <body>
 
+  .pk-hero .img.duo { height: 590px; gap: 40px; padding-bottom: 40px; align-items: stretch; justify-content: center; }
+  .pk-hero .duo figure { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 12px; min-height: 0; width: 280px; }
+  .pk-hero .duo figure img { flex: 1 1 0; min-height: 0; max-height: none; }
+  .pk-hero .duo figcaption { height: 92px; text-align: center; display: flex; flex-direction: column; gap: 2px; }
+  .pk-hero .duo figcaption b { font-size: 22px; }
+  .pk-hero .duo figcaption small { font-size: 16px; color: var(--ink-2); }
+  .pk-hero .duo figcaption span { font-size: 21px; font-weight: 800; }
 <!-- Loop mark: blue rounded square, white loop arrow, ink dot. Reused by every slide via <use>. -->
 <svg width="0" height="0" style="position:absolute">
   <defs>
@@ -718,8 +725,8 @@
       <b class="name rise" style="--d:.1s">AgiBot A3</b>
       <div class="meta rise" style="--d:.2s"><span class="price">Dès 88 600 € HT*</span></div>
       <p class="specs rise" style="--d:.25s">1,73 m · 55 kg · jusqu'à 10 h d'autonomie · batteries changées en 10 secondes</p>
-      <p class="src-n rise" style="--d:.3s">* Prix public de Generation Robots, revendeur en France, version standard. Relevé en octobre 2026.</p>
-      <div class="img"><img src="assets/deck/a3-debout.jpg" alt="AgiBot A3" style="filter:brightness(1.1)"></div>
+      <p class="src-n rise" style="--d:.3s">* Prix public de Generation Robots, revendeur en France, version standard. Relevé en octobre 2026.<br>** Prix public de Megadron, revendeur en Pologne. Relevé en octobre 2026.</p>
+      <div class="img duo"><figure><img src="assets/deck/agibot-a3.png" alt="AgiBot A3" style="height:96.1%"><figcaption><b>AgiBot A3</b><small>1,73 m · 55 kg</small></figcaption></figure><figure><img src="assets/deck/unitree-h2.png" alt="Unitree H2" style="height:100%"><figcaption><b>Unitree H2</b><small>1,80 m · 70 kg · moins cher</small><span>35 146 € HT**</span></figcaption></figure></div>
     </div>
     <div class="pk-body">
       <div class="rise" style="--d:.2s"><h6>Ce qu'on retient</h6><ul class="pk-seen"><li class="ok">Taille humaine : il tient un comptoir comme une personne.</li><li class="ok">Parle et comprend la voix, avec des gestes.</li><li class="ok">Se déplace à pied, jusqu'à 1,8 m/s.</li><li class="ok">Deux batteries : on les change sans l'éteindre.</li><li class="ko">Coûte très cher.</li><li class="ko">Nécessite un développement logiciel.</li></ul></div>
@@ -727,8 +734,7 @@
       <div class="pk-alts">
         <div class="pk-alt pop" data-at="600"><span class="th ph"><img src="assets/deck/alt-unitree-r1.jpg" alt=""><span class="x">✕</span></span><div><b>Unitree R1</b><small>≈ 5 900 $</small></div><p>1,21 m : trop petit pour tenir un comptoir.</p></div>
         <div class="pk-alt pop" data-at="1050"><span class="th"><img src="https://escadrone.com/wp-content/uploads/2025/10/Robot-humanoide-Unitree-G1.png" alt=""><span class="x">✕</span></span><div><b>Unitree G1</b><small>22 500 € et plus</small></div><p>1,32 m : trop petit aussi, et encore téléopéré.</p></div>
-        <div class="pk-alt pop" data-at="1500"><span class="th ph"><img src="assets/deck/alt-unitree-h2.jpg" alt=""><span class="x">✕</span></span><div><b>Unitree H2</b><small>≈ 41 000 $</small></div><p>La bonne taille, mais pas de prix confirmé en Europe.</p></div>
-        <div class="pk-alt pop" data-at="1950"><span class="th ph"><img src="assets/deck/alt-neura-4ne1.jpg" alt=""><span class="x">✕</span></span><div><b>NEURA 4NE1</b><small>98 000 € HT</small></div><p>Réservation seulement, livraison attendue fin 2026.</p></div>
+        <div class="pk-alt pop" data-at="1500"><span class="th ph"><img src="assets/deck/alt-neura-4ne1.jpg" alt=""><span class="x">✕</span></span><div><b>NEURA 4NE1</b><small>98 000 € HT</small></div><p>Réservation seulement, livraison attendue fin 2026.</p></div>
       </div></div>
     </div>
   </div>
@@ -749,7 +755,7 @@
       </div>
       <p class="src-n rise" style="--d:.3s">Illustration : accueil de Quartier Libre Opéra, robot ajouté.</p>
     </div>
-    <div class="cart-img rise" style="--d:.15s"><img src="assets/deck/a3-accueil.jpg" alt="L'hôtesse et l'AgiBot A3 derrière le comptoir, le robot remet une clé au client" style="object-position:5% 50%"></div>
+    <div class="cart-img rise" style="--d:.15s"><img src="assets/deck/a3-accueil.jpg" alt="L'hôtesse et l'AgiBot A3 derrière le comptoir, le robot fait le check-in sur son ordinateur" style="object-position:5% 50%"></div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection · P1 · Accueil · alternative</span><span class="n"></span></div>
 </section>
