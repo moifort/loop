@@ -517,22 +517,12 @@
   .roi3 .roi-l i { font-size: 20px; }
   .roi3 .roi-l b { font-size: 26px; color: var(--ink); }
   .roi3 .roi-l li:last-child b { color: #15924f; }
-  /* ROI: how the saving is counted, put forward above the figures */
-  .roi-m { margin-bottom: 24px; padding: 26px 32px; border-radius: 22px; background: #fff; }
-  .roi-m h6 { font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
-  .roi-m p { font-size: 28px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; color: var(--ink); }
-  .roi-m .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 20px; }
-  .roi-m .chip { height: 40px; padding: 0 18px; font-size: 19px; }
-  .roi-m .res { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-top: 20px; border-top: 1px solid rgba(18,19,26,.1); }
-  .roi-m .res span { font-size: 21px; color: var(--muted); font-variant-numeric: tabular-nums; }
-  .roi-m .res b { font-size: 38px; font-weight: 800; letter-spacing: -.02em; color: var(--loop); white-space: nowrap; }
-  /* ROI: the three figures that matter, large */
+  /* ROI: four figures, one size and one colour; the method sits in the note */
   .roi-k { list-style: none; border-bottom: 1px solid rgba(18,19,26,.1); }
-  .roi-k li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 10px 4px; border-top: 1px solid rgba(18,19,26,.1); }
-  .roi-k span { font-size: 24px; font-weight: 700; color: var(--ink); }
-  .roi-k span i { font-style: normal; font-size: 19px; font-weight: 500; color: var(--muted); margin-left: 8px; }
-  .roi-k b { font-size: 42px; font-weight: 800; letter-spacing: -.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
-  .roi-k li.gain b { color: #15924f; }
+  .roi-k li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 22px 4px; border-top: 1px solid rgba(18,19,26,.1); }
+  .roi-k span { font-size: 26px; font-weight: 700; color: var(--ink); }
+  .roi-k b { font-size: 40px; font-weight: 800; letter-spacing: -.03em; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .roi-k + .roi-n { margin-top: 24px; }
   /* Budget: same layout as the ROI slide, in Loop blue; the per-step fees on the right, robots apart */
   .bud2 { grid-template-columns: 520px 1fr; background: var(--loop-50); }
   .bud2 .roi-g b { color: var(--loop); }
@@ -962,18 +952,13 @@
         <circle class="dot" cx="920" cy="52.1" r="9"></circle><text class="v" x="900" y="28.0" text-anchor="end" style="fill: #15924f">+287 950 € sur 5 ans</text>
       </svg>
       <div>
-        <div class="roi-m">
-          <h6>Comment on calcule l'économie</h6>
-          <p>Le Temi tient l'accueil<br>1&nbsp;h&nbsp;30 par jour dans chaque immeuble :</p>
-          <div class="chips"><span class="chip b">Pause déjeuner</span><span class="chip b">Pause café</span><span class="chip b">Tôt le matin</span><span class="chip b">Tard le soir</span></div>
-          <div class="res"><span>1 h 30 × 25 € de l'heure × 365 jours</span><b>14 000 € / an</b></div>
-        </div>
         <ul class="roi-k">
-          <li><span>Investi<i>pilote + 6 Temi</i></span><b>90 050 €</b></li>
+          <li><span>Économie par immeuble*</span><b>14 000 € / an</b></li>
+          <li><span>Investi, pilote et 6 Temi</span><b>90 050 €</b></li>
           <li><span>Remboursé en</span><b>19 mois</b></li>
-          <li class="gain"><span>Gain sur 5 ans</span><b>+287 950 €</b></li>
+          <li><span>Gain sur 5 ans</span><b>+287 950 €</b></li>
         </ul>
-        <p class="roi-n">Aucune économie comptée pendant les 6 mois de pilote. Hors déploiement des 5 autres sites, chiffré après le site n°1. Hypothèses à valider pendant l'étape 1.</p>
+        <p class="roi-n">* Le Temi tient l'accueil seul 1&nbsp;h&nbsp;30 par jour, × 25&nbsp;€ de l'heure × 365&nbsp;jours. C'est une estimation, à mesurer sur le site de test pendant l'étape 1. Avec 1&nbsp;h par jour, remboursé en 26&nbsp;mois. Avec 2&nbsp;h, en 16&nbsp;mois.<br>Aucune économie comptée pendant les 6 mois de pilote. Hors déploiement des 5 autres sites, chiffré après le site n°1.</p>
       </div>
     </div>
   </div>
