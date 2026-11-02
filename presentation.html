@@ -499,7 +499,24 @@
   .roi-solo .roi-l span { font-size: 26px; }
   .roi-solo .roi-l i { font-size: 22px; }
   .roi-solo .roi-l b { font-size: 28px; }
-  .roi-acc .roi-l li { grid-template-columns: 200px 1fr auto; }
+  /* ROI: the cumulative gain as one line on the left, the arithmetic behind it on the right */
+  .roi3 { flex: 1; display: grid; grid-template-columns: 1fr 720px; gap: 80px; align-items: center; padding: 0 96px; background: #f3f4f7; }
+  .roi-ch { width: 100%; height: auto; overflow: visible; }
+  .roi-ch .grid line { stroke: rgba(18,19,26,.08); stroke-width: 1; }
+  .roi-ch .zero { stroke: rgba(18,19,26,.35); stroke-width: 2; }
+  .roi-ch .neg { fill: var(--red-soft); }
+  .roi-ch .pos { fill: var(--green-soft); }
+  .roi-ch .ln { stroke: var(--loop); stroke-width: 4; stroke-linecap: round; }
+  .roi-ch .dot { fill: var(--loop); stroke: #f3f4f7; stroke-width: 4; }
+  .roi-ch text { font-size: 18px; fill: var(--muted); }
+  .roi-ch .ylab text { text-anchor: end; }
+  .roi-ch .xlab text { text-anchor: middle; font-weight: 600; }
+  .roi-ch .v { font-size: 24px; font-weight: 800; fill: var(--ink); }
+  .roi3 .roi-l li { grid-template-columns: 170px 1fr auto; padding: 18px 0; }
+  .roi3 .roi-l span { font-size: 24px; }
+  .roi3 .roi-l i { font-size: 20px; }
+  .roi3 .roi-l b { font-size: 26px; color: var(--ink); }
+  .roi3 .roi-l li:last-child b { color: #15924f; }
   /* Budget: same layout as the ROI slide, in Loop blue; the per-step fees on the right, robots apart */
   .bud2 { grid-template-columns: 520px 1fr; background: var(--loop-50); }
   .bud2 .roi-g b { color: var(--loop); }
@@ -919,16 +936,29 @@
 <!-- ======================= ROI · the money the robots save ======================= -->
 <section class="slide" data-scene="roi">
   <div class="roi2">
-    <h1 class="rise">14&nbsp;000&nbsp;€ d'économie par an,<br><em>par immeuble, sur l'accueil.</em></h1>
-    <div class="roi-solo roi-acc rise" style="--d:.2s">
-      <div class="roi-g"><div><small>Économisé par an sur vos 5 immeubles</small><b>≈ 70 000 €</b></div></div>
+    <h1 class="rise">Remboursé en 14 mois,<br><em>puis 70&nbsp;000&nbsp;€ d'économie par an.</em></h1>
+    <div class="roi3 rise" style="--d:.2s">
+      <!-- Cumulative net for the 5 buildings, months 0 to 36: x = 80 + 23.33 × month, y = 295.7 − 1.826 × k€ -->
+      <svg class="roi-ch" viewBox="0 0 960 520" role="img" aria-label="Gain cumulé sur 3 ans : −82 000 € au départ, remboursé au 14e mois, +128 000 € au bout de 3 ans">
+        <g class="grid"><line x1="80" x2="920" y1="113" y2="113"/><line x1="80" x2="920" y1="204.3" y2="204.3"/><line x1="80" x2="920" y1="387" y2="387"/></g>
+        <g class="ylab"><text x="68" y="119">+100 000 €</text><text x="68" y="210">+50 000 €</text><text x="68" y="302">0</text><text x="68" y="393">−50 000 €</text></g>
+        <polygon class="neg" points="80,295.7 80,445.1 407.6,295.7"/>
+        <polygon class="pos" points="407.6,295.7 920,61.7 920,295.7"/>
+        <line class="zero" x1="80" x2="920" y1="295.7" y2="295.7"/>
+        <line class="ln" x1="80" y1="445.1" x2="920" y2="61.7"/>
+        <g class="xlab"><text x="80" y="500">Départ</text><text x="360" y="500">1 an</text><text x="640" y="500">2 ans</text><text x="920" y="500">3 ans</text></g>
+        <circle class="dot" cx="80" cy="445.1" r="9"/><text class="v neg-t" x="100" y="470">−82 000 € investis</text>
+        <circle class="dot" cx="407.6" cy="295.7" r="9"/><text class="v" x="425" y="330">Remboursé en 14 mois</text>
+        <circle class="dot" cx="920" cy="61.7" r="9"/><text class="v pos-t" x="900" y="40" text-anchor="end">+128 000 € sur 3 ans</text>
+      </svg>
       <div>
         <ul class="roi-l">
-          <li><span>1 immeuble</span><i>Check-in, check-out et questions : 1 h 30 libérée par jour × 25 €*</i><b>14 000 €</b></li>
-          <li><span>5 immeubles</span><i>Vos immeubles actuels, tous équipés en 6 mois</i><b>70 000 €</b></li>
-          <li><span>9 immeubles</span><i>Avec les 4 en projet</i><b>126 000 €</b></li>
+          <li><span>Investi</span><i>Pilote ≈ 41 000 € + 5 Temi à 8 175 €</i><b>≈ 82 000 €</b></li>
+          <li><span>Économisé</span><i>14 000 € par immeuble* × 5 immeubles</i><b>70 000 € / an</b></li>
+          <li><span>Remboursé</span><i>82 000 € ÷ 70 000 € par an</i><b>≈ 14 mois</b></li>
+          <li><span>Sur 3 ans</span><i>210 000 € économisés − 82 000 € investis</i><b>≈ 128 000 €</b></li>
         </ul>
-        <p class="roi-n">* 25 € : coût horaire d'un réceptionniste. Hypothèses à valider ensemble pendant l'étape 1.</p>
+        <p class="roi-n">* Check-in, check-out et questions : 1 h 30 libérée par jour × 25 € de l'heure.<br>Mois comptés une fois les 5 immeubles équipés, en 6 mois. Hors déploiement des 3 derniers immeubles, chiffré après le site n°1. Hypothèses à valider ensemble pendant l'étape 1.</p>
       </div>
     </div>
   </div>
