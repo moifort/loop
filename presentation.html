@@ -930,29 +930,28 @@
 <!-- ======================= ROI · the money the robots save ======================= -->
 <section class="slide" data-scene="roi">
   <div class="roi2">
-    <h1 class="rise">Remboursé en 14 mois,<br><em>puis 70&nbsp;000&nbsp;€ d'économie par an.</em></h1>
+    <h1 class="rise">Remboursé en 3 ans et demi,<br><em>puis 14&nbsp;000&nbsp;€ d'économie par an.</em></h1>
     <div class="roi3 rise" style="--d:.2s">
-      <!-- Cumulative net for the 5 buildings, months 0 to 36: x = 80 + 23.33 × month, y = 295.7 − 1.826 × k€ -->
-      <svg class="roi-ch" viewBox="0 0 960 520" role="img" aria-label="Gain cumulé sur 3 ans : −82 000 € au départ, remboursé au 14e mois, +128 000 € au bout de 3 ans">
-        <g class="grid"><line x1="80" x2="920" y1="113" y2="113"/><line x1="80" x2="920" y1="204.3" y2="204.3"/><line x1="80" x2="920" y1="387" y2="387"/></g>
-        <g class="ylab"><text x="68" y="119">+100 000 €</text><text x="68" y="210">+50 000 €</text><text x="68" y="302">0</text><text x="68" y="393">−50 000 €</text></g>
-        <polygon class="neg" points="80,295.7 80,445.1 407.6,295.7"/>
-        <polygon class="pos" points="407.6,295.7 920,61.7 920,295.7"/>
-        <line class="zero" x1="80" x2="920" y1="295.7" y2="295.7"/>
-        <line class="ln" x1="80" y1="445.1" x2="920" y2="61.7"/>
-        <g class="xlab"><text x="80" y="500">Départ</text><text x="360" y="500">1 an</text><text x="640" y="500">2 ans</text><text x="920" y="500">3 ans</text></g>
-        <circle class="dot" cx="80" cy="445.1" r="9"/><text class="v neg-t" x="100" y="470">−82 000 € investis</text>
-        <circle class="dot" cx="407.6" cy="295.7" r="9"/><text class="v" x="425" y="330">Remboursé en 14 mois</text>
-        <circle class="dot" cx="920" cy="61.7" r="9"/><text class="v pos-t" x="900" y="40" text-anchor="end">+128 000 € sur 3 ans</text>
+      <svg class="roi-ch" viewBox="0 0 960 520" role="img" aria-label="Gain cumulé sur 5 ans pour un immeuble : −49 175 € au départ, remboursé en 3 ans et demi, +20 825 € au bout de 5 ans">
+        <g class="grid"><line x1="80" x2="920" y1="164.0" y2="164.0"></line><line x1="80" x2="920" y1="316.0" y2="316.0"></line><line x1="80" x2="920" y1="392.0" y2="392.0"></line></g>
+        <g class="ylab"><text x="68" y="170.0">+20 000 €</text><text x="68" y="246.0">0</text><text x="68" y="322.0">−20 000 €</text><text x="68" y="398.0">−40 000 €</text></g>
+        <polygon class="neg" points="80,240.0 80,426.9 670.1,240.0"></polygon>
+        <polygon class="pos" points="670.1,240.0 920,160.9 920,240.0"></polygon>
+        <line class="zero" x1="80" x2="920" y1="240.0" y2="240.0"></line>
+        <line class="ln" x1="80" y1="426.9" x2="920" y2="160.9"></line>
+        <g class="xlab"><text x="80" y="500">Départ</text><text x="248" y="500">1 an</text><text x="416" y="500">2 ans</text><text x="584" y="500">3 ans</text><text x="752" y="500">4 ans</text><text x="920" y="500">5 ans</text></g>
+        <circle class="dot" cx="80" cy="426.9" r="9"></circle><text class="v neg-t" x="100" y="451.9">−49 175 € investis</text>
+        <circle class="dot" cx="670.1" cy="240.0" r="9"></circle><text class="v" x="652.1" y="218.0" text-anchor="end">Remboursé en 3 ans et demi</text>
+        <circle class="dot" cx="920" cy="160.9" r="9"></circle><text class="v pos-t" x="900" y="130.9" text-anchor="end">+20 825 € sur 5 ans</text>
       </svg>
       <div>
         <ul class="roi-l">
-          <li><span>Investi</span><i>Pilote ≈ 41 000 € + 5 Temi à 8 175 €</i><b>≈ 82 000 €</b></li>
-          <li><span>Économisé</span><i>14 000 € par immeuble* × 5 immeubles</i><b>70 000 € / an</b></li>
-          <li><span>Remboursé</span><i>82 000 € ÷ 70 000 € par an</i><b>≈ 14 mois</b></li>
-          <li><span>Sur 3 ans</span><i>210 000 € économisés − 82 000 € investis</i><b>≈ 128 000 €</b></li>
+          <li><span>Investi</span><i>Pilote 41 000 € + 1 Temi à 8 175 €</i><b>49 175 €</b></li>
+          <li><span>Économisé</span><i>Pour un immeuble*</i><b>14 000 € / an</b></li>
+          <li><span>Remboursé</span><i>49 175 € ÷ 14 000 € par an</i><b>3 ans et demi</b></li>
+          <li><span>Sur 5 ans</span><i>70 000 € économisés − 49 175 € investis</i><b>20 825 €</b></li>
         </ul>
-        <p class="roi-n">* Check-in, check-out et questions : 1 h 30 libérée par jour × 25 € de l'heure.<br>Mois comptés une fois les 5 immeubles équipés, en 6 mois. Hors déploiement des 3 derniers immeubles, chiffré après le site n°1. Hypothèses à valider ensemble pendant l'étape 1.</p>
+        <p class="roi-n">* Check-in, check-out et questions : 1 h 30 libérée par jour × 25 € de l'heure.<br>Tout le pilote est compté sur ce seul immeuble. Hypothèses à valider ensemble pendant l'étape 1.</p>
       </div>
     </div>
   </div>
