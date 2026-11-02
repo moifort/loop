@@ -517,6 +517,15 @@
   .roi3 .roi-l i { font-size: 20px; }
   .roi3 .roi-l b { font-size: 26px; color: var(--ink); }
   .roi3 .roi-l li:last-child b { color: #15924f; }
+  /* ROI: how the saving is counted, put forward above the figures */
+  .roi-m { margin-bottom: 24px; padding: 26px 30px; border-radius: 22px; background: #fff; }
+  .roi-m h6 { font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .roi-m p { font-size: 21px; line-height: 1.45; color: var(--ink); }
+  .roi-m .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 16px; }
+  .roi-m .chip { height: 38px; padding: 0 16px; font-size: 18px; }
+  .roi-m .f { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .roi-m .f b { color: var(--loop); }
+  .roi-m + .roi-l li { padding: 14px 0; }
   /* Budget: same layout as the ROI slide, in Loop blue; the per-step fees on the right, robots apart */
   .bud2 { grid-template-columns: 520px 1fr; background: var(--loop-50); }
   .bud2 .roi-g b { color: var(--loop); }
@@ -927,31 +936,38 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<!-- ======================= ROI · the money the robots save ======================= -->
+<!-- ======================= ROI · six buildings: 6 months of pilot on site 1, then the 5 other sites ======================= -->
 <section class="slide" data-scene="roi">
   <div class="roi2">
-    <h1 class="rise">Remboursé en 3 ans et demi,<br><em>puis 14&nbsp;000&nbsp;€ d'économie par an.</em></h1>
+    <h1 class="rise">Sur 6 immeubles, remboursé en 19 mois,<br><em>puis 84&nbsp;000&nbsp;€ d'économie par an.</em></h1>
     <div class="roi3 rise" style="--d:.2s">
-      <svg class="roi-ch" viewBox="0 0 960 520" role="img" aria-label="Gain cumulé sur 5 ans pour un immeuble : −49 175 € au départ, remboursé en 3 ans et demi, +20 825 € au bout de 5 ans">
-        <g class="grid"><line x1="80" x2="920" y1="164.0" y2="164.0"></line><line x1="80" x2="920" y1="316.0" y2="316.0"></line><line x1="80" x2="920" y1="392.0" y2="392.0"></line></g>
-        <g class="ylab"><text x="68" y="170.0">+20 000 €</text><text x="68" y="246.0">0</text><text x="68" y="322.0">−20 000 €</text><text x="68" y="398.0">−40 000 €</text></g>
-        <polygon class="neg" points="80,240.0 80,426.9 670.1,240.0"></polygon>
-        <polygon class="pos" points="670.1,240.0 920,160.9 920,240.0"></polygon>
-        <line class="zero" x1="80" x2="920" y1="240.0" y2="240.0"></line>
-        <line class="ln" x1="80" y1="426.9" x2="920" y2="160.9"></line>
-        <g class="xlab"><text x="80" y="500">Départ</text><text x="248" y="500">1 an</text><text x="416" y="500">2 ans</text><text x="584" y="500">3 ans</text><text x="752" y="500">4 ans</text><text x="920" y="500">5 ans</text></g>
-        <circle class="dot" cx="80" cy="426.9" r="9"></circle><text class="v neg-t" x="100" y="451.9">−49 175 € investis</text>
-        <circle class="dot" cx="670.1" cy="240.0" r="9"></circle><text class="v" x="652.1" y="218.0" text-anchor="end">Remboursé en 3 ans et demi</text>
-        <circle class="dot" cx="920" cy="160.9" r="9"></circle><text class="v pos-t" x="900" y="130.9" text-anchor="end">+20 825 € sur 5 ans</text>
+      <svg class="roi-ch" viewBox="0 0 960 520" role="img" aria-label="Gain cumulé sur 5 ans pour 6 immeubles : −49 175 € au départ pour le pilote, −90 050 € au 6e mois quand les 5 autres sites sont équipés, remboursé en 19 mois, +287 950 € au bout de 5 ans">
+        <g class="grid"><line x1="80" x2="920" y1="140.0" y2="140.0"></line><line x1="80" x2="920" y1="240.0" y2="240.0"></line><line x1="80" x2="920" y1="440.0" y2="440.0"></line></g>
+        <g class="ylab"><text x="68" y="146.0">+200 000 €</text><text x="68" y="246.0">+100 000 €</text><text x="68" y="346.0">0</text><text x="68" y="446.0">−100 000 €</text></g>
+        <polygon class="neg" points="80,340.0 80,389.2 164,389.2 164,430.1 344.1,340.0"></polygon>
+        <polygon class="pos" points="344.1,340.0 920,52.1 920,340.0"></polygon>
+        <line class="zero" x1="80" x2="920" y1="340.0" y2="340.0"></line>
+        <polyline class="ln" points="80,389.2 164,389.2 164,430.1 920,52.1" fill="none" stroke-linejoin="round"></polyline>
+        <g class="xlab"><text x="80" y="500">Départ</text><text x="164" y="500">6 mois</text><text x="248" y="500">1 an</text><text x="416" y="500">2 ans</text><text x="584" y="500">3 ans</text><text x="752" y="500">4 ans</text><text x="920" y="500">5 ans</text></g>
+        <circle class="dot" cx="80" cy="389.2" r="9"></circle><text x="122" y="374.0" text-anchor="middle" style="font-weight: 700">Pilote</text>
+        <circle class="dot" cx="164" cy="430.1" r="9"></circle><text class="v" x="184" y="460.0">−90 050 € investis</text>
+        <circle class="dot" cx="344.1" cy="340.0" r="12"></circle><text class="v" x="326.1" y="318.0" text-anchor="end" style="font-size: 30px">19 mois</text>
+        <circle class="dot" cx="920" cy="52.1" r="9"></circle><text class="v" x="900" y="28.0" text-anchor="end" style="fill: #15924f">+287 950 € sur 5 ans</text>
       </svg>
       <div>
+        <div class="roi-m">
+          <h6>Comment on calcule l'économie</h6>
+          <p>Le Temi tient l'accueil quand l'équipe n'est pas au comptoir :</p>
+          <div class="chips"><span class="chip b">Pause déjeuner</span><span class="chip b">Pause café</span><span class="chip b">Tôt le matin</span><span class="chip b">Tard le soir</span></div>
+          <p class="f">1 h 30 par jour × 25 € de l'heure × 365 jours<br>≈ <b>14 000 € par immeuble et par an</b></p>
+        </div>
         <ul class="roi-l">
-          <li><span>Investi</span><i>Pilote 41 000 € + 1 Temi à 8 175 €</i><b>49 175 €</b></li>
-          <li><span>Économisé</span><i>Pour un immeuble*</i><b>14 000 € / an</b></li>
-          <li><span>Remboursé</span><i>49 175 € ÷ 14 000 € par an</i><b>3 ans et demi</b></li>
-          <li><span>Sur 5 ans</span><i>70 000 € économisés − 49 175 € investis</i><b>20 825 €</b></li>
+          <li><span>Investi</span><i>Pilote 41 000 € + 6 Temi à 8 175 €</i><b>90 050 €</b></li>
+          <li><span>Économisé</span><i>14 000 € × 6 immeubles, après le pilote</i><b>84 000 € / an</b></li>
+          <li><span>Remboursé</span><i>6 mois de pilote + 90 050 € ÷ 7 000 € par mois</i><b>19 mois</b></li>
+          <li><span>Sur 5 ans</span><i>378 000 € économisés − 90 050 € investis</i><b>287 950 €</b></li>
         </ul>
-        <p class="roi-n">* Check-in, check-out et questions : 1 h 30 libérée par jour × 25 € de l'heure.<br>Tout le pilote est compté sur ce seul immeuble. Hypothèses à valider ensemble pendant l'étape 1.</p>
+        <p class="roi-n">Pilote de 6 mois sur le site n°1, sans économie comptée. Les 5 autres sites sont équipés au 6e mois. Hors déploiement des 5 autres sites, chiffré après le site n°1. Hypothèses à valider ensemble pendant l'étape 1.</p>
       </div>
     </div>
   </div>
