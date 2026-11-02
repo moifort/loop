@@ -518,14 +518,21 @@
   .roi3 .roi-l b { font-size: 26px; color: var(--ink); }
   .roi3 .roi-l li:last-child b { color: #15924f; }
   /* ROI: how the saving is counted, put forward above the figures */
-  .roi-m { margin-bottom: 24px; padding: 26px 30px; border-radius: 22px; background: #fff; }
-  .roi-m h6 { font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
-  .roi-m p { font-size: 21px; line-height: 1.45; color: var(--ink); }
-  .roi-m .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 16px; }
-  .roi-m .chip { height: 38px; padding: 0 16px; font-size: 18px; }
-  .roi-m .f { font-weight: 700; font-variant-numeric: tabular-nums; }
-  .roi-m .f b { color: var(--loop); }
-  .roi-m + .roi-l li { padding: 14px 0; }
+  .roi-m { margin-bottom: 24px; padding: 26px 32px; border-radius: 22px; background: #fff; }
+  .roi-m h6 { font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .roi-m p { font-size: 28px; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; color: var(--ink); }
+  .roi-m .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 20px; }
+  .roi-m .chip { height: 40px; padding: 0 18px; font-size: 19px; }
+  .roi-m .res { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding-top: 20px; border-top: 1px solid rgba(18,19,26,.1); }
+  .roi-m .res span { font-size: 21px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .roi-m .res b { font-size: 38px; font-weight: 800; letter-spacing: -.02em; color: var(--loop); white-space: nowrap; }
+  /* ROI: the three figures that matter, large */
+  .roi-k { list-style: none; border-bottom: 1px solid rgba(18,19,26,.1); }
+  .roi-k li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 10px 4px; border-top: 1px solid rgba(18,19,26,.1); }
+  .roi-k span { font-size: 24px; font-weight: 700; color: var(--ink); }
+  .roi-k span i { font-style: normal; font-size: 19px; font-weight: 500; color: var(--muted); margin-left: 8px; }
+  .roi-k b { font-size: 42px; font-weight: 800; letter-spacing: -.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .roi-k li.gain b { color: #15924f; }
   /* Budget: same layout as the ROI slide, in Loop blue; the per-step fees on the right, robots apart */
   .bud2 { grid-template-columns: 520px 1fr; background: var(--loop-50); }
   .bud2 .roi-g b { color: var(--loop); }
@@ -957,17 +964,16 @@
       <div>
         <div class="roi-m">
           <h6>Comment on calcule l'économie</h6>
-          <p>Le Temi tient l'accueil quand l'équipe n'est pas au comptoir :</p>
+          <p>Le Temi tient l'accueil<br>1&nbsp;h&nbsp;30 par jour dans chaque immeuble :</p>
           <div class="chips"><span class="chip b">Pause déjeuner</span><span class="chip b">Pause café</span><span class="chip b">Tôt le matin</span><span class="chip b">Tard le soir</span></div>
-          <p class="f">1 h 30 par jour × 25 € de l'heure × 365 jours<br>≈ <b>14 000 € par immeuble et par an</b></p>
+          <div class="res"><span>1 h 30 × 25 € de l'heure × 365 jours</span><b>14 000 € / an</b></div>
         </div>
-        <ul class="roi-l">
-          <li><span>Investi</span><i>Pilote 41 000 € + 6 Temi à 8 175 €</i><b>90 050 €</b></li>
-          <li><span>Économisé</span><i>14 000 € × 6 immeubles, après le pilote</i><b>84 000 € / an</b></li>
-          <li><span>Remboursé</span><i>6 mois de pilote + 90 050 € ÷ 7 000 € par mois</i><b>19 mois</b></li>
-          <li><span>Sur 5 ans</span><i>378 000 € économisés − 90 050 € investis</i><b>287 950 €</b></li>
+        <ul class="roi-k">
+          <li><span>Investi<i>pilote + 6 Temi</i></span><b>90 050 €</b></li>
+          <li><span>Remboursé en</span><b>19 mois</b></li>
+          <li class="gain"><span>Gain sur 5 ans</span><b>+287 950 €</b></li>
         </ul>
-        <p class="roi-n">Pilote de 6 mois sur le site n°1, sans économie comptée. Les 5 autres sites sont équipés au 6e mois. Hors déploiement des 5 autres sites, chiffré après le site n°1. Hypothèses à valider ensemble pendant l'étape 1.</p>
+        <p class="roi-n">Aucune économie comptée pendant les 6 mois de pilote. Hors déploiement des 5 autres sites, chiffré après le site n°1. Hypothèses à valider pendant l'étape 1.</p>
       </div>
     </div>
   </div>
