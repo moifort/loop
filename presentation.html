@@ -410,10 +410,6 @@
   .gkey span { display: inline-flex; align-items: center; gap: 10px; }
   .gkey i { width: 14px; height: 14px; transform: rotate(45deg); border-radius: 2px; background: var(--c); }
   /* Roadmap summary next to the title: the black Temi, then the plan in a few lines */
-  .rsum { display: flex; align-items: center; gap: 24px; }
-  .rsum .rimg { flex: none; width: 96px; height: 150px; background: url(assets/deck/temi-3.png) 50% 50% / contain no-repeat; }
-  .rsum ul { list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 21px; line-height: 1.35; color: var(--ink-2); }
-  .rsum li.later { color: var(--muted); font-size: 18px; margin-top: 4px; }
   /* Steps detail: one column per phase, one card per step */
   .steps4 { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 8px; }
   .sph { display: flex; flex-direction: column; gap: 16px; }
@@ -843,7 +839,6 @@
   <div class="road2">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:60px">
       <h1 class="rise">Un robot d'accueil,<br><em>déployé en 6 mois max.</em></h1>
-      <div class="rsum rise" style="--d:.15s"><span class="rimg" role="img" aria-label="Temi 3"></span><ul><li><b>Preuve de concept</b> : un site de test, téléopération depuis Madagascar.</li><li><b>Fiabilisation sur un site</b> : stabilisation, développement logiciel, kit d'installation.</li><li><b>Premier site en autonomie</b> : installation avec le kit.</li><li><b>Déploiement progressif</b> : extension aux autres sites, par vagues.</li><li class="later">Chariot, sécurité et ménage : dans un second temps.</li></ul></div>
     </div>
     <div class="gantt">
       <div class="gr hd"><div class="gl"><small>26 semaines, soit six mois</small></div><div class="gt"><span class="mo" style="--w:1.000">M1</span><span class="mo" style="--w:5.333">M2</span><span class="mo" style="--w:9.667">M3</span><span class="mo" style="--w:14.000">M4</span><span class="mo" style="--w:18.333">M5</span><span class="mo" style="--w:22.667">M6</span></div></div>
