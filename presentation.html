@@ -343,10 +343,13 @@
   .strips { position: absolute; inset: 84px 0 0; display: grid; grid-template-rows: repeat(3, 1fr); }
   .btags { display: flex; gap: 8px; }
   .strip { display: grid; grid-template-columns: 520px 440px 1fr 230px 150px; align-items: center; gap: 40px; padding-right: 96px; background: var(--tint); border-bottom: 1px solid rgba(18,19,26,.06); overflow: hidden; }
-  .simg { height: 214px; display: flex; align-items: flex-end; justify-content: center; gap: 0; padding: 14px 40px 12px; }
+  .simg { position: relative; height: 214px; display: flex; align-items: flex-end; justify-content: center; gap: 0; padding: 14px 40px 12px; }
   .simg img { height: 100%; min-width: 0; max-width: 100%; object-fit: contain; object-position: bottom; mix-blend-mode: multiply; }
   .simg.duo img { max-width: 50%; }
   .simg.duo img + img { height: 55%; }
+  .salt { position: absolute; left: calc(50% + 60px); bottom: 12px; height: 188px; display: flex; align-items: flex-end; gap: 10px; }
+  .salt img { max-width: none; }
+  .salt span { position: absolute; top: 100%; left: 0; right: 0; margin-top: 10px; text-align: center; font-size: 18px; font-weight: 700; color: var(--muted); }
   .slide.active .simg img { animation: robot-in .9s var(--ease) both; animation-delay: calc(var(--d, 0s) + .15s); }
   @keyframes robot-in { from { opacity: 0; transform: translateX(-40px) scale(.96); } }
   .sid { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
@@ -669,7 +672,7 @@
 
 <section class="slide full" data-scene="robots">
   <div class="strips">
-    <div class="strip rise" style="--d:0.05s;--tint:#eef1fa"><div class="simg"><img src="assets/deck/temi-3.png" alt="" style="mix-blend-mode:normal"></div><div class="sid"><div class="btags"><span class="btag" style="background:var(--navy)">P1 · Accueil</span><span class="btag" style="background:#2a2f63">P1 · Sécurité</span></div><b>Temi 3</b></div><p>Répond aux clients au comptoir. Un humain prend la main en visio. La nuit, il surveille l'entrée.</p><span class="sprice">8 175 € HT*</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
+    <div class="strip rise" style="--d:0.05s;--tint:#eef1fa"><div class="simg"><img src="assets/deck/temi-3.png" alt="" style="mix-blend-mode:normal"><div class="salt"><img src="assets/deck/agibot-a3.png" alt="AgiBot A3" style="height:96.1%"><img src="assets/deck/unitree-h2.png" alt="Unitree H2"><span>Alternative</span></div></div><div class="sid"><div class="btags"><span class="btag" style="background:var(--navy)">P1 · Accueil</span><span class="btag" style="background:#2a2f63">P1 · Sécurité</span></div><b>Temi 3</b></div><p>Répond aux clients au comptoir. Un humain prend la main en visio. La nuit, il surveille l'entrée.</p><span class="sprice">8 175 € HT*</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
     <div class="strip rise" style="--d:0.15s;--tint:#f3effd"><div class="simg"><img src="assets/deck/pudu-t300.webp" alt=""></div><div class="sid"><span class="btag" style="background:var(--violet)">P2 · Bagages</span><b>Pudu T300</b></div><p>Porte 300 kg. Soulève un chariot aux couleurs de l'hôtel, monte et revient seul.</p><span class="sprice">Dès 17 500 € HT**</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
     <div class="strip rise" style="--d:0.25s;--tint:#e9f6fd"><div class="simg"><img src="assets/deck/dreame-l40s.jpg" alt="" style="filter:brightness(1.07)"></div><div class="sid"><div class="btags"><span class="btag" style="background:var(--sky)">P3 · Ménage</span><span class="btag" style="background:#2a2f63">P1 · Sécurité</span></div><b>Dreame L40s Pro Ultra</b></div><p>Aspire et lave, pièce par pièce. La nuit, surveille les étages, caméra allumée.</p><span class="sprice">≈ 500 € HT</span><span class="chip g"><span class="dot"></span>Retenu</span></div>
   </div>
