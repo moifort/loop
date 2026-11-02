@@ -28,7 +28,8 @@ Same workflow as the Shiori Board:
   `presentation.html` gets the same change, checked in the browser and sent as a screenshot. The two are validated
   separately, and a change landing in the deck by another route is mirrored on the board in the same task.
 - **A text correction stays in the main session.** A comment that only changes wording is handled by the session that
-  receives it, with no child session: board first, then the validation steps above, then its thread is resolved.
+  receives it, with no child session. Once the change is made on the board, that session resolves the thread itself
+  (`ArtifactComments`, `resolve`), without waiting for a validation.
 - **Any other comment gets its own child session.** Such a comment is never handled in the session that receives it:
   start a child session (`start_session`, `user_asked`, fresh context, `use_worktree: false`), one per thread, without
   asking. Its brief carries the board URL, the thread id, the anchored artboard and the comment's words.
