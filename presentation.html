@@ -517,17 +517,10 @@
   .roi3 .roi-l i { font-size: 20px; }
   .roi3 .roi-l b { font-size: 26px; color: var(--ink); }
   .roi3 .roi-l li:last-child b { color: #15924f; }
-  .roi-w { margin-bottom: 22px; font-size: 24px; font-weight: 600; line-height: 1.4; color: var(--ink); }
-  /* ROI: the three robots side by side, one size and one colour; a dot ties each column to its curve */
-  .roi-t { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-  .roi-t th, .roi-t td { padding: 18px 0 18px 12px; border-top: 1px solid rgba(18,19,26,.1); text-align: right; white-space: nowrap; }
-  .roi-t th:first-child { padding-left: 0; text-align: left; }
-  .roi-t thead th { padding-top: 0; border-top: 0; font-size: 20px; font-weight: 700; color: var(--ink); }
-  .roi-t thead i { display: inline-block; width: 12px; height: 12px; margin-right: 8px; border-radius: 50%; background: var(--c); }
-  .roi-t tbody th { font-size: 22px; font-weight: 700; color: var(--ink); }
-  .roi-t td { font-size: 28px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
-  .roi-t tbody tr:last-child > * { border-bottom: 1px solid rgba(18,19,26,.1); }
-  .roi-t + .roi-n { margin-top: 20px; }
+  /* ROI: the chart takes the room, one statement beside it */
+  .roi3-s { grid-template-columns: 1fr 560px; }
+  .roi-w { font-size: 34px; font-weight: 700; letter-spacing: -.02em; line-height: 1.3; color: var(--ink); }
+  .roi-w b { display: block; margin-top: 16px; color: var(--loop); }
   /* Budget: same layout as the ROI slide, in Loop blue; the per-step fees on the right, robots apart */
   .bud2 { grid-template-columns: 520px 1fr; background: var(--loop-50); }
   .bud2 .roi-g b { color: var(--loop); }
@@ -942,7 +935,7 @@
 <section class="slide" data-scene="roi">
   <div class="roi2">
     <h1 class="rise">Accueillir sans recruter,<br><em>rentabilisé en 10 mois et demi avec le Temi.</em></h1>
-    <div class="roi3 rise" style="--d:.2s">
+    <div class="roi3 roi3-s rise" style="--d:.2s">
       <svg class="roi-ch" viewBox="0 0 960 520" role="img" aria-label="Coût évité cumulé sur 3 ans pour 6 immeubles, une personne à l'accueil remplacée par immeuble. Après 6 mois de pilote, les 6 immeubles sont équipés. Temi 3 : rentabilisé en 10 mois et demi, +509 950 € au bout de 3 ans. Unitree H2 : 19 mois, +339 950 €. AgiBot A3 : 35 mois, +19 225 €">
         <g class="grid"><line x1="80" x2="800" y1="84.0" y2="84.0"></line><line x1="80" x2="800" y1="158.0" y2="158.0"></line><line x1="80" x2="800" y1="306.0" y2="306.0"></line><line x1="80" x2="800" y1="380.0" y2="380.0"></line></g>
         <g class="ylab"><text x="68" y="90.0">+400 000 €</text><text x="68" y="164.0">+200 000 €</text><text x="68" y="238.0">0</text><text x="68" y="312.0">−200 000 €</text><text x="68" y="386.0">−400 000 €</text></g>
@@ -960,16 +953,7 @@
         <text class="v" x="816" y="250.0" style="font-size: 22px">AgiBot A3</text>
       </svg>
       <div>
-        <p class="roi-w">Dans chaque immeuble, le robot remplace une personne à l'accueil : 40&nbsp;000&nbsp;€ évités par an*, 240&nbsp;000&nbsp;€ sur 6 immeubles.</p>
-        <table class="roi-t">
-          <thead><tr><th></th><th><i style="--c: var(--loop)"></i>Temi 3</th><th><i style="--c: #f0a020"></i>Unitree H2</th><th><i style="--c: #5f6475"></i>AgiBot A3</th></tr></thead>
-          <tbody>
-            <tr><th>Investi</th><td>90 050 €</td><td>260 050 €</td><td>580 775 €</td></tr>
-            <tr><th>Rentabilisé en</th><td>10,5 mois</td><td>19 mois</td><td>35 mois</td></tr>
-            <tr><th>Gain sur 3 ans</th><td>+509 950 €</td><td>+339 950 €</td><td>+19 225 €</td></tr>
-          </tbody>
-        </table>
-        <p class="roi-n">* Une personne à l'accueil à temps plein : ≈&nbsp;40&nbsp;000&nbsp;€ par an charges comprises. Sources : offre Michael Page, réceptionniste de nuit, hôtel 4 étoiles, Paris 8e, 29&nbsp;000 à 31&nbsp;000&nbsp;€ brut par an (juin 2026) ; SMIC 2026, 12,02&nbsp;€ brut de l'heure.<br>Même pilote de 6 mois pour les trois robots, sans coût évité compté. Puis 6 robots, un par immeuble : Temi 8&nbsp;175&nbsp;€, Unitree H2 35&nbsp;146&nbsp;€, AgiBot A3 88&nbsp;600&nbsp;€ HT. Hors déploiement des 5 autres sites, chiffré après le site n°1.</p>
+        <p class="roi-w">Dans chaque immeuble, le robot remplace une personne à l'accueil.<br><b>40&nbsp;000&nbsp;€ évités par an,<br>240&nbsp;000&nbsp;€ sur 6&nbsp;immeubles.</b></p>
       </div>
     </div>
   </div>
