@@ -499,6 +499,14 @@
   .roi-solo .roi-l span { font-size: 26px; }
   .roi-solo .roi-l i { font-size: 22px; }
   .roi-solo .roi-l b { font-size: 28px; }
+  /* Budget: same layout as the ROI slide, in Loop blue; the per-step fees on the right, robots apart */
+  .bud2 { grid-template-columns: 520px 1fr; background: var(--loop-50); }
+  .bud2 .roi-g b { color: var(--loop); }
+  .bud2-s { margin-top: 14px; font-size: 22px; font-weight: 600; color: var(--muted); }
+  .bud2 .roi-l li { grid-template-columns: 290px 1fr auto; }
+  .bud2 .roi-l b { color: var(--ink); }
+  .bud2 .roi-l li.later b { color: var(--muted); }
+  .bud2 .roi-l li.robot { margin-top: 18px; border-top: 2px solid rgba(18,19,26,.18); }
   /* Why Loop: one idea, the robot fleet. Four points two by two, then how it fits the buildings' home automation */
   .fleet { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 40px; padding: 0 96px 56px; background: var(--loop); color: #fff; }
   .fleet ul { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 48px 96px; }
@@ -885,24 +893,22 @@
 
 <!-- ======================= Budget · pilot cost, robots included ======================= -->
 <section class="slide" data-scene="budget">
-  <div class="wip">WIP</div>
-  <div class="opts-w budget">
-    <h1 class="rise">Le budget du pilote,<br><em>robots compris.</em></h1>
-    <div class="opts bud-solo">
-      <div class="opt rise" style="--d:.2s">
-        <span class="ol">Le pilote</span>
-        <h3>Les robots, installés et suivis</h3>
-        <div class="bud-p"><b>18 750 €</b><span>HT · 25 jours-homme à 750 €</span></div>
-        <ul class="bud-l">
-          <li><span>Écouter : interviews à Saint-Georges</span><b>3 j</b></li>
-          <li><span>Temi : installation, accueil, visio</span><b>6 j</b></li>
-          <li><span>Pudu T300 : chariot habillé, tests avec l'équipe</span><b>4 j</b></li>
-          <li><span>Sécurité : le Temi à l'entrée, le Dreame aux étages</span><b>3 j</b></li>
-          <li><span>Dreame : cartes, rondes et formation</span><b>4 j</b></li>
-          <li><span>Suivi des fournisseurs et bilan</span><b>5 j</b></li>
+  <div class="roi2">
+    <h1 class="rise">Le budget du pilote,<br><em>réglé étape par étape.</em></h1>
+    <div class="roi-solo bud2 rise" style="--d:.2s">
+      <div>
+        <div class="roi-g"><div><small>Du site de test au site n°1</small><b>≈ 41 000 €</b></div></div>
+        <p class="bud2-s">HT · 54 à 56 jours-homme à 750 €</p>
+      </div>
+      <div>
+        <ul class="roi-l">
+          <li><span>Preuve de concept</span><i>29 jours-homme · réglé au bilan POC</i><b>21 750 €</b></li>
+          <li><span>Déploiement sur site</span><i>15 à 17 jours-homme · réglé au bilan de stabilité</i><b>11 250 à 12 750 €</b></li>
+          <li><span>1er site autonome</span><i>≈ 10 jours-homme · réglé au bilan du site n°1</i><b>≈ 7 500 €</b></li>
+          <li class="later"><span>Sites restants</span><i>Chiffré après le site n°1, selon le nombre de sites</i><b>À chiffrer</b></li>
+          <li class="robot"><span>Robots</span><i>Achetés en direct par Quartier Libre, un Temi par site</i><b>8 175 € / site</b></li>
         </ul>
-        <div class="bud-x"><span>+ Robots : Temi, Pudu T300, 2 Dreame, hors habillage du chariot</span><b>26 675 €</b></div>
-        <div class="bud-t">Total du pilote<b>45 425 € HT</b></div>
+        <p class="roi-n">Un forfait par étape, réglé au bilan qui la clôt : vous pouvez arrêter à chaque bilan.<br>Déplacements compris. Montants HT, au tarif de 750 € par jour-homme.</p>
       </div>
     </div>
   </div>
@@ -941,7 +947,7 @@
       </div>
       <div class="pcard rise" style="--d:.35s;--tint:#e9efff;--c:var(--loop)">
         <div class="head"><span class="rank">2</span><h3>Validez le budget</h3></div>
-        <div class="reco"><small>Budget prévu</small><b>45 425 € HT</b><p>Robots compris.</p></div>
+        <div class="reco"><small>Budget prévu</small><b>≈ 41 000 € HT</b><p>Jusqu'au site n°1. Robots achetés en direct.</p></div>
       </div>
       <div class="pcard rise" style="--d:.5s;--tint:#dfe8ff;--c:var(--loop)">
         <div class="head"><span class="rank">3</span><h3>Dites-nous quand démarrer</h3></div>
