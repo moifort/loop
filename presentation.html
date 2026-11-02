@@ -517,13 +517,17 @@
   .roi3 .roi-l i { font-size: 20px; }
   .roi3 .roi-l b { font-size: 26px; color: var(--ink); }
   .roi3 .roi-l li:last-child b { color: #15924f; }
-  /* ROI: four figures, one size and one colour; the method sits in the note */
-  .roi-k { list-style: none; border-bottom: 1px solid rgba(18,19,26,.1); }
-  .roi-k li { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 16px 4px; border-top: 1px solid rgba(18,19,26,.1); }
-  .roi-k span { font-size: 26px; font-weight: 700; color: var(--ink); }
-  .roi-k b { font-size: 40px; font-weight: 800; letter-spacing: -.03em; color: var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .roi-k + .roi-n { margin-top: 20px; }
   .roi-w { margin-bottom: 22px; font-size: 24px; font-weight: 600; line-height: 1.4; color: var(--ink); }
+  /* ROI: the three robots side by side, one size and one colour; a dot ties each column to its curve */
+  .roi-t { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .roi-t th, .roi-t td { padding: 18px 0 18px 12px; border-top: 1px solid rgba(18,19,26,.1); text-align: right; white-space: nowrap; }
+  .roi-t th:first-child { padding-left: 0; text-align: left; }
+  .roi-t thead th { padding-top: 0; border-top: 0; font-size: 20px; font-weight: 700; color: var(--ink); }
+  .roi-t thead i { display: inline-block; width: 12px; height: 12px; margin-right: 8px; border-radius: 50%; background: var(--c); }
+  .roi-t tbody th { font-size: 22px; font-weight: 700; color: var(--ink); }
+  .roi-t td { font-size: 28px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
+  .roi-t tbody tr:last-child > * { border-bottom: 1px solid rgba(18,19,26,.1); }
+  .roi-t + .roi-n { margin-top: 20px; }
   /* Budget: same layout as the ROI slide, in Loop blue; the per-step fees on the right, robots apart */
   .bud2 { grid-template-columns: 520px 1fr; background: var(--loop-50); }
   .bud2 .roi-g b { color: var(--loop); }
@@ -934,33 +938,38 @@
   <div class="s-foot"><span>Loop × Quartier Libre Collection</span><span class="n"></span></div>
 </section>
 
-<!-- ======================= ROI · six buildings: the night shift a Temi holds, against hiring for it ======================= -->
+<!-- ======================= ROI · six buildings: one reception job avoided per building, the Temi against two humanoids ======================= -->
 <section class="slide" data-scene="roi">
   <div class="roi2">
-    <h1 class="rise">Accueillir la nuit sans recruter,<br><em>rentabilisé en 8 mois et demi sur 6 immeubles.</em></h1>
+    <h1 class="rise">Accueillir sans recruter,<br><em>rentabilisé en 10 mois et demi avec le Temi.</em></h1>
     <div class="roi3 rise" style="--d:.2s">
-      <svg class="roi-ch" viewBox="0 0 960 520" role="img" aria-label="Coût évité cumulé sur 2 ans pour 6 immeubles, comparé à un accueil de nuit tenu par une personne : −49 175 € au départ pour le pilote, −90 050 € au 6e mois quand les 5 autres sites sont équipés, rentabilisé en 8 mois et demi, +566 950 € au bout de 2 ans">
-        <g class="grid"><line x1="80" x2="920" y1="148.0" y2="148.0"></line><line x1="80" x2="920" y1="268.0" y2="268.0"></line></g>
-        <g class="ylab"><text x="68" y="154.0">+400 000 €</text><text x="68" y="274.0">+200 000 €</text><text x="68" y="394.0">0</text></g>
-        <polygon class="neg" points="80,388.0 80,417.5 290,417.5 290,442.0 376.3,388.0"></polygon>
-        <polygon class="pos" points="376.3,388.0 920,47.8 920,388.0"></polygon>
-        <line class="zero" x1="80" x2="920" y1="388.0" y2="388.0"></line>
-        <polyline class="ln" points="80,417.5 290,417.5 290,442.0 920,47.8" fill="none" stroke-linejoin="round"></polyline>
-        <g class="xlab"><text x="80" y="500">Départ</text><text x="290" y="500">6 mois</text><text x="500" y="500">1 an</text><text x="710" y="500">18 mois</text><text x="920" y="500">2 ans</text></g>
-        <circle class="dot" cx="80" cy="417.5" r="9"></circle><text x="185" y="410.0" text-anchor="middle" style="font-weight: 700">Pilote</text>
-        <circle class="dot" cx="290" cy="442.0" r="9"></circle><text class="v" x="310" y="470.0">−90 050 € investis</text>
-        <circle class="dot" cx="376.3" cy="388.0" r="12"></circle><text class="v" x="358.3" y="366.0" text-anchor="end" style="font-size: 30px">8 mois et demi</text>
-        <circle class="dot" cx="920" cy="47.8" r="9"></circle><text class="v" x="900" y="24.0" text-anchor="end" style="fill: #15924f">+566 950 € sur 2 ans</text>
+      <svg class="roi-ch" viewBox="0 0 960 520" role="img" aria-label="Coût évité cumulé sur 3 ans pour 6 immeubles, une personne à l'accueil remplacée par immeuble. Après 6 mois de pilote, les 6 immeubles sont équipés. Temi 3 : rentabilisé en 10 mois et demi, +509 950 € au bout de 3 ans. Unitree H2 : 19 mois, +339 950 €. AgiBot A3 : 35 mois, +19 225 €">
+        <g class="grid"><line x1="80" x2="800" y1="84.0" y2="84.0"></line><line x1="80" x2="800" y1="158.0" y2="158.0"></line><line x1="80" x2="800" y1="306.0" y2="306.0"></line><line x1="80" x2="800" y1="380.0" y2="380.0"></line></g>
+        <g class="ylab"><text x="68" y="90.0">+400 000 €</text><text x="68" y="164.0">+200 000 €</text><text x="68" y="238.0">0</text><text x="68" y="312.0">−200 000 €</text><text x="68" y="386.0">−400 000 €</text></g>
+        <line class="zero" x1="80" x2="800" y1="232.0" y2="232.0"></line>
+        <polyline class="ln" points="80,250.2 200,250.2 200,446.9 800,224.9" fill="none" stroke-linejoin="round" style="stroke: #5f6475"></polyline>
+        <polyline class="ln" points="80,250.2 200,250.2 200,328.2 800,106.2" fill="none" stroke-linejoin="round" style="stroke: #f0a020"></polyline>
+        <polyline class="ln" points="80,250.2 200,250.2 200,265.3 800,43.3" fill="none" stroke-linejoin="round"></polyline>
+        <g class="xlab"><text x="80" y="500">Départ</text><text x="200" y="500">6 mois</text><text x="320" y="500">1 an</text><text x="560" y="500">2 ans</text><text x="800" y="500">3 ans</text></g>
+        <circle class="dot" cx="80" cy="250.2" r="9"></circle><text x="140" y="276.0" text-anchor="middle" style="font-weight: 700">Pilote</text>
+        <circle class="dot" cx="290.1" cy="232.0" r="10"></circle><text class="v" x="272.1" y="214.0" text-anchor="end">10 mois et demi</text>
+        <circle class="dot" cx="460.1" cy="232.0" r="10" style="fill: #f0a020"></circle><text class="v" x="478.1" y="260.0">19 mois</text>
+        <circle class="dot" cx="780.8" cy="232.0" r="10" style="fill: #5f6475"></circle><text class="v" x="762.8" y="214.0" text-anchor="end">35 mois</text>
+        <text class="v" x="816" y="51.3" style="font-size: 22px">Temi 3</text>
+        <text class="v" x="816" y="114.2" style="font-size: 22px">Unitree H2</text>
+        <text class="v" x="816" y="250.0" style="font-size: 22px">AgiBot A3</text>
       </svg>
       <div>
-        <p class="roi-w">Une personne la nuit : 73&nbsp;000&nbsp;€ par an et par immeuble*.<br>Le Temi : 8&nbsp;175&nbsp;€, avec votre réception en ligne.</p>
-        <ul class="roi-k">
-          <li><span>Coût évité par an</span><b>438 000 €</b></li>
-          <li><span>Investi, pilote et 6 Temi</span><b>90 050 €</b></li>
-          <li><span>Rentabilisé en</span><b>8 mois et demi</b></li>
-          <li><span>Gain sur 2 ans</span><b>+566 950 €</b></li>
-        </ul>
-        <p class="roi-n">* De 23&nbsp;h à 7&nbsp;h, 365&nbsp;nuits : 2&nbsp;920&nbsp;heures par an, près de 2 postes à temps plein, à ≈&nbsp;25&nbsp;€ de l'heure charges comprises. Sources : offre Michael Page, réceptionniste de nuit, hôtel 4 étoiles, Paris 8e, 29&nbsp;000 à 31&nbsp;000&nbsp;€ brut par an (juin 2026) ; SMIC 2026, 12,02&nbsp;€ brut de l'heure.<br>Aucun coût évité compté pendant les 6 mois de pilote. Hors déploiement des 5 autres sites, chiffré après le site n°1.</p>
+        <p class="roi-w">Dans chaque immeuble, le robot remplace une personne à l'accueil : 40&nbsp;000&nbsp;€ évités par an*, 240&nbsp;000&nbsp;€ sur 6 immeubles.</p>
+        <table class="roi-t">
+          <thead><tr><th></th><th><i style="--c: var(--loop)"></i>Temi 3</th><th><i style="--c: #f0a020"></i>Unitree H2</th><th><i style="--c: #5f6475"></i>AgiBot A3</th></tr></thead>
+          <tbody>
+            <tr><th>Investi</th><td>90 050 €</td><td>260 050 €</td><td>580 775 €</td></tr>
+            <tr><th>Rentabilisé en</th><td>10,5 mois</td><td>19 mois</td><td>35 mois</td></tr>
+            <tr><th>Gain sur 3 ans</th><td>+509 950 €</td><td>+339 950 €</td><td>+19 225 €</td></tr>
+          </tbody>
+        </table>
+        <p class="roi-n">* Une personne à l'accueil à temps plein : ≈&nbsp;40&nbsp;000&nbsp;€ par an charges comprises. Sources : offre Michael Page, réceptionniste de nuit, hôtel 4 étoiles, Paris 8e, 29&nbsp;000 à 31&nbsp;000&nbsp;€ brut par an (juin 2026) ; SMIC 2026, 12,02&nbsp;€ brut de l'heure.<br>Même pilote de 6 mois pour les trois robots, sans coût évité compté. Puis 6 robots, un par immeuble : Temi 8&nbsp;175&nbsp;€, Unitree H2 35&nbsp;146&nbsp;€, AgiBot A3 88&nbsp;600&nbsp;€ HT. Hors déploiement des 5 autres sites, chiffré après le site n°1.</p>
       </div>
     </div>
   </div>
