@@ -389,7 +389,7 @@
   /* ============ Part 3 · Roadmap ============ */
   .road2 { position: absolute; inset: 116px 96px 92px; display: flex; flex-direction: column; gap: 36px; }
   /* Roadmap Gantt: one row per phase, a bar per step placed by week (--a to --b, 1-based, inclusive) over 22 weeks */
-  .gantt { position: relative; display: flex; flex-direction: column; --lbl: 380px; }
+  .gantt { position: relative; display: flex; flex-direction: column; --lbl: 430px; }
   .gantt .gr { display: grid; grid-template-columns: var(--lbl) 1fr; align-items: center; min-height: 108px; border-top: 1px solid var(--line); }
   .gantt .gr.hd { min-height: 40px; border-top: 0; }
   .gantt .gl { display: flex; flex-direction: column; gap: 4px; padding-right: 28px; }
@@ -414,6 +414,8 @@
   .steps4 { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-top: 8px; }
   .sph { display: flex; flex-direction: column; gap: 16px; }
   .sph > header { display: flex; flex-direction: column; gap: 4px; padding-bottom: 14px; border-bottom: 4px solid var(--c, var(--navy)); }
+  /* Two-line phase names: every header takes the tallest one's height and sits on the coloured rule, so the rules and cards line up */
+  .steps4 .sph > header { min-height: 171px; justify-content: flex-end; }
   .sph > header b { font-size: 32px; letter-spacing: -.02em; }
   .sph > header small { font-size: 19px; color: var(--muted); font-variant-numeric: tabular-nums; }
   .sph > header .jh { align-self: flex-start; margin-top: 6px; padding: 3px 12px; border-radius: 999px; background: var(--loop-50); color: var(--c, var(--navy)); font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -838,14 +840,14 @@
   <div class="s-head"><div class="brand"><svg><use href="#loop-mark"/></svg>loop</div><div class="client">Partie 2 · Roadmap</div></div>
   <div class="road2">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:60px">
-      <h1 class="rise">Un robot d'accueil,<br><em>déployé en 6 mois max.</em></h1>
+      <h1 class="rise">Un robot d'accueil, <em>déployé en 6 mois max.</em></h1>
     </div>
     <div class="gantt">
       <div class="gr hd"><div class="gl"><small>26 semaines, soit six mois</small></div><div class="gt"><span class="mo" style="--w:1.000">M1</span><span class="mo" style="--w:5.333">M2</span><span class="mo" style="--w:9.667">M3</span><span class="mo" style="--w:14.000">M4</span><span class="mo" style="--w:18.333">M5</span><span class="mo" style="--w:22.667">M6</span></div></div>
       <div class="gr"><div class="gl"><b>Preuve de concept</b><small>6,5 semaines · S1 à S7</small></div><div class="gt"><span class="gbar pop" data-at="300" style="--a:1;--b:6.5;--c:var(--navy)">3 étapes</span></div></div>
       <div class="gr"><div class="gl"><b>Déploiement sur site</b><small>4 semaines · S7 à S11</small></div><div class="gt"><span class="gbar pop" data-at="550" style="--a:7.5;--b:10.5;--c:#2f55c7">3 étapes</span></div></div>
       <div class="gr"><div class="gl"><b>1er site autonome</b><small>2 semaines · S11 à S13</small></div><div class="gt"><span class="gbar pop" data-at="800" style="--a:11.5;--b:12.5;--c:var(--loop)">2 étapes</span></div></div>
-      <div class="gr"><div class="gl"><b>Déploiement progressif</b><small>13 semaines · S13 à S26</small></div><div class="gt"><span class="gbar pop" data-at="1050" style="--a:13.5;--b:25.5;--c:#5b8cff">2 étapes</span></div></div>
+      <div class="gr"><div class="gl"><b>Déploiement sur le reste des sites</b><small>13 semaines · S13 à S26</small></div><div class="gt"><span class="gbar pop" data-at="1050" style="--a:13.5;--b:25.5;--c:#5b8cff">2 étapes</span></div></div>
       <div class="gr" style="min-height:130px"><div class="gl"><b>Bilan</b><small>On décide ensemble de la suite</small></div><div class="gt"></div></div>
       <div style="position:absolute;top:40px;bottom:0;left:var(--lbl);right:0;pointer-events:none"><div style="position:absolute;inset:0"><span class="gate pop blk" data-at="2300" style="--w:3"><i></i><span>Robot reçu</span></span><span class="gate pop blk up" data-at="2450" style="--w:4.5"><i></i><span>Go / no go</span></span><span class="gate pop" data-at="2600" style="--w:7.5"><i></i><span>Preuve faite ?</span></span><span class="gate pop blk" data-at="2750" style="--w:9.5"><i></i><span>Stable ?</span></span><span class="gate pop blk up" data-at="2900" style="--w:11.5"><i></i><span>Go / no go</span></span><span class="gate pop" data-at="3050" style="--w:13.5"><i></i><span>Bilan site 1</span></span><span class="gate pop up" data-at="3200" style="--w:16.5"><i></i><span>Bilans sites 2 et 3</span></span></div></div>
     </div>
@@ -863,7 +865,7 @@
       <div class="sph" style="--c:var(--navy)"><header class="rise" style="--d:0.1s"><b>Preuve de concept</b><small>6,5 semaines · S1 à S7</small><span class="jh">29 jours-homme</span></header><div class="sc pop" data-at="300"><span class="sn">1</span><h4>Interviews et besoin<small>S1–S2</small></h4></div><div class="sc pop" data-at="500"><span class="sn">2</span><h4>Test en conditions réelles<small>S3–S4</small></h4></div><div class="sc pop" data-at="700"><span class="sn">3</span><h4>Téléopération<small>S4–S7</small></h4></div></div>
       <div class="sph" style="--c:#2f55c7"><header class="rise" style="--d:0.2s"><b>Déploiement sur site</b><small>4 semaines · S7 à S11</small><span class="jh">15 à 17 jours-homme</span></header><div class="sc pop" data-at="900"><span class="sn">4</span><h4>Stabilisation<small>S7–S9</small></h4></div><div class="sc pop" data-at="1100"><span class="sn">5</span><h4>Développement logiciel<small>S9–S10</small></h4></div><div class="sc pop" data-at="1300"><span class="sn">6</span><h4>Kit d'installation<small>S10–S11</small></h4></div></div>
       <div class="sph" style="--c:var(--loop)"><header class="rise" style="--d:0.3s"><b>1er site autonome</b><small>2 semaines · S11 à S13</small><span class="jh">≈ 10 jours-homme</span></header><div class="sc pop" data-at="1500"><span class="sn">7</span><h4>Le kit sur le site n°1<small>S11–S12</small></h4></div><div class="sc pop" data-at="1700"><span class="sn">8</span><h4>Retours sur la plateforme<small>S11–S13</small></h4></div></div>
-      <div class="sph" style="--c:#5b8cff"><header class="rise" style="--d:0.4s"><b>Déploiement progressif</b><small>13 semaines · S13 à S26</small><span class="jh">À chiffrer après le site n°1</span></header><div class="sc pop" data-at="1900"><span class="sn">9</span><h4>Deux sites de plus<small>S13–S16</small></h4></div><div class="sc pop" data-at="2100"><span class="sn">10</span><h4>Déploiement par vagues<small>S16–S26</small></h4></div></div>
+      <div class="sph" style="--c:#5b8cff"><header class="rise" style="--d:0.4s"><b>Déploiement sur le reste des sites</b><small>13 semaines · S13 à S26</small><span class="jh">À chiffrer après le site n°1</span></header><div class="sc pop" data-at="1900"><span class="sn">9</span><h4>Deux sites de plus<small>S13–S16</small></h4></div><div class="sc pop" data-at="2100"><span class="sn">10</span><h4>Déploiement par vagues<small>S16–S26</small></h4></div></div>
     </div>
   </div>
   <div class="s-foot"><span>Loop × Quartier Libre Collection · Durées à affiner après l'étape 1</span><span class="n"></span></div>
